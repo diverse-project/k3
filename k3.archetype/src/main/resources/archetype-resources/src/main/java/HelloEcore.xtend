@@ -1,16 +1,15 @@
 package ${package}
 
-import java.util.HashMap
-import java.util.Map
+import k3.Aspect
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.EcorePackage
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
 
-import static extension ${package}.EPackageHelper.*
+import static extension ${package}.EPackageAspect.*
 
 class HelloEcore{
 
@@ -28,15 +27,11 @@ class HelloEcore{
 		var EPackage p = res.contents.get(0) as EPackage
 		//properties are shared between instances
 		p.start		
-		p.start		
 
-		//Call with properties
-		var prop = new EPackageAspectProperties
-		var map = new HashMap<EPackage, EPackageAspectProperties>
-		map.put(p, prop)
-		p.start(map)
-		p.start(map)
-		p.toto
+		p = EcoreFactory.eINSTANCE.createEPackage
+		p.start		
+		p.sayHello("k3")
+
 	}
 
 	def static void main(String[] args) {
@@ -45,34 +40,34 @@ class HelloEcore{
 
 	}
 	
-	def void toto(EPackage f) {
-		println("local extension method")		
-	}
 
 }
 
-class EPackageHelper {
 
+
+@Aspect(className=typeof(EPackage))
+class EPackageAspect {
+
+	//Do not use this but use self for accessing aspect values
+	EPackageAspect self;
+	
+	//i has a value persistance is static
 	static int i = 0;
+	
+	//j is local
+	int j;
 
-	//aspect without properties
-	static def void start(EPackage _self) {
-		println("call start be careful it is just an helper function")
+	public def void start(EPackage _self) {
 		i = i + 1
 		println(i)
-	}
-
-	//aspect with properties
-	static def void start(EPackage _self, Map<EPackage, EPackageAspectProperties> selfProp) {
-		var self = selfProp.get(_self)
-		self.i = self.i + 1;
-		println(self.i)
+		self.j = self.j + 1;
+		println(self.j)
 		
 	}
 
+	public def void sayHello(EPackage _self,String say) {
+		println(say)		
+	}
+
 }
 
-class EPackageAspectProperties {
-	@Property
-	var i = 0
-}
