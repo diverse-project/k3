@@ -105,6 +105,10 @@ class AspectProcessor extends AbstractClassProcessor {
 					if (s.length>0)
 						s= s.substring(0, s.length-1)
 					val s1 =s
+					var ret = ""
+					if (m.returnType != newTypeReference("void"))
+						ret = "return"
+					val retu = ret
 					m.body = [
 						'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName + className»AspectContext.getInstance();
 						    java.util.Map<«className»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
@@ -115,7 +119,7 @@ class AspectProcessor extends AbstractClassProcessor {
    						   selfProp.put(_self, prop);
 					    }
 					     self = selfProp.get(_self);
-					    priv«m.simpleName»(«s1»);					     
+					    «retu» priv«m.simpleName»(«s1»);					     
 					    ''']
 
 				}
