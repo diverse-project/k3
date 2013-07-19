@@ -50,6 +50,7 @@ public class  FSMAspect {
 
 	def void setCurrentState(FSM _self, State current) {
 		self._currentState = current;
+		
 	}
  
 	def State getCurrentState(FSM _self) {
