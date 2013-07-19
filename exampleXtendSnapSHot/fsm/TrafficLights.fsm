@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fsm:FSM xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:fsm="http://www.kermeta.org/fsm" initialState="//@ownedState.3" finalState="//@ownedState.3">
+  <ownedState name="Green" incomingTransition="//@ownedState.2/@outgoingTransition.0">
+    <outgoingTransition target="//@ownedState.1" input="TurnOffGreen" output="TurnOnYellow"/>
+  </ownedState>
+  <ownedState name="Yellow" incomingTransition="//@ownedState.0/@outgoingTransition.0">
+    <outgoingTransition target="//@ownedState.2" input="TurnOffYellow" output="TurnOnRed"/>
+  </ownedState>
+  <ownedState name="Red" incomingTransition="//@ownedState.1/@outgoingTransition.0">
+    <outgoingTransition target="//@ownedState.0" input="TurnOffRed" output="TurnOnGreen"/>
+  </ownedState>
+  <ownedState name="Off"/>
+</fsm:FSM>

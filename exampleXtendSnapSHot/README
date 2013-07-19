@@ -1,0 +1,20 @@
+to run these examples 
+
+> git clone https://github.com/eclipse/xtext.git
+> cd xtext/plugins/org.eclipse.xtend.maven
+> mvn install -Dmaven.test.skip=true
+
+next you can build k3 and fsm 
+> mvn install on both project. 
+
+To run it on top of eclipse
+
+just download 
+http://www.eclipse.org/xtend/download.html
+
+Next import the project through File -> import -> maven -> existing maven project.
+
+Have fun. 
+
+
+
