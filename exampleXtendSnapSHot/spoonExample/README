@@ -1,0 +1,9 @@
+take spoon, the annotation framework, and the mojo mutator plugin from here
+
+https://github.com/DIVERSIFY-project/diversify.git
+
+mvn clean install -Dmaven.test.skip=true
+
+
+next you can do a mvn install on this project
+
