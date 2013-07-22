@@ -11,12 +11,18 @@ Among these examples:
 * an example of FSM Operational Semantics
 * an example of integration with Spoon
 * an integration to generate Kevoree components. 
+* Example with multiples aspects on the same metaclasses
+* Example with aspect inheritance
 
 TODO
-* Example with multiples aspects on the same metaclasses
+* Example of Xtend that work on a xtend program
+* AspectProperty Active Annotation
 * Example with design by contracts
-* Example with aspect inheritance
 * Pretty printer from k2 to k3
+* Example of Aspect that overrides emf method
+* Documentation to explain self, and _self on aspects. 
+* Example with GWT
+
 
 
 
