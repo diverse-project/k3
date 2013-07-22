@@ -81,6 +81,14 @@ public class AspectProcessor extends AbstractClassProcessor {
 					
 
 				}
+				var self= clazz.declaredFields.findFirst[simpleName=="self"]
+				if (self == null){
+					clazz.addField("self", [
+						type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
+						static = true
+						visibility = Visibility::PUBLIC
+					])
+				}
 				for (f : toRemove) {
 					f.remove
 				}

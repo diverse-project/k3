@@ -19,10 +19,13 @@ TODO
 * AspectProperty Active Annotation
 * Example with design by contracts
 * Pretty printer from k2 to k3
-* Example of Aspect that overrides emf method
+* Example of Aspect that overrides EMF method
 * Documentation to explain self, and _self on aspects. 
 * Example with GWT
 
+
+Add repository
+http://dev.nightlabs.org/maven-repository/repo/org/eclipse/xtend/xtend-maven-plugin/
 
 
 
