@@ -6,6 +6,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import java.util.Map
+import java.util.Random
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.TransformationContext
@@ -19,17 +20,14 @@ annotation Contracted {
 }
 
 @Target(ElementType::METHOD)
-//@Active(typeof(PreProcessor))
 annotation Pre {
 }
 
 @Target(ElementType::METHOD)
-//@Active(typeof(PostProcessor))
 annotation Post {
 }
 
 @Target(ElementType::METHOD)
-//@Active(typeof(PostProcessor))
 annotation Inv {
 }
 
@@ -48,6 +46,26 @@ class ContractedProcessor extends AbstractClassProcessor {
 		}		
 	}
 
+	private def getAllPre(MutableClassDeclaration cl , List<MutableMethodDeclaration> pres,String MsimpleName, extension TransformationContext context){
+		pres.addAll(cl.declaredMethods.filter[m1|
+				m1.simpleName == "pre" + MsimpleName])
+		if (cl.extendedClass != null ){
+			val parent = findClass(cl.extendedClass.name) 
+			if (parent!= null)
+				getAllPre(parent, pres,MsimpleName,context)
+		}		
+	}
+
+
+	private def getAllPost(MutableClassDeclaration cl , List<MutableMethodDeclaration> posts, String simpleName,extension TransformationContext context){
+				posts.addAll(cl.declaredMethods.filter[m1|
+				m1.simpleName == "post" + simpleName])
+		if (cl.extendedClass != null ){
+			val parent = findClass(cl.extendedClass.name) 
+			if (parent!= null)
+				getAllPost(parent, posts,simpleName,context)
+		}		
+	}
 	override doTransform(MutableClassDeclaration annotateClass, extension TransformationContext context) {
 
 		val Map<MutableMethodDeclaration,String> bodies = new HashMap<MutableMethodDeclaration,String>()
@@ -144,10 +162,42 @@ class ContractedProcessor extends AbstractClassProcessor {
 				ret = "return"
 			val retu = ret
 			var invt = "true"
-			if (annotateClass.declaredMethods.exists[m1|
-				m1.simpleName == "pre" + m.simpleName]
-			)
-				invt = "pre" + m.simpleName + "()"
+			val pres= new ArrayList<MutableMethodDeclaration>();
+			getAllPre(annotateClass,pres,m.simpleName,context)
+			var presconditionmethod_index = new Random().nextInt(1000000);
+			for(presconditionmethod : pres ){
+				if (!annotateClass.declaredMethods.exists[m3| m3 == presconditionmethod]){
+						val sname = presconditionmethod.simpleName
+						val snameWithIndex = presconditionmethod.simpleName+ presconditionmethod_index
+						presconditionmethod.setSimpleName(snameWithIndex)
+												
+						presconditionmethod.declaringType.addMethod(sname,[
+							returnType = presconditionmethod.returnType
+							static = false
+							final = false
+							visibility = Visibility::PROTECTED
+							body = ['''return this.«snameWithIndex»();''']
+						])
+						/*annotateClass.addMethod(snameWithIndex,[
+							returnType = presconditionmethod.returnType
+							static = false
+							final = false
+							visibility = Visibility::PRIVATE
+							body = ['''return super.«snameWithIndex»();''']
+						]) */
+						presconditionmethod_index = new Random().nextInt(1000000);
+				}
+			}
+			
+			
+			
+			if (pres.size()>0) {
+				invt = " ( false || "
+					for(presconditionmethod : pres ){
+						invt = invt + presconditionmethod.simpleName + "() ||"
+					}
+					invt = invt.substring(0, invt.length-2) + ")"				
+			}
 			for (in : invs)
 				invt = invt+ "&& " +in.simpleName + "() "
 			val invt1 = invt
@@ -190,11 +240,36 @@ class ContractedProcessor extends AbstractClassProcessor {
 			}
 
 			invt = "true"
-			if (annotateClass.declaredMethods.exists[m1|
-				m1.simpleName == "post" + m.simpleName]
-			)
-				invt = "post" + m.simpleName + "()"
-			for (in : invs)
+			val posts= new ArrayList<MutableMethodDeclaration>();
+			getAllPost(annotateClass,posts,m.simpleName,context)
+			var postsconditionmethod_index = new Random().nextInt(1000000);
+			for(postsconditionmethod : posts ){
+				if (!annotateClass.declaredMethods.exists[m3| m3 == postsconditionmethod]){
+						val sname = postsconditionmethod.simpleName
+						val snameWithIndex = postsconditionmethod.simpleName+ postsconditionmethod_index
+						postsconditionmethod.setSimpleName(snameWithIndex)
+												
+						postsconditionmethod.declaringType.addMethod(sname,[
+							returnType = postsconditionmethod.returnType
+							static = false
+							final = false
+							visibility = Visibility::PROTECTED
+							body = ['''return this.«snameWithIndex»();''']
+						])
+						postsconditionmethod_index = new Random().nextInt(1000000);
+				}
+			}
+			
+			if (posts.size()>0) {
+				invt = " ( true && "
+					for( postsconditionmethod: posts ){
+						invt = invt + postsconditionmethod.simpleName + "() &&"
+					}
+				invt = invt.substring(0, invt.length-2) + ")"								
+			}
+			
+			
+						for (in : invs)
 				invt = invt+ "&& " +in.simpleName + "() "
 			val invt2 = invt
 

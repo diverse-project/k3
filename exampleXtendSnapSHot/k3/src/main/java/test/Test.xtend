@@ -1,10 +1,9 @@
 package test
 
-import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.Contracted
+import fr.inria.triskell.k3.Inv
 import fr.inria.triskell.k3.Post
 import fr.inria.triskell.k3.Pre
-import fr.inria.triskell.k3.Inv
 
 @Contracted
 class Test {
@@ -26,9 +25,9 @@ class Test {
 	def boolean inv1() {
 		return true
 	}
+  
 
-
-	def void foo() {
+	def void foo() { 
 		println("ok")
 	}
 
@@ -42,7 +41,7 @@ class Test {
 	@Post
 	def boolean postfoo() {
 		return false
-	}
+	} 
 
 }
 @Contracted
@@ -52,14 +51,14 @@ class A {
 
 	@Inv
 	def boolean inv1(){
-		return false
+		return true
 	}
 	
-	@Pre
+	@Pre 
 	def boolean prefoo(){
 		return false;		
-	}
-	
+	} 
+	  
 	def void foo() {
 	}
 
@@ -77,10 +76,10 @@ class A {
  
 
 @Contracted 
-class B extends A {
-	String name
-
+class B extends A { 
+	String name 
  
+   
 	@Inv
 	def boolean inv2(){
 		return true
@@ -98,9 +97,9 @@ class B extends A {
 	
 	@Pre
 	override def boolean prefoo(){
-		return false;		
+		return true;		
 	}
-	
+	 
 
 	def static void main(String[] args) {
 		new B().bar
