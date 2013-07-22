@@ -54,7 +54,7 @@ public class  FSMAspect {
 		// reset if there is no current state
 		if (self.currentState == null) {
 			self.currentState = _self.initialState
-		} 
+		}  
  
  		var str = "init"
 		while (str != "quit") {

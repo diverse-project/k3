@@ -29,7 +29,7 @@ class HelloEcore{
 		var EPackage p = res.contents.get(0) as EPackage
 		//properties are shared between instances
 		p.start		
-
+ 
 		p = EcoreFactory.eINSTANCE.createEPackage
 		p.start		
 		p.sayHello("k3")
