@@ -14,7 +14,8 @@ import static extension fr.inria.triskell.k3.aspectinheritance.EClassifierAspect
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EClassifier
 import fr.inria.triskell.k3.OverrideAspectMethod
-
+import fr.inria.triskell.k3.AspectProperty
+ 
 class HelloEcore{
 
 	public def run() {
@@ -37,9 +38,9 @@ class HelloEcore{
 		c.sayHello("hello1") 
 		c.test4
 		c.testInheritance
-		
+		 
 		//properties are shared between instances
-		
+		 
 		
 }
 
@@ -94,8 +95,8 @@ class EClassAspect extends EClassifierAspect{
 		//call super (Must be improved must be something like super() 
 		_self.test1		
 	}
-	
-
+	   
+ 
 
 }
 
@@ -107,15 +108,17 @@ class EClassifierAspect {
 	EClassifier self;
 		
 	//j is local
+	 
+	@AspectProperty
 	int j;
-	
+	/*
 	
 	public def int j(EClassifier _self){
 		return self.j
 	}
 	public def void j(EClassifier _self, int j){
 		self.j=j
-	}
+	} */
 
 	
 	/* Testt call on method on the superclass without parameter */

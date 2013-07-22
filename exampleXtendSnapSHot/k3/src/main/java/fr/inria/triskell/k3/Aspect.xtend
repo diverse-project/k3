@@ -1,7 +1,9 @@
 package fr.inria.triskell.k3
 
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
+import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
@@ -10,8 +12,8 @@ import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
-import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
+import org.eclipse.xtend.lib.macro.declaration.Visibility
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -21,10 +23,16 @@ public annotation Aspect {
 public annotation OverrideAspectMethod {
 } 
 
+public annotation AspectProperty {
+} 
+
+
 public class AspectProcessor extends AbstractClassProcessor {
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-
+		var String v  =''' toto '''
+		
+		
 		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
 		var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
 		val className = classNam.eGet(simpleNameF) as String
@@ -38,26 +46,29 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 		override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
 			for (clazz : classes) {
-
+				
 				var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
 				var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
 				val className = classNam.eGet(simpleNameF) as String
 				var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
 				val identifier = classNam.eGet(identF) as String
+				val Map<MutableMethodDeclaration,String> bodies = new HashMap<MutableMethodDeclaration,String>()
+
 
 				//clazz.addError(className)
 				//MOVE non static fields
 				var List<MutableFieldDeclaration> toRemove = new ArrayList<MutableFieldDeclaration>();
+				var List<MutableFieldDeclaration> propertyAspect = new ArrayList<MutableFieldDeclaration>();
 
 				var c = findClass(clazz.qualifiedName + className + "AspectProperties")
-				
-				
-				
 				for (f : clazz.declaredFields) {
 
 					//MOVE non static fields
 					if (!f.static && f.simpleName != "self") {
 						toRemove.add(f)
+						if (f.annotations.findFirst[a| a.annotationTypeDeclaration.simpleName=="AspectProperty"] !=null){
+							propertyAspect.add(f)
+						}
 						
 						c.addField(f.simpleName) [
 							visibility = Visibility::PUBLIC
@@ -89,6 +100,24 @@ public class AspectProcessor extends AbstractClassProcessor {
 						visibility = Visibility::PUBLIC
 					])
 				}
+				
+				
+				for (f :propertyAspect){
+				var get = clazz.addMethod(f.simpleName,[
+								returnType = f.type
+								addParameter("_self", newTypeReference(identifier))
+							])
+				bodies.put(get,''' return «clazz.qualifiedName».self.«f.simpleName»; ''')
+							
+							
+				var set = 			clazz.addMethod(f.simpleName,[
+								returnType =newTypeReference("void")
+								addParameter("_self", newTypeReference(identifier))
+								addParameter(f.simpleName, f.type)
+							])
+				bodies.put(set,'''«clazz.qualifiedName».self.«f.simpleName» = «f.simpleName»; ''')
+				
+				} 
 				for (f : toRemove) {
 					f.remove
 				}
@@ -141,7 +170,12 @@ public class AspectProcessor extends AbstractClassProcessor {
 						visibility = Visibility::PRIVATE
 						static = true
 						returnType = m.returnType
-						body = m.body	
+						if (m.body == null){
+							body = [bodies.get(m)]
+							//addError(bodies.get(m))
+							}
+						else 								
+							body = m.body	
 						 for (p : m.parameters) {
            					 addParameter(p.simpleName, p.type)
          				 }					
