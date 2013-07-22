@@ -11,10 +11,14 @@ import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
- 
+import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
+
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
 	Class className;
+} 
+
+public annotation OverrideAspectMethod {
 } 
 
 public class AspectProcessor extends AbstractClassProcessor {
@@ -31,7 +35,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 		}
 
-		override doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+
+		override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
 			for (clazz : classes) {
 
 				var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
@@ -43,12 +48,17 @@ public class AspectProcessor extends AbstractClassProcessor {
 				//clazz.addError(className)
 				//MOVE non static fields
 				var List<MutableFieldDeclaration> toRemove = new ArrayList<MutableFieldDeclaration>();
+
+				var c = findClass(clazz.qualifiedName + className + "AspectProperties")
+				
+				
+				
 				for (f : clazz.declaredFields) {
 
 					//MOVE non static fields
 					if (!f.static && f.simpleName != "self") {
 						toRemove.add(f)
-						var c = findClass(clazz.qualifiedName + className + "AspectProperties")
+						
 						c.addField(f.simpleName) [
 							visibility = Visibility::PUBLIC
 							static = f.static
@@ -89,6 +99,36 @@ public class AspectProcessor extends AbstractClassProcessor {
 						m.setStatic(true)
 					}
 					
+					
+					if (clazz.extendedClass!= null  && m.annotations.findFirst[a| a.annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] !=null){
+						clazz.addMethod("super_"+ m.simpleName,[
+						//visibility = Visibility::PRIVATE
+						visibility = Visibility::PRIVATE
+						static = true
+						returnType = m.returnType
+						for (p : m.parameters) {
+							//if (p.simpleName != "_self")
+	           					 addParameter(p.simpleName, p.type)
+         				 }		
+         				 var s="";
+						for (p:m.parameters)
+				 		{ s=s+p.simpleName + "," }
+						if (s.length>0)
+							s= s.substring(0, s.length-1)
+						val s1 =s
+						
+						val  m3 = findMethod(findClass(clazz.extendedClass.name),m,context)
+						if (m3==null)
+							m.addError("No super method found")							
+										 			
+						body = [''' «m3.declaringType.newTypeReference.name ».«m.simpleName»(«s1»);  ''']	
+					])
+
+							
+
+					}
+					
+					
 					clazz.addMethod("priv"+ m.simpleName,[
 						visibility = Visibility::PRIVATE
 						static = true
@@ -98,6 +138,8 @@ public class AspectProcessor extends AbstractClassProcessor {
            					 addParameter(p.simpleName, p.type)
          				 }					
 					])
+					
+					
 					
 					var s="";
 					for (p:m.parameters)
@@ -171,5 +213,26 @@ public class AspectProcessor extends AbstractClassProcessor {
 			}
 
 		}
+		
+		def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz, MutableMethodDeclaration methodName ,extension TransformationContext context){
+			
+			var m = clazz.declaredMethods.findFirst[ m2| m2.simpleName == methodName.simpleName] 
+			if (m== null){
+				if (clazz.extendedClass == null)
+					return null
+				else if (findClass(clazz.extendedClass.name) ==null)
+					return null
+				else
+					return findMethod(findClass(clazz.extendedClass.name),methodName,context)
+							
+				
+			}else
+				return m;
+			
+			
+			
+				
+		
+		
 	}
-	
+	}
