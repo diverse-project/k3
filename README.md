@@ -13,10 +13,10 @@ Among these examples:
 * an integration to generate Kevoree components. 
 * Example with multiples aspects on the same metaclasses
 * Example with aspect inheritance
+* AspectProperty Active Annotation
 
 TODO
 * Example of Xtend that work on a xtend program
-* AspectProperty Active Annotation
 * Example with design by contracts
 * Pretty printer from k2 to k3
 * Example of Aspect that overrides EMF method
