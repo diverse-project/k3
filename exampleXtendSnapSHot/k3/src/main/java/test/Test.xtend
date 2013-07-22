@@ -25,9 +25,8 @@ class Test {
 	def boolean inv1() {
 		return true
 	}
-  
 
-	def void foo() { 
+	def void foo() {
 		println("ok")
 	}
 
@@ -41,76 +40,70 @@ class Test {
 	@Post
 	def boolean postfoo() {
 		return false
-	} 
+	}
 
 }
+
 @Contracted
 class A {
 	String name
 
-
 	@Inv
-	def boolean inv1(){
+	def boolean inv1() {
 		return true
 	}
-	
-	@Pre 
-	def boolean prefoo(){
-		return false;		
-	} 
-	  
-	def void foo() {
+
+	@Pre
+	def boolean prefoo() {
+		return false;
 	}
 
-
+	def void foo() {
+	}
 
 	def void bar() {
 		println("ok")
 	}
+
 	@Post
-	def boolean postbar(){
-		return true;		
+	def boolean postbar() {
+		return true;
 	}
 
 }
- 
 
-@Contracted 
-class B extends A { 
-	String name 
- 
-   
+@Contracted
+class B extends A {
+	String name
+
 	@Inv
-	def boolean inv2(){
+	def boolean inv2() {
 		return true
 	}
+
 	override def void bar() {
 		println("ok")
 	}
+
 	override def void foo() {
-		
 	}
+
 	@Post
-	override def boolean postbar(){
-		return false;		
+	override def boolean postbar() {
+		return false;
 	}
-	
+
 	@Pre
-	override def boolean prefoo(){
-		return true;		
+	override def boolean prefoo() {
+		return true;
 	}
-	 
 
 	def static void main(String[] args) {
 		new B().bar
 	}
-	
 
 }
-
-
 // && sur les post || sur les pre
-
 /*
 @Aspect(className=typeof(A))
 @Contracted
