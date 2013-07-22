@@ -2,7 +2,9 @@ package fr.inria.triskell.k3
 
 import java.lang.annotation.ElementType
 import java.lang.annotation.Target
+import java.util.ArrayList
 import java.util.HashMap
+import java.util.List
 import java.util.Map
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
@@ -32,14 +34,25 @@ annotation Inv {
 }
 
 
+
+
 class ContractedProcessor extends AbstractClassProcessor {
+
+	private def getAllInvs(MutableClassDeclaration cl , List<MutableMethodDeclaration> invs, extension TransformationContext context){
+		invs.addAll(cl.declaredMethods.filter[
+			annotations.exists[annotationTypeDeclaration.simpleName == "Inv"]])
+		if (cl.extendedClass != null ){
+			val parent = findClass(cl.extendedClass.name) 
+			if (parent!= null)
+				getAllInvs(parent, invs,context)
+		}		
+	}
 
 	override doTransform(MutableClassDeclaration annotateClass, extension TransformationContext context) {
 
 		val Map<MutableMethodDeclaration,String> bodies = new HashMap<MutableMethodDeclaration,String>()
-
-		val  invs = annotateClass.declaredMethods.filter[
-			annotations.exists[annotationTypeDeclaration.simpleName == "Inv"]]
+		val invs = new ArrayList<MutableMethodDeclaration>();
+		getAllInvs(annotateClass,invs,context)
 		
 		var pre =  annotateClass.declaredMethods.filter[
 			annotations.exists[annotationTypeDeclaration.simpleName == "Pre"]]
