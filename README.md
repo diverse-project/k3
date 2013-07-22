@@ -17,18 +17,15 @@ Among these examples:
 * Example with design by contracts
 * Inheritance and Design by contract
 * Example of Aspect that overrides Base method Works when we remain in Xtend (Using ReplaceAspectMethod annotation)
+* Example with GWT
 
 TODO
 * Aspects and Design by contract
 * Pretty printer from k2 to k3
-* Example of Aspect that overrides Base method Works when we remain in Xtend
+* Example of Aspect that overrides Base method Works when we leave Xtend (the case of EMF)
 * Documentation to explain self, and _self on aspects. 
-* Example with GWT
-* Example of Xtend that work on a xtend program
+* Example of an Xtend program  that works on a xtend program
 
-
-Add repository
-http://dev.nightlabs.org/maven-repository/repo/org/eclipse/xtend/xtend-maven-plugin/
 
 
 
