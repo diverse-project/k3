@@ -74,9 +74,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 							final = f.final
 							type = f.type
 							if (f.initializer != null) {
-								initializer = [
-									'''«f.initializer» '''
-								]
+								initializer = f.initializer								
 							}
 						]
 

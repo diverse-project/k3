@@ -38,6 +38,8 @@ class HelloEcore{
 		c.sayHello("hello1") 
 		c.test4 
 		c.testInheritance
+		c.testInheritance1
+		c.testU
 		 
 		
 		
@@ -92,7 +94,15 @@ class EClassAspect extends EClassifierAspect{
 		//call super (Must be improved must be something like super() 
 		_self.test1		
 	}
-	   
+	 
+	@OverrideAspectMethod
+	public def void testU(){
+		_self.super_testU
+		_self.u = _self.u+1;
+		println(_self.u)
+		
+	}
+	 
   
 
 }
@@ -108,6 +118,10 @@ class EClassifierAspect {
 	 
 	@AspectProperty
 	int j;
+	
+	@AspectProperty
+	int u=0;
+	
 	/*
 	
 	public def int j(EClassifier _self){
@@ -133,8 +147,12 @@ class EClassifierAspect {
 	public def void testInheritance() {
 		println("call testInheritance on EClassifier" )
 				
-	}
+	} 
 	
+	public def void testU(){
+		self.u = self.u+1;
+		println(self.u)
+	}
 
 }
 
