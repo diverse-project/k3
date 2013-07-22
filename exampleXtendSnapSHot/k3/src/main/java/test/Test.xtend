@@ -1,8 +1,10 @@
 package test
 
+import fr.inria.triskell.k3.Aspect
+import fr.inria.triskell.k3.Contracted
 import fr.inria.triskell.k3.Post
 import fr.inria.triskell.k3.Pre
-import fr.inria.triskell.k3.Contracted
+import fr.inria.triskell.k3.Inv
 
 @Contracted
 class Test {
@@ -21,6 +23,16 @@ class Test {
 		
 	} 
 	
+	@Inv 
+	def boolean inv1(){
+		return true
+	}
+	
+	
+	def void bar(){
+		
+	}
+	
 	
 	def void foo(){
 		println("ok")
@@ -38,3 +50,25 @@ class Test {
 	}	
 	
 }
+
+
+class A{
+	String name
+	
+	def void foo(){
+		
+	}
+	
+}
+
+/*
+@Aspect(className=typeof(A))
+@Contracted
+class AAspect{
+	
+	@Pre	
+	def boolean prefoo(){ 
+		return true	
+	}
+	
+} */
