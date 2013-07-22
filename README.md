@@ -14,9 +14,11 @@ Among these examples:
 * Example with multiples aspects on the same metaclasses
 * Example with aspect inheritance
 * AspectProperty Active Annotation
+* Example with design by contracts
 
 TODO
-* Example with design by contracts
+* Inheritance and Design by contract
+* Aspects and Design by contract
 * Pretty printer from k2 to k3
 * Example of Aspect that overrides EMF method
 * Documentation to explain self, and _self on aspects. 
