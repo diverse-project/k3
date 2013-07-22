@@ -39,8 +39,7 @@ class HelloEcore{
 		c.test4
 		c.testInheritance
 		 
-		//properties are shared between instances
-		 
+		
 		
 }
 
@@ -59,26 +58,24 @@ class HelloEcore{
 @Aspect(className=typeof(EClass))
 class EClassAspect extends EClassifierAspect{
 
-	//Do not use this but use self for accessing aspect values
-	EClass self;
 	
 	//j is local
 	int k;
 
 	/* Testt call on method on the inherited class without parameter */
-	public def void test3(EClass _self) {
+	public def void test3() {
 		self.k = self.k + 1;
 		println(self.k)
 		
 	}
 
 	/* Testt call on method on the class with parameter */
-	public def void sayHello(EClass _self,String say) {
+	public def void sayHello(String say) {
 		println(say)		
 	}
 
 	/* Testt call on method on the class that use attributes of the super aspect */
-	public def void test4(EClass _self) {
+	public def void test4() {
 		_self.j = _self.j + 1;
 		println(_self.j)
 		 
@@ -86,17 +83,17 @@ class EClassAspect extends EClassifierAspect{
 
 	
 	@OverrideAspectMethod
-	public def void testInheritance(EClass _self) {
+	public def void testInheritance() {
 		println("call testInheritance on EClass" )
 		_self.super_testInheritance
 	}
-		public def void testInheritance1(EClass _self) {
+		public def void testInheritance1() {
 		println("call testInheritance 1 on EClass" )
 		//call super (Must be improved must be something like super() 
 		_self.test1		
 	}
 	   
- 
+  
 
 }
 
@@ -122,18 +119,18 @@ class EClassifierAspect {
 
 	
 	/* Testt call on method on the superclass without parameter */
-	public def void test1(EClassifier _self) {
+	public def void test1() {
 		self.j = self.j + 1;
 		println(self.j)
 		
 	}
 
 	/* Testt call on method on the superclass with parameter */
-	public def void test2(EClassifier _self,String say) {
-		println(say)		
+	public def void test2(String say) {
+		println(say)	 	
 	}
 	
-	public def void testInheritance(EClassifier _self) {
+	public def void testInheritance() {
 		println("call testInheritance on EClassifier" )
 				
 	}

@@ -51,8 +51,6 @@ class HelloEcore{
 @Aspect(className=typeof(EPackage))
 class EPackageAspect1 {
 
-	//Do not use this but use self for accessing aspect values
-	EPackageAspect1 self;
 	
 	//i has a value persistance is static
 	static int i = 0;
@@ -60,7 +58,7 @@ class EPackageAspect1 {
 	//j is local
 	int j;
 
-	public def void start(EPackage _self) {
+	public def void start() {
 		i = i + 1
 		println(i)
 		self.j = self.j + 1;
@@ -74,11 +72,9 @@ class EPackageAspect1 {
 @Aspect(className=typeof(EPackage))
 class EPackageAspect2 {
 
-	//Do not use this but use self for accessing aspect values
-	EPackageAspect2 self;
 	
 
-	public def void sayHello(EPackage _self,String say) {
+	public def void sayHello(String say) {
 		println(say)		
 	}
 
@@ -89,11 +85,9 @@ class EPackageAspect2 {
 @Aspect(className=typeof(EPackage))
 class EPackageAspect3 {
 
-	//Do not use this but use self for accessing aspect values
-	EPackageAspect3 self;
 	
 
-	public def void sayHello1(EPackage _self,String say) {
+	public def void sayHello1(String say) {
 		_self.sayHello(say)
 	}
 

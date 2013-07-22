@@ -49,7 +49,7 @@ public class  FSMAspect {
 	State currentState
 
 		// Operational semantic
-	def void run(FSM _self) {
+	def void run() {
 
 		// reset if there is no current state
 		if (self.currentState == null) {
@@ -101,7 +101,7 @@ public class  FSMAspect {
  
 @Aspect(className=typeof(State))
  class StateAspect { // Go to the next state
-	def String step(State _self, String c) {
+	def String step(String c) {
 
 		// Get the valid transitions
 		var validTransitions = _self.outgoingTransition.filter[t|t.input.equals(c)]
@@ -120,7 +120,7 @@ public class  FSMAspect {
 @Aspect(className=typeof(Transition))
  class TransitionAspect {
 	// Fire the transition
-	public def String fire(Transition _self) {
+	public def String fire() {
 
 		// update FSM current state
 		_self.source.owningFSM.currentState = _self.target

@@ -14,6 +14,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
+import org.eclipse.xtend.lib.macro.declaration.MutableParameterDeclaration
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -30,9 +31,6 @@ public annotation AspectProperty {
 public class AspectProcessor extends AbstractClassProcessor {
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-		var String v  =''' toto '''
-		
-		
 		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
 		var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
 		val className = classNam.eGet(simpleNameF) as String
@@ -126,10 +124,26 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 				//Transform method to static
 				for (m : clazz.declaredMethods) {
-					if (m.parameters.size == 0)
-						clazz.addError("Each method must have at least one parameter")
-					if (m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')
-						clazz.addError("First parameter must be nammed self")
+					if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')
+					{
+						val l = new ArrayList<MutableParameterDeclaration>()
+						for (p1 : m.parameters){
+							l.add(p1)
+						}
+						
+						m.parameters.clear
+						
+						m.addParameter("_self", newTypeReference(identifier))
+						
+						for (param : l){
+							m.addParameter(param.simpleName, param.type)
+						}
+						
+						//m.parameters.add(1,m.parameters.remove(m.parameters.size-1))
+					}
+/*/						clazz.addError("Each method must have at least one parameter")
+					if ()
+						clazz.addError("First parameter must be nammed self")*/
 					if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
 						clazz.addError("First parameter must be typed by the aspect") //MOVE non static fields
 					if (!m.static) {
