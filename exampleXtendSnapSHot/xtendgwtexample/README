@@ -1,0 +1,4 @@
+to build it
+mvn clean gwt:i18n gwt:generateAsync install
+
+
