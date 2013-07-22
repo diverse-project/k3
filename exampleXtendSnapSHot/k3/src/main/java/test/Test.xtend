@@ -2,7 +2,9 @@ package test
 
 import fr.inria.triskell.k3.Post
 import fr.inria.triskell.k3.Pre
+import fr.inria.triskell.k3.Contracted
 
+@Contracted
 class Test {
 	def static void main(String[] args) {
 		
@@ -17,7 +19,7 @@ class Test {
 		//We can catch the exception ignore it
 		new Test().foo()	
 		
-	}
+	} 
 	
 	
 	def void foo(){
@@ -26,7 +28,7 @@ class Test {
 	
 	//TODO does not work together.
 	//It must be managed by the same processor
-	//@Pre
+	@Pre
 	def boolean prefoo(){
 		return true
 	}	 

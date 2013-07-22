@@ -16,12 +16,12 @@ Among these examples:
 * AspectProperty Active Annotation
 
 TODO
-* Example of Xtend that work on a xtend program
 * Example with design by contracts
 * Pretty printer from k2 to k3
 * Example of Aspect that overrides EMF method
 * Documentation to explain self, and _self on aspects. 
 * Example with GWT
+* Example of Xtend that work on a xtend program
 
 
 Add repository
