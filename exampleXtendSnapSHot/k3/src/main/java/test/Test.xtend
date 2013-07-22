@@ -21,8 +21,8 @@ class Test {
 		//We can catch the exception ignore it
 		new Test().foo()	
 		
-	} 
-	
+	}  
+	 
 	@Inv 
 	def boolean inv1(){
 		return true

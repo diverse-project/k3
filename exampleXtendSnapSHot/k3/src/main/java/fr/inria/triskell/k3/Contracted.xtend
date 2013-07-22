@@ -132,7 +132,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 			val retu = ret
 			var invt = "true"
 			if (annotateClass.declaredMethods.exists[m1|
-				m1.simpleName == "pre" + m]
+				m1.simpleName == "pre" + m.simpleName]
 			)
 				invt = "pre" + m.simpleName + "()"
 			for (in : invs)
@@ -178,7 +178,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 
 			invt = "true"
 			if (annotateClass.declaredMethods.exists[m1|
-				m1.simpleName == "post" + m]
+				m1.simpleName == "post" + m.simpleName]
 			)
 				invt = "post" + m.simpleName + "()"
 			for (in : invs)
