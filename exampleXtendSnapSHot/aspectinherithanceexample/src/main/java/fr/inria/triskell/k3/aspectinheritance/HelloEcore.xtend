@@ -14,7 +14,6 @@ import static extension fr.inria.triskell.k3.aspectinheritance.EClassifierAspect
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EClassifier
 import fr.inria.triskell.k3.OverrideAspectMethod
-import fr.inria.triskell.k3.AspectProperty
  
 class HelloEcore{
 
@@ -34,10 +33,10 @@ class HelloEcore{
 		var EClass c = EcoreFactory.eINSTANCE.createEClass
 		c.test1
 		c.test2("hello") 
-		c.test3 
+		c.test3  
 		c.sayHello("hello1") 
 		c.test4 
-		c.testInheritance
+		c.testInheritance 
 		c.testInheritance1
 		c.testU
 		 
@@ -66,7 +65,8 @@ class EClassAspect extends EClassifierAspect{
 
 	/* Testt call on method on the inherited class without parameter */
 	public def void test3() {
-		self.k = self.k + 1;
+		_self.k = _self.k + 1;
+		
 		println(self.k)
 		
 	}
@@ -78,8 +78,8 @@ class EClassAspect extends EClassifierAspect{
 
 	/* Testt call on method on the class that use attributes of the super aspect */
 	public def void test4() {
-		_self.j = _self.j + 1;
-		println(_self.j)
+		self.j = self.j + 1;
+		println(self.j)
 		 
 	}
 
@@ -87,19 +87,19 @@ class EClassAspect extends EClassifierAspect{
 	@OverrideAspectMethod
 	public def void testInheritance() {
 		println("call testInheritance on EClass" )
-		_self.super_testInheritance
+		self.super_testInheritance
 	}
 		public def void testInheritance1() {
 		println("call testInheritance 1 on EClass" )
 		//call super (Must be improved must be something like super() 
-		_self.test1		
+		self.test1		
 	}
 	 
 	@OverrideAspectMethod
 	public def void testU(){
-		_self.super_testU
-		_self.u = _self.u+1;
-		println(_self.u)
+		self.super_testU
+		self.u = self.u+1;
+		println(self.u)
 		
 	}
 	 
@@ -111,15 +111,11 @@ class EClassAspect extends EClassifierAspect{
 @Aspect(className=typeof(EClassifier))
 class EClassifierAspect {
 
-	//Do not use this but use self for accessing aspect values
-	EClassifier self;
 		
 	//j is local
 	 
-	@AspectProperty
 	int j;
 	
-	@AspectProperty
 	int u=0;
 	
 	/*
@@ -133,9 +129,9 @@ class EClassifierAspect {
 
 	
 	/* Testt call on method on the superclass without parameter */
-	public def void test1() {
-		self.j = self.j + 1;
-		println(self.j)
+	public def void test1() { 
+		_self.j = _self.j + 1;
+		println(_self.j)
 		
 	}
 
@@ -150,8 +146,8 @@ class EClassifierAspect {
 	} 
 	
 	public def void testU(){
-		self.u = self.u+1;
-		println(self.u)
+		_self.u = _self.u+1;
+		println(_self.u)
 	}
 
 }

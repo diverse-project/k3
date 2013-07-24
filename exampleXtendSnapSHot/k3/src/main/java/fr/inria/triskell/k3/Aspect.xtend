@@ -2,6 +2,7 @@ package fr.inria.triskell.k3
 
 import java.util.ArrayList
 import java.util.HashMap
+import java.util.HashSet
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
@@ -13,8 +14,9 @@ import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
-import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.MutableParameterDeclaration
+import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
+import org.eclipse.xtend.lib.macro.declaration.Visibility
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -24,13 +26,58 @@ public annotation Aspect {
 public annotation OverrideAspectMethod {
 }
 
-public annotation AspectProperty {
+public annotation NotAspectProperty {
 }
 
 public annotation ReplaceAspectMethod {
 }
 
+/*class sortClass implements Comparator<MutableClassDeclaration>{
+	
+	 TransformationContext context
+	 
+	
+	new ( TransformationContext context){
+		this.context = context
+	}
+	def override int compare(MutableClassDeclaration arg0, MutableClassDeclaration arg1) {
+		val ext = 	new ArrayList<MutableClassDeclaration>()
+		getSuperClass(ext,arg0,context)	
+		if (ext.contains(arg1))
+			return 1
+		else return -1		
+	}
+	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,extension TransformationContext context){
+		if (c.extendedClass!=null){
+			val l =	findClass(c.extendedClass.name)
+			if (l!=null){
+				s.add(l)
+				getSuperClass(s,l,context)
+			}			
+		}
+	}
+	
+	
+}*/
+
+
+
 public class AspectProcessor extends AbstractClassProcessor {
+def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
+			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
+			var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
+			return  classNam.eGet(identF) as String
+			
+}
+	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,extension TransformationContext context){
+		if (c.extendedClass!=null){
+			val l =	findClass(c.extendedClass.name)
+			if (l!=null){
+				s.add(l)
+				getSuperClass(s,l,context)
+			}			
+		}
+	}
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
 		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
@@ -44,6 +91,64 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+		//Method name_parameterlengths, 
+		
+		val Map<MutableClassDeclaration,List<MutableClassDeclaration>> superclass= new HashMap<MutableClassDeclaration,List<MutableClassDeclaration>>()
+		val Map<MutableMethodDeclaration,List<MutableMethodDeclaration>> dispatchmethod= new HashMap<MutableMethodDeclaration,List<MutableMethodDeclaration>>()
+		for (clazz : classes) {
+			val ext = 	new ArrayList<MutableClassDeclaration>()
+			getSuperClass(ext,clazz,context)	
+			if (ext.size>0)
+				superclass.put(clazz, ext)
+		}
+		
+			val allparent = 	new HashSet<MutableClassDeclaration>()
+			for(child : superclass.keySet)
+			{
+				allparent.addAll(superclass.get(child))
+			}
+			for (p:allparent)
+			{
+				superclass.remove(p)
+			}
+			
+		for (cl : superclass.keySet){
+			val clazzes = 	new ArrayList<MutableClassDeclaration>()
+			clazzes.add(cl)
+			clazzes.addAll(superclass.get(cl))
+			val Map<String,List<MutableMethodDeclaration>> dispatchs= new HashMap<String,List<MutableMethodDeclaration>>()
+			for (clazz : clazzes) {
+				
+				for (m:clazz.declaredMethods){
+					val mname= m.simpleName + "__"+ m.parameters.size
+					var v = dispatchs.get(mname)
+					if (v==null){
+						v= new ArrayList<MutableMethodDeclaration>()
+						dispatchs.put(mname,v)						
+					}
+					v.add(m)				 
+				}
+			}
+			for (key : dispatchs.keySet){
+				val res= dispatchs.get(key)
+				if (res.size>1){
+					for (m : res){
+						dispatchmethod.put(m,res)
+					}
+				}
+			}
+		}
+		
+		/*for (m : dispatchmethod.keySet){
+			m.addError(dispatchmethod.get(m).size.toString )
+		}*/
+			
+		
+		
+		
+		
+		
+		
 		for (clazz : classes) {
 
 			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
@@ -62,9 +167,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 			for (f : clazz.declaredFields) {
 
 				//MOVE non static fields
-				if (!f.static && f.simpleName != "self") {
+				if (!f.static && f.simpleName != "_self") {
 					toRemove.add(f)
-					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "AspectProperty"] != null) {
+					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null) {
 						propertyAspect.add(f)
 					}
 
@@ -78,15 +183,15 @@ public class AspectProcessor extends AbstractClassProcessor {
 						}
 					]
 
-				} else if (!f.static && f.simpleName == "self") {
+				} else if (!f.static && f.simpleName == "_self") {
 					f.type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
 					f.static = true
 				}
 
 			}
-			var self = clazz.declaredFields.findFirst[simpleName == "self"]
+			var self = clazz.declaredFields.findFirst[simpleName == "_self"]
 			if (self == null) {
-				clazz.addField("self",
+				clazz.addField("_self",
 					[
 						type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
 						static = true
@@ -98,17 +203,17 @@ public class AspectProcessor extends AbstractClassProcessor {
 				var get = clazz.addMethod(f.simpleName,
 					[
 						returnType = f.type
-						addParameter("_self", newTypeReference(identifier))
+						addParameter("self", newTypeReference(identifier))
 					])
-				bodies.put(get, ''' return «clazz.qualifiedName».self.«f.simpleName»; ''')
+				bodies.put(get, ''' return «clazz.qualifiedName»._self.«f.simpleName»; ''')
 
 				var set = clazz.addMethod(f.simpleName,
 					[
 						returnType = newTypeReference("void")
-						addParameter("_self", newTypeReference(identifier))
+						addParameter("self", newTypeReference(identifier))
 						addParameter(f.simpleName, f.type)
 					])
-				bodies.put(set, '''«clazz.qualifiedName».self.«f.simpleName» = «f.simpleName»; ''')
+				bodies.put(set, '''«clazz.qualifiedName»._self.«f.simpleName» = «f.simpleName»; ''')
 
 			}
 			for (f : toRemove) {
@@ -117,7 +222,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 			//Transform method to static
 			for (m : clazz.declaredMethods) {
-				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self') {
+				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != 'self') {
 					val l = new ArrayList<MutableParameterDeclaration>()
 					for (p1 : m.parameters) {
 						l.add(p1)
@@ -125,9 +230,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 					m.parameters.clear
 
-					m.addParameter("_self", newTypeReference(identifier))
+					m.addParameter("self", newTypeReference(identifier))
 
 					for (param : l) {
+						
 						m.addParameter(param.simpleName, param.type)
 					}
 
@@ -137,11 +243,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 					/*/						clazz.addError("Each method must have at least one parameter")
 					if ()
 						clazz.addError("First parameter must be nammed self")*/
-					if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
-						clazz.addError("First parameter must be typed by the aspect") //MOVE non static fields
+					//if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
+					//	clazz.addError("First parameter must be typed by the aspect "  + m.parameters.get(0).type.simpleName) //MOVE non static fields
 					if (!m.static) {
-						m.setStatic(true)
+						m.setStatic(true)					
 					}
+				
+
 
 					if (clazz.extendedClass != null &&
 						m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] !=
@@ -154,7 +262,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 								returnType = m.returnType
 								for (p : m.parameters) {
 
-									//if (p.simpleName != "_self")
+									//if (p.simpleName != "self")
 									addParameter(p.simpleName, p.type)
 								}
 								var s = "";
@@ -182,9 +290,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 					}
 
 
+					
+
 					clazz.addMethod("priv" + m.simpleName,
 						[
-							visibility = Visibility::PRIVATE
+							visibility = Visibility::PROTECTED
 							static = true
 							returnType = m.returnType
 							if (m.body == null) {
@@ -209,18 +319,34 @@ public class AspectProcessor extends AbstractClassProcessor {
 						if (m.returnType != newTypeReference("void"))
 							ret = "return"
 						val retu = ret
+						var callt = '''«retu» priv«m.simpleName»(«s1»); '''
+						//m.addError(""+dispatchmethod.get(m)) 
+						if (dispatchmethod.get(m)!=null){
+							val listmethod = dispatchmethod.get(m)		
+								//md.simpleName = "_dispatch_"+md.simpleName
+								var ifst = '''«FOR md  : listmethod»   if (self instanceof «getIdentifierOfAnAspectedClass(md.declaringType)»){
+									«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("self", "("+ getIdentifierOfAnAspectedClass(md.declaringType) + ")self" )»);
+									} else «ENDFOR»
+									'''
+								callt = ifst + ''' {
+      										throw new IllegalArgumentException("Unhandled parameter types: " +
+									        java.util.Arrays.<Object>asList(self).toString());
+							    } '''							
+						}
+						val call = callt
+
 						m.body = [
 							'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
 								className»AspectContext.getInstance();
 						    java.util.Map<«className»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
-    						boolean _containsKey = selfProp.containsKey(_self);
+    						boolean _containsKey = selfProp.containsKey(self);
 						    boolean _not = (!_containsKey);
 						    if (_not) {
       						«clazz.qualifiedName + className»AspectProperties prop = new «clazz.qualifiedName + className»AspectProperties();
-   						   selfProp.put(_self, prop);
+   						   selfProp.put(self, prop);
 					    }
-					     self = selfProp.get(_self);
-					    «retu» priv«m.simpleName»(«s1»);					     
+					     _self = selfProp.get(self);
+					     «call»
 					    ''']
 
 					}

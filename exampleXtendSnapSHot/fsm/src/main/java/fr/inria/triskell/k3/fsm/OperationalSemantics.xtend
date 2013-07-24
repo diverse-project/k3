@@ -1,7 +1,6 @@
 package fr.inria.triskell.k3.fsm
 
 import fr.inria.triskell.k3.Aspect
-import fr.inria.triskell.k3.AspectProperty
 import fr.inria.triskell.k3.Singleton
 import fsm.FSM
 import fsm.State
@@ -47,7 +46,6 @@ public class Console {
 @Aspect(className=typeof(FSM))
 public class  FSMAspect {
 
-	@AspectProperty
 	State currentState
 
 		// Operational semantic
@@ -56,7 +54,7 @@ public class  FSMAspect {
 		
 		// reset if there is no current state
 		if (self.currentState == null) {
-			self.currentState = _self.initialState
+			self.currentState = self.initialState
 		}  
  
  		var str = "init"
@@ -107,7 +105,7 @@ public class  FSMAspect {
 	def String step(String c) {
 
 		// Get the valid transitions
-		var validTransitions = _self.outgoingTransition.filter[t|t.input.equals(c)]
+		var validTransitions = self.outgoingTransition.filter[t|t.input.equals(c)]
 
 		// Check if there is one and only one valid transition
 		if(validTransitions.empty) throw new NoTransition
@@ -124,11 +122,11 @@ public class  FSMAspect {
  class TransitionAspect {
 	// Fire the transition
 	public def String fire() {
-		_self.fire
+		self.fire
 		// update FSM current state
-		_self.source.owningFSM.currentState = _self.target
+		self.source.owningFSM.currentState = self.target
 		
-		return _self.output 
+		return self.output 
 	}
 }
 

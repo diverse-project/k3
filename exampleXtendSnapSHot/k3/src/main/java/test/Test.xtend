@@ -20,7 +20,7 @@ class Test {
 		} catch (Exception e) {
 			println("nok\n")
 		}
-
+ 
 		//We can catch the exception ignore it
 		new Test().foo()
 

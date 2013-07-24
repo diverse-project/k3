@@ -57,7 +57,7 @@ class EPackageAspect1 {
 	
 	//j is local
 	int j;
-
+ 
 	public def void start() {
 		i = i + 1
 		println(i)
@@ -88,7 +88,7 @@ class EPackageAspect3 {
 	
 
 	public def void sayHello1(String say) {
-		_self.sayHello(say)
+		self.sayHello(say)
 	}
 
 }
