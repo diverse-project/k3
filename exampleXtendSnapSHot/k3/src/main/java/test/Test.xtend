@@ -30,7 +30,7 @@ class Test {
 	def boolean inv1() {
 		return true
 	}
-
+ 
 	def void foo() {
 		println("ok")
 	}
@@ -126,16 +126,16 @@ class D {
 	def boolean foo(){
 		return true
 	}
-}
+}  
 
 @Aspect(className=typeof(D))
 class E {
 	
 	@ReplaceAspectMethod
-	public def static boolean foo(){
+	public def boolean foo(){
 		return false
 	} 
-}
+} 
 class F{
 	def static void main(String[] args) {
 		println(new D().foo)
@@ -150,12 +150,6 @@ class H {
 	public def static boolean foo(){
 		return false
 	} 
-}
-class I{
-	def static void main(String[] args) {
-		println(new G().foo)
-	}
-	
 }
 
 
