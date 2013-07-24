@@ -167,7 +167,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 			for (f : clazz.declaredFields) {
 
 				//MOVE non static fields
-				if (!f.static && f.simpleName != "_self") {
+				if (/*!f.static &&*/ f.simpleName != "_self") {
 					toRemove.add(f)
 					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null) {
 						propertyAspect.add(f)

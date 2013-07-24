@@ -72,7 +72,7 @@ class D{
 		
 	}
 }
-
+ 
 @Aspect(className=typeof(EClass))
 class EClassAspect extends EClassifierAspect{
 	

@@ -129,7 +129,7 @@ class D {
 }  
 
 @Aspect(className=typeof(D))
-class E {
+class E { 
 	
 	@ReplaceAspectMethod
 	public def boolean foo(){

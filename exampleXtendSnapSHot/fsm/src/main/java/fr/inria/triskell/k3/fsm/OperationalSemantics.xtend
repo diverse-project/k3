@@ -37,7 +37,7 @@ public class Console {
 		var reader = new BufferedReader(new InputStreamReader(System.in));
 		return reader.readLine();
 	}
-}
+} 
  
 
 

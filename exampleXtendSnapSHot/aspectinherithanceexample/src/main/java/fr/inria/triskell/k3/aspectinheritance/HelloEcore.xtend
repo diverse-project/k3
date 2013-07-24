@@ -33,7 +33,7 @@ class HelloEcore{
 		var EClass c = EcoreFactory.eINSTANCE.createEClass
 		c.test1
 		c.test2("hello") 
-		c.test3  
+		c.test3   
 		c.sayHello("hello1") 
 		c.test4 
 		c.testInheritance 
