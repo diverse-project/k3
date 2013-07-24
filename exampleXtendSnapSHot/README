@@ -14,6 +14,10 @@ http://www.eclipse.org/xtend/download.html
 
 Next import the project through File -> import -> maven -> existing maven project.
 
+If you want to use the archetype. 
+Just use 
+mvn archetype:generate -DarchetypeGroupId=fr.irisa.triskell -DarchetypeArtifactId=k3-archetype
+
 Have fun. 
 
 
