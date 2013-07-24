@@ -60,13 +60,13 @@ class D{
 		
 		       var EClass c = EcoreFactory.eINSTANCE.createEClass
         var EClassifier cl = c;
-        c.testInheritance
+        c.testInheritance("a")
         println("----")
-        cl.testInheritance
+        cl.testInheritance("a")
 	}
 	 
 	def void testfoo(){ 
-		var A a  = new B() 
+		var A a  = new B()  
 		//a.foo
 		a.bar 
 		
@@ -76,15 +76,15 @@ class D{
 @Aspect(className=typeof(EClass))
 class EClassAspect extends EClassifierAspect{
 	
-	def void testInheritance(){
-		println("EClass")
+	def void testInheritance(String a){
+		println(""+a+" EClass " + a)
 	} 
 	
 }
 @Aspect(className=typeof(EClassifier))
-class EClassifierAspect {
-	def void testInheritance(){
-		println("EClassifier")
+class EClassifierAspect {  
+	def void testInheritance(String a){
+		println(a +  "EClassifier")
 	}
 	
 }
