@@ -23,8 +23,12 @@ TODO
 * Aspects and Design by contract
 * Pretty printer from k2 to k3
 * Example of Aspect that overrides Base method Works when we leave Xtend (the case of EMF)
-* Documentation to explain self, and _self on aspects. 
+* Documentation to explain self on aspects. 
 * Example of an Xtend program  that works on a xtend program
+
+* Kown bugs
+On Kevoree (Kevoree maven plugin ignores the xtend source code) Erwan will fix it.
+
 
 
 
