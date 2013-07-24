@@ -1,14 +1,21 @@
 package fr.inria.triskell.k3.kevoree
 
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
+import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.JTextPane
+import javax.swing.text.BadLocationException
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
 import org.kevoree.annotation.ComponentType
 import org.kevoree.annotation.DictionaryAttribute
 import org.kevoree.annotation.DictionaryType
@@ -22,16 +29,8 @@ import org.kevoree.annotation.Start
 import org.kevoree.annotation.Stop
 import org.kevoree.annotation.Update
 import org.kevoree.framework.AbstractComponentType
-import org.kevoree.framework.MessagePort
 import org.kevoree.framework.KevoreeMessage
-import java.awt.event.KeyListener
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
-import javax.swing.JScrollPane
-import javax.swing.text.BadLocationException
-import javax.swing.text.StyleContext
-import javax.swing.text.StyleConstants
-import java.awt.Color
+import org.kevoree.framework.MessagePort
 import org.kevoree.library.ui.layout.KevoreeLayout
 
 /**

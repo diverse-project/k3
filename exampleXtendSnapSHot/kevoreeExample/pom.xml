@@ -10,8 +10,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
 		<kevoree.version>2.0.0-SNAPSHOT</kevoree.version>
+		<xtendGenDirectory>src/main/generated-sources/xtend</xtendGenDirectory>
 	</properties>
 	<build>
+	
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
@@ -25,6 +27,9 @@
 							<goal>xtend-install-debug-info</goal>
 							<goal>xtend-test-install-debug-info</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${xtendGenDirectory}</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -35,6 +40,25 @@
 					<source>1.5</source>
 					<target>1.5</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${xtendGenDirectory}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.kevoree.tools</groupId>

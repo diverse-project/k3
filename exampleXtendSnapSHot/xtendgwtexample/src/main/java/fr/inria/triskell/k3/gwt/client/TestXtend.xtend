@@ -21,6 +21,7 @@ public class TestXtend implements EntryPoint{
 		b.text = "hello"
 		b.addClickHandler(new MyClickHandler())
 		RootPanel.get().add(b)
+		
 	}
 	
 }

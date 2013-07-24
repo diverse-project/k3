@@ -1,17 +1,17 @@
 package fr.inria.triskell.k3.fsm
- 
+
 import fr.inria.triskell.k3.Aspect
-import fsm.FSM 
+import fr.inria.triskell.k3.AspectProperty
+import fr.inria.triskell.k3.Singleton
+import fsm.FSM
 import fsm.State
-import fsm.Transition 
+import fsm.Transition
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 import static extension fr.inria.triskell.k3.fsm.FSMAspect.*
 import static extension fr.inria.triskell.k3.fsm.StateAspect.*
 import static extension fr.inria.triskell.k3.fsm.TransitionAspect.*
-import fr.inria.triskell.k3.Singleton
-import fr.inria.triskell.k3.AspectProperty
 
 /* $Id: fsm_Operationnal_Semantics.kmt,v 1.3 2008-08-25 13:04:01 vmahe Exp $
  * Project    : fr.irisa.triskell.samples.fsm
@@ -26,6 +26,7 @@ import fr.inria.triskell.k3.AspectProperty
  * Description : 
  *       Finite State Machine Sample with Behaviour implemented in Kermeta
  */
+
 @Singleton 
 public class Console {
 	
@@ -42,6 +43,7 @@ public class Console {
 
 
 
+
 @Aspect(className=typeof(FSM))
 public class  FSMAspect {
 
@@ -51,6 +53,7 @@ public class  FSMAspect {
 		// Operational semantic
 	def void run() {
 
+		
 		// reset if there is no current state
 		if (self.currentState == null) {
 			self.currentState = _self.initialState
@@ -121,9 +124,10 @@ public class  FSMAspect {
  class TransitionAspect {
 	// Fire the transition
 	public def String fire() {
-
+		_self.fire
 		// update FSM current state
 		_self.source.owningFSM.currentState = _self.target
+		
 		return _self.output 
 	}
 }
