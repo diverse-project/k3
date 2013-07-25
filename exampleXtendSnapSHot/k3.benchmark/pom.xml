@@ -77,4 +77,16 @@
 		</dependency>
 
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>xtext.snapshots</id>
+			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>xtext.oss.snapshots</id>
+			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
+		</pluginRepository>
+	</pluginRepositories>	
 </project>
