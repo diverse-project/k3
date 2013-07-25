@@ -26,8 +26,12 @@ TODO
 * Documentation to explain _self on aspects (even for static method or static attributes. 
 * Example of an Xtend program  that works on a xtend program
 
-* Kown bugs
+Kown bugs
 ...
+
+
+Ongoing works
+* Aspect generator for an ecore metamodel (Vincent)
 
 
 
