@@ -8,13 +8,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback
 import com.google.gwt.user.client.ui.Button
 import com.google.gwt.user.client.ui.RootPanel
 
-//import static fr.inria.triskell.k3.gwt.client.GreetingServiceAsync.Util.*
+import static fr.inria.triskell.k3.gwt.client.GreetingServiceAsync.Util.*
 
 public class TestXtend implements EntryPoint{
 	
 	
 	
-	
+		
 	
 	override onModuleLoad() {
 		var b = new Button();
@@ -29,11 +29,12 @@ public class TestXtend implements EntryPoint{
 class MyClickHandler implements ClickHandler, AsyncCallback<String>{
 	
 	
-	override onClick(ClickEvent arg0) {
-		GetServices.greetingService.greetServer("hello world", this)
+	override void onClick(ClickEvent arg0) {
+		getInstance.greetServer("toto", this)
+		 
 	}
 	
-	override onFailure(Throwable arg0) {
+	override void onFailure(Throwable arg0) {
 		Window.alert("error")
 	}
 	

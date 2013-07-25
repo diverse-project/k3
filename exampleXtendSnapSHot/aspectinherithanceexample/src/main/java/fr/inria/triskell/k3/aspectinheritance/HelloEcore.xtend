@@ -1,7 +1,11 @@
 package fr.inria.triskell.k3.aspectinheritance
 
 import fr.inria.triskell.k3.Aspect
+import fr.inria.triskell.k3.OverrideAspectMethod
+import java.util.List
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EClassifier
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.EcorePackage
@@ -11,10 +15,7 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
 
 import static extension fr.inria.triskell.k3.aspectinheritance.EClassAspect.*
 import static extension fr.inria.triskell.k3.aspectinheritance.EClassifierAspect.*
-import org.eclipse.emf.ecore.EClass
-import org.eclipse.emf.ecore.EClassifier
-import fr.inria.triskell.k3.OverrideAspectMethod
- 
+
 class HelloEcore{
 
 	public def run() {
@@ -132,7 +133,7 @@ class EClassifierAspect {
 	public def void test1() { 
 		_self.j = _self.j + 1;
 		println(_self.j)
-		
+		 
 	}
 
 	/* Testt call on method on the superclass with parameter */
@@ -149,6 +150,13 @@ class EClassifierAspect {
 		_self.u = _self.u+1;
 		println(_self.u)
 	}
+	
+	public def List<String> testU(List<String> a){
+		_self.u = _self.u+1;
+		println(_self.u)
+		return a
+	}
+	
 
 }
 

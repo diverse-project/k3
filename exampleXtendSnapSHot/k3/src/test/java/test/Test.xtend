@@ -33,7 +33,7 @@ class Test {
  
 	def void foo() {
 		println("ok")
-	}
+	} 
 
 	//TODO does not work together.
 	//It must be managed by the same processor
