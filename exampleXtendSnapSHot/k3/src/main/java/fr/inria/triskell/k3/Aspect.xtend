@@ -179,7 +179,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 			for (f : clazz.declaredFields) {
 
 				//MOVE non static fields
-				if (/*!f.static &&*/ f.simpleName != "_self") {
+				if (/*!f.static &&*/ f.simpleName != "_self_") {
 					toRemove.add(f)
 					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null) {
 						propertyAspect.add(f)
@@ -195,15 +195,15 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 						}
 					]
 
-				} else if (!f.static && f.simpleName == "_self") {
+				} else if (!f.static && f.simpleName == "_self_") {
 					f.type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
 					f.static = true
 				}
 
 			}
-			var self = clazz.declaredFields.findFirst[simpleName == "_self"]
+			var self = clazz.declaredFields.findFirst[simpleName == "_self_"]
 			if (self == null) {
-				clazz.addField("_self",
+				clazz.addField("_self_",
 					[
 						type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
 						static = true
@@ -215,17 +215,17 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 				var get = clazz.addMethod(f.simpleName,
 					[
 						returnType = f.type
-						addParameter("self", newTypeReference(identifier))
+						addParameter("_self", newTypeReference(identifier))
 					])
-				bodies.put(get, ''' return «clazz.qualifiedName»._self.«f.simpleName»; ''')
+				bodies.put(get, ''' return «clazz.qualifiedName»._self_.«f.simpleName»; ''')
 
 				var set = clazz.addMethod(f.simpleName,
 					[
 						returnType = newTypeReference("void")
-						addParameter("self", newTypeReference(identifier))
+						addParameter("_self", newTypeReference(identifier))
 						addParameter(f.simpleName, f.type)
 					])
-				bodies.put(set, '''«clazz.qualifiedName»._self.«f.simpleName» = «f.simpleName»; ''')
+				bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
 
 			}
 			for (f : toRemove) {
@@ -234,7 +234,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 
 			//Transform method to static
 			for (m : clazz.declaredMethods) {
-				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != 'self') {
+				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self') {
 					val l = new ArrayList<Tuple<String, TypeReference >>()
 					for (p1 : m.parameters) {
 						l.add(new Tuple(p1.simpleName, p1.type))
@@ -242,7 +242,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 
 					m.parameters.clear
 
-					m.addParameter("self", newTypeReference(identifier))
+					m.addParameter("_self", newTypeReference(identifier))
 
 					for (param : l) {
 						
@@ -336,13 +336,13 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 						if (dispatchmethod.get(m)!=null){
 							val listmethod = dispatchmethod.get(m)		
 								//md.simpleName = "_dispatch_"+md.simpleName
-								var ifst = '''«FOR md  : listmethod»   if (self instanceof «getIdentifierOfAnAspectedClass(md.declaringType)»){
-									«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("self", "("+ getIdentifierOfAnAspectedClass(md.declaringType) + ")self" )»);
+								var ifst = '''«FOR md  : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(md.declaringType)»){
+									«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self", "("+ getIdentifierOfAnAspectedClass(md.declaringType) + ")_self" )»);
 									} else «ENDFOR»
 									'''
 								callt = ifst + ''' {
       										throw new IllegalArgumentException("Unhandled parameter types: " +
-									        java.util.Arrays.<Object>asList(self).toString());
+									        java.util.Arrays.<Object>asList(_self).toString());
 							    } '''							
 						}
 						val call = callt
@@ -351,13 +351,13 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 							'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
 								className»AspectContext.getInstance();
 						    java.util.Map<«className»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
-    						boolean _containsKey = selfProp.containsKey(self);
+    						boolean _containsKey = selfProp.containsKey(_self);
 						    boolean _not = (!_containsKey);
 						    if (_not) {
       						«clazz.qualifiedName + className»AspectProperties prop = new «clazz.qualifiedName + className»AspectProperties();
-   						   selfProp.put(self, prop);
+   						   selfProp.put(_self, prop);
 					    }
-					     _self = selfProp.get(self);
+					     _self_ = selfProp.get(_self);
 					     «call»
 					    ''']
 

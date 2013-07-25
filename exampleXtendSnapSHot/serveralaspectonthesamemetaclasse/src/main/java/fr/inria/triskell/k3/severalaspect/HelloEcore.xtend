@@ -59,10 +59,10 @@ class EPackageAspect1 {
 	int j;
  
 	public def void start() {
-		self.i= self.i + 1
-		println(self.i)
-		self.j = self.j + 1;
-		println(self.j)
+		_self.i= _self.i + 1
+		println(_self.i)
+		_self.j = _self.j + 1; 
+		println(_self.j)
 		
 	}
 
@@ -88,7 +88,7 @@ class EPackageAspect3 {
 	
 
 	public def void sayHello1(String say) {
-		self.sayHello(say)
+		_self.sayHello(say)
 	}
 
 }

@@ -35,7 +35,7 @@ class HelloEcore{
 		c.test2("hello") 
 		c.test3   
 		c.sayHello("hello1") 
-		c.test4 
+		c.test4  
 		c.testInheritance 
 		c.testInheritance1
 		c.testU
@@ -54,7 +54,7 @@ class HelloEcore{
 }
 
 
-
+ 
 
 @Aspect(className=typeof(EClass))
 class EClassAspect extends EClassifierAspect{
@@ -67,7 +67,7 @@ class EClassAspect extends EClassifierAspect{
 	public def void test3() {
 		_self.k = _self.k + 1;
 		
-		println(self.k)
+		println(_self.k)
 		
 	}
 
@@ -78,8 +78,8 @@ class EClassAspect extends EClassifierAspect{
 
 	/* Testt call on method on the class that use attributes of the super aspect */
 	public def void test4() {
-		self.j = self.j + 1;
-		println(self.j)
+		_self.j = _self.j + 1;
+		println(_self.j)
 		 
 	}
 
@@ -87,19 +87,19 @@ class EClassAspect extends EClassifierAspect{
 	@OverrideAspectMethod
 	public def void testInheritance() {
 		println("call testInheritance on EClass" )
-		self.super_testInheritance
+		_self.super_testInheritance
 	}
 		public def void testInheritance1() {
 		println("call testInheritance 1 on EClass" )
 		//call super (Must be improved must be something like super() 
-		self.test1		
+		_self.test1		
 	}
 	 
 	@OverrideAspectMethod
 	public def void testU(){
-		self.super_testU
-		self.u = self.u+1;
-		println(self.u)
+		_self.super_testU
+		_self.u = _self.u+1;
+		println(_self.u)
 		
 	}
 	 
@@ -120,11 +120,11 @@ class EClassifierAspect {
 	
 	/*
 	
-	public def int j(EClassifier _self){
-		return self.j
+	public def int j(EClassifier __self){
+		return _self.j
 	}
-	public def void j(EClassifier _self, int j){
-		self.j=j
+	public def void j(EClassifier __self, int j){
+		_self.j=j
 	} */
 
 	

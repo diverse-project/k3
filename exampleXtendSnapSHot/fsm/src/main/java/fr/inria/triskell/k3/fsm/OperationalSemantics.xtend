@@ -28,7 +28,7 @@ import static extension fr.inria.triskell.k3.fsm.TransitionAspect.*
 
 @Singleton 
 public class Console {
-	
+	 
 	def String readLine(String format, Object... args) {
 		if (System.console() != null) {
 			return System.console().readLine(format, args);
@@ -50,13 +50,13 @@ public class  FSMAspect {
 
 		
 		// reset if there is no current state
-		if (self.currentState == null) {
-			self.currentState = self.initialState
+		if (_self.currentState == null) {
+			_self.currentState = _self.initialState
 		}  
  
  		var str = "init"
 		while (str != "quit") {
-			println("Current state : " + self.currentState.name)
+			println("Current state : " + _self.currentState.name)
 			str = Console.instance.readLine("give me a letter : ")
 			if (str == "quit") {
 				println("")
@@ -67,7 +67,7 @@ public class  FSMAspect {
 				println(str)
 			println("stepping...")
 			try {   
-				var textRes = self.currentState.step(str)
+				var textRes = _self.currentState.step(str)
 				if (textRes == void || textRes == "")
 					textRes = "NC"
 
@@ -102,7 +102,7 @@ public class  FSMAspect {
 	def String step(String c) {
 
 		// Get the valid transitions
-		var validTransitions = self.outgoingTransition.filter[t|t.input.equals(c)]
+		var validTransitions = _self.outgoingTransition.filter[t|t.input.equals(c)]
 
 		// Check if there is one and only one valid transition
 		if(validTransitions.empty) throw new NoTransition
@@ -119,11 +119,11 @@ public class  FSMAspect {
  class TransitionAspect {
 	// Fire the transition
 	public def String fire() {
-		self.fire
+		_self.fire
 		// update FSM current state
-		self.source.owningFSM.currentState = self.target
+		_self.source.owningFSM.currentState = _self.target
 		
-		return self.output 
+		return _self.output 
 	}
 }
 

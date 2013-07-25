@@ -28,7 +28,7 @@ class Test {
 
 	@Inv
 	def boolean inv1() {
-		return true
+		return true 
 	}
  
 	def void foo() {
@@ -118,7 +118,7 @@ class CAspect{
 	
 	@Inv
 	def boolean prebar(){ 
-		return true	
+		return true	 
 	}
 } 
 

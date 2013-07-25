@@ -78,4 +78,16 @@
 			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
 		</pluginRepository>
 	</pluginRepositories>	
+	
+ <distributionManagement>
+    <snapshotRepository>
+      <id>k3.snapshots</id>
+      <url>http://10.100.0.22/archiva/repository/snapshots/</url>
+    </snapshotRepository>
+     <repository>
+      <id>k3.internal</id>
+      <url>http://10.100.0.22/archiva/repository/internal/</url>
+    </repository>
+  </distributionManagement>
+	
 </project>
