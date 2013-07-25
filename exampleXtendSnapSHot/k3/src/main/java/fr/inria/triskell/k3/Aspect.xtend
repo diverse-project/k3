@@ -137,14 +137,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 		for (p : allparent) {
 			superclass.remove(p)
 		}
-
+		var i =0
 		for (cl : superclass.keySet) {
 			val clazzes = new ArrayList<MutableClassDeclaration>()
 			clazzes.add(cl)
 			clazzes.addAll(superclass.get(cl))
 			val Map<String, Set<MutableMethodDeclaration>> dispatchs = new HashMap<String, Set<MutableMethodDeclaration>>()
 			for (clazz : clazzes) {
-
 				for (m : clazz.declaredMethods) {
 					val mname = m.simpleName + "__" + m.parameters.size
 					var v = dispatchs.get(mname)
@@ -155,9 +154,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 					v.add(m)
 				}
 			}
+			
 			for (key : dispatchs.keySet) {
-				val res = dispatchs.get(key)
+				val res = dispatchs.get(key)				
 				if (res.size > 1) {
+					i=i+res.size
 					for (m : res) {
 						if (dispatchmethod.get(m) == null)
 							dispatchmethod.put(m, res)
@@ -172,6 +173,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val l = dispatchmethod.get(m).sort(new sortMethod(context))
 			dispatchmethod.get(m).clear
 			dispatchmethod.get(m).addAll(l)
+			//m.addError(dispatchmethod.get(m).size.toString)
 		}
 
 		for (clazz : classes) {

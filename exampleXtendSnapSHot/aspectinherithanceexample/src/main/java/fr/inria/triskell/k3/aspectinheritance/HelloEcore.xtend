@@ -35,7 +35,7 @@ class HelloEcore{
 		c.test2("hello") 
 		c.test3   
 		c.sayHello("hello1") 
-		c.test4  
+		c.test4   
 		c.testInheritance 
 		c.testInheritance1
 		c.testU
