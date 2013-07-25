@@ -23,7 +23,7 @@ class Test {
  
 		//We can catch the exception ignore it
 		new Test().foo()
-
+ 
 	}
 
 	@Inv

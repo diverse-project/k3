@@ -29,7 +29,7 @@ class B extends A{
 
 @Aspect(className=typeof(A))
 public class AAspect{ 
-	 def void bar(){  
+	 def void bar(){   
 		println("A")
 	}
 }
@@ -62,18 +62,18 @@ class D{
 		// @Inject extension C
 		new D().testfoo()
 		
-		       var EClass c = EcoreFactory.eINSTANCE.createEClass
+		var EClass c = EcoreFactory.eINSTANCE.createEClass
         var EClassifier cl = c;
         c.testInheritance("a")
         println("----")
         cl.testInheritance("a")
-	}
-	 
+	} 
+	  
 	def void testfoo(){ 
 		var A a  = new B()  
 		//a.foo
 		a.bar  
-		
+		  
 	}
 }
  
@@ -87,7 +87,7 @@ class EClassAspect extends EClassifierAspect{
 }
 @Aspect(className=typeof(EClassifier))
 class EClassifierAspect {  
-	def void testInheritance(String a){
+	def void testInheritance(String a){ 
 		println(a +  "EClassifier")
 	}
 	
@@ -115,6 +115,6 @@ class EClassifierAspectName {
             ] // Ne reconnait pas l'operation isSuperTypeOfBis
         } 
         
-        return result
+        return result 
     }
 }

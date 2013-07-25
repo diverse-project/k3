@@ -37,7 +37,6 @@ class HelloEcore{
 	def static void main(String[] args) {
 		println('Hello Kermeta on top of Xtend!')
 		new HelloEcore().run()
-
 	}
 	
 

@@ -1,10 +1,11 @@
 package fr.inria.triskell.k3
 
 import java.util.ArrayList
+import java.util.Comparator
 import java.util.HashMap
-import java.util.HashSet
 import java.util.List
 import java.util.Map
+import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
@@ -14,10 +15,10 @@ import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
-import org.eclipse.xtend.lib.macro.declaration.MutableParameterDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
-import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
+import org.eclipse.xtend.lib.macro.declaration.Visibility
+import java.util.LinkedHashSet
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -33,61 +34,76 @@ public annotation NotAspectProperty {
 public annotation ReplaceAspectMethod {
 }
 
-/*class sortClass implements Comparator<MutableClassDeclaration>{
-	
-	 TransformationContext context
-	 
-	
-	new ( TransformationContext context){
+class sortMethod implements Comparator<MutableMethodDeclaration> {
+
+	TransformationContext context
+
+	new(TransformationContext context) {
 		this.context = context
 	}
-	def override int compare(MutableClassDeclaration arg0, MutableClassDeclaration arg1) {
-		val ext = 	new ArrayList<MutableClassDeclaration>()
-		getSuperClass(ext,arg0,context)	
-		if (ext.contains(arg1))
+
+	def override int compare(MutableMethodDeclaration arg0, MutableMethodDeclaration arg2) {
+		val ext = new ArrayList<MutableClassDeclaration>()
+		getSuperClass(ext, arg0.declaringType as MutableClassDeclaration, context)
+		val ext1 = new ArrayList<MutableClassDeclaration>()
+		getSuperClass(ext1, arg2.declaringType as MutableClassDeclaration, context)
+
+		if (ext.contains(arg2.declaringType)) {
+
+			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " > " + arg2.declaringType.simpleName+" " +ext.size)
+			return -1
+		} else if (ext1.contains(arg0.declaringType)) {
+
+			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " < " + arg2.declaringType.simpleName + " " +ext1.size)
 			return 1
-		else return -1		
-	}
-	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,extension TransformationContext context){
-		if (c.extendedClass!=null){
-			val l =	findClass(c.extendedClass.name)
-			if (l!=null){
-				s.add(l)
-				getSuperClass(s,l,context)
-			}			
+		} else {
+
+			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " = " + arg2.declaringType.simpleName)
+			return 0
 		}
 	}
-	
-	
-}*/
 
+	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,
+		extension TransformationContext context) {
+		if (c.extendedClass != null) {
+			val l = findClass(c.extendedClass.name)
+			if (l != null) {
+				s.add(l)
+				getSuperClass(s, l, context)
+			}
+		}
+	}
 
+}
 
-public class Tuple<X, Y> { 
-	@Property	
-  X x
-	@Property	
-  Y y
-  new(X x, Y y) { 
-    this.x = x; 
-    this.y = y; 
-  } 
-} 
+public class Tuple<X, Y> {
+	@Property
+	X x
+	@Property
+	Y y
+
+	new(X x, Y y) {
+		this.x = x;
+		this.y = y;
+	}
+}
 
 public class AspectProcessor extends AbstractClassProcessor {
-def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
-			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
-			var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
-			return  classNam.eGet(identF) as String
-			
-}
-	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,extension TransformationContext context){
-		if (c.extendedClass!=null){
-			val l =	findClass(c.extendedClass.name)
-			if (l!=null){
+	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz) {
+		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
+		var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
+		return classNam.eGet(identF) as String
+
+	}
+
+	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,
+		extension TransformationContext context) {
+		if (c.extendedClass != null) {
+			val l = findClass(c.extendedClass.name)
+			if (l != null) {
 				s.add(l)
-				getSuperClass(s,l,context)
-			}			
+				getSuperClass(s, l, context)
+			}
 		}
 	}
 
@@ -103,64 +119,61 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 	}
 
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+
 		//Method name_parameterlengths, 
-		
-		val Map<MutableClassDeclaration,List<MutableClassDeclaration>> superclass= new HashMap<MutableClassDeclaration,List<MutableClassDeclaration>>()
-		val Map<MutableMethodDeclaration,List<MutableMethodDeclaration>> dispatchmethod= new HashMap<MutableMethodDeclaration,List<MutableMethodDeclaration>>()
+		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>()
+		val Map<MutableMethodDeclaration, Set<MutableMethodDeclaration>> dispatchmethod = new HashMap<MutableMethodDeclaration, Set<MutableMethodDeclaration>>()
 		for (clazz : classes) {
-			val ext = 	new ArrayList<MutableClassDeclaration>()
-			getSuperClass(ext,clazz,context)	
-			if (ext.size>0)
+			val ext = new ArrayList<MutableClassDeclaration>()
+			getSuperClass(ext, clazz, context)
+			if (ext.size > 0)
 				superclass.put(clazz, ext)
 		}
-		
-			val allparent = 	new HashSet<MutableClassDeclaration>()
-			for(child : superclass.keySet)
-			{
-				allparent.addAll(superclass.get(child))
-			}
-			for (p:allparent)
-			{
-				superclass.remove(p)
-			}
-			
-		for (cl : superclass.keySet){
-			val clazzes = 	new ArrayList<MutableClassDeclaration>()
+
+		val allparent = new LinkedHashSet<MutableClassDeclaration>()
+		for (child : superclass.keySet) {
+			allparent.addAll(superclass.get(child))
+		}
+		for (p : allparent) {
+			superclass.remove(p)
+		}
+
+		for (cl : superclass.keySet) {
+			val clazzes = new ArrayList<MutableClassDeclaration>()
 			clazzes.add(cl)
 			clazzes.addAll(superclass.get(cl))
-			val Map<String,List<MutableMethodDeclaration>> dispatchs= new HashMap<String,List<MutableMethodDeclaration>>()
+			val Map<String, Set<MutableMethodDeclaration>> dispatchs = new HashMap<String, Set<MutableMethodDeclaration>>()
 			for (clazz : clazzes) {
-				
-				for (m:clazz.declaredMethods){
-					val mname= m.simpleName + "__"+ m.parameters.size
+
+				for (m : clazz.declaredMethods) {
+					val mname = m.simpleName + "__" + m.parameters.size
 					var v = dispatchs.get(mname)
-					if (v==null){
-						v= new ArrayList<MutableMethodDeclaration>()
-						dispatchs.put(mname,v)						
+					if (v == null) {
+						v = new LinkedHashSet<MutableMethodDeclaration>()
+						dispatchs.put(mname, v)
 					}
-					v.add(m)				 
+					v.add(m)
 				}
 			}
-			for (key : dispatchs.keySet){
-				val res= dispatchs.get(key)
-				if (res.size>1){
-					for (m : res){
-						dispatchmethod.put(m,res)
+			for (key : dispatchs.keySet) {
+				val res = dispatchs.get(key)
+				if (res.size > 1) {
+					for (m : res) {
+						if (dispatchmethod.get(m) == null)
+							dispatchmethod.put(m, res)
+						else
+							dispatchmethod.get(m).addAll(res)
 					}
 				}
 			}
 		}
-		
-		/*for (m : dispatchmethod.keySet){
-			m.addError(dispatchmethod.get(m).size.toString )
-		}*/
-			
-		
-		
-		
-		
-		
-		
+
+		for (m : dispatchmethod.keySet) {
+			val l = dispatchmethod.get(m).sort(new sortMethod(context))
+			dispatchmethod.get(m).clear
+			dispatchmethod.get(m).addAll(l)
+		}
+
 		for (clazz : classes) {
 
 			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
@@ -179,9 +192,10 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 			for (f : clazz.declaredFields) {
 
 				//MOVE non static fields
-				if (/*!f.static &&*/ f.simpleName != "_self_") {
+				if (/*!f.static &&*/f.simpleName != "_self_") {
 					toRemove.add(f)
-					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null) {
+					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] ==
+						null) {
 						propertyAspect.add(f)
 					}
 
@@ -235,7 +249,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 			//Transform method to static
 			for (m : clazz.declaredMethods) {
 				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self') {
-					val l = new ArrayList<Tuple<String, TypeReference >>()
+					val l = new ArrayList<Tuple<String, TypeReference>>()
 					for (p1 : m.parameters) {
 						l.add(new Tuple(p1.simpleName, p1.type))
 					}
@@ -245,7 +259,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 					m.addParameter("_self", newTypeReference(identifier))
 
 					for (param : l) {
-						
+
 						m.addParameter(param.x, param.y)
 					}
 
@@ -258,14 +272,11 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 					//if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
 					//	clazz.addError("First parameter must be typed by the aspect "  + m.parameters.get(0).type.simpleName) //MOVE non static fields
 					if (!m.static) {
-						m.setStatic(true)					
+						m.setStatic(true)
 					}
-				
 
-
-					if (clazz.extendedClass != null &&
-						m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] !=
-							null) {
+					if (clazz.extendedClass != null && m.annotations.findFirst[a|
+						a.annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] != null) {
 						clazz.addMethod("super_" + m.simpleName,
 							[
 								//visibility = Visibility::PRIVATE
@@ -292,17 +303,15 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 					}
 
 					if (m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"] !=
-							null) {
+						null) {
 						val cl = findClass(identifier)
-						if (cl!= null){
-							val m2 = cl.declaredMethods.findFirst[m2| m2.simpleName == m.simpleName && m2.parameters.size == m.parameters.size-1]
-							m2.setSimpleName("_hidden_" + m.simpleName)	
+						if (cl != null) {
+							val m2 = cl.declaredMethods.findFirst[m2|
+								m2.simpleName == m.simpleName && m2.parameters.size == m.parameters.size - 1]
+							m2.setSimpleName("_hidden_" + m.simpleName)
 						}
-						
+
 					}
-
-
-					
 
 					clazz.addMethod("priv" + m.simpleName,
 						[
@@ -332,18 +341,29 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 							ret = "return"
 						val retu = ret
 						var callt = '''«retu» priv«m.simpleName»(«s1»); '''
+
 						//m.addError(""+dispatchmethod.get(m)) 
-						if (dispatchmethod.get(m)!=null){
-							val listmethod = dispatchmethod.get(m)		
-								//md.simpleName = "_dispatch_"+md.simpleName
-								var ifst = '''«FOR md  : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(md.declaringType)»){
-									«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self", "("+ getIdentifierOfAnAspectedClass(md.declaringType) + ")_self" )»);
+						if (dispatchmethod.get(m) != null) {
+							val listmethod = dispatchmethod.get(m)
+
+							//md.simpleName = "_dispatch_"+md.simpleName
+							var toto1 = ""
+							for (s5 : listmethod) {
+								toto1 = s5.declaringType.simpleName + " " + toto1
+							}
+
+							//m.addError(toto1)
+							//								m.addError(listmethod.)
+							var ifst = '''«FOR md : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(
+								md.declaringType)»){
+									«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
+								"(" + getIdentifierOfAnAspectedClass(md.declaringType) + ")_self")»);
 									} else «ENDFOR»
 									'''
-								callt = ifst + ''' {
+							callt = ifst + ''' {
       										throw new IllegalArgumentException("Unhandled parameter types: " +
 									        java.util.Arrays.<Object>asList(_self).toString());
-							    } '''							
+							    } '''
 						}
 						val call = callt
 
@@ -412,8 +432,8 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 
 			}
 
-			def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz, MutableMethodDeclaration methodName,
-				extension TransformationContext context) {
+			def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz,
+				MutableMethodDeclaration methodName, extension TransformationContext context) {
 
 				var m = clazz.declaredMethods.findFirst[m2|m2.simpleName == methodName.simpleName]
 				if (m == null) {
