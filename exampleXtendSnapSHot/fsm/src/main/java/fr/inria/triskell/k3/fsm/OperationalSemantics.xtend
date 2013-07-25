@@ -119,7 +119,7 @@ public class  FSMAspect {
  class TransitionAspect {
 	// Fire the transition
 	public def String fire() {
-		self.fire
+		//self.fire
 		// update FSM current state
 		self.source.owningFSM.currentState = self.target
 		
