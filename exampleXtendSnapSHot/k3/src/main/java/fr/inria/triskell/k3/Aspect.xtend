@@ -17,6 +17,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableParameterDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
+import org.eclipse.xtend.lib.macro.declaration.TypeReference
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -61,6 +62,17 @@ public annotation ReplaceAspectMethod {
 }*/
 
 
+
+public class Tuple<X, Y> { 
+	@Property	
+  X x
+	@Property	
+  Y y
+  new(X x, Y y) { 
+    this.x = x; 
+    this.y = y; 
+  } 
+} 
 
 public class AspectProcessor extends AbstractClassProcessor {
 def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
@@ -223,9 +235,9 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 			//Transform method to static
 			for (m : clazz.declaredMethods) {
 				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != 'self') {
-					val l = new ArrayList<MutableParameterDeclaration>()
+					val l = new ArrayList<Tuple<String, TypeReference >>()
 					for (p1 : m.parameters) {
-						l.add(p1)
+						l.add(new Tuple(p1.simpleName, p1.type))
 					}
 
 					m.parameters.clear
@@ -234,7 +246,7 @@ def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz){
 
 					for (param : l) {
 						
-						m.addParameter(param.simpleName, param.type)
+						m.addParameter(param.x, param.y)
 					}
 
 					//m.parameters.add(1,m.parameters.remove(m.parameters.size-1))
