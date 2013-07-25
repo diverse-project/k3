@@ -22,6 +22,8 @@ class SingletonProcessor extends AbstractClassProcessor {
 	}
 
 	override doTransform(MutableClassDeclaration annotatedClass, extension TransformationContext context) {
+		//annotatedClass.addError(("Singleton is bad"))
+		
 		annotatedClass.final = true
 
 		if (annotatedClass.declaredConstructors.size > 1)
@@ -40,6 +42,7 @@ class SingletonProcessor extends AbstractClassProcessor {
 			if (constructor.visibility != Visibility::PRIVATE)
 				constructor.addError("Constructor is not private")
 		}
+		
 		
 
 		annotatedClass.addField('INSTANCE') [

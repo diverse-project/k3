@@ -38,9 +38,6 @@ public class Console {
 		return reader.readLine();
 	}
 } 
- 
-
-
 
 
 @Aspect(className=typeof(FSM))
