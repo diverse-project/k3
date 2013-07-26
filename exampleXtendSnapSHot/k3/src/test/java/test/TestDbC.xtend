@@ -23,7 +23,7 @@ class TestCase{
 	}
 
 	@Test
-	def void testInv(){
+	def void testInv(){ 
 		val l = new TestDbC1()
 		try{
 			l.foo					
