@@ -300,7 +300,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 								val m3 = findMethod(findClass(clazz.extendedClass.name), m, context)
 								if (m3 == null)
 									m.addError("No super method found")
-								body = [''' «m3.declaringType.newTypeReference.name».«m.simpleName»(«s1»);  ''']
+								//TODO find super method
+								//val ret = m3.returnType.name
+								body = [''' «IF (m3.returnType.name != "void")»return «ENDIF» «m3.declaringType.newTypeReference.name».priv«m.simpleName»(«s1»);  ''']
 							])
 					}
 
