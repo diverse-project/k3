@@ -3,7 +3,7 @@ package test
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*; 
 import static extension test.AspectC.*;
 import fr.inria.triskell.k3.ReplaceAspectMethod
 
@@ -12,17 +12,15 @@ class TestAspect {
 	@org.junit.Test
 	def void testAspectInheritance() {
 		 
-		val l = new C
+		val l = new C 
 		assertEquals(l.foo,"ABC")
 	}
 	@org.junit.Test
 	def void testAspectMethodReplacement() {
 		val l = new C
 		assertTrue(l.testReplacement) 
-		
-
 	}
-	
+	 
 }
 
 
