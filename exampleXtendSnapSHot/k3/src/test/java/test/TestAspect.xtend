@@ -6,6 +6,8 @@ import fr.inria.triskell.k3.OverrideAspectMethod
 import static org.junit.Assert.*; 
 import static extension test.AspectC.*;
 import fr.inria.triskell.k3.ReplaceAspectMethod
+import static extension test.TestAbstractAspect.*;
+
 
 class TestAspect { 
 	
@@ -38,7 +40,7 @@ class TestAspect {
 	
 	  
 }
-
+ 
 
 class A{
 	
@@ -55,11 +57,22 @@ class B extends A{
 	
 }
 
-class C extends B{}
+class C extends B{} 
 
+ 
+ 
+@Aspect(className=typeof(A))
+abstract class TestAbstractAspect{
+//	static TestAbstractAspect _self_
+	
+	abstract def void foofoo()
+} 
+  
+ 
 
 @Aspect(className=typeof(A))
-class AspectA{
+abstract class AspectA{
+	
 	
 	def String foo(){
 		 return "A"

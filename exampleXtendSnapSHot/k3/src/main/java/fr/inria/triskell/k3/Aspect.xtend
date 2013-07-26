@@ -249,8 +249,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 			}
 
 			//Transform method to static
+			
 			for (m : clazz.declaredMethods) {
-				if (m.parameters.size == 0 || m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self') {
+				//clazz.addError(m.simpleName)
+				if (m.parameters.size == 0 || (m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')) {
 					val l = new ArrayList<Tuple<String, TypeReference>>()
 					for (p1 : m.parameters) {
 						l.add(new Tuple(p1.simpleName, p1.type))
@@ -321,16 +323,22 @@ public class AspectProcessor extends AbstractClassProcessor {
 						[
 							visibility = Visibility::PROTECTED
 							static = true
+							abstract = false
 							returnType = m.returnType
+							if (m.abstract)
+								body = ['''throw new java.lang.RuntimeException("Not implemented");''']
+							else {
 							if (m.body == null) {
 								body = [bodies.get(m)]
 
 								//addError(bodies.get(m))
 								} else
 									body = m.body
+								}
 								for (p : m.parameters) {
 									addParameter(p.simpleName, p.type)
 								}
+								
 							])
 
 						var s = "";
@@ -370,7 +378,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 							    } '''
 						}
 						val call = callt
-
+						m.abstract = false
 						m.body = [
 							'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
 								className»AspectContext.getInstance();
