@@ -7,22 +7,20 @@ import fr.inria.triskell.k3.Post
 import fr.inria.triskell.k3.Pre
 import fr.inria.triskell.k3.ReplaceAspectMethod
 
-import static extension test.E.*
-import static extension test.H.*
 
 @Contracted
-class Test {
+class TestDbC {
 	def static void main(String[] args) {
 
 		//We can catch the exception or ignore it
 		try {
-			new Test().foo()
+			new TestDbC().foo()
 		} catch (Exception e) {
 			println("nok\n")
 		}
  
 		//We can catch the exception ignore it
-		new Test().foo()
+		new TestDbC().foo()
  
 	}
 
@@ -113,7 +111,7 @@ class C{
 }
  
 @Contracted
-@Aspect(className=typeof(C))
+//@Aspect(className=typeof(C))
 class CAspect{
 	
 	@Inv
@@ -122,34 +120,6 @@ class CAspect{
 	}
 } 
 
-class D {
-	def boolean foo(){
-		return true
-	}
-}  
 
-@Aspect(className=typeof(D))
-class E { 
-	
-	@ReplaceAspectMethod
-	public def boolean foo(){
-		return false
-	} 
-} 
-class F{
-	def static void main(String[] args) {
-		println(new D().foo)
-	}
-	
-}
-
-@Aspect(className=typeof(G))
-class H {
-	
-	@ReplaceAspectMethod
-	public def static boolean foo(){
-		return false
-	} 
-}
 
 

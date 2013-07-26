@@ -20,7 +20,7 @@ class TestAspect {
 		val l = new C
 		assertTrue(l.testReplacement) 
 	}
-	 
+	  
 }
 
 
