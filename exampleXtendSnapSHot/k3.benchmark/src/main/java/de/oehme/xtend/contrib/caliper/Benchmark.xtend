@@ -80,7 +80,7 @@ class BenchmarkProcessor extends AbstractClassProcessor {
 				body = [
 					'''
 						for (int i = 0; i < iterations;i++) {
-							Â«method.simpleNameÂ»();
+							«method.simpleName»();
 						}
 					''']
 			]
@@ -100,7 +100,7 @@ class BenchmarkProcessor extends AbstractClassProcessor {
 			addParameter("args", newArrayTypeReference(string))
 			body = [extension it|
 				'''
-					Â«typeof(Runner).newTypeReference.toJavaCodeÂ».main(Â«benchmark.simpleNameÂ».class, args);
+					«typeof(Runner).newTypeReference.toJavaCode».main(«benchmark.simpleName».class, args);
 				''']
 		]
 	}
