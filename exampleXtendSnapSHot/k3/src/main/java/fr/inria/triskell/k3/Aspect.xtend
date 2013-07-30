@@ -19,6 +19,9 @@ import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import java.util.LinkedHashSet
+import java.util.Collections
+import java.io.BufferedWriter
+import java.io.FileWriter
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -118,8 +121,42 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	}
 
-	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+	def List<String> sortByClassInheritance(List<? extends MutableClassDeclaration> classes) {
+		
+		var List<MutableClassDeclaration> listTmp = new ArrayList<MutableClassDeclaration>()
+		var List<String> listRes = new ArrayList<String>(classes.length)
+		
+		for(elt : classes) {
+			listTmp.add(elt)
+		}
+		
+		Collections.sort(listTmp, [a, b | if (a.declaredClasses.exists[c | c == b]) 1 else -1])
+		var int index = -1
+		while((index = index +1) < classes.length) {
+			listRes.add(listTmp.get(index).simpleName)
+		}
+		
+		return listRes
+	}
 
+
+	def List<MutableMethodDeclaration> sortByMethodInheritance(Set<MutableMethodDeclaration> methods, List<String> inheritOrder) {
+		var List<MutableMethodDeclaration> listRes = new ArrayList<MutableMethodDeclaration>()
+		
+		for(classe : inheritOrder) {
+			for (md : methods) {
+				if( md.declaringType.simpleName == classe) {
+					listRes.add(md)
+				}
+			}
+		}
+		
+		return listRes
+	}
+
+	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+		var List<String> inheritList = sortByClassInheritance(classes)
+		
 		//Method name_parameterlengths, 
 		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>()
 		val Map<MutableMethodDeclaration, Set<MutableMethodDeclaration>> dispatchmethod = new HashMap<MutableMethodDeclaration, Set<MutableMethodDeclaration>>()
@@ -356,8 +393,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 						//m.addError(""+dispatchmethod.get(m)) 
 						if (dispatchmethod.get(m) != null) {
-							val listmethod = dispatchmethod.get(m)
-
+							//val listmethod = dispatchmethod.get(m)
+							val listmethod = sortByMethodInheritance(dispatchmethod.get(m), inheritList)
+							
 							//md.simpleName = "_dispatch_"+md.simpleName
 							var toto1 = ""
 							for (s5 : listmethod) {
