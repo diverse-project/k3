@@ -9,15 +9,31 @@ class Context {
 	public List<String>		classCollection
 	public Integer 			counterPackage
 	public StringBuffer		kmtContent
+	public String			projectName
 	public String			projectPath
-	public String			currentPath
+	public String			nameOperation
+	public Boolean			isOverride
 	
-	new() {
+	new(String projectPath, String projectName, String nameOperation) {
 		packageCollection = new ArrayList<String>
 		classCollection = new ArrayList<String>
 		counterPackage = 0
 		kmtContent = new StringBuffer
-		projectPath = System.getProperty("user.dir") + "/target/"
-		currentPath = projectPath
+		this.projectName = projectName
+		this.projectPath = projectPath +"/" + projectName + "/src/main/java/"
+		this.nameOperation = nameOperation
+		isOverride = false
+	}
+	
+	def public String comment_ForMultiInheritence() {
+		var String result = ""
+		result = result + "\t/*"
+		result = result + "\n\t* BE CAREFUL :"
+		result = result + "\n\t*"
+		result = result + "\n\t* This class inherits of multi superclass"
+		result = result + "\n\t* please specify which parent you want with the 'super' expected calling"
+		result = result + "\n\t*\n\t*/\n\n"
+		
+		return result
 	}
 }

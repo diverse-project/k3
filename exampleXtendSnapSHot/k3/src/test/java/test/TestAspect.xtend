@@ -2,10 +2,10 @@ package test
 
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
+import fr.inria.triskell.k3.ReplaceAspectMethod
 
 import static org.junit.Assert.*;
 import static extension test.AspectC.*;
-import fr.inria.triskell.k3.ReplaceAspectMethod
 
 class TestAspect {
 
@@ -21,11 +21,17 @@ class TestAspect {
 		val l = new C
 		assertTrue(l.testReplacement)
 	}
+	
+	@org.junit.Test
+	def void testAspectReplaceAspectMethod() {
+		val l = new C
+		assertTrue(l.testReplaceAspectMethod)
+	}
 
 	@org.junit.Test
-	def void testStaticAndNotStaticAttribute() {
+	def void testStaticAndNotStaticAttribute() {  
 		val l = new C
-		val l1 = new C
+		val l1 = new C  
 		l.incI
 		l.incJ
 		l1.incI
@@ -61,6 +67,10 @@ class B extends A {
 }
 
 class C extends B {
+	
+	def boolean testReplaceAspectMethod () {
+		return false
+	}
 }
 
 @Aspect(className=typeof(A))
@@ -103,6 +113,11 @@ class AspectB extends AspectA {
 
 @Aspect(className=typeof(C))
 class AspectC extends AspectB {
+
+	@ReplaceAspectMethod
+	def boolean testReplaceAspectMethod () {
+		return true
+	}
 
 	@OverrideAspectMethod
 	def String foo() {

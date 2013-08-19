@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ASM:LogoProgram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ASM="http://www.kermeta.org/kmLogo/ASM">
+  <instructions xsi:type="ASM:Clear"/>
+  <instructions xsi:type="ASM:PenDown"/>
+  <instructions xsi:type="ASM:Repeat">
+    <condition xsi:type="ASM:Constant" integerValue="4"/>
+    <block>
+      <instructions xsi:type="ASM:Forward">
+        <steps xsi:type="ASM:Constant" integerValue="25"/>
+      </instructions>
+      <instructions xsi:type="ASM:Right">
+        <angle xsi:type="ASM:Constant" integerValue="90"/>
+      </instructions>
+    </block>
+  </instructions>
+  <instructions xsi:type="ASM:PenUp"/>
+</ASM:LogoProgram>

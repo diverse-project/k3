@@ -19,6 +19,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import java.util.LinkedHashSet
+import java.util.Collections
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -96,6 +97,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	}
 
+	/**
+	 * Fill s with super classes of c, ordered by hierarchy
+	 * (the first element is the direct super type of c)
+	 */
 	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,
 		extension TransformationContext context) {
 		if (c.extendedClass != null) {
@@ -118,27 +123,357 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	}
 
-	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+	def List<String> sortByClassInheritance(List<? extends MutableClassDeclaration> classes) {
+		
+		var List<MutableClassDeclaration> listTmp = new ArrayList<MutableClassDeclaration>()
+		var List<String> listRes = new ArrayList<String>(classes.length)
+		
+		for(elt : classes) {
+			listTmp.add(elt)
+		}
+		
+		Collections.sort(listTmp, [a, b | if (a.declaredClasses.exists[c | c == b]) 1 else -1])
+		var int index = -1
+		while((index = index +1) < classes.length) {
+			listRes.add(listTmp.get(index).simpleName)
+		}
+		
+		return listRes
+	}
 
+
+	def List<MutableMethodDeclaration> sortByMethodInheritance(Set<MutableMethodDeclaration> methods, List<String> inheritOrder) {
+		var List<MutableMethodDeclaration> listRes = new ArrayList<MutableMethodDeclaration>()
+		
+		for(classe : inheritOrder) {
+			for (md : methods) {
+				if( md.declaringType.simpleName == classe) {
+					listRes.add(md)
+				}
+			}
+		}
+		
+		return listRes
+	}
+
+	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
+		var List<String> inheritList = sortByClassInheritance(classes)
+		
 		//Method name_parameterlengths, 
 		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>()
 		val Map<MutableMethodDeclaration, Set<MutableMethodDeclaration>> dispatchmethod = new HashMap<MutableMethodDeclaration, Set<MutableMethodDeclaration>>()
+		
+		
+		init_superclass(classes, context, superclass)
+		init_dispatchmethod(superclass, dispatchmethod, context)
+
 		for (clazz : classes) {
-			val ext = new ArrayList<MutableClassDeclaration>()
-			getSuperClass(ext, clazz, context)
-			if (ext.size > 0)
-				superclass.put(clazz, ext)
+
+			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
+			var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
+			val className = classNam.eGet(simpleNameF) as String
+			var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
+			val identifier = classNam.eGet(identF) as String
+			val Map<MutableMethodDeclaration, String> bodies = new HashMap<MutableMethodDeclaration, String>()
+
+			//clazz.addError(className)
+			//MOVE non static fields
+			fields_processing(context, clazz, className, identifier, bodies)
+
+			//Transform method to static
+			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
+
+			aspectContextMaker(context, clazz, className, identifier)
+
 		}
 
-		val allparent = new LinkedHashSet<MutableClassDeclaration>()
-		for (child : superclass.keySet) {
-			allparent.addAll(superclass.get(child))
+	}
+
+	def methods_processing(MutableClassDeclaration clazz, extension TransformationContext context, String identifier, Map<MutableMethodDeclaration,String> bodies, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, List<String> inheritList, String className) {
+		for (m : clazz.declaredMethods) {
+			//clazz.addError(m.simpleName)
+			//In not visited method, add _self as first parameter and set it static
+			if (m.parameters.size == 0 || (m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')) {
+				val l = new ArrayList<Tuple<String, TypeReference>>()
+				for (p1 : m.parameters) {
+					l.add(new Tuple(p1.simpleName, p1.type))
+				}
+
+				m.parameters.clear
+
+				m.addParameter("_self", newTypeReference(identifier))
+
+				for (param : l) {
+
+					m.addParameter(param.x, param.y)
+				}
+
+				//m.parameters.add(1,m.parameters.remove(m.parameters.size-1))
+				}
+
+				/*/						clazz.addError("Each method must have at least one parameter")
+				if ()
+					clazz.addError("First parameter must be nammed self")*/
+				//if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
+				//	clazz.addError("First parameter must be typed by the aspect "  + m.parameters.get(0).type.simpleName) //MOVE non static fields
+				if (!m.static) {
+					m.setStatic(true)
+				}
+
+				//Add a method "super_methodName" which call first method in the
+				//super class hierarchy with the same name.
+				if (clazz.extendedClass != null && m.annotations.findFirst[a|
+					a.annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] != null) {
+					clazz.addMethod("super_" + m.simpleName,
+						[
+							//visibility = Visibility::PRIVATE
+							visibility = Visibility::PRIVATE
+							static = true
+							returnType = m.returnType
+							for (p : m.parameters) {
+
+								//if (p.simpleName != "self")
+								addParameter(p.simpleName, p.type)
+							}
+							var s = "";
+							for (p : m.parameters) {
+								s = s + p.simpleName + ","
+							}
+							if (s.length > 0)
+								s = s.substring(0, s.length - 1)
+							val s1 = s
+							
+							val m3 = findMethod(findClass(clazz.extendedClass.name), m, context)
+							if (m3 == null)
+								m.addError("No super method found")
+							//TODO find super method
+							//val ret = m3.returnType.name
+							body = [''' «IF (m3.returnType.name != "void")»return «ENDIF» «m3.declaringType.newTypeReference.name».priv«m.simpleName»(«s1»);  ''']
+						])
+				}
+
+				//Add "_hidden_" at the beginning of the replaced method name
+				if (m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"] !=
+					null) {
+					val cl = findClass(identifier)
+					if (cl != null) {
+						val m2 = cl.declaredMethods.findFirst[m2|
+							m2.simpleName == m.simpleName && m2.parameters.size == m.parameters.size - 1]
+						m2.setSimpleName("_hidden_" + m.simpleName)
+					}
+
+				}
+
+				//Make "priv"+methodName as a copy of the method
+				clazz.addMethod("priv" + m.simpleName,
+					[
+						visibility = Visibility::PROTECTED
+						static = true
+						abstract = false
+						returnType = m.returnType
+						if (m.abstract)
+							body = ['''throw new java.lang.RuntimeException("Not implemented");''']
+						else {
+						if (m.body == null) {
+							body = [bodies.get(m)] //getters & setters
+
+							//addError(bodies.get(m))
+							} else
+								body = m.body
+							}
+							for (p : m.parameters) {
+								addParameter(p.simpleName, p.type)
+							}
+							
+						])
+
+				//Change the body of the method to call the closest 
+				//method "priv"+methodName in the aspect hierarchy
+				var s = "";
+				for (p : m.parameters) {
+					s = s + p.simpleName + ","
+				}
+				if (s.length > 0)
+					s = s.substring(0, s.length - 1)
+				val s1 = s
+				var ret = ""
+				if (m.returnType != newTypeReference("void"))
+					ret = "return"
+				val retu = ret
+				var callt = '''«retu» priv«m.simpleName»(«s1»); ''' //for getters & setters
+
+				//m.addError(""+dispatchmethod.get(m)) 
+				if (dispatchmethod.get(m) != null) {
+					//val listmethod = dispatchmethod.get(m)
+					val listmethod = sortByMethodInheritance(dispatchmethod.get(m), inheritList)
+					
+					//md.simpleName = "_dispatch_"+md.simpleName
+					var toto1 = ""
+					for (s5 : listmethod) {
+						toto1 = s5.declaringType.simpleName + " " + toto1
+					}
+
+					//m.addError(toto1)
+					//								m.addError(listmethod.)
+					var ifst = '''«FOR md : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(
+						md.declaringType)»){
+							«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
+						"(" + getIdentifierOfAnAspectedClass(md.declaringType) + ")_self")»);
+							} else «ENDFOR»
+							'''
+					callt = ifst + ''' {
+  										throw new IllegalArgumentException("Unhandled parameter types: " +
+							        java.util.Arrays.<Object>asList(_self).toString());
+					    } '''
+				}
+				val call = callt
+				m.abstract = false
+				m.body = [
+					'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
+						className»AspectContext.getInstance();
+				    java.util.Map<«className»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
+					boolean _containsKey = selfProp.containsKey(_self);
+				    boolean _not = (!_containsKey);
+				    if (_not) {
+  						«clazz.qualifiedName + className»AspectProperties prop = new «clazz.qualifiedName + className»AspectProperties();
+				   selfProp.put(_self, prop);
+			    }
+			     _self_ = selfProp.get(_self);
+			     «call»
+			    ''']
+
+				}
+	}
+
+	/**
+	 * Create the class which link classes with their aspects 
+	 */
+	def aspectContextMaker(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier) {
+		val holderClass = findClass(clazz.qualifiedName + className + "AspectContext")
+		holderClass.visibility = Visibility::PUBLIC
+		holderClass.addConstructor [
+			visibility = Visibility::PRIVATE
+		]
+
+		holderClass.addField('INSTANCE') [
+			visibility = Visibility::PUBLIC
+			static = true
+			final = true
+			type = holderClass.newTypeReference
+			initializer = [
+				'''new «holderClass.simpleName»()'''
+			]
+		]
+
+		holderClass.addMethod('getInstance') [
+			visibility = Visibility::PUBLIC
+			static = true
+			returnType = holderClass.newTypeReference
+			body = [
+				'''return INSTANCE;'''
+			]
+		]
+
+		holderClass.addField('map',
+			[
+				visibility = Visibility::PRIVATE
+				static = false
+				type = newTypeReference("java.util.Map", newTypeReference(identifier),
+					newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
+				initializer = [
+					'''new java.util.HashMap<«className», «clazz.qualifiedName + className»AspectProperties>()''']
+			])
+
+		holderClass.addMethod('getMap') [
+			visibility = Visibility::PUBLIC
+			static = false
+			returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
+				newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
+			body = [
+				'''return map;'''
+			]
+		]
+	}
+
+	/**
+	 * Move fields of the aspect to the AspectProperties class
+	 */
+	def fields_processing(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier, Map<MutableMethodDeclaration,String> bodies) {
+		var List<MutableFieldDeclaration> toRemove = new ArrayList<MutableFieldDeclaration>();
+		var List<MutableFieldDeclaration> propertyAspect = new ArrayList<MutableFieldDeclaration>();
+
+		var c = findClass(clazz.qualifiedName + className + "AspectProperties")
+		for (f : clazz.declaredFields) {
+
+			//MOVE non static fields
+			if (/*!f.static &&*/f.simpleName != "_self_") {
+				toRemove.add(f)
+				if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] ==
+					null) {
+					propertyAspect.add(f)
+				}
+
+				c.addField(f.simpleName) [
+					visibility = Visibility::PUBLIC
+					static = f.static
+					final = f.final
+					type = f.type
+					if (f.initializer != null) {
+						initializer = f.initializer
+					}
+				]
+
+			} else if (!f.static && f.simpleName == "_self_") {
+				f.type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
+				f.static = true
+			}
+
 		}
-		for (p : allparent) {
-			superclass.remove(p)
+		var self = clazz.declaredFields.findFirst[simpleName == "_self_"]
+		if (self == null) {
+			clazz.addField("_self_",
+				[
+					type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
+					static = true
+					visibility = Visibility::PUBLIC
+				])
 		}
+
+		//Create getters and setters
+		for (f : propertyAspect) {
+			var get = clazz.addMethod(f.simpleName,
+				[
+					returnType = f.type
+					addParameter("_self", newTypeReference(identifier))
+				])
+			bodies.put(get, ''' return «clazz.qualifiedName»._self_.«f.simpleName»; ''')
+
+			var set = clazz.addMethod(f.simpleName,
+				[
+					returnType = newTypeReference("void")
+					addParameter("_self", newTypeReference(identifier))
+					addParameter(f.simpleName, f.type)
+				])
+			bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
+
+		}
+		for (f : toRemove) {
+			f.remove
+		}
+	}
+
+	/**
+	 * Each aspect method is associatated with the lists of all methods with the
+	 * same signature (name + number of args) of parents classes and children classes.
+	 * 
+	 * @superclass All aspects associated with their superclasses
+	 * @dispatchmethod Associations computed
+	 * @context
+	 */
+	def init_dispatchmethod(Map<MutableClassDeclaration,List<MutableClassDeclaration>> superclass, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, TransformationContext context) {
 		var i =0
 		for (cl : superclass.keySet) {
+			//Regroup methods of the class hierarchy by name+number of parameters
 			val clazzes = new ArrayList<MutableClassDeclaration>()
 			clazzes.add(cl)
 			clazzes.addAll(superclass.get(cl))
@@ -156,7 +491,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			}
 			
 			for (key : dispatchs.keySet) {
-				val res = dispatchs.get(key)				
+				val res = dispatchs.get(key)
 				if (res.size > 1) {
 					i=i+res.size
 					for (m : res) {
@@ -169,296 +504,66 @@ public class AspectProcessor extends AbstractClassProcessor {
 			}
 		}
 
+		//Sort Dispatchmethod entries values by hierarchy of their containing classes
 		for (m : dispatchmethod.keySet) {
 			val l = dispatchmethod.get(m).sort(new sortMethod(context))
 			dispatchmethod.get(m).clear
 			dispatchmethod.get(m).addAll(l)
 			//m.addError(dispatchmethod.get(m).size.toString)
 		}
-
-		for (clazz : classes) {
-
-			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
-			var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
-			val className = classNam.eGet(simpleNameF) as String
-			var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
-			val identifier = classNam.eGet(identF) as String
-			val Map<MutableMethodDeclaration, String> bodies = new HashMap<MutableMethodDeclaration, String>()
-
-			//clazz.addError(className)
-			//MOVE non static fields
-			var List<MutableFieldDeclaration> toRemove = new ArrayList<MutableFieldDeclaration>();
-			var List<MutableFieldDeclaration> propertyAspect = new ArrayList<MutableFieldDeclaration>();
-
-			var c = findClass(clazz.qualifiedName + className + "AspectProperties")
-			for (f : clazz.declaredFields) {
-
-				//MOVE non static fields
-				if (/*!f.static &&*/f.simpleName != "_self_") {
-					toRemove.add(f)
-					if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] ==
-						null) {
-						propertyAspect.add(f)
-					}
-
-					c.addField(f.simpleName) [
-						visibility = Visibility::PUBLIC
-						static = f.static
-						final = f.final
-						type = f.type
-						if (f.initializer != null) {
-							initializer = f.initializer
-						}
-					]
-
-				} else if (!f.static && f.simpleName == "_self_") {
-					f.type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
-					f.static = true
-				}
-
-			}
-			var self = clazz.declaredFields.findFirst[simpleName == "_self_"]
-			if (self == null) {
-				clazz.addField("_self_",
-					[
-						type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
-						static = true
-						visibility = Visibility::PUBLIC
-					])
-			}
-
-			for (f : propertyAspect) {
-				var get = clazz.addMethod(f.simpleName,
-					[
-						returnType = f.type
-						addParameter("_self", newTypeReference(identifier))
-					])
-				bodies.put(get, ''' return «clazz.qualifiedName»._self_.«f.simpleName»; ''')
-
-				var set = clazz.addMethod(f.simpleName,
-					[
-						returnType = newTypeReference("void")
-						addParameter("_self", newTypeReference(identifier))
-						addParameter(f.simpleName, f.type)
-					])
-				bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
-
-			}
-			for (f : toRemove) {
-				f.remove
-			}
-
-			//Transform method to static
-			
-			for (m : clazz.declaredMethods) {
-				//clazz.addError(m.simpleName)
-				if (m.parameters.size == 0 || (m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')) {
-					val l = new ArrayList<Tuple<String, TypeReference>>()
-					for (p1 : m.parameters) {
-						l.add(new Tuple(p1.simpleName, p1.type))
-					}
-
-					m.parameters.clear
-
-					m.addParameter("_self", newTypeReference(identifier))
-
-					for (param : l) {
-
-						m.addParameter(param.x, param.y)
-					}
-
-					//m.parameters.add(1,m.parameters.remove(m.parameters.size-1))
-					}
-
-					/*/						clazz.addError("Each method must have at least one parameter")
-					if ()
-						clazz.addError("First parameter must be nammed self")*/
-					//if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
-					//	clazz.addError("First parameter must be typed by the aspect "  + m.parameters.get(0).type.simpleName) //MOVE non static fields
-					if (!m.static) {
-						m.setStatic(true)
-					}
-
-					if (clazz.extendedClass != null && m.annotations.findFirst[a|
-						a.annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] != null) {
-						clazz.addMethod("super_" + m.simpleName,
-							[
-								//visibility = Visibility::PRIVATE
-								visibility = Visibility::PRIVATE
-								static = true
-								returnType = m.returnType
-								for (p : m.parameters) {
-
-									//if (p.simpleName != "self")
-									addParameter(p.simpleName, p.type)
-								}
-								var s = "";
-								for (p : m.parameters) {
-									s = s + p.simpleName + ","
-								}
-								if (s.length > 0)
-									s = s.substring(0, s.length - 1)
-								val s1 = s
-								val m3 = findMethod(findClass(clazz.extendedClass.name), m, context)
-								if (m3 == null)
-									m.addError("No super method found")
-								//TODO find super method
-								//val ret = m3.returnType.name
-								body = [''' «IF (m3.returnType.name != "void")»return «ENDIF» «m3.declaringType.newTypeReference.name».priv«m.simpleName»(«s1»);  ''']
-							])
-					}
-
-					if (m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"] !=
-						null) {
-						val cl = findClass(identifier)
-						if (cl != null) {
-							val m2 = cl.declaredMethods.findFirst[m2|
-								m2.simpleName == m.simpleName && m2.parameters.size == m.parameters.size - 1]
-							m2.setSimpleName("_hidden_" + m.simpleName)
-						}
-
-					}
-
-					clazz.addMethod("priv" + m.simpleName,
-						[
-							visibility = Visibility::PROTECTED
-							static = true
-							abstract = false
-							returnType = m.returnType
-							if (m.abstract)
-								body = ['''throw new java.lang.RuntimeException("Not implemented");''']
-							else {
-							if (m.body == null) {
-								body = [bodies.get(m)]
-
-								//addError(bodies.get(m))
-								} else
-									body = m.body
-								}
-								for (p : m.parameters) {
-									addParameter(p.simpleName, p.type)
-								}
-								
-							])
-
-						var s = "";
-						for (p : m.parameters) {
-							s = s + p.simpleName + ","
-						}
-						if (s.length > 0)
-							s = s.substring(0, s.length - 1)
-						val s1 = s
-						var ret = ""
-						if (m.returnType != newTypeReference("void"))
-							ret = "return"
-						val retu = ret
-						var callt = '''«retu» priv«m.simpleName»(«s1»); '''
-
-						//m.addError(""+dispatchmethod.get(m)) 
-						if (dispatchmethod.get(m) != null) {
-							val listmethod = dispatchmethod.get(m)
-
-							//md.simpleName = "_dispatch_"+md.simpleName
-							var toto1 = ""
-							for (s5 : listmethod) {
-								toto1 = s5.declaringType.simpleName + " " + toto1
-							}
-
-							//m.addError(toto1)
-							//								m.addError(listmethod.)
-							var ifst = '''«FOR md : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(
-								md.declaringType)»){
-									«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
-								"(" + getIdentifierOfAnAspectedClass(md.declaringType) + ")_self")»);
-									} else «ENDFOR»
-									'''
-							callt = ifst + ''' {
-      										throw new IllegalArgumentException("Unhandled parameter types: " +
-									        java.util.Arrays.<Object>asList(_self).toString());
-							    } '''
-						}
-						val call = callt
-						m.abstract = false
-						m.body = [
-							'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
-								className»AspectContext.getInstance();
-						    java.util.Map<«className»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
-    						boolean _containsKey = selfProp.containsKey(_self);
-						    boolean _not = (!_containsKey);
-						    if (_not) {
-      						«clazz.qualifiedName + className»AspectProperties prop = new «clazz.qualifiedName + className»AspectProperties();
-   						   selfProp.put(_self, prop);
-					    }
-					     _self_ = selfProp.get(_self);
-					     «call»
-					    ''']
-
-					}
-
-					val holderClass = findClass(clazz.qualifiedName + className + "AspectContext")
-					holderClass.visibility = Visibility::PUBLIC
-					holderClass.addConstructor [
-						visibility = Visibility::PRIVATE
-					]
-
-					holderClass.addField('INSTANCE') [
-						visibility = Visibility::PUBLIC
-						static = true
-						final = true
-						type = holderClass.newTypeReference
-						initializer = [
-							'''new «holderClass.simpleName»()'''
-						]
-					]
-
-					holderClass.addMethod('getInstance') [
-						visibility = Visibility::PUBLIC
-						static = true
-						returnType = holderClass.newTypeReference
-						body = [
-							'''return INSTANCE;'''
-						]
-					]
-
-					holderClass.addField('map',
-						[
-							visibility = Visibility::PRIVATE
-							static = false
-							type = newTypeReference("java.util.Map", newTypeReference(identifier),
-								newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
-							initializer = [
-								'''new java.util.HashMap<«className», «clazz.qualifiedName + className»AspectProperties>()''']
-						])
-
-					holderClass.addMethod('getMap') [
-						visibility = Visibility::PUBLIC
-						static = false
-						returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
-							newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
-						body = [
-							'''return map;'''
-						]
-					]
-
-				}
-
-			}
-
-			def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz,
-				MutableMethodDeclaration methodName, extension TransformationContext context) {
-
-				var m = clazz.declaredMethods.findFirst[m2|m2.simpleName == methodName.simpleName]
-				if (m == null) {
-					if (clazz.extendedClass == null)
-						return null
-					else if (findClass(clazz.extendedClass.name) == null)
-						return null
-					else
-						return findMethod(findClass(clazz.extendedClass.name), methodName, context)
-
-				} else
-					return m;
-
-			}
+	}
+	
+	/**
+	 * For each annoted class store his super classes hierarchy.
+	 * An annoted class which is a parent of an other annoted
+	 * class is not in the final result.
+	 * 
+	 * @annotedClasses All aspects
+	 * @superclass Mapping computed between class and list of his super classes
+	 * @context
+	 */
+	def init_superclass(List<? extends MutableClassDeclaration> annotedClasses, TransformationContext context, Map<MutableClassDeclaration,List<MutableClassDeclaration>> superclass) {
+		//Add super classes for all annotated classes
+		for (clazz : annotedClasses) {
+			val ext = new ArrayList<MutableClassDeclaration>()
+			getSuperClass(ext, clazz, context)
+			if (ext.size > 0)
+				superclass.put(clazz, ext)
 		}
+		//Get all super classes
+		val allparent = new LinkedHashSet<MutableClassDeclaration>()
+		for (child : superclass.keySet) {
+			allparent.addAll(superclass.get(child))
+		}
+		//Remove super classes which are annotated
+		for (p : allparent) {
+			superclass.remove(p)
+		}
+	}
+
+	
+	/**
+	 * Find first method with the same name in super classes hierarchy
+	 * 
+	 * @clazz This class and super classes are the search area
+	 * @methodName Method to find
+	 */
+	def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz,
+		MutableMethodDeclaration methodName, extension TransformationContext context) {
+
+		//FIXME: take care about number of parameters ? 
+		var m = clazz.declaredMethods.findFirst[m2|m2.simpleName == methodName.simpleName]
+		if (m == null) {
+			if (clazz.extendedClass == null)
+				return null
+			else if (findClass(clazz.extendedClass.name) == null)
+				return null
+			else
+				return findMethod(findClass(clazz.extendedClass.name), methodName, context)
+
+		} else
+			return m;
+
+	}
+}
 		
