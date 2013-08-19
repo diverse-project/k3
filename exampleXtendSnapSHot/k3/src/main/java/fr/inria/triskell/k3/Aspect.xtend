@@ -123,7 +123,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	}
 
-	def List<String> sortByClassInheritance(List<? extends MutableClassDeclaration> classes) {
+	/*def List<String> sortByClassInheritance(List<? extends MutableClassDeclaration> classes) {
 		
 		var List<MutableClassDeclaration> listTmp = new ArrayList<MutableClassDeclaration>()
 		var List<String> listRes = new ArrayList<String>(classes.length)
@@ -133,13 +133,23 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 		
 		Collections.sort(listTmp, [a, b | if (a.declaredClasses.exists[c | c == b]) 1 else -1])
+		
 		var int index = -1
 		while((index = index +1) < classes.length) {
 			listRes.add(listTmp.get(index).simpleName)
 		}
 		
 		return listRes
+	} */
+
+	def void sortByClassInheritance1(MutableClassDeclaration clazz, List<String> res,extension TransformationContext context) {
+		res.add(clazz.simpleName)
+		val l  = findClass(clazz.extendedClass.name)
+		if (l!= null)
+			sortByClassInheritance1(l,res,context)
+		
 	}
+
 
 
 	def List<MutableMethodDeclaration> sortByMethodInheritance(Set<MutableMethodDeclaration> methods, List<String> inheritOrder) {
@@ -157,7 +167,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		var List<String> inheritList = sortByClassInheritance(classes)
 		
 		//Method name_parameterlengths, 
 		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>()
@@ -168,7 +177,19 @@ public class AspectProcessor extends AbstractClassProcessor {
 		init_dispatchmethod(superclass, dispatchmethod, context)
 
 		for (clazz : classes) {
-
+//
+			var List<String> inheritList1 = new ArrayList<String>() //sortByClassInheritance(clazz)
+			//var List<String> inheritList = sortByClassInheritance(classes)
+			sortByClassInheritance1(clazz, inheritList1,context)
+			
+			/*val StringBuffer log  = new StringBuffer
+			log.append("before ")
+			inheritList.forEach[ s | log.append(" " + s)]
+			log.append("\n after ")
+			inheritList1.forEach[ s | log.append(" " + s)]
+			*/
+			//clazz.addError(log .toString)
+		
 			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
 			var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
 			val className = classNam.eGet(simpleNameF) as String
@@ -181,7 +202,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			fields_processing(context, clazz, className, identifier, bodies)
 
 			//Transform method to static
-			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
+			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList1, className)
 
 			aspectContextMaker(context, clazz, className, identifier)
 

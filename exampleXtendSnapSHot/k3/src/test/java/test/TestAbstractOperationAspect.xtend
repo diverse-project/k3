@@ -7,47 +7,47 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension test.CAspect_AbstractOperationAspect.*
+import static extension test.CAspect_A.*
  
 
-class TestAbstractOperationAspect {
+class TestA {
 	@Test
 	def void test_ABC_Inheritance() {
-		val c = new C_AbstractOperationAspect
+		val c = new C_A
 		assertEquals(c.foooo, "CAspect")
 	}
 }
+ 
+ 
+ 
+ 
+class A_A { }
 
+class B_A extends A_A { }
+class C_A extends B_A {	}
 
-
-
-class A_AbstractOperationAspect { }
-
-class B_AbstractOperationAspect extends A_AbstractOperationAspect { }
-class C_AbstractOperationAspect extends B_AbstractOperationAspect {	}
-
-class D_AbstractOperationAspect extends A_AbstractOperationAspect {	}
-class E_AbstractOperationAspect extends D_AbstractOperationAspect {	}
-
-
-
-@Aspect(className=typeof(A_AbstractOperationAspect))
-class AAspect_AbstractOperationAspect {
-	def String foooo() {}
+class D_A extends A_A {	}
+class E_A extends D_A {	}
+ 
+ 
+ 
+@Aspect(className=typeof(A_A))
+class AAspect_A {
+	def String foooo() {} 
 }
+ 
+ 
 
-
-
-@Aspect(className=typeof(B_AbstractOperationAspect))
-class BAspect_AbstractOperationAspect extends AAspect_AbstractOperationAspect {
+@Aspect(className=typeof(B_A))
+class BAspect_A extends AAspect_A {
 	@OverrideAspectMethod
 	def String foooo() {
 		return "BAspect"
 	}
 }
 
-@Aspect(className=typeof(C_AbstractOperationAspect))
-class CAspect_AbstractOperationAspect extends BAspect_AbstractOperationAspect {
+@Aspect(className=typeof(C_A))
+class CAspect_A extends BAspect_A {
 	@OverrideAspectMethod
 	def String foooo() {
 		return "CAspect"
@@ -56,12 +56,12 @@ class CAspect_AbstractOperationAspect extends BAspect_AbstractOperationAspect {
 
 
 
-@Aspect(className=typeof(D_AbstractOperationAspect))
-abstract class DAspect_AbstractOperationAspect extends AAspect_AbstractOperationAspect {
+@Aspect(className=typeof(D_A))
+abstract class DAspect_A extends AAspect_A {
 }
 
-@Aspect(className=typeof(E_AbstractOperationAspect))
-class EAspect_AbstractOperationAspect extends DAspect_AbstractOperationAspect {
+@Aspect(className=typeof(E_A))
+class EAspect_A extends DAspect_A {
 	@OverrideAspectMethod
 	def String foooo() {
 		return "EAspect"

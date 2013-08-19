@@ -13,8 +13,8 @@ class TestAspect {
 	def void testAspectInheritance() {
 
 		val l = new C
-		assertEquals(l.foo, "ABC")
-	}
+		assertEquals(l.foo, "ABC") 
+	} 
 
 	@org.junit.Test
 	def void testAspectMethodReplacement() {
