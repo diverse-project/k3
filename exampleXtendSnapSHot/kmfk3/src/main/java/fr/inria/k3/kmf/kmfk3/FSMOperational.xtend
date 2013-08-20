@@ -3,16 +3,20 @@ package fr.inria.k3.kmf.kmfk3
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.Singleton
 import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
 import java.io.InputStreamReader
 import org.fsmsample.FSM
+import org.fsmsample.State
 import org.fsmsample.Transition
 import org.fsmsample.factory.MainFactory
-import org.fsmsample.State
+import org.fsmsample.loader.XMIModelLoader
+import org.fsmsample.serializer.XMIModelSerializer
 
 import static extension fr.inria.k3.kmf.kmfk3.FSMAspect.*
 import static extension fr.inria.k3.kmf.kmfk3.StateAspect.*
 import static extension fr.inria.k3.kmf.kmfk3.TransitionAspect.*
-
+import java.io.PrintStream
 
 class FSMOperational{
 
@@ -38,6 +42,7 @@ class FSMOperational{
 		s1.addOutgoingTransition(t1)
 		//t1.source = s1
 		s2.addIncomingTransition(t1)
+		
 		//t1.target = s2
 		s2.addOutgoingTransition(t2)
 		//t2.source = s1
@@ -49,11 +54,24 @@ class FSMOperational{
 		fsm.addOwnedState(s3)
 		fsm.addFinalState(s3)
 
+
 		fsm.run
 		
+		val XMIModelLoader loader = new XMIModelLoader
+		val fsm1 = loader.loadModelFromStream(new FileInputStream(new File("TrafficLights.fsm"))).get(0) as FSM
+		println("initial state " + fsm1.initialState.name)
 
 
+		val XMIModelSerializer saver = new XMIModelSerializer
 
+
+		
+		//saver.FSMtoXmi(fsm1,"fsm:FSM",new HashMap,new PrintStream(System.out),false)		
+		
+		saver.serialize(fsm, System.out)
+		
+
+		
 	}
 	
 
