@@ -6,7 +6,7 @@ import java.util.HashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
-import org.eclipse.emf.ecore.EObject
+//import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.RegisterGlobalsContext
@@ -21,7 +21,7 @@ import org.eclipse.xtend.lib.macro.declaration.Visibility
 import java.util.LinkedHashSet
 import java.util.Collections
 
-@Active(typeof(AspectProcessor))
+@Active(typeof(AspectProcessor)) 
 public annotation Aspect {
 	Class className;
 }
@@ -86,15 +86,15 @@ public class Tuple<X, Y> {
 	new(X x, Y y) {
 		this.x = x;
 		this.y = y;
-	}
+	} 
 }
 
 public class AspectProcessor extends AbstractClassProcessor {
 	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz) {
-		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
-		var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
-		return classNam.eGet(identF) as String
-
+		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')		
+		//var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
+		//return classNam.eGet(identF) as String
+		return classNam.class.getMethod("getIdentifier").invoke(classNam) as String
 	}
 
 	/**
@@ -113,10 +113,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
-		var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
-		val className = classNam.eGet(simpleNameF) as String
-
+		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') 
+		//var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
+		//val className = classNam.eGet(simpleNameF) as String
+		val className = classNam.class.getMethod("getSimpleName").invoke(classNam) as String
 		context.registerClass(annotatedClass.qualifiedName + className + "AspectProperties")
 
 		context.registerClass(annotatedClass.qualifiedName + className + "AspectContext")
@@ -190,11 +190,15 @@ public class AspectProcessor extends AbstractClassProcessor {
 			*/
 			//clazz.addError(log .toString)
 		
-			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className') as EObject
-			var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
-			val className = classNam.eGet(simpleNameF) as String
-			var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
-			val identifier = classNam.eGet(identF) as String
+			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')
+			//addError(clazz, classNam.class.toString)
+			
+			//var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
+			//val className = classNam.eGet(simpleNameF) as String
+			val className = classNam.class.getMethod("getSimpleName").invoke(classNam) as String
+			//var identF = classNam.eClass.getEAllStructuralFeatures().findFirst[name == "identifier"]
+			//val identifier = classNam.eGet(identF) as String
+			val identifier = classNam.class.getMethod("getIdentifier").invoke(classNam) as String
 			val Map<MutableMethodDeclaration, String> bodies = new HashMap<MutableMethodDeclaration, String>()
 
 			//clazz.addError(className)

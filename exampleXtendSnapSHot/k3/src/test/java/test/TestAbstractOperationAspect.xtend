@@ -22,13 +22,13 @@ class TestA {
  
  
 class A_A { }
-
+ 
 class B_A extends A_A { }
 class C_A extends B_A {	}
 
 class D_A extends A_A {	}
 class E_A extends D_A {	}
- 
+  
  
  
 @Aspect(className=typeof(A_A))

@@ -21,8 +21,8 @@ class TestAspect {
 		val l = new C
 		assertTrue(l.testReplacement)
 	}
-	
-	@org.junit.Test
+	 
+	@org.junit.Test 
 	def void testAspectReplaceAspectMethod() {
 		val l = new C
 		assertTrue(l.testReplaceAspectMethod)
@@ -81,7 +81,7 @@ abstract class AspectA {
 	}
 
 	abstract def String foofoo()
-
+ 
 }
 
 @Aspect(className=typeof(B))
