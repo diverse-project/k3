@@ -1,0 +1,11 @@
+This example show the use of K3 AL with KMF. 
+
+Please download the following project. 
+
+https://github.com/dukeboard/kevoree-modeling-framework
+
+go to metamodel/fsm/org.kevoree.modeling.sample.fsm.kt
+and run > mvn clean install
+
+next do run mvn install on this project
+
