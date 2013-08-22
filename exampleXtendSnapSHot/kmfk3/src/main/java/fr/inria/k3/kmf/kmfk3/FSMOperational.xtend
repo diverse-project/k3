@@ -19,7 +19,7 @@ import static extension fr.inria.k3.kmf.kmfk3.TransitionAspect.*
 import java.io.PrintStream
 
 class FSMOperational{
-
+ 
 	def static void main(String[] args) {
 		val fact = (new MainFactory).fsmSampleFactory
 		val fsm = fact.createFSM

@@ -20,7 +20,7 @@ class TestAspect {
 	def void testAspectMethodReplacement() {
 		val l = new C
 		assertTrue(l.testReplacement)
-	}
+	} 
 	 
 	@org.junit.Test 
 	def void testAspectReplaceAspectMethod() {

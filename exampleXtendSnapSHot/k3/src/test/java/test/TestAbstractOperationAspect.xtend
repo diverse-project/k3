@@ -14,10 +14,11 @@ class TestA {
 	@Test
 	def void test_ABC_Inheritance() {
 		val c = new C_A
-		assertEquals(c.foooo, "CAspect")
+		var  A_A a  = c
+		assertEquals(a.foooo, "CAspect") 
 	}
-}
- 
+} 
+  
  
  
  
@@ -33,7 +34,7 @@ class E_A extends D_A {	}
  
 @Aspect(className=typeof(A_A))
 class AAspect_A {
-	def String foooo() {} 
+	def String foooo() {}  
 }
  
  

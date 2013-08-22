@@ -123,27 +123,36 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	}
 
-	/*def List<String> sortByClassInheritance(List<? extends MutableClassDeclaration> classes) {
+	def List<String> sortByClassInheritance(MutableClassDeclaration clazz, List<? extends MutableClassDeclaration> classes,extension TransformationContext context) {
 		
-		var List<MutableClassDeclaration> listTmp = new ArrayList<MutableClassDeclaration>()
-		var List<String> listRes = new ArrayList<String>(classes.length)
+		val List<MutableClassDeclaration> listTmp = new ArrayList<MutableClassDeclaration>()
 		
-		for(elt : classes) {
-			listTmp.add(elt)
-		}
+		val List<MutableClassDeclaration> listRes = new ArrayList<MutableClassDeclaration>()
+		val List<String> listRes1 = new ArrayList<String>()
 		
-		Collections.sort(listTmp, [a, b | if (a.declaredClasses.exists[c | c == b]) 1 else -1])
+		sortByClassInheritance1(clazz,listRes,context)
 		
-		var int index = -1
-		while((index = index +1) < classes.length) {
-			listRes.add(listTmp.get(index).simpleName)
-		}
+		classes.forEach[c | if (!listRes.contains(c)){ 
+			listTmp.clear
+			sortByClassInheritance1(c,listTmp,context)
+			if (listTmp.contains(clazz))
+				listRes.add(c)
+			
+		} ]
+				
+		Collections.sort(listRes, [a, b | 
+			listTmp.clear
+			sortByClassInheritance1(a,listTmp,context)
+			if (listTmp.contains(b)) -1 else 1
+		])
 		
-		return listRes
-	} */
+		listRes.forEach[c|  listRes1.add(c.simpleName)]
+		
+		return listRes1
+	} 
 
-	def void sortByClassInheritance1(MutableClassDeclaration clazz, List<String> res,extension TransformationContext context) {
-		res.add(clazz.simpleName)
+	def void sortByClassInheritance1(MutableClassDeclaration clazz, List<MutableClassDeclaration> res,extension TransformationContext context) {
+		res.add(clazz)
 		val l  = findClass(clazz.extendedClass.name)
 		if (l!= null)
 			sortByClassInheritance1(l,res,context)
@@ -178,9 +187,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 		for (clazz : classes) {
 //
-			var List<String> inheritList1 = new ArrayList<String>() //sortByClassInheritance(clazz)
-			//var List<String> inheritList = sortByClassInheritance(classes)
-			sortByClassInheritance1(clazz, inheritList1,context)
+			//var List<String> inheritList1 = new ArrayList<String>() //sortByClassInheritance(clazz)
+			var List<String> inheritList = sortByClassInheritance(clazz, classes,context)
+			//sortByClassInheritance(clazz, inheritList1,context)
 			
 			/*val StringBuffer log  = new StringBuffer
 			log.append("before ")
@@ -206,7 +215,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			fields_processing(context, clazz, className, identifier, bodies)
 
 			//Transform method to static
-			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList1, className)
+			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
 
 			aspectContextMaker(context, clazz, className, identifier)
 
