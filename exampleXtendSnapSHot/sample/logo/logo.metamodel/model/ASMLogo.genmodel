@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/logo.metamodel/src" modelPluginID="logo.metamodel"
+    modelName="ASMLogo" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>ASMLogo.ecore</foreignModel>
+  <genPackages prefix="KmLogo" disposableProviderFactory="true" ecorePackage="ASMLogo.ecore#/">
+    <genDataTypes ecoreDataType="ASMLogo.ecore#//Integer"/>
+    <genDataTypes ecoreDataType="ASMLogo.ecore#//Boolean"/>
+    <genDataTypes ecoreDataType="ASMLogo.ecore#//String"/>
+    <nestedGenPackages prefix="ASM" disposableProviderFactory="true" ecorePackage="ASMLogo.ecore#//ASM">
+      <genClasses image="false" ecoreClass="ASMLogo.ecore#//ASM/Instruction"/>
+      <genClasses image="false" ecoreClass="ASMLogo.ecore#//ASM/Primitive"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Back">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/Back/steps"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Forward">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/Forward/steps"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Left">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/Left/angle"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Right">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/Right/angle"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/PenDown"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/PenUp"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Clear"/>
+      <genClasses image="false" ecoreClass="ASMLogo.ecore#//ASM/Expression"/>
+      <genClasses image="false" ecoreClass="ASMLogo.ecore#//ASM/BinaryExp">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/BinaryExp/lhs"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/BinaryExp/rhs"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Constant">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASMLogo.ecore#//ASM/Constant/integerValue"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/ProcCall">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ProcCall/actualArgs"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ProcCall/declaration"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/ProcDeclaration">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASMLogo.ecore#//ASM/ProcDeclaration/name"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ProcDeclaration/args"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ProcDeclaration/procCall"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ProcDeclaration/instructions"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Block">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/Block/instructions"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/If">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/If/thenPart"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/If/elsePart"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/ControlStructure">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ControlStructure/condition"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Repeat">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/Repeat/block"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/While">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/While/block"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Parameter">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ASMLogo.ecore#//ASM/Parameter/name"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/ParameterCall">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/ParameterCall/parameter"/>
+      </genClasses>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Plus"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Minus"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Mult"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Div"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Equals"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Greater"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/Lower"/>
+      <genClasses ecoreClass="ASMLogo.ecore#//ASM/LogoProgram">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ASMLogo.ecore#//ASM/LogoProgram/instructions"/>
+      </genClasses>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

@@ -32,7 +32,7 @@ class TestCase{
 		}
 		fail("Should not occur")
 	}
-
+ 
 	@Test
 	def void testPost(){
 		val l = new TestDbC2()

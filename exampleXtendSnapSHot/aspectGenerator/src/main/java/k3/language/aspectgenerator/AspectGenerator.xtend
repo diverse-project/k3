@@ -11,22 +11,23 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
 
 import static extension k3.language.aspectgenerator.EPackageAspect.*
 import static extension k3.language.aspectgenerator.EClassAspect.*
-import java.io.BufferedWriter
-import java.io.FileWriter
-import java.io.File
 import java.util.ArrayList
+import java.util.List
 
 class AspectGenerator{
 
 
 	def static void main(String[] args) {
 		println('Hello Kermeta on top of Xtend!')
-		new AspectGenerator().run()
+		var String projectPath = System.getProperty("user.dir") + "/target/"
+		var String projectName = "aspectKermeta"
+		var String operationName = "eval"
+		new AspectGenerator().run(projectPath, projectName, operationName, "kermeta.ecore")
 
 	}
 	
-	public def run() {
-		var Context context = new Context
+	public def run(String projectPath, String projectName, String operationName, String ecorePath) {
+		var Context context = new Context(projectPath, projectName, operationName)
 		
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
@@ -36,13 +37,30 @@ class AspectGenerator{
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", fact)
 		
 		var rs = new ResourceSetImpl()
-		var uri = URI.createURI("kermeta.ecore")
+		//var uri = URI.createURI("kermeta.ecore")
+		var uri = URI.createURI(ecorePath)
 		var res = rs.getResource(uri, true)
 
 		var EPackage p = res.contents.get(0) as EPackage
 		p.generateAspect(context)
+		generateContext(context)
 	}
 	
+	private def void generateContext(Context context) {
+		// initialization of packaging for the class "Context"
+		var List<String> packageCollection = new ArrayList<String>
+		packageCollection.add(context.projectName)
+		
+		// initialization of the content of file "Context.xtend"
+		var StringBuffer content = new StringBuffer
+		content.append("package " + context.projectName + "\n\n")
+		content.append("class Context {\n\n")
+		content.append("\tdef new (){\n\n\t}")
+		content.append("\n\n}\n")
+		
+		FileManager.writeFile(context.projectPath, "Context", packageCollection, content.toString)
+		
+	}
 
 }
 
@@ -64,7 +82,8 @@ class EPackageAspect {
 				}
 			}
 			_self.manageImport(context)
-			_self.writeFile(context)
+			FileManager.writeFile(context.projectPath, context.packageCollection.last, context.packageCollection, context.kmtContent.toString)
+			//_self.writeFile(context)
 			context.classCollection = new ArrayList<String>
 			context.kmtContent = new StringBuffer
 			
@@ -86,26 +105,6 @@ class EPackageAspect {
 		}	
 	}
 	
-	def private void writeFile(Context context) {
-		_self.writePackage(context)
-		
-		var BufferedWriter buffer = new BufferedWriter(new FileWriter(context.currentPath + context.packageCollection.last + ".xtend"))
-		
-		buffer.write(context.kmtContent.toString)
-		buffer.flush
-		buffer.close
-	}
-	
-	def private void writePackage(Context context) {
-		context.currentPath = context.projectPath + "/"
-		for(pack : context.packageCollection) {
-			context.currentPath = context.currentPath + "/" + pack
-			var File dir =  new File(context.currentPath);
-			dir.mkdirs
-		}
-		context.currentPath = context.currentPath + "/"
-	}
-	
 	def private void manageImport(Context context) {
 		var String pack = ""
 		var StringBuffer aspect = new StringBuffer
@@ -119,10 +118,18 @@ class EPackageAspect {
 		}
 		
 		aspect.append("package " + pack + "\n\n")			
-		aspect.append("import fr.inria.triskell.k3.Aspect\n\n")
+		aspect.append("import fr.inria.triskell.k3.Aspect\n")
+		
+		if(context.isOverride) {
+			aspect.append("import fr.inria.triskell.k3.OverrideAspectMethod\n")			
+		}
+		
+		aspect.append("import " + context.projectName + "\n\n")
+		
 		for (cl : context.classCollection){
 			aspect.append("import static extension " + pack + "." + cl + ".*\n")
 		}
+		
 		aspect.append("\n")
 		context.kmtContent.insert(0, aspect.toString)
 		context.kmtContent.append("\n\n")
@@ -135,6 +142,9 @@ class EClassAspect {
 		def public void generateAspect(Context context) {
 			
 			_self.writeOpenClass(context)
+			if(context.nameOperation != null) {
+				_self.writeOperation(context)
+			}
 			_self.writeCloseClass(context)
 			
 		}
@@ -151,8 +161,14 @@ class EClassAspect {
 			} else {
 				scriptNewClass = scriptNewClass + "class "
 			}
-						
-			scriptNewClass = scriptNewClass + _self.name + "Aspect {\n"
+			scriptNewClass = scriptNewClass + _self.name + "Aspect" 
+			if (!_self.ESuperTypes.empty) {
+				scriptNewClass = scriptNewClass + " extends " + _self.ESuperTypes.get(0).name
+			}
+			scriptNewClass = scriptNewClass + " {\n"
+			if(_self.ESuperTypes.length > 1){
+				scriptNewClass = scriptNewClass + context.comment_ForMultiInheritence
+			}
 			
 			context.kmtContent.append(scriptNewClass)
 		}
@@ -164,6 +180,21 @@ class EClassAspect {
 	def private void addClass (Context context) {
 		context.classCollection.add(_self.name + "Aspect")
 	}
+	
+	def private void writeOperation (Context context) {
+		var String operation = "\tdef public void " + context.nameOperation + " (Context context)"
+		
+		if (!_self.ESuperTypes.empty) {
+			context.kmtContent.append("\t@OverrideAspectMethod\n")
+			context.kmtContent.append(operation)
+			context.isOverride = true
+		} else {
+			context.kmtContent.append(operation)
+		}
+		context.kmtContent.append(" { \n\n\t}")
+			
+	}
+	
 }
 
 
