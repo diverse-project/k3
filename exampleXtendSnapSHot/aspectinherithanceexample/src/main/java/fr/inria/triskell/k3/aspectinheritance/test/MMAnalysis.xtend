@@ -24,7 +24,7 @@ class A{
 } 
 
 class B extends A{
-	
+	 
 } 
 
 @Aspect(className=typeof(A))

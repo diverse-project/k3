@@ -25,7 +25,7 @@ class Demo {
 		var res = rs.getResource(uri, true);
 		var FSM fsm = res.contents.get(0) as FSM
 		fsm.run 
-	}
+	} 
 
 	def static void main(String[] args) {
 		println('Hello K3 based on xtend!')

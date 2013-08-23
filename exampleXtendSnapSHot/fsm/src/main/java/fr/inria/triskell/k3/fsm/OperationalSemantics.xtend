@@ -24,7 +24,7 @@ import static extension fr.inria.triskell.k3.fsm.TransitionAspect.*
  *        Cyril Faucher <cfaucher@irisa.fr>
  * Description : 
  *       Finite State Machine Sample with Behaviour implemented in Kermeta
- */
+ */ 
 
 @Singleton 
 public class Console {
