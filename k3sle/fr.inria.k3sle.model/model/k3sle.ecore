@@ -4,108 +4,75 @@
   <eSubpackages name="interface" nsURI="http://k3sle/interface/1.0" nsPrefix="interface">
     <eClassifiers xsi:type="ecore:EClass" name="Model">
       <eOperations name="isTypeOf" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-        <eParameters name="mt" lowerBound="1" eType="#//interface/metamodelingInTheLarge/ModelType"/>
+        <eParameters name="mt" lowerBound="1" eType="#//interface/ModelType"/>
       </eOperations>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="strictType" eType="#//interface/metamodelingInTheLarge/ModelType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="strictType" eType="#//interface/ModelType"/>
     </eClassifiers>
-    <eSubpackages name="metamodelingInTheSmall" nsURI="http://k3sle/interface/small/1.0"
-        nsPrefix="small">
-      <eSubpackages name="syntax" nsURI="http://k3sle/interface/small/syntax/1.0"
-          nsPrefix="syntax">
-        <eClassifiers xsi:type="ecore:EClass" name="Class">
-          <eOperations name="match" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-            <eParameters name="class" lowerBound="1" eType="#//interface/metamodelingInTheSmall/syntax/Class"/>
-          </eOperations>
-          <eStructuralFeatures xsi:type="ecore:EReference" name="invariants" upperBound="-1"
-              eType="#//interface/metamodelingInTheSmall/constraint/Constraint" containment="true"/>
-          <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
-              eType="#//interface/metamodelingInTheSmall/syntax/Property" containment="true"/>
-          <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1"
-              eType="#//interface/metamodelingInTheSmall/semantics/Operation" containment="true"/>
-        </eClassifiers>
-        <eClassifiers xsi:type="ecore:EClass" name="Property" abstract="true">
-          <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//interface/metamodelingInTheSmall/syntax/Class"/>
-        </eClassifiers>
-      </eSubpackages>
-      <eSubpackages name="semantics" nsURI="http://k3sle/interface/small/semantics/1.0"
-          nsPrefix="semantics">
-        <eClassifiers xsi:type="ecore:EClass" name="Operation" abstract="true">
-          <eStructuralFeatures xsi:type="ecore:EReference" name="pre" upperBound="-1"
-              eType="#//interface/metamodelingInTheSmall/constraint/Constraint" containment="true"/>
-          <eStructuralFeatures xsi:type="ecore:EReference" name="post" upperBound="-1"
-              eType="#//interface/metamodelingInTheSmall/constraint/Constraint" containment="true"/>
-        </eClassifiers>
-      </eSubpackages>
-      <eSubpackages name="constraint" nsURI="http://k3sle/interface/small/constraint/1.0"
-          nsPrefix="constraint">
-        <eClassifiers xsi:type="ecore:EClass" name="OclProperty" eSuperTypes="#//interface/metamodelingInTheSmall/constraint/Constraint"/>
-        <eClassifiers xsi:type="ecore:EClass" name="Constraint" abstract="true"/>
-      </eSubpackages>
-    </eSubpackages>
-    <eSubpackages name="metamodelingInTheLarge" nsURI="http://k3sle/interface/large/1.0"
-        nsPrefix="large">
-      <eClassifiers xsi:type="ecore:EClass" name="ModelType">
-        <eOperations name="subtypeOf" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-          <eParameters name="mt" lowerBound="1" eType="#//interface/metamodelingInTheLarge/ModelType"/>
-          <eParameters name="kind" lowerBound="1" eType="#//interface/metamodelingInTheLarge/Subtyping"/>
-        </eOperations>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="compose" upperBound="-1"
-            eType="#//manipulation/composition/LanguageCompositionOperator" containment="true"
-            eOpposite="#//manipulation/composition/LanguageCompositionOperator/source"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="isComposedBy" upperBound="-1"
-            eType="#//manipulation/composition/LanguageCompositionOperator" eOpposite="#//manipulation/composition/LanguageCompositionOperator/target"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
-            eType="#//interface/metamodelingInTheSmall/syntax/Class" containment="true"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="modelOperations" upperBound="-1"
-            eType="#//interface/metamodelingInTheLarge/ModelOperation" containment="true"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="dse" upperBound="-1"
-            eType="#//interface/metamodelingInTheLarge/DSE" containment="true"/>
-      </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="ModelOperation">
-        <eOperations name="staticfootprint" eType="#//interface/metamodelingInTheLarge/ModelType"/>
-        <eOperations name="dynamicfootprint" eType="#//interface/metamodelingInTheLarge/ModelType">
-          <eParameters name="model" lowerBound="1" eType="#//interface/Model"/>
-        </eOperations>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="pre" upperBound="-1"
-            eType="#//interface/metamodelingInTheSmall/constraint/Constraint" containment="true"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="post" eType="#//interface/metamodelingInTheSmall/constraint/Constraint"
-            containment="true"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="modelElementOperations"
-            upperBound="-1" eType="#//interface/metamodelingInTheSmall/semantics/Operation"
-            derived="true"/>
-      </eClassifiers>
-      <eClassifiers xsi:type="ecore:EEnum" name="Subtyping">
-        <eLiterals name="structuralWithoutInvariant"/>
-        <eLiterals name="structuralWithInvariant" value="1"/>
-        <eLiterals name="behavioral" value="2"/>
-      </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="DSE"/>
-    </eSubpackages>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelType">
+      <eOperations name="subtypeOf" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eParameters name="mt" lowerBound="1" eType="#//interface/ModelType"/>
+        <eParameters name="kind" lowerBound="1" eType="#//interface/Subtyping"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compose" upperBound="-1"
+          eType="#//manipulation/composition/LanguageCompositionOperator" containment="true"
+          eOpposite="#//manipulation/composition/LanguageCompositionOperator/source"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isComposedBy" upperBound="-1"
+          eType="#//manipulation/composition/LanguageCompositionOperator" eOpposite="#//manipulation/composition/LanguageCompositionOperator/target"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
+          eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"
+          containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="modelOperations" upperBound="-1"
+          eType="#//interface/ModelOperation" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dse" upperBound="-1"
+          eType="#//interface/DSE" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelOperation">
+      <eOperations name="staticfootprint" eType="#//interface/ModelType"/>
+      <eOperations name="dynamicfootprint" eType="#//interface/ModelType">
+        <eParameters name="model" lowerBound="1" eType="#//interface/Model"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pre" upperBound="-1"
+          containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="post" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="modelElementOperations"
+          upperBound="-1" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EOperation"
+          derived="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Subtyping">
+      <eLiterals name="withoutConstraints"/>
+      <eLiterals name="withConstraints" value="1"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DSE"/>
   </eSubpackages>
   <eSubpackages name="manipulation" nsURI="http://k3sle/manipulation/1.0" nsPrefix="manipulation">
     <eSubpackages name="composition" nsURI="http://k3sle/manipulation/composition/1.0"
         nsPrefix="composition">
       <eClassifiers xsi:type="ecore:EClass" name="Inheritance" eSuperTypes="#//manipulation/composition/LanguageCompositionOperator">
         <eStructuralFeatures xsi:type="ecore:EReference" name="filteredModelOperations"
-            upperBound="-1" eType="#//interface/metamodelingInTheLarge/ModelOperation"/>
+            upperBound="-1" eType="#//interface/ModelOperation"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="Merge" eSuperTypes="#//manipulation/composition/LanguageCompositionOperator"/>
       <eClassifiers xsi:type="ecore:EClass" name="LanguageCompositionOperator" abstract="true">
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" lowerBound="1"
-            eType="#//interface/metamodelingInTheLarge/ModelType" eOpposite="#//interface/metamodelingInTheLarge/ModelType/compose"/>
+            eType="#//interface/ModelType" eOpposite="#//interface/ModelType/compose"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-            eType="#//interface/metamodelingInTheLarge/ModelType" eOpposite="#//interface/metamodelingInTheLarge/ModelType/isComposedBy"/>
+            eType="#//interface/ModelType" eOpposite="#//interface/ModelType/isComposedBy"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTransient" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="adaptations" upperBound="-1"
             eType="#//manipulation/composition/AdaptationOperator" containment="true"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="AdaptationOperator" abstract="true"/>
-      <eClassifiers xsi:type="ecore:EClass" name="Rename" eSuperTypes="#//manipulation/composition/AdaptationOperator"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Rename" eSuperTypes="#//manipulation/composition/AdaptationOperator">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="source" lowerBound="1"
+            eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//ENamedElement"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+            eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//ENamedElement"/>
+      </eClassifiers>
     </eSubpackages>
     <eSubpackages name="slicing" nsURI="http://k3sle/manipulation/slicing/1.0" nsPrefix="slicing">
       <eClassifiers xsi:type="ecore:EClass" name="Slicer" abstract="true">
         <eStructuralFeatures xsi:type="ecore:EReference" name="src" lowerBound="1"
-            eType="#//interface/metamodelingInTheLarge/ModelType"/>
+            eType="#//interface/ModelType"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="Pruner" eSuperTypes="#//manipulation/slicing/Slicer"/>
       <eClassifiers xsi:type="ecore:EClass" name="FreeSlicer" eSuperTypes="#//manipulation/slicing/Slicer">
@@ -117,9 +84,9 @@
   <eSubpackages name="variability" nsURI="http://k3sle/variability/1.0" nsPrefix="variability"/>
   <eSubpackages name="impl" nsURI="http://k3sle/impl/1.0" nsPrefix="impl">
     <eClassifiers xsi:type="ecore:EClass" name="ModelTypeDefinition" abstract="true">
-      <eStructuralFeatures xsi:type="ecore:EReference" name="required" eType="#//interface/metamodelingInTheLarge/ModelType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="required" eType="#//interface/ModelType"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="provided" lowerBound="1"
-          eType="#//interface/metamodelingInTheLarge/ModelType"/>
+          eType="#//interface/ModelType"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MoC"/>
     <eSubpackages name="kermeta2" nsURI="http://k3sle/impl/k2/1.0" nsPrefix="kermeta2">
