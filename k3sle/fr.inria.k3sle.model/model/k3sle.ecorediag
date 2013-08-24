@@ -225,7 +225,7 @@
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_fBFWMQweEeOdGZAiiJUdIQ" fontColor="8421504" fontName="Lucida Grande" fontHeight="10" fillColor="12632256" lineColor="8421504"/>
       <element xmi:type="ecore:EClass" href="k3sle.ecore#//interface/DSE"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fBFWMgweEeOdGZAiiJUdIQ" x="768" y="200"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fBFWMgweEeOdGZAiiJUdIQ" x="760" y="196"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_uWI0oAweEeOdGZAiiJUdIQ" type="1001">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uWmusAweEeOdGZAiiJUdIQ" source="Shortcut">
