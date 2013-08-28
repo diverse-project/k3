@@ -71,7 +71,7 @@
     </eSubpackages>
     <eSubpackages name="slicing" nsURI="http://k3sle/manipulation/slicing/1.0" nsPrefix="slicing">
       <eClassifiers xsi:type="ecore:EClass" name="Slicer" abstract="true">
-        <eStructuralFeatures xsi:type="ecore:EReference" name="src" lowerBound="1"
+        <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
             eType="#//interface/ModelType"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="Pruner" eSuperTypes="#//manipulation/slicing/Slicer"/>

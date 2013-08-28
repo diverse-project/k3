@@ -146,7 +146,7 @@
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_o1BuwfOvEeKt7Jrhjcb2LQ" fontColor="4210752" fontName="Lucida Grande" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
       <element xmi:type="ecore:EClass" href="k3sle.ecore#//impl/ModelTypeDefinition"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_o1BuwvOvEeKt7Jrhjcb2LQ" x="348" y="76" width="243"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_o1BuwvOvEeKt7Jrhjcb2LQ" x="352" y="80" width="243"/>
     </children>
     <children xmi:type="notation:Shape" xmi:id="_9dPXEPz-EeKM2cWa0uqbdQ" type="Note" fontName="Lucida Grande" description="under investigation in GEMOC => would become the behavioral interface of a language unit" fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
       <children xmi:type="notation:BasicDecorationNode" xmi:id="_9dRzUPz-EeKM2cWa0uqbdQ" type="DiagramName">
@@ -177,7 +177,7 @@
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_2H258QwdEeOdGZAiiJUdIQ" fontColor="4210752" fontName="Lucida Grande" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
       <element xmi:type="ecore:EClass" href="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2H258gwdEeOdGZAiiJUdIQ" x="416" y="364"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2H258gwdEeOdGZAiiJUdIQ" x="416" y="356"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_QEsPYAweEeOdGZAiiJUdIQ" type="1001">
       <children xmi:type="notation:Node" xmi:id="_QEuEkAweEeOdGZAiiJUdIQ" type="4001"/>
@@ -256,7 +256,7 @@
       <styles xmi:type="notation:TextStyle" xmi:id="_RbIBYQwfEeOdGZAiiJUdIQ"/>
       <styles xmi:type="notation:LineTypeStyle" xmi:id="_RbIBYgwfEeOdGZAiiJUdIQ"/>
       <element xsi:nil="true"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RbIBYwwfEeOdGZAiiJUdIQ" x="328" y="448" height="29"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RbIBYwwfEeOdGZAiiJUdIQ" x="360" y="436" width="142" height="37"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_1wpigAzbEeOdGZAiiJUdIQ" type="1005">
       <children xmi:type="notation:Node" xmi:id="_1wvpIAzbEeOdGZAiiJUdIQ" type="4010"/>
@@ -1376,6 +1376,18 @@
       <element xmi:type="ecore:EClass" href="k3sle.ecore#//interface/ModelType"/>
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_1kN6AgwgEeOdGZAiiJUdIQ" x="40" y="44"/>
     </children>
+    <children xmi:type="notation:Shape" xmi:id="_Tp8cUA1yEeOA950hWKJmhg" type="Note" fontName="Lucida Grande" description="Ecore Slicer only => expressed at the M3 level, and applied at the M2 level." fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+      <children xmi:type="notation:BasicDecorationNode" xmi:id="_Tp-4kA1yEeOA950hWKJmhg" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:BasicDecorationNode" xmi:id="_Tp-4kQ1yEeOA950hWKJmhg" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:TextStyle" xmi:id="_Tp8cUQ1yEeOA950hWKJmhg"/>
+      <styles xmi:type="notation:LineTypeStyle" xmi:id="_Tp8cUg1yEeOA950hWKJmhg"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Tp8cUw1yEeOA950hWKJmhg" x="760" y="252" width="133"/>
+    </children>
     <styles xmi:type="notation:DiagramStyle" xmi:id="_a4-SUfOpEeKt7Jrhjcb2LQ"/>
     <element xmi:type="ecore:EPackage" href="k3sle.ecore#//manipulation/slicing"/>
     <edges xmi:type="notation:Edge" xmi:id="_a5BVpPOpEeKt7Jrhjcb2LQ" type="3003" source="_a4_gefOpEeKt7Jrhjcb2LQ" target="_a4-5YPOpEeKt7Jrhjcb2LQ">
@@ -1404,15 +1416,21 @@
     </edges>
     <edges xmi:type="notation:Edge" xmi:id="_1kY5IAwgEeOdGZAiiJUdIQ" type="3002" source="_a4-5YPOpEeKt7Jrhjcb2LQ" target="_1kN6AAwgEeOdGZAiiJUdIQ">
       <children xmi:type="notation:Node" xmi:id="_1kY5JAwgEeOdGZAiiJUdIQ" type="4011">
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_1kY5JQwgEeOdGZAiiJUdIQ" x="-10" y="-10"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_1kY5JQwgEeOdGZAiiJUdIQ" x="11" y="-13"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_1kY5JgwgEeOdGZAiiJUdIQ" type="4012">
         <layoutConstraint xmi:type="notation:Location" xmi:id="_1kY5JwwgEeOdGZAiiJUdIQ" x="10" y="10"/>
       </children>
       <styles xmi:type="notation:ConnectorStyle" xmi:id="_1kY5IQwgEeOdGZAiiJUdIQ" lineColor="4210752"/>
       <styles xmi:type="notation:FontStyle" xmi:id="_1kY5IgwgEeOdGZAiiJUdIQ" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
-      <element xmi:type="ecore:EReference" href="k3sle.ecore#//manipulation/slicing/Slicer/src"/>
+      <element xmi:type="ecore:EReference" href="k3sle.ecore#//manipulation/slicing/Slicer/target"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_1kY5IwwgEeOdGZAiiJUdIQ" points="[-50, -7, 485, 62]$[-534, -69, 1, 0]"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_Zk27kA1yEeOA950hWKJmhg" type="NoteAttachment" source="_Tp8cUA1yEeOA950hWKJmhg" target="_a5AumPOpEeKt7Jrhjcb2LQ" lineWidth="1">
+      <styles xmi:type="notation:ArrowStyle" xmi:id="_Zk27kQ1yEeOA950hWKJmhg"/>
+      <styles xmi:type="notation:LineTypeStyle" xmi:id="_Zk27kg1yEeOA950hWKJmhg"/>
+      <element xsi:nil="true"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Zk27kw1yEeOA950hWKJmhg" points="[9, -28, -47, 76]$[6, -113, -50, -9]"/>
     </edges>
   </notation:Diagram>
   <notation:Diagram xmi:id="_ivP1kPOqEeKt7Jrhjcb2LQ" type="EcoreTools" name="ModelManipulation" measurementUnit="Pixel">
