@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import static extension test.AspectC.*;
 
 class TestAspect {
-
+ 
 	@org.junit.Test
 	def void testAspectInheritance() {
 

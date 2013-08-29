@@ -17,7 +17,7 @@ import org.eclipse.xtend.lib.macro.declaration.Visibility
  * the Java AST during Xtend active annotation processing
  */
 class ASTExtensions {
-
+ 
 	def static signature(ExecutableDeclaration it) {
 		signature(simpleName, parameters.map[p|p.type])
 	}
