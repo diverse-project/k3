@@ -21,7 +21,7 @@ class TestCase{
 		}
 		fail("Should not occur")
 	}
-
+ 
 	@Test
 	def void testInv(){ 
 		val l = new TestDbC1()

@@ -15,7 +15,7 @@ class TestAspect {
 		val l = new C
 		assertEquals(l.foo, "ABC") 
 	} 
-
+ 
 	@org.junit.Test
 	def void testAspectMethodReplacement() {
 		val l = new C

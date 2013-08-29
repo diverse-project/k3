@@ -16,9 +16,10 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
 import static extension fr.inria.triskell.k3.aspectinheritance.EClassAspect.*
 import static extension fr.inria.triskell.k3.aspectinheritance.EClassifierAspect.*
 
-class HelloEcore{
+class HelloEcore {
 
 	public def run() {
+
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {
@@ -30,95 +31,79 @@ class HelloEcore{
 		var res = rs.getResource(uri, true);
 
 		var EPackage p = res.contents.get(0) as EPackage
-		 
+
 		var EClass c = EcoreFactory.eINSTANCE.createEClass
 		c.test1
-		c.test2("hello") 
-		c.test3   
-		c.sayHello("hello1") 
-		c.test4   
-		c.testInheritance 
+		c.test2("hello")
+		c.test3
+		c.sayHello("hello1")
+		c.test4
+		c.testInheritance
 		c.testInheritance1
 		c.testU
-		 
-		
-		
-}
+	}
 
 	def static void main(String[] args) {
 		println('Hello Kermeta on top of Xtend!')
 		new HelloEcore().run()
 
 	}
-	
 
 }
 
-
- 
-
 @Aspect(className=typeof(EClass))
-class EClassAspect extends EClassifierAspect{
-
-	
-	//j is local
+class EClassAspect extends EClassifierAspect { //j is local
 	int k;
 
 	/* Testt call on method on the inherited class without parameter */
 	public def void test3() {
 		_self.k = _self.k + 1;
-		
+
 		println(_self.k)
-		
+
 	}
 
 	/* Testt call on method on the class with parameter */
 	public def void sayHello(String say) {
-		println(say)		
+		println(say)
 	}
 
 	/* Testt call on method on the class that use attributes of the super aspect */
 	public def void test4() {
 		_self.j = _self.j + 1;
 		println(_self.j)
-		 
+
 	}
 
-	
 	@OverrideAspectMethod
 	public def void testInheritance() {
-		println("call testInheritance on EClass" )
+		println("call testInheritance on EClass")
 		_self.super_testInheritance
 	}
-		public def void testInheritance1() {
-		println("call testInheritance 1 on EClass" )
+
+	public def void testInheritance1() {
+		println("call testInheritance 1 on EClass")
+
 		//call super (Must be improved must be something like super() 
-		_self.test1		
+		_self.test1
 	}
-	 
+
 	@OverrideAspectMethod
-	public def void testU(){
+	public def void testU() {
 		_self.super_testU
-		_self.u = _self.u+1;
+		_self.u = _self.u + 1;
 		println(_self.u)
-		
+
 	}
-	 
-  
 
 }
 
-
 @Aspect(className=typeof(EClassifier))
-class EClassifierAspect {
-
-		
-	//j is local
-	 
+class EClassifierAspect { //j is local
 	int j;
-	
-	int u=0;
-	
+
+	int u = 0;
+
 	/*
 	
 	public def int j(EClassifier __self){
@@ -127,37 +112,32 @@ class EClassifierAspect {
 	public def void j(EClassifier __self, int j){
 		_self.j=j
 	} */
-
-	
 	/* Testt call on method on the superclass without parameter */
-	public def void test1() { 
+	public def void test1() {
 		_self.j = _self.j + 1;
 		println(_self.j)
-		 
+
 	}
 
 	/* Testt call on method on the superclass with parameter */
 	public def void test2(String say) {
-		println(say)	 	
+		println(say)
 	}
-	
+
 	public def void testInheritance() {
-		println("call testInheritance on EClassifier" )
-				
-	} 
-	
-	public def void testU(){
-		_self.u = _self.u+1;
+		println("call testInheritance on EClassifier")
+
+	}
+
+	public def void testU() {
+		_self.u = _self.u + 1;
 		println(_self.u)
 	}
-	
-	public def List<String> testU(List<String> a){
-		_self.u = _self.u+1;
+
+	public def List<String> testU(List<String> a) {
+		_self.u = _self.u + 1;
 		println(_self.u)
 		return a
 	}
-	
 
 }
-
-

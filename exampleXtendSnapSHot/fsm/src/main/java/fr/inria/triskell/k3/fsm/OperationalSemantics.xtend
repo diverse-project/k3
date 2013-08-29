@@ -24,11 +24,10 @@ import static extension fr.inria.triskell.k3.fsm.TransitionAspect.*
  *        Cyril Faucher <cfaucher@irisa.fr>
  * Description : 
  *       Finite State Machine Sample with Behaviour implemented in Kermeta
- */ 
-
-@Singleton 
+ */
+@Singleton
 public class Console {
-	 
+
 	def String readLine(String format, Object... args) {
 		if (System.console() != null) {
 			return System.console().readLine(format, args);
@@ -37,24 +36,22 @@ public class Console {
 		var reader = new BufferedReader(new InputStreamReader(System.in));
 		return reader.readLine();
 	}
-} 
-
+}
 
 @Aspect(className=typeof(FSM))
-public class  FSMAspect {
+public class FSMAspect {
 
 	State currentState
 
-		// Operational semantic
+	// Operational semantic
 	def void run() {
 
-		
 		// reset if there is no current state
 		if (_self.currentState == null) {
 			_self.currentState = _self.initialState
-		}  
- 
- 		var str = "init"
+		}
+
+		var str = "init"
 		while (str != "quit") {
 			println("Current state : " + _self.currentState.name)
 			str = Console.instance.readLine("give me a letter : ")
@@ -63,10 +60,11 @@ public class  FSMAspect {
 				println("quitting ...")
 			} else if (str == "print") {
 				println("")
+
 			} else
 				println(str)
 			println("stepping...")
-			try {   
+			try {
 				var textRes = _self.currentState.step(str)
 				if (textRes == void || textRes == "")
 					textRes = "NC"
@@ -96,9 +94,9 @@ public class  FSMAspect {
 	}
 
 }
- 
+
 @Aspect(className=typeof(State))
- class StateAspect { // Go to the next state
+class StateAspect { // Go to the next state
 	def String step(String c) {
 
 		// Get the valid transitions
@@ -110,30 +108,32 @@ public class  FSMAspect {
 
 		// Fire the transition
 		return validTransitions.get(0).fire()
+
 		//return ""
+		}
+
 	}
 
-} 
+	@Aspect(className=typeof(Transition))
+	class TransitionAspect { // Fire the transition
+		public def String fire() {
 
-@Aspect(className=typeof(Transition))
- class TransitionAspect {
-	// Fire the transition
-	public def String fire() {
-		//_self.fire
-		// update FSM current state
-		_self.source.owningFSM.currentState = _self.target		
-		return _self.output 
+			//_self.fire
+			// update FSM current state
+			_self.source.owningFSM.currentState = _self.target
+			return _self.output
+		}
 	}
-}
 
-abstract class FSMException extends Exception {
-}
+	abstract class FSMException extends Exception {
+	}
 
-class NonDeterminism extends FSMException {
-}
+	class NonDeterminism extends FSMException {
+	}
 
-class NoTransition extends FSMException {
-}
+	class NoTransition extends FSMException {
+	}
 
-class NoInitialStateException extends FSMException {
-}
+	class NoInitialStateException extends FSMException {
+	}
+	
