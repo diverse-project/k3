@@ -19,7 +19,7 @@ import static extension fr.inria.triskell.k3.aspectinheritance.EClassifierAspect
 class HelloEcore {
 
 	public def run() {
-
+ 
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {

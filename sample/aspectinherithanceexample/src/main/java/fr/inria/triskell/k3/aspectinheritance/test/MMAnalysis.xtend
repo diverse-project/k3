@@ -18,7 +18,7 @@ import static extension fr.inria.triskell.k3.aspectinheritance.test.EClassifierA
 import java.util.List
 
 class A{
-	
+	 
 	
 	
 } 
