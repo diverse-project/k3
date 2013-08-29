@@ -5,7 +5,7 @@
 	<groupId>k3.language</groupId>
 	<artifactId>k3.language.aspectGenerator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>kermeta3-quickstart</name>
+	<name>kermeta3 aspect generator</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
