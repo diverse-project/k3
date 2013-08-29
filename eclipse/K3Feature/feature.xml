@@ -2,7 +2,7 @@
 <feature
       id="K3Feature"
       label="K3Feature"
-      version="1.0.0">
+      version="1.0.0.qualifier">
 
    <description url="https://github.com/barais/k3/">
       k3 Project
