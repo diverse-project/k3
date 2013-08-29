@@ -5,13 +5,13 @@ import fsm.State
 import fsm.Transition
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import k3.Aspect
+import fr.inria.triskell.k3.Aspect
 
 import static extension fr.inria.triskell.k3.FSMAspect.*
 import static extension fr.inria.triskell.k3.StateAspect.*
 import static extension fr.inria.triskell.k3.TransitionAspect.*
 import singleton.Singleton
-
+ 
 /* $Id: fsm_Operationnal_Semantics.kmt,v 1.3 2008-08-25 13:04:01 vmahe Exp $
  * Project    : fr.irisa.triskell.samples.fsm
  * File       : fsmmodel.kmt
@@ -19,7 +19,7 @@ import singleton.Singleton
  * Copyright  : IRISA / INRIA / Universite de Rennes 1
  * -------------------------------------------------------------------
  * Creation date : 03 October. 2005
- * Modified By : 
+ * Modified By :  
  *        Waqas Ahmed Saeed <wahmedsa@irisa.fr>
  *        Cyril Faucher <cfaucher@irisa.fr>
  * Description : 
@@ -41,16 +41,15 @@ public class Console {
 @Aspect(className=typeof(FSM))
 public class FSMAspect {
 
-	FSMAspect self
 
 	public State _currentState
 
 	def State setCurrentState(FSM _self, State current) {
-		self._currentState = current;
+		_self._currentState = current;
 	}
 
 	def State getCurrentState(FSM _self) {
-		return self._currentState;
+		return _self._currentState;
 	}
 
 	// Operational semantic

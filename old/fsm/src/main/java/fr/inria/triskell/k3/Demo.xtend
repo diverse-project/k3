@@ -25,7 +25,7 @@ class Demo {
 		var uri = URI.createURI("TrafficLights.fsm");
 		var res = rs.getResource(uri, true);
 		var FSM fsm = res.contents.get(0) as FSM
-		fsm.run
+		fsm.run 
 	}
 	
 
