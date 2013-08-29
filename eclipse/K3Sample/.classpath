@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="xtend-gen"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/k3-3.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/guava-15.0-rc1.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.common-2.8.0-v20120911-0500.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore-2.8.0-v20120911-0500.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi-2.8.0-v20120911-0500.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

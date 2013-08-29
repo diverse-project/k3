@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+
+
+	<extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.k3.language.samples.category"
+            name="K3 samples"
+            parentCategory="org.eclipse.ui.Examples"/>
+      <wizard
+            canFinishEarly="true"
+            category="org.eclipse.ui.Examples/org.k3.language.samples.category"
+            class="org.kermeta.language.sample.deployer.wizards.K3ExampleWizard"
+            hasPages="false"
+            icon="icons/newkermetafile.png"
+            id="org.k3.language.samples.wizard"
+            name="k3 sample"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+         <description>
+            T⁮his project features a simple model transformation from Class metamodel to database metamodel. This transformation embeds its own version of the metamodels (ie. doesn't rely on an external model projects).
+         </description>
+      </wizard>
+   </extension>
+ 
+</plugin>

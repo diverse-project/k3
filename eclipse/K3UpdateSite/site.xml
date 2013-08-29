@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/K3Feature_1.0.0.jar" id="K3Feature" version="1.0.0">
+      <category name="k3"/>
+   </feature>
+   <category-def name="k3" label="k3"/>
+</site>
