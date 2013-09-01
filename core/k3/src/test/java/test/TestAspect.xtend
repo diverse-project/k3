@@ -155,3 +155,14 @@ class FooAspect extends FooAbsClass{
 		println("foo2")
 	}
 }
+
+//------------------------
+// Testing generics on aspects
+
+interface FooGenerics<T> {}
+
+@Aspect(className=typeof(FooGenerics))
+class FooGenericsAspect {
+	
+}
+
