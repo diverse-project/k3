@@ -10,6 +10,12 @@ import static extension test.AspectC.*;
 class TestAspect {
  
 	@org.junit.Test
+	def void testAspectOnInterfaceExtendsClass() {
+		val l = new FooAspect
+		assertEquals(l.fooOp, "foo2") 
+	} 
+ 
+	@org.junit.Test
 	def void testAspectInheritance() {
 
 		val l = new C
@@ -129,4 +135,23 @@ class AspectC extends AspectB {
 		return "C"
 	}
 
+}
+
+//------------------------
+// Testing aspect on interface extending a class
+
+interface FooInterface { }
+
+abstract class FooAbsClass {
+	def fooOp() {
+		println("foo1")	
+	}
+}
+
+@Aspect(className=typeof(FooInterface))
+class FooAspect extends FooAbsClass{
+	@OverrideAspectMethod
+	def fooOp() {
+		println("foo2")
+	}
 }
