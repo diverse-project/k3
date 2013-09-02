@@ -1,5 +1,4 @@
 package test
-
 import fr.inria.triskell.k3.Contracted
 import fr.inria.triskell.k3.Inv
 import fr.inria.triskell.k3.Post
@@ -7,11 +6,11 @@ import fr.inria.triskell.k3.PostConditionViolationException
 import fr.inria.triskell.k3.Pre
 import fr.inria.triskell.k3.PreConditionViolationException
 import org.junit.Test
-
+ 
 import static org.junit.Assert.*
 
-class TestCase{
-	@Test
+class TestCase{ 
+	@Test 
 	def void testPre(){
 		val l = new TestDbC()
 		try{
@@ -21,7 +20,7 @@ class TestCase{
 		}
 		fail("Should not occur")
 	}
- 
+  
 	@Test
 	def void testInv(){ 
 		val l = new TestDbC1()

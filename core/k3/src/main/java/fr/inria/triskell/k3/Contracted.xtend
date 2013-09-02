@@ -18,7 +18,7 @@ import org.eclipse.xtend.lib.macro.declaration.Visibility
 @Active(typeof(ContractedProcessor))
 annotation Contracted {
 }
-
+ 
 @Target(ElementType::METHOD)
 annotation Pre {
 }

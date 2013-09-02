@@ -18,7 +18,7 @@ class TestA {
 		assertEquals(a.foooo, "CAspect") 
 	}
 } 
-    
+       
  
  
  
