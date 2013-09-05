@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
    <groupId>fr.inria.triskell.k3</groupId>
-  <artifactId>fsm</artifactId>
+  <artifactId>fsm.metamodel</artifactId>
   <packaging>eclipse-plugin</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
