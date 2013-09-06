@@ -23,7 +23,7 @@ import java.util.Collections
  
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
-	Class className;
+	Class<?> className;
 }
 
 public annotation OverrideAspectMethod {
