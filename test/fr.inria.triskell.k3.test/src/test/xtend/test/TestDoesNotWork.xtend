@@ -1,10 +1,10 @@
 package test
- 
+
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
-import static extension test.FooAbsClass.*
+
 import static extension test.FooAspect.*
- 
+
 class TestDoesNotWork {
 	
 	def static void main(String[] args) {

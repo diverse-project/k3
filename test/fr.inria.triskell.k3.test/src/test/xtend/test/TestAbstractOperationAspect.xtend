@@ -7,9 +7,8 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension test.CAspect_A.*
- 
- 
+import static extension test.AAspect_A.*
+
 class TestA {
 	@Test
 	def void test_ABC_Inheritance() {

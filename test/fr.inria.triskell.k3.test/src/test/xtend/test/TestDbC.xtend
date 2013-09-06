@@ -1,4 +1,5 @@
 package test
+
 import fr.inria.triskell.k3.Contracted
 import fr.inria.triskell.k3.Inv
 import fr.inria.triskell.k3.Post
@@ -6,7 +7,7 @@ import fr.inria.triskell.k3.PostConditionViolationException
 import fr.inria.triskell.k3.Pre
 import fr.inria.triskell.k3.PreConditionViolationException
 import org.junit.Test
- 
+
 import static org.junit.Assert.*
 
 class TestCase{ 
