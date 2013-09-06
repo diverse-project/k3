@@ -6,30 +6,63 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 class TestComposition {
-	@Composition
-	var Compose attr  = null
-
 	@Test
-	def testComposition() {
-		val testCompo = new TestComposition
-		val compo = new Composer2
-		val compose = new Compose
+	def void testComposition1() {
+		val composed1 = new Composed1
+		val composed2 = new Composed2
+		val compose1 = new Compose
 		
-		testCompo.attr = compose
-		assertEquals(compose, testCompo.attr)
-		compo.attr = testCompo.attr
-		assertEquals(compose, compo.attr)
-		assertNull(testCompo.attr)
-	}	
-}
+		composed1.attr1 = compose1
+		assertEquals(compose1, composed1.attr1)
+		
+		composed2.attr2 = compose1
+		assertEquals(compose1, composed2.attr2)
+		assertNull(composed1.attr1)
+	}
+	
+	@Test
+	def void testComposition2() {
+		val composed1 = new Composed1
+		val composed2 = new Composed2
+		val compose1 = new Compose
+		val compose2 = new Compose
 
-class Composer2 {
-	@Composition
-	public var Compose attr  = null
+		composed1.attr1 = compose1
+		assertEquals(compose1, composed1.attr1)
+		composed2.attr2 = compose2
+		assertEquals(compose2, composed2.attr2)
+		
+		composed2.attr2 = compose1
+		assertEquals(compose1, composed2.attr2)
+		assertNull(composed1.attr1)
+		assertNull(compose2._kContainer)
+	}	
 }
 
 
 class Compose {
+}
+
+class Composed1 {
+	@Composition
+	public var Compose attr1
 	
+	@Composition
+	public var Compose attr1b
+	
+	new() {
+		attr1 = null
+		attr1b = null
+	}
+}
+
+
+class Composed2 {
+	@Composition
+	public var Compose attr2
+	
+	new() {
+		attr2 = null
+	}
 }
 

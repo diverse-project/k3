@@ -3,8 +3,10 @@ package test
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
 import fr.inria.triskell.k3.ReplaceAspectMethod
+import org.junit.Test
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*
+
 import static extension test.AspectC.*;
 
 class TestAspect {
@@ -21,19 +23,19 @@ class TestAspect {
 		assertEquals(l.foo, "ABC") 
 	}  */
  
-	@org.junit.Test
+	@Test
 	def void testAspectMethodReplacement() {
 		val l = new C
 		assertTrue(l.testReplacement)
 	} 
 	 
-	@org.junit.Test 
+	@Test 
 	def void testAspectReplaceAspectMethod() {
 		val l = new C 
 		assertTrue(l.testReplaceAspectMethod)
 	}
 
-	@org.junit.Test
+	@Test
 	def void testStaticAndNotStaticAttribute() {  
 		val l = new C
 		val l1 = new C  
@@ -48,7 +50,7 @@ class TestAspect {
 
 	}
 
-	@org.junit.Test
+	@Test
 	def void testAbstractMethodOnAspect() {
 		val l = new C
 		l.foofoo 
