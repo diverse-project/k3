@@ -28,17 +28,17 @@ public annotation Composition {}
  */
 public class CompositionProcessor extends AbstractFieldProcessor {
 	// The name of the container attribute
-	private val static String NAME_CONTAINER = "_kContainer" 
+	protected val static String NAME_CONTAINER = "_kContainer" 
 	// Used to know the types which interface has been already generated.
-	private val Set<TypeReference> interfaceObsGenerated = new HashSet<TypeReference>()
+	protected val Set<TypeReference> interfaceObsGenerated = new HashSet<TypeReference>()
 	
 	// Returns the name of the generated interface
-	def String getObservabilityInterfaceName(FieldDeclaration field) {
+	protected def String getObservabilityInterfaceName(FieldDeclaration field) {
 		return field.type.name + "__K3__Observer4Composition"
 	}
 	
 	// Returns the name of the operation of the generated interface
-	def String getObservabilityOperationName(String typeName) {
+	protected def String getObservabilityOperationName(String typeName) {
 		return "__remove__K3__Observer4Composition_" + typeName 
 	}
 	
