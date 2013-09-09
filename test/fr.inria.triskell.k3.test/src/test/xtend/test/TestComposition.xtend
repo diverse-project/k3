@@ -1,6 +1,7 @@
 package test
 
 import fr.inria.triskell.k3.Composition
+import java.util.List
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -54,6 +55,12 @@ class Composed1 {
 		attr1 = null
 		attr1b = null
 	}
+}
+
+
+class Composed3 {
+//	@Composition
+	public var List<Compose> attr1
 }
 
 
