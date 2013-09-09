@@ -11,7 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
+		<xtend.version>2.4.3</xtend.version>
 	</properties>
   
  	<build>
