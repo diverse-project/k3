@@ -205,7 +205,7 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	}
 	
 	protected void registerParameter (String nameParameter, String typeParameter) {
-		this.context.operationParams.add(nameParameter + " : " + typeParameter);
+		this.context.operationParams.add(typeParameter + " " + nameParameter);
 	}
 	
 	protected void registerNewClass (String newClass) {

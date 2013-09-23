@@ -279,33 +279,14 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	}
 	
 	public void createKmtProjectWithEcore () {
-		switch (this.context.indexTransfomation) {
-		case 0:
-			//none
-			break;
-		case 1:
+		if (this.context.indexTransfomation != 0) {
 			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
 					"File:///"+this.context.locationProject,
 					this.context.nameProject,
 					"eval",
-					"File:///"+this.context.ecoreIFile.getLocation().toOSString());
-			break; 
-		case 2:
-			/*generator.generateCustomizeProjectScala (this.context.nameProject,
-													 "file:///" + this.context.locationProject,
-					 								 "/" + this.context.ecoreIFile.getProjectRelativePath().toString(),
-					 								 this.context.ecoreIFile.getProject().getName(),
-					 								 this.context.operationName,
-					 								 this.context.operationReturnType,
-					 								 this.context.operationParams,
-					 								 this.context.listNewClass);*/
-			break;
-		case 3:
-			/*generator.generateVisitorProjectScala (this.context.nameProject,
-												   "file:///" + this.context.locationProject,
-					 							   "/" + this.context.ecoreIFile.getProjectRelativePath().toString(),
-					 							   this.context.ecoreIFile.getProject().getName());*/
-			break;
+					"File:///"+this.context.ecoreIFile.getLocation().toOSString(), 
+					this.context.listNewClass, 
+					this.context.operationParams);			
 		}
 	}
 	

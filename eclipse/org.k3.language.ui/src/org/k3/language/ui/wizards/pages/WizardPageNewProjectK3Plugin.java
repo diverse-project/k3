@@ -239,7 +239,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		lblTemplateEcore.setBounds(10, 176, 218, 15);
 		
 		combo = new Combo(grpFeatures, SWT.NONE);
-		combo.setItems(new String[] {"None", "Aspect class from ecore file", "Customize", "Traditional Visitor design patter (Not Recommended)"});
+		combo.setItems(new String[] {"None", "Aspect class from ecore file", "Customize"});
 		combo.setBounds(10, 197, 333, 23);
 		combo.select(0);
 		
