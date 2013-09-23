@@ -7,22 +7,29 @@ class Context {
 	
 	public List<String> 	packageCollection
 	public List<String>		classCollection
+	public List<String>		classAspectCollection
 	public Integer 			counterPackage
 	public StringBuffer		kmtContent
 	public String			projectName
 	public String			projectPath
 	public String			nameOperation
 	public Boolean			isOverride
+	public List<String>		operationParams
+	public List<String>		listNewClass
 	
-	new(String projectPath, String projectName, String nameOperation) {
+	new(String projectPath, String projectName, String nameOperation,List<String> listNewClass, List<String> operationParams) {
 		packageCollection = new ArrayList<String>
 		classCollection = new ArrayList<String>
+		classAspectCollection = new ArrayList<String>
 		counterPackage = 0
 		kmtContent = new StringBuffer
 		this.projectName = projectName
-		this.projectPath = projectPath +"/" + projectName + "/src/main/java/"
+		this.projectPath = projectPath +"/" + projectName + "/src/"
 		this.nameOperation = nameOperation
 		isOverride = false
+		this.operationParams = operationParams
+		this.listNewClass = listNewClass
+		
 	}
 	
 	def public String comment_ForMultiInheritence() {

@@ -8,6 +8,12 @@ import java.util.List
 static class FileManager {
 	
 	def public static void writeFile(String pathProject, String nameFile, List<String> collectionPackage, String content) {
+		
+		println("projectPath = " + pathProject);
+		println("nameFile = " + nameFile);
+		println("content = " + content);
+		
+		
 		var String pathCurrent = writePackage(pathProject, collectionPackage)
 		
 		var BufferedWriter buffer = new BufferedWriter(new FileWriter(pathCurrent + nameFile + ".xtend"))

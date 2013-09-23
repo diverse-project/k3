@@ -17,17 +17,25 @@ import java.util.List
 class AspectGenerator{
 
 
-	def static void main(String[] args) {
-		println('Hello Kermeta on top of Xtend!')
+	public def static void main(String[] args) {
+		//println('Hello Kermeta on top of Xtend!')
+		println(System.getProperty("user.dir") + "/target/");
 		var String projectPath = System.getProperty("user.dir") + "/target/"
 		var String projectName = "aspectKermeta"
 		var String operationName = "eval"
-		new AspectGenerator().run(projectPath, projectName, operationName, "kermeta.ecore")
+		var List<String> listNewClass = new ArrayList<String>()
+		var List<String> operationParams = new ArrayList<String>()
+		listNewClass.add("Context")
+		listNewClass.add("Essai")
+		operationParams.add("Context context")
+		operationParams.add("Essai test")
+		
+		aspectGenerate(projectPath, projectName, operationName, "ASMLogo.ecore", listNewClass, operationParams)
 
 	}
 	
-	public def run(String projectPath, String projectName, String operationName, String ecorePath) {
-		var Context context = new Context(projectPath, projectName, operationName)
+	public def static aspectGenerate(String projectPath, String projectName, String operationName, String ecorePath, List<String> listNewClass, List<String> operationParams) {
+		var Context context = new Context(projectPath, projectName, operationName, listNewClass, operationParams)
 		
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
@@ -37,31 +45,32 @@ class AspectGenerator{
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", fact)
 		
 		var rs = new ResourceSetImpl()
-		//var uri = URI.createURI("kermeta.ecore")
 		var uri = URI.createURI(ecorePath)
 		var res = rs.getResource(uri, true)
 
 		var EPackage p = res.contents.get(0) as EPackage
 		p.generateAspect(context)
-		generateContext(context)
+		generateClass(context)
 	}
 	
-	private def void generateContext(Context context) {
+	private static def void generateClass(Context context) {
 		// initialization of packaging for the class "Context"
 		var List<String> packageCollection = new ArrayList<String>
 		packageCollection.add(context.projectName)
 		
 		// initialization of the content of file "Context.xtend"
 		var StringBuffer content = new StringBuffer
-		content.append("package " + context.projectName + "\n\n")
-		content.append("class Context {\n\n")
-		content.append("\tdef new (){\n\n\t}")
-		content.append("\n\n}\n")
 		
-		FileManager.writeFile(context.projectPath, "Context", packageCollection, content.toString)
 		
+		for(c : context.listNewClass) {
+			content.append("package " + context.projectName + "\n\n")
+			content.append("class "+ c +" {\n\n")
+			content.append("\tnew (){\n\n\t}")
+			content.append("\n\n}\n")
+			FileManager.writeFile(context.projectPath.substring(8), c, packageCollection, content.toString)
+			content.delete(0, content.length)
+		}
 	}
-
 }
 
 @Aspect(className=typeof(EPackage)) 
@@ -82,9 +91,9 @@ class EPackageAspect {
 				}
 			}
 			_self.manageImport(context)
-			FileManager.writeFile(context.projectPath, context.packageCollection.last, context.packageCollection, context.kmtContent.toString)
-			//_self.writeFile(context)
+			FileManager.writeFile(context.projectPath.substring(8), context.packageCollection.last, context.packageCollection, context.kmtContent.toString)
 			context.classCollection = new ArrayList<String>
+			context.classAspectCollection = new ArrayList<String>
 			context.kmtContent = new StringBuffer
 			
 		}
@@ -124,9 +133,18 @@ class EPackageAspect {
 			aspect.append("import fr.inria.triskell.k3.OverrideAspectMethod\n")			
 		}
 		
-		aspect.append("import " + context.projectName + "\n\n")
+		for (c : context.listNewClass)
+		{
+			aspect.append("import " + context.projectName + "." + c + "\n")
+		}
 		
 		for (cl : context.classCollection){
+			aspect.append("import " + pack + "." + cl + "\n")
+		}
+		
+		aspect.append("\n")
+		
+		for (cl : context.classAspectCollection){
 			aspect.append("import static extension " + pack + "." + cl + ".*\n")
 		}
 		
@@ -178,11 +196,22 @@ class EClassAspect {
 	}
 		
 	def private void addClass (Context context) {
-		context.classCollection.add(_self.name + "Aspect")
+		context.classCollection.add(_self.name)
+		context.classAspectCollection.add(_self.name + "Aspect")
 	}
 	
 	def private void writeOperation (Context context) {
-		var String operation = "\tdef public void " + context.nameOperation + " (Context context)"
+		var StringBuffer operation = new StringBuffer
+		
+		operation.append("\tdef public void " + context.nameOperation + " (")
+		
+		for(op : context.operationParams) {
+			operation.append(op)
+			if(op != context.operationParams.last) {
+				operation.append(", ")
+			}
+		}
+		operation.append(")")
 		
 		if (!_self.ESuperTypes.empty) {
 			context.kmtContent.append("\t@OverrideAspectMethod\n")
