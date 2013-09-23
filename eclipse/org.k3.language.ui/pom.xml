@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../k3eclipse.root/pom.xml</relativePath>
+		<groupId>fr.inria.triskell.k3</groupId>
+		<artifactId>fr.inria.triskell.k3.root</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.k3.language.ui</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+	</properties>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<!-- manually copy features -->
+					<execution>
+						<id>copy</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>k3.language</groupId>
+									<artifactId>k3.language.aspectGenerator</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<outputDirectory>lib</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project> 
+
