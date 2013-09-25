@@ -6,10 +6,12 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.k3.language.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.codegen.ecore
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.eclipse.core.resources,
+ org.eclipse.emf.codegen.ecore,
  org.eclipse.emf.common.ui.dialogs,
  org.eclipse.emf.common.util,
  org.eclipse.emf.mapping.ecore2ecore.presentation,

@@ -117,7 +117,7 @@ public class FileUtils {
 		return buffer.toString();
 	}
 	
-	public static String pomXml(String nameProject, String groupID, String artifactID, String version) {
+	public static String pomXmlK3(String nameProject, String groupID, String artifactID, String version) {
 		StringBuffer buffer= new StringBuffer();
 		
 		buffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -209,6 +209,50 @@ public class FileUtils {
 		return buffer.toString();
 	}
  
+	public static String pomXmlMetamodel(String nameProject, String groupID, String artifactID, String version) {
+		StringBuffer buffer= new StringBuffer();
+		
+		buffer.append("<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n");
+		buffer.append("\t <modelVersion>4.0.0</modelVersion>\n");
+		buffer.append("\t<groupId>"+ groupID + "</groupId>\n");
+		buffer.append("\t<artifactId>"+ artifactID + "</artifactId>\n");
+		buffer.append("\t<version>"+ version + "</version>\n");
+		buffer.append("\t<name>"+ nameProject + "</name>\n");
+		buffer.append("\t<build>\n");
+		buffer.append("\t\t<sourceDirectory>src</sourceDirectory>\n");
+		buffer.append("\t\t<plugins>\n");
+		buffer.append("\t\t\t<plugin>\n");
+		buffer.append("\t\t\t\t<artifactId>maven-compiler-plugin</artifactId>\n");
+		buffer.append("\t\t\t\t<version>3.0</version>\n");
+		buffer.append("\t\t\t\t<configuration>\n");
+		buffer.append("\t\t\t\t\t<source/>\n");
+		buffer.append("\t\t\t\t\t<target/>\n");
+		buffer.append("\t\t\t\t</configuration>\n");
+		buffer.append("\t\t\t</plugin>\n");
+		buffer.append("\t\t</plugins>\n");
+		buffer.append("\t</build>\n");
+		buffer.append("\t<dependencies>\n");
+		buffer.append("\t\t<dependency>\n");
+		buffer.append("\t\t\t<groupId>org.eclipse.core</groupId>\n");
+		buffer.append("\t\t\t<artifactId>org.eclipse.core.runtime</artifactId>\n");
+		buffer.append("\t\t\t<version>3.6.0.v20100505</version>\n");
+		buffer.append("\t\t</dependency>\n");
+		buffer.append("\t\t<dependency>\n");
+		buffer.append("\t\t\t<groupId>org.eclipse.emf</groupId>\n");
+		buffer.append("\t\t\t<artifactId>org.eclipse.emf.ecore</artifactId>\n");
+		buffer.append("\t\t\t<version>2.8.0-v20120911-0500</version>\n");
+		buffer.append("\t\t</dependency>\n");
+		buffer.append("\t\t<dependency>\n");
+		buffer.append("\t\t\t<groupId>org.eclipse.emf</groupId>\n");
+		buffer.append("\t\t\t<artifactId>org.eclipse.emf.common</artifactId>\n");
+		buffer.append("\t\t\t<version>2.8.0-v20120911-0500</version>\n");
+		buffer.append("\t\t</dependency>\n");
+		buffer.append("\t</dependencies>\n");
+		buffer.append("</project>\n");
+		
+		return buffer.toString();
+	}
+	
 	public static void copy(final InputStream inStream, final OutputStream outStream, final int bufferSize) throws IOException {
 		final byte[] buffer = new byte[bufferSize];
 		int nbRead;
