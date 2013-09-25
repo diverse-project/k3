@@ -6,6 +6,8 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
  <modules>
+	<module>../org.k3.core.plugin</module>
+	<module>../org.k3.language.ui</module>
 	<module>../K3SampleDeployer</module>
 	<module>../K3Feature</module>
 	<module>../K3UpdateSite</module>
