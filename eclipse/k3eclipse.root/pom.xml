@@ -2,7 +2,7 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.inria.triskell.k3</groupId>
-  <artifactId>fr.inria.triskell.k3.root</artifactId>
+  <artifactId>k3eclipse.root</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
  <modules>
