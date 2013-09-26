@@ -8,7 +8,9 @@
 		<artifactId>k3.eclipse.root</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-  <artifactId>K3Feature</artifactId>
-  <packaging>eclipse-feature</packaging>
-</project> 
 
+  <artifactId>k3.eclipse.p2updatesite</artifactId>
+  <packaging>eclipse-update-site</packaging>
+
+
+</project> 
