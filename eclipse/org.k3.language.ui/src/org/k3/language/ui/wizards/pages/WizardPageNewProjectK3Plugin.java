@@ -382,4 +382,18 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	public boolean canFlipToNextPage () {
 		return enableNext;
 	}
+	
+	public void setEcoreLoaded(IFile ecoreFile) {
+		btnCheckEcore.setSelection(true);
+		btnCheckEcore.setEnabled(false);
+		updateEcoreProject(true);
+		btnBrowseEcore.setEnabled(false);
+		txtPathEcore.setEnabled(false);
+		lblTemplateEcore.setEnabled(true);
+		combo.setEnabled(true);
+		txtPathEcore.setText(ecoreFile.getFullPath().toOSString());
+		
+		this.context.ecoreIFile = ecoreFile;
+		this.context.ecoreProjectPath = ecoreFile.getProject().getFullPath().toOSString();
+	}
 }

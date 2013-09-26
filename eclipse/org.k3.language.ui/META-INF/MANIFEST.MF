@@ -25,3 +25,6 @@ Bundle-ClassPath: .,
  library/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar,
  library/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar,
  lib/k3.language.aspectGenerator-0.0.1-SNAPSHOT.jar
+Export-Package: org.k3.language.ui,
+ org.k3.language.ui.wizards,
+ org.k3.language.ui.wizards.pages

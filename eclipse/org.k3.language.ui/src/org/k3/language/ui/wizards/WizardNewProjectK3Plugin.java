@@ -37,10 +37,17 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 
 	protected Context context = new Context();
 	
+	WizardPageNewProjectK3Plugin 		projectPage			 = new WizardPageNewProjectK3Plugin(this.context);
+	WizardPageCustomNewProjectK3Plugin 	projectPageCustom	 = new WizardPageCustomNewProjectK3Plugin(this.context);
+	
+	public WizardNewProjectK3Plugin() {
+		
+	}
+	
 	@Override
 	public void addPages() {
-		addPage(new WizardPageNewProjectK3Plugin(this.context));
-		addPage(new WizardPageCustomNewProjectK3Plugin(this.context));
+		addPage(projectPage);
+		addPage(projectPageCustom);
 	}
 	
 	@Override
@@ -343,5 +350,9 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	
 	private String getContextNamePackage() {
 		return this.context.namePackage;
+	}
+
+	public WizardPageNewProjectK3Plugin getPageProject() {
+		return this.projectPage;
 	}
 }
