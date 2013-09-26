@@ -4,9 +4,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<relativePath>../k3eclipse.root/pom.xml</relativePath>
-		<groupId>fr.inria.triskell.k3</groupId>
-		<artifactId>fr.inria.triskell.k3.root</artifactId>
+		<relativePath>../k3.eclipse.root/pom.xml</relativePath>
+		<groupId>org.diverse.k3.eclipse</groupId>
+		<artifactId>k3.eclipse.root</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.k3.language.ui</artifactId>
@@ -33,7 +33,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>k3.language</groupId>
+									<groupId>org.diverse.k3.tools</groupId>
 									<artifactId>k3.language.aspectGenerator</artifactId>
 									<version>0.0.1-SNAPSHOT</version>
 									<outputDirectory>lib</outputDirectory>

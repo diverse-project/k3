@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <relativePath>../k3eclipse.root/pom.xml</relativePath>
-    <groupId>fr.inria.triskell.k3</groupId>
-    <artifactId>fr.inria.triskell.k3.root</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+		<relativePath>../k3.eclipse.root/pom.xml</relativePath>
+		<groupId>org.diverse.k3.eclipse</groupId>
+		<artifactId>k3.eclipse.root</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
   <artifactId>fr.inria.triskell.K3.p2updatesite</artifactId>
   <packaging>eclipse-update-site</packaging>
