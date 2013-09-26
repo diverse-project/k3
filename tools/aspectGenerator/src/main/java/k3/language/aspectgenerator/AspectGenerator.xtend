@@ -181,7 +181,7 @@ class EClassAspect {
 			}
 			scriptNewClass = scriptNewClass + _self.name + "Aspect" 
 			if (!_self.ESuperTypes.empty) {
-				scriptNewClass = scriptNewClass + " extends " + _self.ESuperTypes.get(0).name
+				scriptNewClass = scriptNewClass + " extends " + _self.ESuperTypes.get(0).name + "Aspect"
 			}
 			scriptNewClass = scriptNewClass + " {\n"
 			if(_self.ESuperTypes.length > 1){
