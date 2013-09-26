@@ -257,7 +257,6 @@ public class FileUtils {
 		buffer.append("\t\t\t<version>3.0-SNAPSHOT</version>\n");
 		buffer.append("\t\t</dependency>\n");
 		buffer.append("\t\t<dependency>\n");
-		buffer.append("\t\t<dependency>\n");
 		buffer.append("\t\t\t<groupId>org.eclipse.emf</groupId>\n");
 		buffer.append("\t\t\t<artifactId>org.eclipse.emf.ecore.xmi</artifactId>\n");
 		buffer.append("\t\t\t<version>2.8.0-v20120911-0500</version>\n");
