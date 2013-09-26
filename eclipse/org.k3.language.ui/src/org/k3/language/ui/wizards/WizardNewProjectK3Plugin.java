@@ -6,11 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -31,6 +26,9 @@ import org.k3.language.ui.tools.Context;
 import org.k3.language.ui.tools.FileUtils;
 import org.k3.language.ui.tools.GenerateGenModelCode;
 import org.k3.language.ui.tools.ProjectDescriptor;
+import org.k3.language.ui.tools.classpath.ManageClasspath;
+import org.k3.language.ui.tools.classpath.ManageClasspathPlugin;
+import org.k3.language.ui.tools.classpath.ManageClasspathStandAlone;
 import org.k3.language.ui.wizards.pages.WizardPageCustomNewProjectK3Plugin;
 import org.k3.language.ui.wizards.pages.WizardPageNewProjectK3Plugin;
 
@@ -112,6 +110,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	
 	public void configureProject(IProject project, IProgressMonitor monitor) {
 		try {
+			ManageClasspath classpath;
 			IProjectDescription description;
 			description = project.getDescription();
 			addNature(description, "org.eclipse.jdt.core.javanature");
@@ -119,17 +118,18 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			switch (this.context.kindsOfProject)
 			{
 			case STANDALONE :
-				setClassPath(project, monitor);
+				classpath = new ManageClasspathStandAlone();
+				classpath.setClasspath(project, monitor);
 				break;
 			case PLUGIN :
+				classpath = new ManageClasspathPlugin();
 				addNature(description, "org.eclipse.pde.PluginNature");
 				configurePlugIn(project, monitor);
-				setClassPath(project, monitor);
+				classpath.setClasspath(project, monitor);
 				break;
 			case MAVEN :
 				addNature(description, "org.eclipse.m2e.core.maven2Nature");
-				createMavenFile(project, monitor, false);
-				//setClassPathMaven(project, monitor);
+				createMavenFile(project, monitor, false);  
 				break;
 			}
 			project.setDescription(description, monitor);
@@ -174,7 +174,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = FileUtils.manifestMF(this.context.nameProject, new ArrayList<String>(), new ArrayList<String>());
+		String contents = FileUtils.manifestMFPlugin(this.context.nameProject, new ArrayList<String>(), new ArrayList<String>());
 		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
 		if (file.exists()) {
 			file.setContents(stream, true, true, monitor);
@@ -260,73 +260,6 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	public Context getContext() {
 		return context;
 	}
-	
-	public void setClassPath (IProject project, IProgressMonitor monitor) {
-		
-		try {
-			
-			IJavaProject javaProject = (IJavaProject)project.getNature(JavaCore.NATURE_ID);
-			
-			IFolder sourceFolder = project.getFolder("src");
-			try {
-				sourceFolder.create(true, true, monitor);
-			} catch (Exception ex) {}
-			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
-			
-			IClasspathEntry[] newClassPath = new IClasspathEntry[8];
-			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
-			newClassPath[1] = JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER"));
-			newClassPath[2] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar"), null, null);
-			newClassPath[3] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar"), null, null);
-			newClassPath[4] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/k3-3.0-SNAPSHOT.jar"), null, null);
-			newClassPath[5] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.emf.common-2.8.0-v20120911-0500.jar"), null, null);
-			newClassPath[6] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.emf.ecore.xmi-2.8.0-v20120911-0500.jar"), null, null);
-			newClassPath[7] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.emf.ecore-2.8.0-v20120911-0500.jar"), null, null);
-			
-			javaProject.setRawClasspath(newClassPath, monitor);
-			
-			
-		} catch (Exception e) {
-			Activator.logErrorMessage(e.getMessage(), e);			
-		}
-		
-	}
-	
-	public void setClassPathMaven (IProject project, IProgressMonitor monitor) {
-		
-		try {
-			
-			IJavaProject javaProject = (IJavaProject)project.getNature(JavaCore.NATURE_ID);
-			
-			IFolder sourceFolder = project.getFolder("src");
-			try {
-				sourceFolder.create(true, true, monitor);
-			} catch (Exception ex) {}
-			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
-			
-			IClasspathEntry[] newClassPath = new IClasspathEntry[1];
-			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
-			
-			javaProject.setRawClasspath(newClassPath, monitor);
-			
-			
-		} catch (Exception e) {
-			Activator.logErrorMessage(e.getMessage(), e);			
-		}
-		
-	}
-	
-	/*public void createProjectWithEcore (IProgressMonitor monitor) {
-		if (this.context.indexTransfomation != 0) {
-			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
-					"File:///"+this.context.locationProject,
-					this.context.nameProject,
-					"eval",
-					"File:///"+this.context.ecoreIFile.getLocation().toOSString(), 
-					this.context.listNewClass, 
-					this.context.operationParams);			
-		}
-	}*/
 	
 	public boolean createProjectWithEcore(IProgressMonitor monitor) {
 		boolean returnVal = true;

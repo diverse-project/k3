@@ -25,11 +25,11 @@ public class FileUtils {
 		buffer.append("\t\tprintln('Hello wolrd by Kermeta 3 programm!')\n");
 		buffer.append("\t}\n");
 		buffer.append("}\n");
-		
+
 		return buffer.toString();
 	}
-	 
-	public static String manifestMF (String projectName, List<String> requiredBundles, List<String> exportedPackages) {
+	
+	public static String manifestMFPlugin (String projectName, List<String> requiredBundles, List<String> exportedPackages) {
 
 		StringBuffer buffer= new StringBuffer();
 		buffer.append("Manifest-Version: 1.0" + lineSeparator);
@@ -38,19 +38,7 @@ public class FileUtils {
 		buffer.append("Bundle-SymbolicName: " + projectName + "; singleton:=true" + lineSeparator);
 		buffer.append("Bundle-Version: 1.0.0" + lineSeparator);
 		buffer.append("Require-Bundle: ");
-	    for (final String entry : requiredBundles) {
-	    	buffer.append(" " + entry + ",\n");
-	    }
-	
-	    if (exportedPackages != null && !exportedPackages.isEmpty()) {
-	    	buffer.append("Require-Bundle: " + exportedPackages.get(0));
-	            for (int i = 1, x = exportedPackages.size(); i < x; i++) {
-	            	buffer.append(",\n " + exportedPackages.get(i));
-	            }
-	            buffer.append("\n");
-	    }
-	    buffer.append(lineSeparator);
-	    //buffer.append("Bundle-RequiredExecutionEnvironment: J2SE-1.5\r\n");
+		buffer.append("org.k3.core.plugin;bundle-version=\"1.0.0\""+ lineSeparator);
 	    buffer.append("Bundle-ClassPath: .,");
 	    buffer.append("resources/k3-3.0-SNAPSHOT.jar,");
 	    buffer.append("resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar,");
