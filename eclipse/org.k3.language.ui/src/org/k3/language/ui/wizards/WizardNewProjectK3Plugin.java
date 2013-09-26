@@ -69,7 +69,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 					}
 					FileUtils.unZip(project, new ProjectDescriptor("org.k3.language.ui","zips/resources.zip"));
 					configureProject(project, monitor);
-					setClassPath(project, monitor);
+					//setClassPath(project, monitor);
 					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 				}
 			};
@@ -119,14 +119,17 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			switch (this.context.kindsOfProject)
 			{
 			case STANDALONE :
+				setClassPath(project, monitor);
 				break;
 			case PLUGIN :
 				addNature(description, "org.eclipse.pde.PluginNature");
 				configurePlugIn(project, monitor);
+				setClassPath(project, monitor);
 				break;
 			case MAVEN :
 				addNature(description, "org.eclipse.m2e.core.maven2Nature");
 				createMavenFile(project, monitor, false);
+				//setClassPathMaven(project, monitor);
 				break;
 			}
 			project.setDescription(description, monitor);
@@ -217,7 +220,11 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IFile file = currentContainer.getFile(new Path(path));
 		String contents = "";
 		if(!bEcoreProject) {
-			contents = FileUtils.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
+			if(this.context.ecoreProject) {
+				contents = FileUtils.pomXmlK3Ecore(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
+			}else {
+				contents = FileUtils.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
+			}
 		} else {
 			contents = FileUtils.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 		}
@@ -285,6 +292,30 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		
 	}
 	
+	public void setClassPathMaven (IProject project, IProgressMonitor monitor) {
+		
+		try {
+			
+			IJavaProject javaProject = (IJavaProject)project.getNature(JavaCore.NATURE_ID);
+			
+			IFolder sourceFolder = project.getFolder("src");
+			try {
+				sourceFolder.create(true, true, monitor);
+			} catch (Exception ex) {}
+			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
+			
+			IClasspathEntry[] newClassPath = new IClasspathEntry[1];
+			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
+			
+			javaProject.setRawClasspath(newClassPath, monitor);
+			
+			
+		} catch (Exception e) {
+			Activator.logErrorMessage(e.getMessage(), e);			
+		}
+		
+	}
+	
 	/*public void createProjectWithEcore (IProgressMonitor monitor) {
 		if (this.context.indexTransfomation != 0) {
 			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
@@ -316,7 +347,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			} catch (Exception e) {
 				Activator.logErrorMessage(e.getMessage(), e);
 			}
-			setClassPath(project, monitor);
+			//setClassPath(project, monitor);
 			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			
 		} catch (Exception exception) {
