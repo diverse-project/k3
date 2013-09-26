@@ -9,7 +9,7 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-  <artifactId>fr.inria.triskell.K3.p2updatesite</artifactId>
+  <artifactId>k3.eclipse.p2updatesite</artifactId>
   <packaging>eclipse-update-site</packaging>
 
 

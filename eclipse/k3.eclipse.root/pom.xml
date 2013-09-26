@@ -10,7 +10,7 @@
 	<module>../org.k3.language.ui</module>
 	<module>../K3SampleDeployer</module>
 	<module>../K3Feature</module>
-	<module>../K3UpdateSite</module>
+	<module>../k3.eclipse.p2updatesite</module>
   </modules>
 
   <properties>
