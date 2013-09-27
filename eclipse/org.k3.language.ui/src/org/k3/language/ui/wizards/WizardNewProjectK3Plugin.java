@@ -27,6 +27,7 @@ import org.k3.language.ui.tools.FileUtils;
 import org.k3.language.ui.tools.GenerateGenModelCode;
 import org.k3.language.ui.tools.ProjectDescriptor;
 import org.k3.language.ui.tools.classpath.ManageClasspath;
+import org.k3.language.ui.tools.classpath.ManageClasspathMaven;
 import org.k3.language.ui.tools.classpath.ManageClasspathPlugin;
 import org.k3.language.ui.tools.classpath.ManageClasspathStandAlone;
 import org.k3.language.ui.wizards.pages.WizardPageCustomNewProjectK3Plugin;
@@ -135,8 +136,10 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				classpath.setClasspath(project, monitor);
 				break;
 			case MAVEN :
+				classpath = new ManageClasspathMaven();
 				addNature(description, "org.eclipse.m2e.core.maven2Nature");
-				createMavenFile(project, monitor, false);  
+				createMavenFile(project, monitor, false);
+				classpath.setClasspath(project, monitor);
 				break;
 			}
 			project.setDescription(description, monitor);
