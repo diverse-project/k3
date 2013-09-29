@@ -2,8 +2,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>fr.inria.triskell</groupId>
-  <artifactId>fr.inria.triskell.k3.test</artifactId>
+  <groupId>fr.inria.diverse</groupId>
+  <artifactId>fr.inria.diverse.k3.test</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -49,8 +49,8 @@
 			<version>${xtend.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.inria.triskell</groupId>
-			<artifactId>k3</artifactId>
+			<groupId>fr.inria.diverse</groupId>
+			<artifactId>fr.inria.diverse.k3.core</artifactId>
 			<version>3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
