@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: K3 Core Plugin
+Bundle-SymbolicName: org.k3.core.plugin
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.k3.core.plugin.Activator
+Bundle-Vendor: INRIA
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.xtend.lib;bundle-version="2.4.2";visibility:=reexport,
+ org.eclipse.emf.ecore;bundle-version="2.7.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/k3-3.0-SNAPSHOT.jar,
+ .
+Export-Package: fr.inria.triskell.k3,
+ org.k3.core.plugin

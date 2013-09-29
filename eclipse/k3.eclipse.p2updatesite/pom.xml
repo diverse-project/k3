@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+		<relativePath>../k3.eclipse.root/pom.xml</relativePath>
+		<groupId>org.diverse.k3.eclipse</groupId>
+		<artifactId>k3.eclipse.root</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+  <artifactId>k3.eclipse.p2updatesite</artifactId>
+  <packaging>eclipse-update-site</packaging>
+
+
+</project> 

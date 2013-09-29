@@ -33,7 +33,7 @@ annotation Inv {
 
 class ContractedProcessor extends AbstractClassProcessor {
 
-	private def getAllInvs(MutableClassDeclaration cl, List<MutableMethodDeclaration> invs,
+	private def void getAllInvs(MutableClassDeclaration cl, List<MutableMethodDeclaration> invs,
 		extension TransformationContext context) {
 		invs.addAll(cl.declaredMethods.filter[annotations.exists[annotationTypeDeclaration.simpleName == "Inv"]])
 		if (cl.extendedClass != null) {
@@ -43,7 +43,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 		}
 	}
 
-	private def getAllPre(MutableClassDeclaration cl, List<MutableMethodDeclaration> pres, String MsimpleName,
+	private def void getAllPre(MutableClassDeclaration cl, List<MutableMethodDeclaration> pres, String MsimpleName,
 		extension TransformationContext context) {
 		pres.addAll(cl.declaredMethods.filter[m1|m1.simpleName == "pre" + MsimpleName])
 		if (cl.extendedClass != null) {
@@ -53,7 +53,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 		}
 	}
 
-	private def getAllPost(MutableClassDeclaration cl, List<MutableMethodDeclaration> posts, String simpleName,
+	private def void getAllPost(MutableClassDeclaration cl, List<MutableMethodDeclaration> posts, String simpleName,
 		extension TransformationContext context) {
 		posts.addAll(cl.declaredMethods.filter[m1|m1.simpleName == "post" + simpleName])
 		if (cl.extendedClass != null) {
@@ -287,7 +287,6 @@ class ContractedProcessor extends AbstractClassProcessor {
 			for (annotatedMethod : pre) {
 				val m = annotatedMethod.declaringType.declaredMethods.filter[m|
 					m.simpleName == annotatedMethod.simpleName.substring(3)].get(0)
-				val clazz = annotatedMethod.declaringType
 				annotatedMethod.declaringType.addMethod("prepriv" + m.simpleName,
 					[
 						visibility = Visibility::PRIVATE
@@ -328,7 +327,6 @@ class ContractedProcessor extends AbstractClassProcessor {
 
 				val m = annotatedMethod.declaringType.declaredMethods.filter[m|
 					m.simpleName == annotatedMethod.simpleName.substring(4)].get(0)
-				val clazz = annotatedMethod.declaringType
 
 				//if (!clazz.declaredMethods.exists[m1 | m1.simpleName == "pre" + m.simpleName ]){
 				annotatedMethod.declaringType.addMethod("postpriv" + m.simpleName,
