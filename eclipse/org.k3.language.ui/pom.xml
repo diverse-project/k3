@@ -5,11 +5,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 	<parent>
 		<relativePath>../k3.eclipse.root/pom.xml</relativePath>
-		<groupId>org.diverse.k3.eclipse</groupId>
-		<artifactId>k3.eclipse.root</artifactId>
+		<groupId>fr.inria.diverse.k3.eclipse</groupId>
+		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.k3.language.ui</artifactId>
+	<artifactId>fr.inria.diverse.k3.eclipse.language.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
@@ -33,8 +33,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.diverse.k3.tools</groupId>
-									<artifactId>k3.language.aspectGenerator</artifactId>
+									<groupId>fr.inria.diverse.k3.tools</groupId>
+									<artifactId>fr.inria.diverse.k3.tools.aspectGenerator</artifactId>
 									<version>0.0.1-SNAPSHOT</version>
 									<outputDirectory>lib</outputDirectory>
 								</artifactItem>

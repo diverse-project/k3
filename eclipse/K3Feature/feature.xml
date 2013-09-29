@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="K3Feature"
+      id="fr.inria.diverse.k3.eclipse.K3Feature"
       label="K3Feature"
       version="1.0.0.qualifier">
 
@@ -17,21 +17,21 @@
    </license>
 
    <plugin
-         id="org.k3.language.sample.deployer"
+         id="fr.inria.diverse.k3.eclipse.language.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
-         id="org.k3.language.ui"
+         id="fr.inria.diverse.k3.eclipse.core.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
-         id="org.k3.core.plugin"
+         id="fr.inria.diverse.k3.eclipse.sample.deployer"
          download-size="0"
          install-size="0"
          version="0.0.0"
