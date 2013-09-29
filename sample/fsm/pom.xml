@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.inria.triskell.k3</groupId>
-	<artifactId>fsm</artifactId>
+	<groupId>fr.inria.diverse.k3.sample</groupId>
+	<artifactId>fr.inria.diverse.k3.sample.fsm</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>kermeta3-quickstart</name>
+	<name>kermeta3-FSM Sample</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
+		<xtend.version>2.4.3</xtend.version>
 	</properties>
 	<build>
 		<plugins>
@@ -39,8 +39,8 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>fr.inria.triskell.k3</groupId>
-			<artifactId>fsm.metamodel</artifactId>
+			<groupId>fr.inria.diverse.k3.sample</groupId>
+			<artifactId>fr.inria.diverse.k3.sample.fsm.metamodel</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -55,8 +55,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>fr.inria.triskell</groupId>
-			<artifactId>k3</artifactId>
+			<groupId>fr.inria.diverse</groupId>
+			<artifactId>fr.inria.diverse.k3.core</artifactId>
 			<version>3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>

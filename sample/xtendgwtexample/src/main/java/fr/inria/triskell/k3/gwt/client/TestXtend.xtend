@@ -10,36 +10,31 @@ import com.google.gwt.user.client.ui.RootPanel
 
 import static fr.inria.triskell.k3.gwt.client.GreetingServiceAsync.Util.*
 
-public class TestXtend implements EntryPoint{
-	
-	
-	
-		
-	
+public class TestXtend implements EntryPoint {
+
 	override onModuleLoad() {
 		var b = new Button();
 		b.text = "hello"
 		b.addClickHandler(new MyClickHandler())
 		RootPanel.get().add(b)
-		
+
 	}
-	
+
 }
 
-class MyClickHandler implements ClickHandler, AsyncCallback<String>{
-	
-	
+class MyClickHandler implements ClickHandler, AsyncCallback<String> {
+
 	override void onClick(ClickEvent arg0) {
 		getInstance.greetServer("toto", this)
-		 
+
 	}
-	
+
 	override void onFailure(Throwable arg0) {
 		Window.alert("error")
 	}
-	
+
 	override onSuccess(String arg0) {
 		Window.alert(arg0)
 	}
-	
+
 }
