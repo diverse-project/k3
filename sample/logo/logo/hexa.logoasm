@@ -1,0 +1,22 @@
+<ASM:LogoProgram xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ASM="http://www.kermeta.org/kmLogo/ASM" xmi:version="2.0">
+<instructions xsi:type="ASM:Clear"/>
+<instructions xsi:type="ASM:Forward">
+			<steps xsi:type="ASM:Constant" integerValue="25"/>
+</instructions>
+<instructions xsi:type="ASM:ProcCall" declaration="//@instructions.3"/>
+<instructions xsi:type="ASM:ProcDeclaration" name="hexa" procCall="//@instructions.2">
+<instructions xsi:type="ASM:PenDown"/>
+<instructions xsi:type="ASM:Repeat">
+	<condition xsi:type="ASM:Constant" integerValue="6"/>
+	<block>
+		<instructions xsi:type="ASM:Forward">
+			<steps xsi:type="ASM:Constant" integerValue="25"/>
+		</instructions>
+		<instructions xsi:type="ASM:Right">
+			<angle xsi:type="ASM:Constant" integerValue="60"/>
+		</instructions>
+	</block>
+</instructions>
+<instructions xsi:type="ASM:PenUp"/>
+</instructions>
+</ASM:LogoProgram>
