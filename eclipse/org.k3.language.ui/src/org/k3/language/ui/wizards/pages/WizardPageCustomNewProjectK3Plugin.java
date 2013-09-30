@@ -7,8 +7,11 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -21,6 +24,9 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	private Context		context;
 	
 	protected Composite 	container;
+	protected Group 		grpOperationFeatures;
+	protected Group 		grpParameterFeature;
+	protected Group 		grpListOfParameters;
 	protected Label 		lblOperationName;
 	protected Label 		lblReturnType;
 	protected Label 		lblParameterName;
@@ -60,11 +66,20 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NULL);
+		container.setLayout(new GridLayout(1, false));
 		
 		//-----------------------------------------------
 		
-		txtOperationName = new Text(container, SWT.BORDER);
-		txtOperationName.setBounds(112, 10, 147, 21);
+		grpOperationFeatures = new Group(container, SWT.NONE);
+		grpOperationFeatures.setText("Operation features");
+		grpOperationFeatures.setLayout(new GridLayout(2, false));
+		
+		lblOperationName = new Label(grpOperationFeatures, SWT.NONE);
+		lblOperationName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOperationName.setText("Operation name");
+		
+		txtOperationName = new Text(grpOperationFeatures, SWT.BORDER);
+		txtOperationName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtOperationName.setText("customize");
 		
 		txtOperationName.addModifyListener(new ModifyListener() {
@@ -75,12 +90,11 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		lblReturnType = new Label(container, SWT.NONE);
-		lblReturnType.setText("Return type :");
-		lblReturnType.setBounds(284, 13, 75, 15);
+		lblReturnType = new Label(grpOperationFeatures, SWT.NONE);
+		lblReturnType.setText("Return type ");
 		
-		txtReturnType = new Text(container, SWT.BORDER);
-		txtReturnType.setBounds(365, 10, 147, 21);
+		txtReturnType = new Text(grpOperationFeatures, SWT.BORDER);
+		txtReturnType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtReturnType.setText("void");
 		
 		txtReturnType.addModifyListener(new ModifyListener() {
@@ -91,29 +105,41 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		lblOperationName = new Label(container, SWT.NONE);
-		lblOperationName.setText("Operation name :");
-		lblOperationName.setBounds(10, 13, 105, 15);
+		grpParameterFeature = new Group(container, SWT.NONE);
+		grpParameterFeature.setText("Parameter features");
+		grpParameterFeature.setLayout(new GridLayout(2, false));
 		
-		txtParameterName = new Text(container, SWT.BORDER);
-		txtParameterName.setBounds(10, 76, 105, 21);
+		lblParameterName = new Label(grpParameterFeature, SWT.NONE);
+		lblParameterName.setText("Parameter name");
 		
-		txtParameterType = new Text(container, SWT.BORDER);
-		txtParameterType.setBounds(135, 76, 105, 21);
+		txtParameterName = new Text(grpParameterFeature, SWT.BORDER);
+		txtParameterName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblParameterName = new Label(container, SWT.NONE);
-		lblParameterName.setBounds(10, 55, 105, 15);
-		lblParameterName.setText("Parameter name :");
+		lblParameterType = new Label(grpParameterFeature, SWT.NONE);
+		lblParameterType.setText("Parameter type");
 		
-		lblParameterType = new Label(container, SWT.NONE);
-		lblParameterType.setText("Parameter type :");
-		lblParameterType.setBounds(135, 55, 105, 15);
+		txtParameterType = new Text(grpParameterFeature, SWT.BORDER);
+		txtParameterType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		btnCheckCreateClass = new Button(container, SWT.CHECK);
-		btnCheckCreateClass.setBounds(246, 78, 102, 16);
+		btnCheckCreateClass = new Button(grpParameterFeature, SWT.CHECK);
 		btnCheckCreateClass.setText("create class for ");
 		
-		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		btnAdd = new Button(grpParameterFeature, SWT.NONE);
+		btnAdd.setText("Add");
+		
+		btnAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addParameter();
+			}
+		});
+		
+		grpListOfParameters = new Group(container, SWT.NONE);
+		grpListOfParameters.setText("List of parameters");
+		grpListOfParameters.setLayout(new GridLayout(2, false));
+		new Label(grpListOfParameters, SWT.NONE);
+		
+		table = new Table(grpListOfParameters, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 
 		colClassCreation = new TableColumn(table, SWT.LEFT);
 		colClassCreation.setText("new class for");
@@ -135,20 +161,10 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		btnAdd = new Button(container, SWT.NONE);
-		btnAdd.setBounds(354, 74, 75, 25);
-		btnAdd.setText("Add");
+		new Label(grpListOfParameters, SWT.NONE);
 		
-		btnAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addParameter();
-			}
-		});
-		
-		btnRemove = new Button(container, SWT.NONE);
+		btnRemove = new Button(grpListOfParameters, SWT.NONE);
 		btnRemove.setText("Remove");
-		btnRemove.setBounds(354, 135, 75, 25);
 		
 		btnRemove.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -180,6 +196,9 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 			registerParameter (txtParameterName.getText(), txtParameterType.getText());
 		}
 		table.redraw();
+		this.btnCheckCreateClass.setSelection(false);
+		this.txtParameterName.setText("");
+		this.txtParameterType.setText("");
 	}
 	
 	protected void removeParameter () {
@@ -236,4 +255,5 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 		}
 		return result;
 	}
+	
 }

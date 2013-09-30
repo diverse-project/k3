@@ -12,6 +12,9 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -82,15 +85,15 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NULL);
+		container.setLayout(new GridLayout(1, false));
 		
 		//-----------------------------------------------
 
 		grpKindOfProject = new Group(container, SWT.NONE);
 		grpKindOfProject.setText("Kinds of project");
-		grpKindOfProject.setBounds(10, 1, 430, 52);
+		grpKindOfProject.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		btnStandAlone = new Button(grpKindOfProject, SWT.RADIO);
-		btnStandAlone.setBounds(20, 25, 90, 16);
 		btnStandAlone.setText("Stand alone");
 		btnStandAlone.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -100,7 +103,6 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		});
 		
 		btnPlugIn = new Button(grpKindOfProject, SWT.RADIO);
-		btnPlugIn.setBounds(160, 25, 90, 16);
 		btnPlugIn.setText("Plug-in");
 		btnPlugIn.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -110,7 +112,6 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		});
 		
 		btnMaven = new Button(grpKindOfProject, SWT.RADIO);
-		btnMaven.setBounds(299, 25, 90, 16);
 		btnMaven.setText("Maven");
 		btnMaven.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -123,11 +124,18 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		
 		grpFeatures = new Group(container, SWT.NONE);
 		grpFeatures.setText("Features");
-		grpFeatures.setBounds(10, 60, 430, 230);
+		grpFeatures.setLayout(new GridLayout(4, false));
+
+		lblProjectName = new Label(grpFeatures, SWT.NONE);
+		lblProjectName.setText("project name ");
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
 		
 		txtProjectName = new Text(grpFeatures, SWT.BORDER);
-		txtProjectName.setBounds(93, 16, 255, 21);
 		txtProjectName.setText(this.context.nameProject);
+		txtProjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		new Label(grpFeatures, SWT.NONE);
 				
 		txtProjectName.addModifyListener(new ModifyListener() {
 			@Override
@@ -144,31 +152,12 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		lblProjectName = new Label(grpFeatures, SWT.NONE);
-		lblProjectName.setBounds(10, 19, 98, 15);
-		lblProjectName.setText("project name :");
-		
-		//-----------------------------------------------
-		
-		btnBrowseLocation = new Button(grpFeatures, SWT.NONE);
-		btnBrowseLocation.setBounds(349, 75, 75, 25);
-		btnBrowseLocation.setText("Browse...");
-		
-		btnBrowseLocation.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				txtProjectLocation.setText(locationDialog());
-			}
-		});
-		
-		txtProjectLocation = new Text(grpFeatures, SWT.BORDER);
-		txtProjectLocation.setBounds(10, 77, 333, 21);
-		txtProjectLocation.setText(this.context.locationProject);
-		
 		btnCheckLocation = new Button(grpFeatures, SWT.CHECK);
 		btnCheckLocation.setText("use default location");
-		btnCheckLocation.setBounds(10, 55, 218, 16);
 		btnCheckLocation.setSelection(true);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
 		
 		btnCheckLocation.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -185,10 +174,28 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		});
 		
 		//-----------------------------------------------
+
+		txtProjectLocation = new Text(grpFeatures, SWT.BORDER);
+		txtProjectLocation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		txtProjectLocation.setText(this.context.locationProject);
 		
+		btnBrowseLocation = new Button(grpFeatures, SWT.NONE);
+		btnBrowseLocation.setText("Browse...");
+		
+		btnBrowseLocation.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				txtProjectLocation.setText(locationDialog());
+			}
+		});
+		
+		//-----------------------------------------------
+
 		btnCheckEcore = new Button(grpFeatures, SWT.CHECK);
-		btnCheckEcore.setBounds(10, 117, 218, 16);
 		btnCheckEcore.setText("referencing an existing ecore file");
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
 		
 		btnCheckEcore.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -219,7 +226,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		});
 		
 		txtPathEcore = new Text(grpFeatures, SWT.READ_ONLY | SWT.BORDER);
-		txtPathEcore.setBounds(10, 139, 333, 21);
+		txtPathEcore.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		btnBrowseEcore = new Button(grpFeatures, SWT.NONE);
 		btnBrowseEcore.setBounds(349, 137, 75, 25);
@@ -236,11 +243,14 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		
 		lblTemplateEcore = new Label(grpFeatures, SWT.NONE);
 		lblTemplateEcore.setText("use template on ecore file");
-		lblTemplateEcore.setBounds(10, 176, 218, 15);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
 		
 		combo = new Combo(grpFeatures, SWT.NONE);
 		combo.setItems(new String[] {"None", "Aspect class from ecore file", "Customize"});
-		combo.setBounds(10, 197, 333, 23);
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		new Label(grpFeatures, SWT.NONE);
 		combo.select(0);
 		
 		combo.addSelectionListener(new SelectionAdapter() {
