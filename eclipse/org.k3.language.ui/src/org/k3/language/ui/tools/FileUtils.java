@@ -22,7 +22,7 @@ public class FileUtils {
 		buffer.append("package " + namePackage + "\n\n");
 		buffer.append("class HelloWorld { \n\n");
 		buffer.append("\tdef static void main(String[] args) {\n");
-		buffer.append("\t\tprintln('Hello world by Kermeta 3 programm!')\n");
+		buffer.append("\t\tprintln('Hello world by Kermeta 3 program!')\n");
 		buffer.append("\t}\n");
 		buffer.append("}\n");
 
