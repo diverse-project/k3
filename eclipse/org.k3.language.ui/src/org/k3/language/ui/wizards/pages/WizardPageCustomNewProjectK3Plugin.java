@@ -7,8 +7,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -66,7 +70,7 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NULL);
-		container.setLayout(new GridLayout(1, false));
+		container.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		//-----------------------------------------------
 		
@@ -136,11 +140,11 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 		
 		grpListOfParameters = new Group(container, SWT.NONE);
 		grpListOfParameters.setText("List of parameters");
-		grpListOfParameters.setLayout(new GridLayout(2, false));
-		new Label(grpListOfParameters, SWT.NONE);
+		grpListOfParameters.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
 		table = new Table(grpListOfParameters, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
-
+		table.setLayoutData(new RowData(436, 101));
+		
 		colClassCreation = new TableColumn(table, SWT.LEFT);
 		colClassCreation.setText("new class for");
 		colClassCreation.setWidth(100);
@@ -157,11 +161,8 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 		registerParameter (tabItem[1], tabItem[2]);
 		registerNewClass(tabItem[2]);
 		
-		table.setBounds(10, 135, 305, 163);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
-		new Label(grpListOfParameters, SWT.NONE);
 		
 		btnRemove = new Button(grpListOfParameters, SWT.NONE);
 		btnRemove.setText("Remove");
@@ -180,7 +181,6 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	
 	protected void addParameter () {
 		if (!txtParameterName.getText().isEmpty() && !txtParameterType.getText().isEmpty() && !existParameter()) {
-			
 			TableItem 	newItem 		= new TableItem(table, SWT.LEFT);
 			String [] 	tabNewItem 		= new String[3];
 			String 		sCreateClass 	= "No";

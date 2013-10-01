@@ -73,7 +73,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 						createFolder("src/" + getContextNamePackage(), project, monitor);
 						createDefaultKmt(project, monitor);
 					}
-					FileUtils.unZip(project, new ProjectDescriptor("org.k3.language.ui","zips/resources.zip"));
+					FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.eclipse.language.ui","zips/resources.zip"));
 					configureProject(project, monitor);
 					//setClassPath(project, monitor);
 					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
