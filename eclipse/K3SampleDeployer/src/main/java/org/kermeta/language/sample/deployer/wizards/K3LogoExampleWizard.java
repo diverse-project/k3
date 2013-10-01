@@ -15,8 +15,8 @@ extends AbstractExampleWizard {
 		// We need the statements example to be unzipped along with the
 		// EMF library example model, edit and editor examples
 		List<ProjectDescriptor> projects = new ArrayList<ProjectDescriptor>(2);
-		projects.add(new ProjectDescriptor("org.k3.language.sample.deployer", "zips/logo.metamodel.zip", "sample.logo.metamodel"));
-		projects.add(new ProjectDescriptor("org.k3.language.sample.deployer", "zips/logo.zip", "sample.logo"));
+		projects.add(new ProjectDescriptor("fr.inria.diverse.k3.eclipse.sample.deployer", "zips/logo.metamodel.zip", "sample.logo.metamodel"));
+		projects.add(new ProjectDescriptor("fr.inria.diverse.k3.eclipse.sample.deployer", "zips/logo.zip", "sample.logo"));
 		return projects;
 	}
 
@@ -25,5 +25,4 @@ extends AbstractExampleWizard {
 		
 		return Activator.getDefault();
 	}
-
 }
