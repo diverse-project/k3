@@ -36,6 +36,19 @@
             this example contains 2 projects : 1- the metamodel Logo project / 2- the transformation of Logo Language which display a trace of a logo program
          </description>
       </wizard>
+      <wizard
+            canFinishEarly="true"
+            category="org.eclipse.ui.Examples/org.k3.language.samples.category"
+            class="org.kermeta.language.sample.deployer.wizards.K3fsmExampleWizard"
+            hasPages="false"
+            icon="icons/newkermetafile.png"
+            id="org.k3.language.samples.wizard.fsm"
+            name="FSM sample"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+         <description>
+            this example contains 2 projects : 1- the metamodel FSM project / 2- the transformation of FSM Language
+         </description>
+      </wizard>
    </extension>
  
 </plugin>
