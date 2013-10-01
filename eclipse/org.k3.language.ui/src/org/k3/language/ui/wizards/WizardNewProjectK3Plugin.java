@@ -302,7 +302,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
 					"File:///"+this.context.locationProject,
 					this.context.nameProject,
-					"eval",
+					this.context.operationName,
 					"File:///"+this.context.ecoreIFile.getLocation().toOSString(), 
 					this.context.listNewClass, 
 					this.context.operationParams);			
