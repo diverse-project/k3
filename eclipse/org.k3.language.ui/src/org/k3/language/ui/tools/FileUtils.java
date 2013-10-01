@@ -16,13 +16,46 @@ public class FileUtils {
 	
 	static String lineSeparator = System.getProperty("line.separator");
 	
-	public static String getFileTypeK3(String namePackage) {
+	public static String getFileTypeK3(String namePackage, String nameClass) {
 		StringBuffer buffer= new StringBuffer();
 		
-		buffer.append("package " + namePackage + "\n\n");
+		/*buffer.append("package " + namePackage + "\n\n");
 		buffer.append("class HelloWorld { \n\n");
 		buffer.append("\tdef static void main(String[] args) {\n");
 		buffer.append("\t\tprintln('Hello world by Kermeta 3 program!')\n");
+		buffer.append("\t}\n");
+		buffer.append("}\n");*/
+		
+		buffer.append("package " + namePackage + "\n");
+		buffer.append("\n");
+		buffer.append("import org.eclipse.emf.ecore.EPackage\n");
+		buffer.append("import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl\n");
+		buffer.append("import org.eclipse.emf.ecore.EcorePackage\n");
+		buffer.append("import org.eclipse.emf.ecore.resource.Resource\n");
+		buffer.append("import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl\n");
+		buffer.append("import org.eclipse.emf.common.util.URI\n");
+		buffer.append("\n");
+		buffer.append("class " + nameClass +  "{ \n\n");
+		buffer.append("\tpublic def run(String modelPath) {\n");
+		buffer.append("\t\t//Load Ecore Model\n");
+		buffer.append("\t\tvar fact = new EcoreResourceFactoryImpl\n");
+		buffer.append("\t\tif (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {\n");
+		buffer.append("\t\t\tEPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);\n");
+		buffer.append("\t\t}\n");
+		buffer.append("\t\tResource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(\"ecore\", fact);\n");
+		buffer.append("\t\tvar rs = new ResourceSetImpl()\n");
+		buffer.append("\t\tvar uri = URI.createURI(modelPath);\n");
+		buffer.append("\t\tvar res = rs.getResource(uri, true);\n");
+		buffer.append("\n");
+		buffer.append("\t\tvar EPackage p = res.contents.get(0) as EPackage\n");
+		buffer.append("\t\t//properties are shared between instances\n");
+		buffer.append("\t\t//Add the expected behavior\n");
+		buffer.append("\t}\n");
+		buffer.append("\n");
+		buffer.append("\tdef static void main(String[] args) {\n");
+		buffer.append("\t\tprintln('Hello Kermeta on top of Xtend!')\n");
+		buffer.append("\t\tnew " + nameClass + "().run(\"model\")\n");
+		buffer.append("\t\tval String s = '''  '''\n");
 		buffer.append("\t}\n");
 		buffer.append("}\n");
 

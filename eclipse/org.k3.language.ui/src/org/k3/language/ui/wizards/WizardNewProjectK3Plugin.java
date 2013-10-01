@@ -248,11 +248,11 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	}
 	
 	private void createDefaultKmt(IProject project,IProgressMonitor monitor) throws CoreException{
-		String path = "src/" + this.context.namePackage + "/HelloWorld.xtend";
+		String path = "src/" + this.context.namePackage + "/HelloEcore.xtend";
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = FileUtils.getFileTypeK3(this.context.namePackage);
+		String contents = FileUtils.getFileTypeK3(this.context.namePackage, "HelloEcore");
 		
 		try {
 			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
