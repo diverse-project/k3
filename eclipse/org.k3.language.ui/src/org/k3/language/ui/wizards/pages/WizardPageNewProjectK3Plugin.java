@@ -406,4 +406,9 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		this.context.ecoreIFile = ecoreFile;
 		this.context.ecoreProjectPath = ecoreFile.getProject().getFullPath().toOSString();
 	}
+	
+	public void setProjectName(String nameProject) {
+		this.txtProjectName.setText(nameProject);
+		this.context.nameProject = nameProject;
+	}
 }
