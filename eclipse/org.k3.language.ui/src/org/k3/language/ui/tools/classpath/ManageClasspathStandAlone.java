@@ -28,16 +28,16 @@ public class ManageClasspathStandAlone extends ManageClasspath {
 			} catch (Exception ex) {}
 			IClasspathEntry[] newClassPath = new IClasspathEntry[9];
 			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
-
+						
 			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
 			newClassPath[1] = JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER"));
-			newClassPath[2] = JavaCore.newLibraryEntry(new Path("resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar"), null, null);
-			newClassPath[3] = JavaCore.newLibraryEntry(new Path("resources/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar"), null, null);
-			newClassPath[4] = JavaCore.newLibraryEntry(new Path("resources/k3-3.0-SNAPSHOT.jar"), null, null);
-			newClassPath[5] = JavaCore.newLibraryEntry(new Path("resources/org.eclipse.emf.common-2.8.0-v20120911-0500.jar"), null, null);
-			newClassPath[6] = JavaCore.newLibraryEntry(new Path("resources/org.eclipse.emf.ecore.xmi-2.8.0-v20120911-0500.jar"), null, null);
-			newClassPath[7] = JavaCore.newLibraryEntry(new Path("resources/org.eclipse.emf.ecore-2.8.0-v20120911-0500.jar"), null, null);
-			newClassPath[8] = JavaCore.newLibraryEntry(new Path("resources/guava-15.0-rc1.jar"), null, null);
+			newClassPath[2] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar".substring(0, 1)), null, null);
+			newClassPath[3] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar"), null, null);
+			newClassPath[4] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/k3-3.0-SNAPSHOT.jar"), null, null);
+			newClassPath[5] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/org.eclipse.emf.common-2.8.0-v20120911-0500.jar"), null, null);
+			newClassPath[6] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/org.eclipse.emf.ecore.xmi-2.8.0-v20120911-0500.jar"), null, null);
+			newClassPath[7] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/org.eclipse.emf.ecore-2.8.0-v20120911-0500.jar"), null, null);
+			newClassPath[8] = JavaCore.newLibraryEntry(new Path(project.getLocation() + "/resources/guava-15.0-rc1.jar"), null, null);
 			
 			javaProject.setRawClasspath(newClassPath, monitor);
 			

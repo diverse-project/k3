@@ -11,6 +11,7 @@ public class Context {
 	public enum KindsOfProject { STANDALONE, PLUGIN, MAVEN }
 	
 	public boolean 			ecoreProject;
+	public boolean 			bCreateEMFProject;
 	public String 			typeProject;
 	public String 			nameProject;
 	public String 			namePackage;
@@ -27,6 +28,7 @@ public class Context {
 	
 	public Context () {
 		this.ecoreProject 			= false;
+		this.bCreateEMFProject		= false;
 		this.typeProject			= "None";
 		this.nameProject 			= "NewKermetaProject";
 		this.namePackage 			= "newPackage";

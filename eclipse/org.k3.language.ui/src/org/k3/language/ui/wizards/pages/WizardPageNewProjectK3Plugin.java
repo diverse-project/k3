@@ -53,6 +53,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected Text 			txtPathEcore;
 	protected Button		btnBrowseLocation;
 	protected Button 		btnBrowseEcore;
+	protected Button 		btnCreateEmfProject;
 	protected Button 		btnCheckLocation;
 	protected Button 		btnCheckEcore;
 	protected Button 		btnStandAlone;
@@ -205,6 +206,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 					btnBrowseEcore.setEnabled(true);
 					txtPathEcore.setEnabled(true);
 					lblTemplateEcore.setEnabled(true);
+					btnCreateEmfProject.setEnabled(true);
 					combo.setEnabled(true);
 					if ( txtPathEcore.getText().isEmpty()) {
 						activErrorMessage(1, true);
@@ -216,6 +218,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 					btnBrowseEcore.setEnabled(false);
 					txtPathEcore.setEnabled(false);
 					lblTemplateEcore.setEnabled(false);
+					btnCreateEmfProject.setEnabled(false);
 					combo.setEnabled(false);
 					combo.select(0);
 					updateNextButton (false);
@@ -238,6 +241,19 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 				if (workspaceDialog() || !txtPathEcore.getText().isEmpty()) {
 					setPageComplete(true);
 				}
+			}
+		});
+		
+		btnCreateEmfProject = new Button(grpFeatures, SWT.CHECK);
+		btnCreateEmfProject.setText("Create EMF project Linked to selected ecore file");
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
+		new Label(grpFeatures, SWT.NONE);
+		
+		btnCreateEmfProject.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateCreateEMFProject(btnCreateEmfProject.getSelection());
 			}
 		});
 		
@@ -273,6 +289,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnBrowseEcore.setEnabled(false);
 		txtPathEcore.setEnabled(false);
 		lblTemplateEcore.setEnabled(false);
+		btnCreateEmfProject.setEnabled(false);
 		combo.setEnabled(false);
 		btnStandAlone.setSelection(true);
 		
@@ -373,6 +390,10 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		this.context.ecoreProject = bState;
 	}
 	
+	protected void updateCreateEMFProject(Boolean bVal) {
+		this.context.bCreateEMFProject = bVal;
+	}
+	
 	protected void updateNameProject (String nameProject) {
 		this.context.nameProject = nameProject;
 	}
@@ -400,6 +421,9 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnBrowseEcore.setEnabled(false);
 		txtPathEcore.setEnabled(false);
 		lblTemplateEcore.setEnabled(true);
+		btnCreateEmfProject.setEnabled(false);
+		btnCreateEmfProject.setSelection(false);
+		updateCreateEMFProject(false);
 		combo.setEnabled(true);
 		txtPathEcore.setText(ecoreFile.getFullPath().toOSString());
 		

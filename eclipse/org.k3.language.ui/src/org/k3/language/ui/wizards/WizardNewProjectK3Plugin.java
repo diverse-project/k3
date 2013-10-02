@@ -245,7 +245,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		}
 		stream.close();
 	}
-	
+		
 	private void createDefaultKmt(IProject project,IProgressMonitor monitor) throws CoreException{
 		String path = "src/" + this.context.namePackage + "/HelloEcore.xtend";
 		IContainer currentContainer = project;
@@ -272,29 +272,30 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	
 	public boolean createProjectWithEcore(IProgressMonitor monitor) {
 		boolean returnVal = true;
-		
-		try {
-			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.ecoreIFile.getName() +".metamodel");
-			project.create(monitor);
-			project.open(monitor);
-			Boolean tabNature[] = {true,false,true,true};
-			addNatureToProject(project, tabNature);
-			createFolder("src/", project, monitor);
-			createFolder("model/", project, monitor);
-			createEcoreFile(project, monitor);
-			new GenerateGenModelCode().createGenModel(this.context.ecoreIFile.getLocation().toString(), this.context.ecoreIFile.getName() +".metamodel");
-			configurePlugIn(project, null);
+		if(this.context.bCreateEMFProject) {
 			try {
-				createMavenFile(project, monitor, true);
-			} catch (Exception e) {
-				Activator.logErrorMessage(e.getMessage(), e);
+				final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.ecoreIFile.getName() +".metamodel");
+				project.create(monitor);
+				project.open(monitor);
+				Boolean tabNature[] = {true,false,true,true};
+				addNatureToProject(project, tabNature);
+				createFolder("src/", project, monitor);
+				createFolder("model/", project, monitor);
+				createEcoreFile(project, monitor);
+				new GenerateGenModelCode().createGenModel(this.context.ecoreIFile.getLocation().toString(), this.context.ecoreIFile.getName() +".metamodel");
+				configurePlugIn(project, null);
+				try {
+					createMavenFile(project, monitor, true);
+				} catch (Exception e) {
+					Activator.logErrorMessage(e.getMessage(), e);
+				}
+				//setClassPath(project, monitor);
+				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+				
+			} catch (Exception exception) {
+				Activator.logErrorMessage(exception.getMessage(), exception);
+				returnVal = false;
 			}
-			//setClassPath(project, monitor);
-			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-			
-		} catch (Exception exception) {
-			Activator.logErrorMessage(exception.getMessage(), exception);
-			returnVal = false;
 		}
 		
 		if (this.context.indexTransfomation != 0) {
