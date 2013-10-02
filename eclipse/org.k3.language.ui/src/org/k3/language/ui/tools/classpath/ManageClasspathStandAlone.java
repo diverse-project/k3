@@ -26,7 +26,7 @@ public class ManageClasspathStandAlone extends ManageClasspath {
 			try {
 				sourceFolder.create(true, true, monitor);
 			} catch (Exception ex) {}
-			IClasspathEntry[] newClassPath = new IClasspathEntry[8];
+			IClasspathEntry[] newClassPath = new IClasspathEntry[9];
 			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
 
 			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
@@ -37,6 +37,7 @@ public class ManageClasspathStandAlone extends ManageClasspath {
 			newClassPath[5] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.emf.common-2.8.0-v20120911-0500.jar"), null, null);
 			newClassPath[6] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.emf.ecore.xmi-2.8.0-v20120911-0500.jar"), null, null);
 			newClassPath[7] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/org.eclipse.emf.ecore-2.8.0-v20120911-0500.jar"), null, null);
+			newClassPath[8] = JavaCore.newLibraryEntry(new Path(project.getLocation().toOSString() + "/resources/guava-15.0-rc1.jar"), null, null);
 			
 			javaProject.setRawClasspath(newClassPath, monitor);
 			
