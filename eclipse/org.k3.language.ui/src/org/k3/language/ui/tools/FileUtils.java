@@ -19,13 +19,6 @@ public class FileUtils {
 	public static String getFileTypeK3(String namePackage, String nameClass) {
 		StringBuffer buffer= new StringBuffer();
 		
-		/*buffer.append("package " + namePackage + "\n\n");
-		buffer.append("class HelloWorld { \n\n");
-		buffer.append("\tdef static void main(String[] args) {\n");
-		buffer.append("\t\tprintln('Hello world by Kermeta 3 program!')\n");
-		buffer.append("\t}\n");
-		buffer.append("}\n");*/
-		
 		buffer.append("package " + namePackage + "\n");
 		buffer.append("\n");
 		buffer.append("import org.eclipse.emf.ecore.EPackage\n");
