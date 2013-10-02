@@ -33,7 +33,6 @@ import org.k3.language.ui.tools.classpath.ManageClasspathStandAlone;
 import org.k3.language.ui.wizards.pages.WizardPageCustomNewProjectK3Plugin;
 import org.k3.language.ui.wizards.pages.WizardPageNewProjectK3Plugin;
 
-
 public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 
 	protected Context context = new Context();
