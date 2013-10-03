@@ -30,12 +30,12 @@ class AspectGenerator{
 		operationParams.add("Context context")
 		operationParams.add("Essai test")
 		
-		aspectGenerate(projectPath, projectName, operationName, "ASMLogo.ecore", listNewClass, operationParams)
+		aspectGenerate(null, projectPath, projectName, operationName, "ASMLogo.ecore", listNewClass, operationParams)
 
 	}
 	
-	public def static aspectGenerate(String projectPath, String projectName, String operationName, String ecorePath, List<String> listNewClass, List<String> operationParams) {
-		var Context context = new Context(projectPath, projectName, operationName, listNewClass, operationParams)
+	public def static aspectGenerate(List<String> basePackage, String projectPath, String projectName, String operationName, String ecorePath, List<String> listNewClass, List<String> operationParams) {
+		var Context context = new Context(basePackage, projectPath, projectName, operationName, listNewClass, operationParams)
 		
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
