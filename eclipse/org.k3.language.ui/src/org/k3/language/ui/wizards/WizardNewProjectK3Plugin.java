@@ -26,6 +26,7 @@ import org.k3.language.ui.tools.Context;
 import org.k3.language.ui.tools.FileUtils;
 import org.k3.language.ui.tools.GenerateGenModelCode;
 import org.k3.language.ui.tools.ProjectDescriptor;
+import org.k3.language.ui.tools.ToolsString;
 import org.k3.language.ui.tools.classpath.ManageClasspath;
 import org.k3.language.ui.tools.classpath.ManageClasspathMaven;
 import org.k3.language.ui.tools.classpath.ManageClasspathPlugin;
@@ -297,9 +298,13 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				returnVal = false;
 			}
 		}
+		else {
+			getGenModel(this.context);
+		}
 		
 		if (this.context.indexTransfomation != 0) {
 			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
+					context.basePackage,
 					"File:///"+this.context.locationProject,
 					this.context.nameProject,
 					this.context.operationName,
@@ -358,4 +363,12 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	public WizardPageNewProjectK3Plugin getPageProject() {
 		return this.projectPage;
 	}
+	
+	public void getGenModel(Context context) {
+		 GenerateGenModelCode genmodel = new GenerateGenModelCode();
+		if(genmodel.existGenModel(context)) {
+			context.basePackage = new ToolsString().generateListPackage(genmodel.getBasePackage(context.genModelFile), (byte)46);
+		}
+	}
+	
 }
