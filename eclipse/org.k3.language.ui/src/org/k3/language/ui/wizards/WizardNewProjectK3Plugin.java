@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -366,8 +367,11 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	
 	public void getGenModel(Context context) {
 		 GenerateGenModelCode genmodel = new GenerateGenModelCode();
+		 String basePackage;
 		if(genmodel.existGenModel(context)) {
-			context.basePackage = new ToolsString().generateListPackage(genmodel.getBasePackage(context.genModelFile), (byte)46);
+			basePackage = genmodel.getBasePackage(context.genModelFile);
+			if (basePackage != null)
+				context.basePackage = new ToolsString().generateListPackage(basePackage, (byte)46);
 		}
 	}
 	
