@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.kermeta.kp.launcher.eclipse.internal.KermetaLauncherID">
+<stringAttribute key="KM_LAUNCH_KP_FILE" value="/org.kermeta.language.sample.cellularautomata.simulator/project.kp"/>
+<stringAttribute key="KM_LAUNCH_MAIN_CLASS" value="ca::simulator::Simulator"/>
+<stringAttribute key="KM_LAUNCH_MAIN_OPERATION" value="simulateWithAsciiArt2Dvisualizer"/>
+<stringAttribute key="KM_LAUNCH_PARAMETERS" value="platform:/resource/org.kermeta.language.sample.cellularautomata.simulator/src/main/samples/lifeGame.evol.xmi platform:/resource/org.kermeta.language.sample.cellularautomata.simulator/src/main/samples/Moore5x5_corner.vm.xmi 5"/>
+<stringAttribute key="KM_LAUNCH_PROJECT" value="org.kermeta.language.sample.cellularautomata.simulator"/>
+<stringAttribute key="process_factory_id" value="org.kermeta.debug.processFactory"/>
+</launchConfiguration>

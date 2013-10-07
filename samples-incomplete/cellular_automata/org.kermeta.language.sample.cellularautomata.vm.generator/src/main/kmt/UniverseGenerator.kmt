@@ -1,0 +1,171 @@
+using kermeta::standard::*
+using kermeta::emfpersistence::*
+using vm::*
+using ruleInit::*
+using core::*
+using geometry::*
+using ca::evaluator::*
+using kermeta::io::StdIO => stdio
+
+package vm {
+	class UniverseGenerator
+	{
+		@main ""
+		operation generateUniverse() : Void is do 
+			var g : Universe := generateMooreRectangleBoundedUniverse(3,3)
+			saveUniverse(g)
+		end
+		
+		@main "platform:/resource/org.kermeta.language.sample.cellularautomata.vm.generator/src/main/samples/Moore3x3_lines.ruleInit.xmi"
+		operation generateInitialUniverseForAutomataFile(automataFile : String) : Void is do 
+			var resourceSet : ResourceSet init ResourceSet.new
+	        var resource : Resource init 
+	        	resourceSet.createResource(automataFile, "platform:/resource/org.kermeta.language.sample.cellularautomata.rules.initialization/metamodel/rules_init.ecore")
+			resource.load(void)
+			var ca : CellularAutomatatInitialization := resource.getContents.one.asType(CellularAutomatatInitialization)
+			saveUniverse(generateInitialUniverseForAutomata(ca))
+			
+		end
+		
+		
+		
+		operation generateInitialUniverseForAutomata(automata : CellularAutomatatInitialization) : Universe is do
+			result := void
+			var regularGeometry : RegularGeometry
+			regularGeometry ?= automata.geometry
+			if not regularGeometry.isVoid then				
+				if ((regularGeometry.neighborsNumber == 4) and (regularGeometry.dimensions.size == 2) 
+						and (not regularGeometry.dimensions.exists{ d | d.isCircular})) then
+					result := generateMooreRectangleBoundedUniverse(regularGeometry.dimensions.at(0).size, regularGeometry.dimensions.at(1).size)
+				else if ((regularGeometry.neighborsNumber == 8) and (regularGeometry.dimensions.size == 2) 
+						and (not regularGeometry.dimensions.exists{ d | d.isCircular})) then
+					result := generateVonNeumannRectangleBoundedUniverse(regularGeometry.dimensions.at(0).size, regularGeometry.dimensions.at(1).size)
+				else 
+					stdio.errorln(" Generic configuration not supported yet. Currently supported configurations : dimension=2; neighborsNumber=4|8; not circular")
+				end end
+				if not result.isVoid then
+					// fill default values
+					result.cells.each{cell |
+					
+						// select the rule that applies (there must be maximum one)
+						var rule : core::Rule := automata.seedRules.select{r |
+							r.isApplicableForCell(cell)
+						}.one
+						if not rule.isVoid then
+							var context : Context := Context.new.initialize(result, cell)
+							cell.val := rule.evaluatedVal.evaluate(context)
+							
+						end
+						
+					}
+					if regularGeometry.dimensions.size <= 2 and (regularGeometry.dimensions.at(0).size == regularGeometry.dimensions.at(1).size) then
+						// visualize result using ascii art
+						var asciiArtVisualizer : ca::visualizers::SimpleAsciiArt2DVisualizer := ca::visualizers::SimpleAsciiArt2DVisualizer.new.initialize(false)
+						asciiArtVisualizer.visualizeRegular2DUniverse(regularGeometry.dimensions.at(0).size, result)
+					end
+					
+				end
+			else
+				stdio.errorln(" Generic configuration not supported yet. Only RegularGeometry can be generated automatically by this.")
+			end				
+		end
+		
+		operation generateVonNeumannRectangleBoundedUniverse(universeLength : Integer, universeWidth : Integer) : Universe is do 
+			stdio.writeln("Generating a square Universe...")
+			var g : Universe := Universe.new
+			
+			var cellNumber : Integer := universeLength * universeWidth
+			stdio.writeln("Generating "+cellNumber.toString+" Cells...")
+			cellNumber.times{ i | 
+				var cell : Cell := Cell.new
+				cell.globalPosition := i
+				cell.coordinates.add(i.div(universeWidth)) // x
+				cell.coordinates.add(i.mod(universeWidth)) // y
+				g.cells.add(cell)
+			}
+			stdio.writeln("Generating bounded VonNeumann neighborhood for "+cellNumber.toString+" Cells...")
+			cellNumber.times{ i | 
+				var currentCell : Cell := g.cells.at(i)
+				var currentLine : Integer :=  i.div(universeWidth)
+				var currentColumn : Integer := i.mod(universeWidth)
+				//stdio.writeln("  "+ i.toString+ " line="+currentLine.toString+ ", col="+currentColumn.toString)
+				var maxCol : Integer := universeWidth-1
+				if(currentLine > 0) then // add north 
+					currentCell.neighbors.add(g.cells.at(i-universeWidth))
+				end
+				if(currentColumn < maxCol) then // add east 
+					currentCell.neighbors.add(g.cells.at(i+1))
+				end
+				if(currentLine < maxCol) then // add south 
+					currentCell.neighbors.add(g.cells.at(i+universeWidth))
+				end
+				if(currentColumn > 0) then // add west 
+					currentCell.neighbors.add(g.cells.at(i-1))
+				end
+				currentCell.val := 0
+			}
+			result := g
+		end
+		operation generateMooreRectangleBoundedUniverse(universeLength : Integer, universeWidth : Integer) : Universe is do 
+			stdio.writeln("Generating a square Universe...")
+			var g : Universe := Universe.new
+			
+			var cellNumber : Integer := universeLength * universeWidth
+			stdio.writeln("Generating "+cellNumber.toString+" Cells...")
+			cellNumber.times{ i | 
+				var cell : Cell := Cell.new
+				cell.globalPosition := i
+				cell.coordinates.add(i.div(universeWidth)) // x
+				cell.coordinates.add(i.mod(universeWidth)) // y
+				g.cells.add(cell)
+			}
+			stdio.writeln("Generating bounded Moore neighborhood for "+cellNumber.toString+" Cells...")
+			cellNumber.times{ i | 
+				var currentCell : Cell := g.cells.at(i)
+				var currentLine : Integer :=  i.div(universeWidth)
+				var currentColumn : Integer := i.mod(universeWidth)
+				//stdio.writeln("  "+ i.toString+ " line="+currentLine.toString+ ", col="+currentColumn.toString)
+				var maxCol : Integer := universeWidth-1
+				if(currentLine > 0) then // add north 
+					currentCell.neighbors.add(g.cells.at(i-universeWidth))
+				end
+				if(currentLine > 0 and currentColumn < maxCol) then // add north/east 
+					currentCell.neighbors.add(g.cells.at(i-universeWidth+1))
+				end
+				if(currentColumn < maxCol) then // add east 
+					currentCell.neighbors.add(g.cells.at(i+1))
+				end
+				if(currentColumn < maxCol and currentLine < maxCol) then // add south/east 
+					currentCell.neighbors.add(g.cells.at(i+1+universeWidth))
+				end
+				if(currentLine < maxCol) then // add south 
+					currentCell.neighbors.add(g.cells.at(i+universeWidth))
+				end
+				if(currentLine < maxCol and currentColumn > 0) then // add south/west
+					currentCell.neighbors.add(g.cells.at(i+universeWidth-1))
+				end
+				if(currentColumn > 0) then // add west 
+					currentCell.neighbors.add(g.cells.at(i-1))
+				end
+				if(currentColumn > 0 and currentLine > 0) then // add north/west 
+					currentCell.neighbors.add(g.cells.at(i-1-universeWidth))
+				end
+				currentCell.val := 0
+			}
+			result := g
+		end
+		 
+		
+		operation saveUniverse( universe : Universe) : Void is do
+			var resourceSet : ResourceSet init ResourceSet.new
+	        var resource : Resource init 
+	        	resourceSet.createResource("platform:/resource/org.kermeta.language.sample.cellularautomata.vm.generator/target/results/universe.vm.xmi", 
+	        							 					 "platform:/resource/org.kermeta.language.sample.cellularautomata.vm.model/metamodel/vm.ecore")       							 					
+		 	// Define a Root ...
+		 	resource.getContents.add(universe)
+		 		 	
+		 	resource.save(void)
+		 	stdio.writeln("saved to platform:/resource/org.kermeta.language.sample.cellularautomata.vm.generator/target/results/universe.vm.xmi")
+		end
+	}
+}

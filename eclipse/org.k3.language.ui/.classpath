@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/"/>
 	<classpathentry exported="true" kind="lib" path="library/guava-15.0-rc1.jar"/>
 	<classpathentry exported="true" kind="lib" path="library/hamcrest-core-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="library/k3-3.0-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="library/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="library/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/k3.language.aspectGenerator-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/fr.inria.diverse.k3.tools.aspectGenerator-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/fr.inria.diverse.k3.core-3.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/org.eclipse.xtend.lib-2.4.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/org.eclipse.xtext.xbase.lib-2.4.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

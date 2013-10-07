@@ -1,0 +1,11 @@
+using kermeta::standard::Integer
+using kermeta::io::StdIO => stdio
+
+package vm{
+	aspect class Cell
+	{
+		attribute coordinates : seq Integer[0..*]
+		attribute globalPosition : Integer
+	
+	}
+}

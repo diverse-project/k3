@@ -1,6 +1,5 @@
 package org.k3.language.ui.tools;
 
-
 import java.io.File;
 import java.util.Collections;
 
@@ -34,7 +33,40 @@ public class GenerateGenModelCode {
 	}
 
 	org.eclipse.emf.codegen.ecore.Generator generator;
+	
+	public Boolean existGenModel (Context context) {
+		int i = 0;
+		Boolean bRet = false;
+		int endIndex = context.ecoreIFile.getLocation().toOSString().length();
+		int beginIndex = endIndex - context.ecoreIFile.getName().length();
+		String pathFolder = context.ecoreIFile.getLocation().toOSString().substring(0, beginIndex);
+		
+		File folder = new File(pathFolder);
+		
+		for(i=0 ; i < folder.list().length ; i++){ 
+			if(folder.list()[i].endsWith(".genmodel") == true){
+				context.genModelFile = folder.listFiles()[i].getPath();
+				bRet = true;
+			}
+		}
+		
+		return bRet;
+	}
 
+	public String getBasePackage(String genModelFile) {
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
+				"genmodel",
+				new org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl());
+		ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getURIConverter().getURIMap()
+		.putAll(EcorePlugin.computePlatformURIMap());
+		URI genModelURI = URI.createFileURI(genModelFile);
+		Resource resource = resourceSet.getResource(genModelURI, true);
+		GenModel eltGenModel = (GenModel)resource.getContents().get(0);
+		
+		return eltGenModel.getGenPackages().get(0).getBasePackage();
+	}
+	
 	public void createGenModel(String ecorepath, String outputPath) {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
 				"ecore",

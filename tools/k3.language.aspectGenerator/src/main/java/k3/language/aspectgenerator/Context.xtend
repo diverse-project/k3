@@ -5,6 +5,7 @@ import java.util.ArrayList
 
 class Context {
 	
+	//public List<String> 	basePackage
 	public List<String> 	packageCollection
 	public List<String>		classCollection
 	public List<String>		classAspectCollection
@@ -17,8 +18,13 @@ class Context {
 	public List<String>		operationParams
 	public List<String>		listNewClass
 	
-	new(String projectPath, String projectName, String nameOperation,List<String> listNewClass, List<String> operationParams) {
+	new(List<String> basePackage, String projectPath, String projectName, String nameOperation,List<String> listNewClass, List<String> operationParams) {
 		packageCollection = new ArrayList<String>
+		if(basePackage.size > 0) {
+			for (elt : basePackage) {
+				packageCollection.add(elt);
+			}
+		}
 		classCollection = new ArrayList<String>
 		classAspectCollection = new ArrayList<String>
 		counterPackage = 0

@@ -1,0 +1,14 @@
+using kermeta::standard::*
+using kermeta::io::StdIO => stdio
+
+package mainPackage{
+	class MainClass
+	{
+
+	@main "" // declares that operation as a possible entry point of the program
+		operation mainOperation() : Void is do 
+			// TODO: implement 'mainOperation' operation
+			stdio.writeln("Hello from mainOperation")
+		end
+	}
+}

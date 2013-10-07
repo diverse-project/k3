@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.inria.triskell.k3.sample</groupId>
-	<artifactId>logo</artifactId>
+	<groupId>fr.inria.diverse.k3.sample</groupId>
+	<artifactId>fr.inria.diverse.k3.sample.logo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>kermeta3-quickstart</name>
+	<name>kermeta3-logo sample</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
+		<xtend.version>2.4.3</xtend.version>
 	</properties>
 	<build>
 		<plugins>
@@ -44,8 +44,8 @@
 			<version>${xtend.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.inria.triskell</groupId>
-			<artifactId>k3</artifactId>
+			<groupId>fr.inria.diverse</groupId>
+			<artifactId>fr.inria.diverse.k3.core</artifactId>
 			<version>3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -71,21 +71,9 @@
 			<version>2.8.0-v20120911-0500</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.inria.triskell.k3.sample</groupId>
-			<artifactId>logo.metamodel</artifactId>
+			<groupId>fr.inria.diverse.k3.sample</groupId>
+			<artifactId>fr.inria.diverse.k3.sample.logo.metamodel</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>xtext.snapshots</id>
-			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>xtext.oss.snapshots</id>
-			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
-		</pluginRepository>
-	</pluginRepositories>	
 </project>

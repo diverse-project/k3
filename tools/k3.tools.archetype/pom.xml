@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>fr.irisa.triskell</groupId>
-  <artifactId>k3.tools.archetype</artifactId>
+  <groupId>fr.inria.diverse.tools</groupId>
+  <artifactId>fr.inria.diverse.k3.tools.archetype</artifactId>
 <packaging>maven-archetype</packaging>
 	<name>Create a simple K3 project</name>
-	<url>http://kermeta3.org</url>
+	<url>http://kermeta.org</url>
 	<build>
 		<resources>
 			<resource>
@@ -51,16 +51,4 @@
 	</build>
 	<version>3.0.0-SNAPSHOT</version>
 	
-	<repositories>
-		<repository>
-			<id>xtext.snapshots</id>
-			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>xtext.oss.snapshots</id>
-			<url>http://dev.nightlabs.org/maven-repository/repo/</url>
-		</pluginRepository>
-	</pluginRepositories>	
 </project>

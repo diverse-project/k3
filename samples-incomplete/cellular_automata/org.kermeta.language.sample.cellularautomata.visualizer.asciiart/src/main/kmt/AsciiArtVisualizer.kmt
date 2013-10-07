@@ -1,0 +1,49 @@
+using kermeta::standard::*
+using ca_vm::*
+using kermeta::io::StdIO => stdio
+
+package ca::visualizers{
+	class SimpleAsciiArt2DVisualizer
+	{
+
+		attribute useEmptyCellForZero : Boolean
+		
+		
+		operation initialize(useEmptyCellForZero : Boolean) : SimpleAsciiArt2DVisualizer is do
+			self.useEmptyCellForZero := useEmptyCellForZero
+			result := self
+		end
+
+		operation visualizeRegular2DUniverse(worldSize : Integer, grid : vm::Universe) : Void is do 			
+			worldSize.times{i |
+				printRow(i, worldSize, grid)
+			}
+			printLine(worldSize)
+		end
+		
+		operation printLine(worldSize : Integer) : Void is do
+			var buf : StringBuffer := StringBuffer.new
+			worldSize.times{i |
+				buf.append("----")
+			}
+			buf.append("-")
+			stdio.writeln(buf.toString)
+		end
+		operation printRow(row : Integer, worldSize : Integer, grid : vm::Universe) : Void is do
+			printLine(worldSize)
+			var buf : StringBuffer := StringBuffer.new
+			
+			buf.append("| ")
+			worldSize.times{i |
+				var cellVal : Integer := grid.cells.at(row*worldSize + i).val
+				if not useEmptyCellForZero or cellVal != 0 then
+					buf.append(cellVal.toString)
+				else
+					buf.append(" ")
+				end
+				buf.append(" | ")
+			}
+			stdio.writeln(buf.toString)
+		end
+	}
+}

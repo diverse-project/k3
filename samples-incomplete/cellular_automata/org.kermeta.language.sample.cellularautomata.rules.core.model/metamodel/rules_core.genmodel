@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.kermeta.language.sample.cellularautomata.rules.core.model/src"
+    modelPluginID="org.kermeta.language.sample.cellularautomata.rules.core.model"
+    modelName="Rules_core" importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0"
+    copyrightFields="false">
+  <foreignModel>rules_core.ecore</foreignModel>
+  <genPackages prefix="Core" disposableProviderFactory="true" ecorePackage="rules_core.ecore#/">
+    <genClasses ecoreClass="rules_core.ecore#//Rule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//Rule/evaluatedVal"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//Rule/filter"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_core.ecore#//Add"/>
+    <genClasses ecoreClass="rules_core.ecore#//IntegerExpression"/>
+    <genClasses ecoreClass="rules_core.ecore#//UnaryExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//UnaryExpression/target"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_core.ecore#//And"/>
+    <genClasses ecoreClass="rules_core.ecore#//Or"/>
+    <genClasses ecoreClass="rules_core.ecore#//Not"/>
+    <genClasses ecoreClass="rules_core.ecore#//Greater"/>
+    <genClasses ecoreClass="rules_core.ecore#//Lower"/>
+    <genClasses ecoreClass="rules_core.ecore#//IntegerLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rules_core.ecore#//IntegerLiteral/val"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_core.ecore#//Conditional">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//Conditional/ifTrueExpression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//Conditional/ifFalseExpression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//Conditional/condition"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_core.ecore#//BinaryExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//BinaryExpression/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_core.ecore#//BinaryExpression/right"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_core.ecore#//Mult"/>
+    <genClasses ecoreClass="rules_core.ecore#//Div"/>
+    <genClasses image="false" ecoreClass="rules_core.ecore#//Filter"/>
+    <genClasses ecoreClass="rules_core.ecore#//Mod"/>
+    <genClasses ecoreClass="rules_core.ecore#//UMinus"/>
+    <genClasses ecoreClass="rules_core.ecore#//Minus"/>
+    <genClasses ecoreClass="rules_core.ecore#//Equal"/>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.inria.diverse.k3.sample</groupId>
+  <artifactId>fr.inria.diverse.k3.sample.root</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+ <modules>
+        <module>../fsm</module>
+        <module>../fsm.metamodel</module>
+        <module>../kevoreeExample</module>
+       <!-- <module>../kmfk3</module>-->
+        <module>../serveralaspectonthesamemetaclasse</module>
+<!--        <module>../xtendgwtexample</module>-->
+        <module>../aspectinherithanceexample</module>
+  </modules>
+</project> 

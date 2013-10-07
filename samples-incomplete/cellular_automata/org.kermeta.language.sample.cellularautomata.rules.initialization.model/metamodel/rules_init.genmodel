@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.kermeta.language.sample.cellularautomata.rules.initialization.model/src"
+    modelPluginID="org.kermeta.language.sample.cellularautomata.rules.initialization.model"
+    modelName="Rules_init" importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0"
+    copyrightFields="false" usedGenPackages="../../org.kermeta.language.sample.cellularautomata.geometry.model/metamodel/geometry.genmodel#//geometry ../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.genmodel#//core">
+  <foreignModel>rules_init.ecore</foreignModel>
+  <genPackages prefix="Init" disposableProviderFactory="true" ecorePackage="rules_init.ecore#/">
+    <genClasses ecoreClass="rules_init.ecore#//CellularAutomatatInitialization">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_init.ecore#//CellularAutomatatInitialization/seedRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_init.ecore#//CellularAutomatatInitialization/geometry"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_init.ecore#//GlobalPosition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference rules_init.ecore#//GlobalPosition/coordinateRanges"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_init.ecore#//PositionLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rules_init.ecore#//PositionLiteral/dimensionIndex"/>
+    </genClasses>
+    <genClasses ecoreClass="rules_init.ecore#//CoordinateRange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rules_init.ecore#//CoordinateRange/lowerCoordinate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute rules_init.ecore#//CoordinateRange/upperCoordinate"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
