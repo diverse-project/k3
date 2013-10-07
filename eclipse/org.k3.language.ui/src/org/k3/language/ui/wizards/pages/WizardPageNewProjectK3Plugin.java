@@ -426,6 +426,12 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		updateCreateEMFProject(false);
 		combo.setEnabled(true);
 		txtPathEcore.setText(ecoreFile.getFullPath().toOSString());
+		String[] ecoreName = ecoreFile.getName().split(".ecore") ;
+		StringBuffer st = new StringBuffer();
+		for (int i = 0; i < ecoreName.length; i++) {
+			st.append(ecoreName[i]);
+		}
+		this.txtProjectName.setText(st + ".model");
 		
 		this.context.ecoreIFile = ecoreFile;
 		this.context.ecoreProjectPath = ecoreFile.getProject().getFullPath().toOSString();
