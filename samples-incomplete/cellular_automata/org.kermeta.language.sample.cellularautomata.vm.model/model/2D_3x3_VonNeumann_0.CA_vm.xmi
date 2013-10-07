@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ca_vm:Grid xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ca_vm="http://ca_vm/1.0">
+  <cells neighbors="//@cells.1 //@cells.3"/>
+  <cells neighbors="//@cells.2 //@cells.4 //@cells.0"/>
+  <cells neighbors="//@cells.5 //@cells.1"/>
+  <cells neighbors="//@cells.0 //@cells.4 //@cells.6"/>
+  <cells neighbors="//@cells.1 //@cells.5 //@cells.7 //@cells.3"/>
+  <cells neighbors="//@cells.2 //@cells.8 //@cells.4"/>
+  <cells neighbors="//@cells.3 //@cells.7"/>
+  <cells neighbors="//@cells.4 //@cells.8 //@cells.6"/>
+  <cells neighbors="//@cells.5 //@cells.7"/>
+</ca_vm:Grid>

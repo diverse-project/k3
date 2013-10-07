@@ -1,0 +1,30 @@
+using kermeta::standard::*
+using ca::evaluator::*
+using kermeta::io::StdIO => stdio
+
+package ruleInit{
+	aspect class GlobalPosition {
+		operation isApplicableForCell(cell : vm::Cell) : Boolean is do 
+			if coordinateRanges.size == cell.coordinates.size then
+			    result := true
+			    coordinateRanges.size.times{ i | result := result and (coordinateRanges.at(i).isInRange(cell.coordinates.at(i)))}
+			else
+				result := false
+			end
+		end
+	
+	}
+	aspect class CoordinateRange {
+		operation isInRange(i : Integer) : Boolean is do
+			result := lowerCoordinate <= i and i <= upperCoordinate
+		end
+	}
+	
+	aspect class PositionLiteral
+	{
+		operation evaluate(context : Context) : Integer is do 
+			//result := context.currentCell.globalPosition
+			result := context.currentCell.coordinates.at(dimensionIndex)
+		end
+	}
+}

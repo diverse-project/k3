@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+    <extension
+            point="org.eclipse.ui.editors">
+        <editor
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="erule"
+            id="org.kermeta.language.sample.cellularautomata.rules.Evol"
+            name="Evol Editor">
+        </editor>
+    </extension>
+    <extension
+        point="org.eclipse.ui.handlers">
+        <handler
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
+            <activeWhen>
+                <reference
+                    definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+        <handler
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            commandId="org.kermeta.language.sample.cellularautomata.rules.Evol.validate">
+         <activeWhen>
+            <reference
+                    definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+            </reference>
+         </activeWhen>
+      </handler>
+    </extension>
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+            <and>
+                <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+                <with variable="activeEditor">
+                    <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
+                        value="org.kermeta.language.sample.cellularautomata.rules.Evol" 
+                        forcePluginActivation="true"/>
+                </with>        
+            </and>
+        </definition>
+    </extension>
+    <extension
+            point="org.eclipse.ui.preferencePages">
+        <page
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.kermeta.language.sample.cellularautomata.rules.Evol"
+            name="Evol">
+            <keywordReference id="org.kermeta.language.sample.cellularautomata.rules.ui.keyword_Evol"/>
+        </page>
+        <page
+            category="org.kermeta.language.sample.cellularautomata.rules.Evol"
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="org.kermeta.language.sample.cellularautomata.rules.Evol.coloring"
+            name="Syntax Coloring">
+            <keywordReference id="org.kermeta.language.sample.cellularautomata.rules.ui.keyword_Evol"/>
+        </page>
+        <page
+            category="org.kermeta.language.sample.cellularautomata.rules.Evol"
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+            id="org.kermeta.language.sample.cellularautomata.rules.Evol.templates"
+            name="Templates">
+            <keywordReference id="org.kermeta.language.sample.cellularautomata.rules.ui.keyword_Evol"/>
+        </page>
+    </extension>
+    <extension
+            point="org.eclipse.ui.propertyPages">
+        <page
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.kermeta.language.sample.cellularautomata.rules.Evol"
+            name="Evol">
+            <keywordReference id="org.kermeta.language.sample.cellularautomata.rules.ui.keyword_Evol"/>
+            <enabledWhen>
+	            <adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+        </page>
+    </extension>
+    <extension
+        point="org.eclipse.ui.keywords">
+        <keyword
+            id="org.kermeta.language.sample.cellularautomata.rules.ui.keyword_Evol"
+            label="Evol"/>
+    </extension>
+    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Trigger expensive validation"
+            id="org.kermeta.language.sample.cellularautomata.rules.Evol.validate"
+            name="Validate">
+      </command>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="popup:#TextEditorContext?after=group.edit">
+             <command
+                 commandId="org.kermeta.language.sample.cellularautomata.rules.Evol.validate"
+                 style="push"
+                 tooltip="Trigger expensive validation">
+            <visibleWhen checkEnabled="false">
+                <reference
+                    definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+                </reference>
+            </visibleWhen>
+         </command>  
+         </menuContribution>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
+			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
+				<visibleWhen checkEnabled="false">
+                	<reference definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+                	</reference>
+            	</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+	    <handler
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            commandId="org.eclipse.xtext.ui.editor.FindReferences">
+            <activeWhen>
+                <reference
+                    definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+    </extension>   
+
+<!-- adding resource factories -->
+
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="erule">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="erule">
+        </resourceServiceProvider>
+    </extension>
+
+
+    <!-- marker definitions for org.kermeta.language.sample.cellularautomata.rules.Evol -->
+    <extension
+            id="evol.check.fast"
+            name="Evol Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="evol.check.normal"
+            name="Evol Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="evol.check.expensive"
+            name="Evol Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
+
+	<!-- Quick Outline -->
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
+			<activeWhen>
+				<reference
+					definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Open the quick outline."
+			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+			name="Quick Outline">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+				style="push"
+				tooltip="Open Quick Outline">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kermeta.language.sample.cellularautomata.rules.Evol.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+
+  <extension point="org.eclipse.compare.contentViewers">
+    <viewer id="org.kermeta.language.sample.cellularautomata.rules.Evol.compare.contentViewers"
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="erule">
+    </viewer>
+  </extension>
+  <extension point="org.eclipse.compare.contentMergeViewers">
+    <viewer id="org.kermeta.language.sample.cellularautomata.rules.Evol.compare.contentMergeViewers"
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="erule" label="Evol Compare">
+     </viewer>
+  </extension>
+  <extension point="org.eclipse.ui.editors.documentProviders">
+    <provider id="org.kermeta.language.sample.cellularautomata.rules.Evol.editors.documentProviders"
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            extensions="erule">
+    </provider>
+  </extension>
+    <!-- quickfix marker resolution generator for org.kermeta.language.sample.cellularautomata.rules.Evol -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.kermeta.language.sample.cellularautomata.rules.ui.evol.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.kermeta.language.sample.cellularautomata.rules.ui.evol.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.kermeta.language.sample.cellularautomata.rules.ui.EvolExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.kermeta.language.sample.cellularautomata.rules.ui.evol.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
+
+</plugin>

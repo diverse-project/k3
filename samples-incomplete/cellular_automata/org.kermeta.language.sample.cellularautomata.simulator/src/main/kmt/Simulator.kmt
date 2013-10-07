@@ -1,0 +1,45 @@
+using kermeta::standard::*
+using vm::*
+using core::*
+using evol::*
+using kermeta::emfpersistence::*
+using kermeta::io::StdIO => stdio
+
+package ca::simulator{
+	class Simulator
+	{
+
+		// declares that operation as a possible entry point of the program
+		@main "platform:/resource/org.kermeta.language.sample.cellularautomata.simulator/src/main/samples/lifeGame.evol.xmi platform:/resource/org.kermeta.language.sample.cellularautomata.simulator/src/main/samples/Moore5x5_corner.vm.xmi 5" 
+		operation simulateWithAsciiArt2Dvisualizer(ruleFile : String, gridFile : String, universeSize : String) : Void is do 
+			var grid : Universe := loadGrid(gridFile)
+			var automata : CellularAutomata := loadRule(ruleFile)
+			var universeLength : Integer := universeSize.toInteger
+			
+			var asciiArtVisualizer : ca::visualizers::SimpleAsciiArt2DVisualizer := ca::visualizers::SimpleAsciiArt2DVisualizer.new.initialize(false)
+			asciiArtVisualizer.visualizeRegular2DUniverse(universeLength, grid)
+			
+			4.times{i |
+				var context : ca::evaluator::Context := ca::evaluator::Context.new.initialize(grid)
+				automata.applyRules(context)
+				asciiArtVisualizer.visualizeRegular2DUniverse(universeLength, grid)
+			}
+		end
+		
+		
+		operation loadRule(ruleFile : String) : CellularAutomata is do
+			var resourceSet : ResourceSet init ResourceSet.new
+	        var resource : Resource init 
+	        	resourceSet.createResource(ruleFile, "platform:/resource/org.kermeta.language.sample.cellularautomata/src/main/ecore/CA_Rules.ecore")
+			resource.load(void)
+			result := resource.getContents.one.asType(CellularAutomata)
+		end
+		operation loadGrid(gridFile : String) : Universe is do
+			var resourceSet : ResourceSet init ResourceSet.new
+	        var resource : Resource init 
+	        	resourceSet.createResource(gridFile, "platform:/resource/org.kermeta.language.sample.cellularautomata/src/main/ecore/CA_VM.ecore")
+			resource.load(void)
+			result := resource.getContents.one.asType(Universe)
+		end
+	}
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.kermeta.kp.launcher.eclipse.internal.KermetaLauncherID">
+<stringAttribute key="KM_LAUNCH_KP_FILE" value="/org.kermeta.language.sample.cellularautomata.vm.generator/project.kp"/>
+<stringAttribute key="KM_LAUNCH_MAIN_CLASS" value="cellularautomata_vmgenerator^vm::UniverseGenerator"/>
+<stringAttribute key="KM_LAUNCH_MAIN_OPERATION" value="generateInitialUniverseForAutomataFile"/>
+<stringAttribute key="KM_LAUNCH_PARAMETERS" value="platform:/resource/org.kermeta.language.sample.cellularautomata.vm.generator/src/main/samples/Moore5x5_corner.rulesInit.xmi"/>
+<stringAttribute key="KM_LAUNCH_PORT" value=""/>
+<stringAttribute key="KM_LAUNCH_PROJECT" value="org.kermeta.language.sample.cellularautomata.vm.generator"/>
+<stringAttribute key="process_factory_id" value="org.kermeta.debug.processFactory"/>
+</launchConfiguration>

@@ -1,0 +1,20 @@
+using kermeta::standard::*
+using vm::*
+
+package ca::evaluator{
+	class Context
+	{
+		reference currentUniverse : Universe
+		reference currentCell : Cell
+		
+		operation initialize(universe : Universe, cell : Cell) : Context is do
+			currentUniverse := universe
+			currentCell := cell
+			result := self
+		end
+		operation initialize(universe : Universe) : Context is do
+			currentUniverse := universe
+			result := self
+		end
+	}
+}

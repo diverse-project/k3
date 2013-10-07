@@ -1,0 +1,12 @@
+resource library_standard ="platform:/plugin/org.kermeta.language.library.standard" alternative "mvn:org.kermeta.language/language.library.standard/2.0.99-SNAPSHOT"
+resource vmModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.vm.model"
+	
+importProject library_standard
+project cellularautomata_asciiartvisualiser {
+	mainClass "cellularautomata_asciiartvisualiser^mainPackage::MainClass"
+	mainOperation "mainOperation"
+
+	import "${project.baseUri}/src/main/kmt/MainClass.kmt"
+	import "${project.baseUri}/src/main/kmt/AsciiArtVisualizer.kmt"
+	import "${vmModel.baseUri}/metamodel/vm.ecore"
+}

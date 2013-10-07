@@ -1,0 +1,99 @@
+using kermeta::standard::*
+using kermeta::exceptions::*
+using ca::evaluator::*
+using core::*
+
+/* base part of the evaluator that doesn't require to use the Cell value to evaluate.
+ * ie. the part that can be used in both as an initialisation expression or 
+ */
+package evol{
+	aspect class PopulationRange {
+		operation isApplicableForCell(cell : vm::Cell) : Boolean is do
+			result := matchesValue(cell.val)
+		end
+		operation matchesValue(val : Integer) : Boolean is do
+			var lowerOk : Boolean := false
+			var upperOk : Boolean := false
+			
+			if not lowerRange.isVoid then
+				if val >= lowerRange then
+					 lowerOk := true
+				end
+			else
+				lowerOk := true
+			end
+			if not upperRange.isVoid then
+				if val <= upperRange then
+					 upperOk := true
+				end
+			else
+				upperOk := true
+			end
+			result := lowerOk and upperOk
+		end
+	}
+	
+	aspect class CurrentCellPopulation inherits IntegerExpression{
+		operation evaluate(context : Context) : Integer is do 
+			result := context.currentCell.val
+		end
+	}	
+	/* --- NeighborsExpressions --- */
+	aspect class Max inherits NeighborsExpression{
+		operation evaluate(context : Context) : Integer is do
+			var selectedCellValues : Sequence[Integer]
+			if neighborsFilter.isVoid then
+				selectedCellValues := context.currentCell.neighbors.collect{ cell | cell.val}
+			else
+				selectedCellValues := context.currentCell.neighbors.select{ cell | neighborsFilter.matchesValue(cell.val)}.collect{ cell | cell.val}
+			end
+			//Initializing result with MININT
+			var MININT : Integer init -2147483647
+			result := MININT
+			selectedCellValues.each{ val | if val > result then result := val end } 
+		end
+	}
+	aspect class Min inherits NeighborsExpression{
+		operation evaluate(context : Context) : Integer is do
+			var selectedCellValues : Sequence[Integer]
+			if neighborsFilter.isVoid then
+				selectedCellValues := context.currentCell.neighbors.collect{ cell | cell.val}
+			else
+				selectedCellValues := context.currentCell.neighbors.select{ cell | neighborsFilter.matchesValue(cell.val)}.collect{ cell | cell.val}
+			end
+			//Initializing result with MAXINT
+			var MAXINT : Integer init 2147483647
+			result := MAXINT
+			selectedCellValues.each{ val | if val < result then result := val end } 
+		end
+	}
+	aspect class Size inherits NeighborsExpression{
+		operation evaluate(context : Context) : Integer is do
+			var selectedCells : OrderedSet[vm::Cell]
+			if neighborsFilter.isVoid then
+				selectedCells := context.currentCell.neighbors
+			else
+				selectedCells := context.currentCell.neighbors.select{ cell | neighborsFilter.matchesValue(cell.val)}.asOrderedSet
+			end
+			//Initializing result with 0
+			result := 0
+			if not selectedCells.isVoid then
+				result := selectedCells.size
+			end
+		end
+	}
+	aspect class Sum inherits NeighborsExpression{
+		operation evaluate(context : Context) : Integer is do
+			var selectedCellValues : Sequence[Integer]
+			if neighborsFilter.isVoid then
+				selectedCellValues := context.currentCell.neighbors.collect{ cell | cell.val}
+			else
+				selectedCellValues := context.currentCell.neighbors.select{ cell | neighborsFilter.matchesValue(cell.val)}.collect{ cell | cell.val}
+			end			
+			result := 0 //Initializing result with 0	
+			if not selectedCellValues.isVoid then
+				result := selectedCellValues.sum
+			end	
+		end
+	}	
+}

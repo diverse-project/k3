@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="ruleInit.presentation.InitModelWizardID"
+            name="%_UI_InitModelWizard_label"
+            class="ruleInit.presentation.InitModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/InitModelFile.gif">
+         <description>%_UI_InitModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="ruleInit.presentation.InitEditorID"
+            name="%_UI_InitEditor_label"
+            icon="icons/full/obj16/InitModelFile.gif"
+            extensions="init"
+            class="ruleInit.presentation.InitEditor"
+            contributorClass="ruleInit.presentation.InitActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

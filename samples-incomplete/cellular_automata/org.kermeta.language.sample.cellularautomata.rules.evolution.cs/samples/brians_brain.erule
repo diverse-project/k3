@@ -1,0 +1,13 @@
+/*
+ * Brian's brain cellular automata rule
+ * Universe: 2D grid, cells have 8 neighbors
+ * A cell turns on if it was off but had exactly two neighbors that were on.
+ * All cells that were "on" go into the "dying" state, which is not counted as an "on" cell in the neighbor count, and prevents any cell from being born there.
+ * Cells that were in the dying state go into the off state.
+ */
+//ON cells go dying
+when [1,1] nextValue = {0}
+//Dying cells go OFF
+when [0,0] nextValue = {-1}
+//OFF cells go ON if they have exactly 2 neighbors ON
+when[-1,-1] nextValue = {if (neighborsSum[1,1] == 2) {1} else {0}}

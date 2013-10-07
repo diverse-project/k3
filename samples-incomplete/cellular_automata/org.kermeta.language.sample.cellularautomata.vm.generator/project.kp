@@ -1,0 +1,29 @@
+resource library_standard ="platform:/plugin/org.kermeta.language.library.standard" alternative "mvn:org.kermeta.language/language.library.standard/2.0.99-SNAPSHOT"
+resource ruleInitModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.rules.initialization.model"
+resource ruleCoreModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.rules.core.model"
+resource vmModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.vm.model"
+resource geometryModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.geometry.model"
+// DVK required but actually shouldn't, probably need some reorganisation of the projects
+resource rulesEvolutionModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.rules.evolution.model"
+resource evaluator = "platform:/resource/org.kermeta.language.sample.cellularautomata.evaluator"
+resource visualizer = "platform:/resource/org.kermeta.language.sample.cellularautomata.visualizer.asciiart"
+		
+importProject library_standard
+
+project cellularautomata_vmgenerator {
+	mainClass "cellularautomata_vmgenerator^vm::UniverseGenerator"
+	mainOperation "generateInitialUniverseForAutomataFile"
+
+	import "${project.baseUri}/src/main/kmt/UniverseGenerator.kmt"
+	import "${project.baseUri}/src/main/kmt/VMGenerator_vm_Aspect.kmt"
+	import "${project.baseUri}/src/main/kmt/VMGenerator_ruleInit_Aspect.kmt"
+	import "${evaluator.baseUri}/src/main/kmt/Context.kmt"
+	import "${evaluator.baseUri}/src/main/kmt/Evaluator_rules_core_Aspect.kmt"
+	import "${evaluator.baseUri}/src/main/kmt/Evaluator_rules_evol_Aspect.kmt"
+	import "${ruleInitModel.baseUri}/metamodel/rules_init.ecore"
+	import "${ruleCoreModel.baseUri}/metamodel/rules_core.ecore"
+	import "${vmModel.baseUri}/metamodel/vm.ecore"
+	import "${geometryModel.baseUri}/metamodel/geometry.ecore"
+	import "${visualizer.baseUri}/src/main/kmt/AsciiArtVisualizer.kmt"
+	import "${rulesEvolutionModel.baseUri}/metamodel/rules_evol.ecore"
+}

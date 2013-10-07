@@ -1,0 +1,121 @@
+using kermeta::standard::*
+using kermeta::exceptions::*
+using ca::evaluator::*
+
+/* base part of the evaluator that doesn't require to use the Cell value to evaluate.
+ * ie. the part that can be used in both as an initialisation expression or */
+package core{
+	aspect class Rule {
+	
+		/** If there is a filter, verify if it applies to this cell
+		 * if not, then the rule applies to the cell */
+		operation isApplicableForCell(cell : vm::Cell) : Boolean is do			
+			if filter.isVoid then
+				result := true
+			else 
+				result := filter.isApplicableForCell(cell)
+			end
+		end		
+		operation evaluate(context : Context) : Integer is do
+			// TODO add precodition checking that the current value is correct for the filter if it exists 
+			result := evaluatedVal.evaluate(context)
+		end
+	}
+	
+	aspect class IntegerExpression
+	{
+		operation evaluate(context : Context) : Integer is do 
+			result := void
+			raise NotImplementedException.new.initialize("evaluate not implemented for "+self.toString)
+		end
+	}
+	
+	aspect class IntegerLiteral inherits IntegerExpression
+	{
+		operation evaluate(context : Context) : Integer is do 
+			result := self.val
+		end
+	}		
+	aspect class Conditional inherits IntegerExpression {
+		operation evaluate(context : Context) : Integer is do 
+			if condition.evaluate(context) != 0 then
+				result := ifTrueExpression.evaluate(context)
+			else 
+				result := ifFalseExpression.evaluate(context)				
+			end
+		end
+	}	
+	/* --- BinaryExpressions --- */
+	aspect class Add inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := left.evaluate(context) + right.evaluate(context)
+		end
+	}
+	aspect class And inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			var leftVal : Boolean init  left.evaluate(context) != 0
+			var rightVal : Boolean init right.evaluate(context) != 0
+			result := if leftVal and rightVal then 1 else 0 end
+		end
+	}
+	aspect class Div inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := left.evaluate(context) / right.evaluate(context)
+		end
+	}
+	aspect class Equal inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := if left.evaluate(context) == right.evaluate(context) then 1 else 0 end
+		end
+	}
+	aspect class Greater inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := if left.evaluate(context) > right.evaluate(context) then 1 else 0 end
+		end
+	}
+	aspect class Lower inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := if left.evaluate(context) < right.evaluate(context) then 1 else 0 end
+		end
+	}
+	aspect class Minus inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := left.evaluate(context) - right.evaluate(context)
+		end
+	}
+	aspect class Mod inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			var leftVal : Integer init  left.evaluate(context)
+			var rightVal : Integer init right.evaluate(context)
+			result := leftVal.mod(rightVal)
+		end
+	}
+	aspect class Mult inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := left.evaluate(context) * right.evaluate(context)
+		end
+	}	
+	aspect class Or inherits BinaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			var leftVal : Boolean init  left.evaluate(context) != 0
+			var rightVal : Boolean init right.evaluate(context) != 0
+			result := if leftVal or rightVal then 1 else 0 end
+		end
+	}	
+	/* --- UnaryExpressions --- */
+	aspect class Not inherits UnaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			var targetVal : Boolean init  target.evaluate(context) != 0
+			result := if targetVal then 1 else 0 end
+		end
+	}
+	aspect class UMinus inherits UnaryExpression{
+		operation evaluate(context : Context) : Integer is do
+			result := - target.evaluate(context)
+		end
+	}
+	
+	aspect class Filter {
+		operation isApplicableForCell(cell : vm::Cell) : Boolean is abstract
+	}		
+}

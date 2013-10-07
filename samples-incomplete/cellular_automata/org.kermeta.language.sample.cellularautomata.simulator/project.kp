@@ -1,0 +1,25 @@
+resource library_standard ="platform:/plugin/org.kermeta.language.library.standard" alternative "mvn:org.kermeta.language/language.library.standard/2.0.99-SNAPSHOT"
+resource rulesCoreModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.rules.core.model"
+resource rulesEvolutionModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.rules.evolution.model"
+resource vmModel = "platform:/resource/org.kermeta.language.sample.cellularautomata.vm.model"
+resource evaluator = "platform:/resource/org.kermeta.language.sample.cellularautomata.evaluator"
+resource asciiVisualizer = "platform:/resource/org.kermeta.language.sample.cellularautomata.visualizer.asciiart"
+
+importProject library_standard
+
+project cellularautomata_simulator {
+	mainClass "cellularautomata_simulator^ca::simulator::Simulator"
+	mainOperation "simulateWithAsciiArt2Dvisualizer"
+
+	import  "${project.baseUri}/src/main/kmt/Simulator.kmt"
+	//import "${project.baseUri}/src/main/kmt/Simulator_rules_core_Aspect.kmt"
+	import "${project.baseUri}/src/main/kmt/Simulator_rules_evol_Aspect.kmt"
+	import "${project.baseUri}/src/main/kmt/Simulator_VM_Aspect.kmt"
+	import "${rulesCoreModel.baseUri}/metamodel/rules_core.ecore"
+	import "${rulesEvolutionModel.baseUri}/metamodel/rules_evol.ecore"
+	import "${vmModel.baseUri}/metamodel/vm.ecore"
+	import "${evaluator.baseUri}/src/main/kmt/Context.kmt"
+	import "${evaluator.baseUri}/src/main/kmt/Evaluator_rules_core_Aspect.kmt"
+	import "${evaluator.baseUri}/src/main/kmt/Evaluator_rules_evol_Aspect.kmt"
+	import "${asciiVisualizer.baseUri}/src/main/kmt/AsciiArtVisualizer.kmt"
+}

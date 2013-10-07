@@ -1,0 +1,13 @@
+/*
+ * High life cellular automata rules
+ * High life has rules close to game of life ones but allows replicator pattern
+ * Universe: 2D grid, cells have 8 neighbors, 0 represent a dead cell, 1 a living one
+ */
+//Rule for living cells (if a cell have 2 or 3 living neighbors it will live, otherwise it will die)
+when [1,1] nextValue = {
+	if (neighborsSum > 1 & neighborsSum < 4) {1} else {0}
+}
+//Rule for dead cells (if a cell have 3 or 6 living neighbors it will reborn, otherwise it will remain dead)
+when [0,0] nextValue = {
+	if (neighborsSum == 3 | neighborsSum == 6) {1} else {0}
+}

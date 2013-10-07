@@ -1,0 +1,29 @@
+using kermeta::standard::*
+using ca::evaluator::*
+using kermeta::io::StdIO => stdio
+
+
+package evol{
+	aspect class CellularAutomata
+	{
+		operation applyRules(context : Context) : Void is do 
+			context.currentUniverse.cells.each{ cell |
+				context.currentCell := cell
+				// select the rule that applies (there must be maximum one)
+				var rule : core::Rule := rules.select{r |
+					r.isApplicableForCell(cell)
+				}.one
+				if rule.isVoid then
+					// no rule, report the current value as the future
+					cell.futureValue := cell.val
+				else
+					cell.futureValue := rule.evaluate(context)
+				end
+			}
+			// apply the change
+			context.currentUniverse.cells.each{ cell |
+				cell.val := cell.futureValue
+			}
+		end
+	}
+}

@@ -1,0 +1,9 @@
+using kermeta::standard::*
+using kermeta::io::StdIO => stdio
+
+package vm{
+	aspect class Cell
+	{
+		attribute futureValue : Integer
+	}
+}
