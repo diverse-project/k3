@@ -69,7 +69,11 @@ public class XtendFieldAspect {
 public class XtendFunctionAspect {
 	def public void eval () {
 		var int i = 1;
-		print( 'def ' + _self.declaredVisibility + ' ' + _self.returnType.simpleName + ' ' + _self.name + ' (')
+		print( 'def ')
+		if(_self.declaredVisibility != null) {
+			print(' ' + _self.declaredVisibility)
+		} 
+		print(' ' + _self.returnType.simpleName + ' ' + _self.name + ' (')
 		for(elt : _self.parameters) {
 			print(elt.parameterType.simpleName + ' ' + elt.name)
 			if(i < _self.parameters.size) {
