@@ -28,8 +28,8 @@ public class LinkingProxyAwareResourceAspect {
 @Aspect(className=typeof(XtendFile)) 
 public class XtendFileAspect {
 	def public void eval () {
-		print('Displaying xtend File : ')
-		println('package = ' + _self.package)
+		println('\nDisplaying xtend File : \n')
+		println('package ' + _self.package)
 		
 		for(xClass : _self.xtendTypes) {
 			if(xClass instanceof XtendClass) {
@@ -42,8 +42,7 @@ public class XtendFileAspect {
 @Aspect(className=typeof(XtendClass)) 
 public class XtendClassAspect {
 	def public void eval () {
-		print('Displaying xtend Class : ')
-		println('class = ' + _self.name)
+		println('class ' + _self.name + ' {')
 		
 		for(xMember : _self.members) {
 			if(xMember instanceof XtendField) {
@@ -54,21 +53,30 @@ public class XtendClassAspect {
 				(xMember as XtendFunction).eval
 			}
 		}
+		
+		println ('}')
 	}
 }
 
 @Aspect(className=typeof(XtendField)) 
 public class XtendFieldAspect {
 	def public void eval () {
-		print('Displaying xtend Attributes : ')
-		println('attribute = ' + _self.name) 		
+		println(_self.type.simpleName + " " + _self.name)	
 	}
 }
 
 @Aspect(className=typeof(XtendFunction)) 
 public class XtendFunctionAspect {
 	def public void eval () {
-		print('Displaying xtend Function : ')
-		println('function = ' + _self.name)
+		var int i = 0;
+		print( 'def ' + _self.declaredVisibility + ' ' + _self.returnType.simpleName + ' ' + _self.name + '( ')
+		for(elt : _self.parameters) {
+			print(elt.parameterType.simpleName + ' ' + elt.name)
+			if(i < _self.parameters.size) {
+				print(', ')
+			}
+			i = i + 1
+		}
+		println(')')
 	}
 }
