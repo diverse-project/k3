@@ -64,7 +64,7 @@ public class FileUtils {
 		buffer.append("Bundle-SymbolicName: " + projectName + "; singleton:=true" + lineSeparator);
 		buffer.append("Bundle-Version: 1.0.0" + lineSeparator);
 		buffer.append("Require-Bundle: ");
-		buffer.append("org.k3.core.plugin;bundle-version=\"1.0.0\""+ lineSeparator);
+		buffer.append("fr.inria.diverse.k3.eclipse.core.plugin;bundle-version=\"1.0.0\""+ lineSeparator);
 	    buffer.append("Bundle-ClassPath: .,");
 	    buffer.append("resources/k3-3.0-SNAPSHOT.jar,");
 	    buffer.append("resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar,");

@@ -24,6 +24,10 @@
 							<goal>xtend-install-debug-info</goal>
 							<goal>xtend-test-install-debug-info</goal>
 						</goals>
+						<!-- optionnaly output dir matches default eclipse configuration -->
+						<configuration>
+							<outputDirectory>src/main/xtend-gen</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

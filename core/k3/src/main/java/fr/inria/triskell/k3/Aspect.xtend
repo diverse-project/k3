@@ -20,7 +20,9 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import java.util.LinkedHashSet
 import java.util.Collections
- 
+import org.eclipse.xtend.lib.macro.CodeGenerationContext
+import org.eclipse.xtend.lib.macro.CodeGenerationParticipant
+
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
 	Class<?> className;
@@ -89,7 +91,7 @@ public class Tuple<X, Y> {
 	} 
 }
 
-public class AspectProcessor extends AbstractClassProcessor {
+public class AspectProcessor extends AbstractClassProcessor implements CodeGenerationParticipant<ClassDeclaration>{
 	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz) {
 		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')		
 		//var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
@@ -630,5 +632,42 @@ public class AspectProcessor extends AbstractClassProcessor {
 			return m;
 
 	}
+	
+	
+	/**
+	 * use an additional code generator to produce the .k3_aspect_mapping.properties file
+	 */
+	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
+		// clean up previous version
+		if(annotatedSourceElements.size > 0){
+			val filePath = annotatedSourceElements.get(0).compilationUnit.filePath
+			filePath.projectFolder.lastSegment
+			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
+			file.delete
+		}
+		// add aspectizedClass = aspectClass mapping
+		for (clazz : annotatedSourceElements) {
+			
+			val filePath = clazz.compilationUnit.filePath
+			filePath.projectFolder.lastSegment
+			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
+			val aspectizedclassNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')
+			val aspectizedclassName = aspectizedclassNam.class.getMethod("getQualifiedName").invoke(aspectizedclassNam) as String
+				
+			if(file.exists){
+				file.contents = '''«file.contents»
+«aspectizedclassName» = «clazz.qualifiedName»
+			'''
+			}
+			else{
+			file.contents = '''
+«aspectizedclassName» = «clazz.qualifiedName»
+			'''
+			}
+			
+		}
+		
+	}
+	
 }
 		
