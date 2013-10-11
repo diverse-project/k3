@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: fr.inria.diverse.k3.sample.cellularautomata
+Bundle-SymbolicName: fr.inria.diverse.k3.sample.cellularautomata; singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: fr.inria.diverse.k3.eclipse.core.plugin;bundle-version="1.0.0",
+ org.eclipse.emf.common;bundle-version="2.9.1",
+ org.eclipse.emf.ecore;bundle-version="2.9.1",
+ org.eclipse.emf.ecore.xmi;bundle-version="2.9.1",
+ org.kermeta.language.sample.cellularautomata.rules.core.model;bundle-version="1.0.0",
+ org.kermeta.language.sample.cellularautomata.rules.evolution.model;bundle-version="1.0.0",
+ org.kermeta.language.sample.cellularautomata.rules.initialization.model;bundle-version="1.0.0",
+ org.kermeta.language.sample.cellularautomata.geometry.model;bundle-version="1.0.0",
+ org.kermeta.language.sample.cellularautomata.vm.model;bundle-version="1.0.0"
+Bundle-ClassPath: .,resources/k3-3.0-SNAPSHOT.jar,resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar,resources/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar
