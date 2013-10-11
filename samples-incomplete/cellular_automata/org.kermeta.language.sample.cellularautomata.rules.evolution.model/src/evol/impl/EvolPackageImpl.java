@@ -345,7 +345,7 @@ public class EvolPackageImpl extends EPackageImpl implements EvolPackage {
 		populationRangeEClass.getESuperTypes().add(theCorePackage.getFilter());
 		currentCellPopulationEClass.getESuperTypes().add(theCorePackage.getIntegerExpression());
 
-		// Initialize classes and features; add operations and parameters
+		// Initialize classes, features, and operations; add parameters
 		initEClass(neighborsExpressionEClass, NeighborsExpression.class, "NeighborsExpression", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getNeighborsExpression_NeighborsFilter(), this.getPopulationRange(), null, "neighborsFilter", null, 0, 1, NeighborsExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -358,8 +358,8 @@ public class EvolPackageImpl extends EPackageImpl implements EvolPackage {
 		initEClass(minEClass, Min.class, "Min", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(populationRangeEClass, PopulationRange.class, "PopulationRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPopulationRange_LowerRange(), ecorePackage.getEInt(), "lowerRange", "-2147483648", 0, 1, PopulationRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationRange_UpperRange(), ecorePackage.getEInt(), "upperRange", "2147483647", 0, 1, PopulationRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPopulationRange_LowerRange(), ecorePackage.getEIntegerObject(), "lowerRange", "-2147483648", 0, 1, PopulationRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPopulationRange_UpperRange(), ecorePackage.getEIntegerObject(), "upperRange", "2147483647", 0, 1, PopulationRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(cellularAutomataEClass, CellularAutomata.class, "CellularAutomata", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCellularAutomata_Rules(), theCorePackage.getRule(), null, "rules", null, 0, -1, CellularAutomata.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
