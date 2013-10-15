@@ -21,6 +21,7 @@ import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import java.util.Collection
+import com.google.common.collect.ImmutableList
 
 /**
  * Opposite annotation declaration
@@ -54,14 +55,12 @@ class OppositeProcessor extends AbstractFieldProcessor
 		val oppositeRefName = field.annotations.findFirst[a | a.annotationTypeDeclaration.qualifiedName.equals(Opposite.name)].getValue("value")
 		
 		if (isCollection(field.type)) {
-			//if (field.type.actualTypeArguments.size != 1) {
-			//	this.context.addError(field, "Only collections with 1 type parameter are supported")
-			//	return
-			//}
+			if (field.type.actualTypeArguments.size != 1) {
+				this.context.addError(field, "Only collections with 1 type parameter are supported")
+				return
+			}
 			
-			//this.oppositeType = context.findClass(field.type.actualTypeArguments.head.name)
-			
-			context.addError(field, "Opposite collections are not supported yet")
+			this.oppositeType = context.findClass(field.type.actualTypeArguments.head.name)
 		} else {
 			this.oppositeType = context.findClass(field.type.name)
 		}
@@ -77,10 +76,23 @@ class OppositeProcessor extends AbstractFieldProcessor
 			// by the generated setter
 			this.field.visibility = Visibility.PRIVATE
 			
+			generateInitializer()
 			generateGetterMethod()
 			generateSetterProxyMethod()
 			generateResetMethod()
 			generateSetMethod()
+		}
+	}
+	
+	protected def void generateInitializer()
+	{
+		if (isCollection(field.type))
+		{
+			val t = field.type.actualTypeArguments.head.simpleName
+			
+			field.initializer = ['''new java.util.ArrayList<«t»>()''']
+		} else {
+			field.initializer = ['''null''']
 		}
 	}
 	
@@ -91,11 +103,20 @@ class OppositeProcessor extends AbstractFieldProcessor
 	{
 		val f = field.simpleName
 		
-		containingType.addMethod(f)[
-			visibility = Visibility.PUBLIC
-			returnType = field.type
-			body = ['''return «f» ;''']
-		]
+		if (isCollection(field.type))
+		{
+			containingType.addMethod(f)[
+				visibility = Visibility.PUBLIC
+				returnType = context.newTypeReference(ImmutableList, field.type.actualTypeArguments.head)
+				body = ['''return com.google.common.collect.ImmutableList.copyOf(«f») ;''']
+			]
+		} else {
+			containingType.addMethod(f)[
+				visibility = Visibility.PUBLIC
+				returnType = field.type
+				body = ['''return «f» ;''']
+			]
+		}
 	}
 	
 	/**
@@ -106,22 +127,48 @@ class OppositeProcessor extends AbstractFieldProcessor
 	{
 		val f = field.simpleName
 		val o = oppositeField.simpleName
+		val t = oppositeField.type
 		
-		containingType.addMethod(field.simpleName)[
-			visibility = Visibility.PUBLIC
-			addParameter("obj", field.type)
-			body = ['''
-				if (obj != «f»)
-				{
-					if («f» != null)
-						«f».__K3_«o»_reset() ;
-					if (obj != null)
-						obj.__K3_«o»_set(this) ;
-					
-					«f» = obj ;
-				}
-			''']
-		]
+		if (isCollection(field.type))
+		{
+			containingType.addMethod("add" + field.simpleName.toFirstUpper)[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					if (!«f».contains(obj))
+					{
+						if (obj != null)
+							«IF isCollection(t)»
+								obj.__K3_«o»_set(this) ;
+							«ELSE»
+								obj.__K3_«o»_set(this) ;
+							«ENDIF»
+						
+						«f».add(obj) ;
+					}
+				''']
+			]
+		} else {
+			containingType.addMethod(field.simpleName)[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type)
+				body = ['''
+					if (obj != «f»)
+					{
+						if («f» != null)
+							«IF isCollection(t)»
+								«f».__K3_«o»_reset(this) ;
+							«ELSE»
+								«f».__K3_«o»_reset() ;
+							«ENDIF»
+						if (obj != null)
+							obj.__K3_«o»_set(this) ;
+						
+						«f» = obj ;
+					}
+				''']
+			]
+		}
 	}
 	
 	/**
@@ -130,11 +177,40 @@ class OppositeProcessor extends AbstractFieldProcessor
 	protected def void generateResetMethod()
 	{
 		val f = field.simpleName
+		val o = oppositeField.simpleName
+		val t = oppositeField.type
 		
-		containingType.addMethod("__K3_" + f + "_reset")[
-			visibility = Visibility.PUBLIC
-			body = ['''«f» = null ;''']
-		]
+		if (isCollection(field.type))
+		{
+			containingType.addMethod("__K3_" + field.simpleName + "_reset")[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					if («f».contains(obj))
+						«f».remove(obj) ;
+				''']
+			]
+			
+			containingType.addMethod("remove" + field.simpleName.toFirstUpper)[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					if (obj != null)
+						«IF isCollection(t)»
+							obj.__K3_«o»_reset(this) ;
+						«ELSE»
+							obj.__K3_«o»_reset() ;
+						«ENDIF»
+						
+					«f».remove(obj) ;
+				''']
+			]
+		} else {
+			containingType.addMethod("__K3_" + f + "_reset")[
+				visibility = Visibility.PUBLIC
+				body = ['''«f» = null ;''']
+			]
+		}
 	}
 	
 	/**
@@ -144,17 +220,33 @@ class OppositeProcessor extends AbstractFieldProcessor
 	{
 		val f = field.simpleName
 		val o = oppositeField.simpleName
+		val t = oppositeField.type
 		
-		containingType.addMethod("__K3_" + f + "_set")[
-			visibility = Visibility.PUBLIC
-			addParameter("obj", field.type)
-			body = ['''
-				if («f» != null)
-					«f».__K3_«o»_reset() ;
+		if (isCollection(field.type))
+		{
+			containingType.addMethod("__K3_" + f + "_set")[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					«f».add(obj) ;
+					''']
+				]
+		} else {
+			containingType.addMethod("__K3_" + f + "_set")[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type)
+				body = ['''
+					if («f» != null)
+						«IF isCollection(t)»
+							«f».__K3_«o»_reset(this) ;
+						«ELSE»
+							«f».__K3_«o»_reset() ;
+						«ENDIF»
 					
-				«f» = obj ;
-				''']
-			]
+					«f» = obj ;
+					''']
+				]
+		}
 	}
 	
 	/**
@@ -176,25 +268,25 @@ class OppositeProcessor extends AbstractFieldProcessor
 		}
 		
 		// Types match
-		// TODO Kill the one who dares to compare types based on their simpleName
-		//if (isCollection(field.type)) {
-		//	if (!isCollection(oppositeField.type) && !oppositeField.type.simpleName.equals(containingType.simpleName)) {
-		//		context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-		//		return false
-		//	} else if (isCollection(oppositeField.type) && !oppositeField.type.actualTypeArguments.head.simpleName.equals(containingType.simpleName)) {
-		//		context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-		//		return false
-		//	}
-		//} else {
+		// TODO Kill the one who dares comparing types based on their simpleName
+		if (isCollection(field.type)) {
+			if (!isCollection(oppositeField.type) && !oppositeField.type.simpleName.equals(containingType.simpleName)) {
+				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
+				return false
+			} else if (isCollection(oppositeField.type) && !oppositeField.type.actualTypeArguments.head.simpleName.equals(containingType.simpleName)) {
+				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
+				return false
+			}
+		} else {
 			if (!isCollection(oppositeField.type) && !oppositeField.type.simpleName.equals(containingType.simpleName)) {
 				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
 				return false
 			}
-		//	else if (isCollection(oppositeField.type) && !oppositeField.type.actualTypeArguments.head.simpleName.equals(containingType.simpleName)) {
-		//		context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-		//		return false
-		//	}
-		//}
+			else if (isCollection(oppositeField.type) && !oppositeField.type.actualTypeArguments.head.simpleName.equals(containingType.simpleName)) {
+				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
+				return false
+			}
+		}
 		
 		// No double-containment
 		if (
