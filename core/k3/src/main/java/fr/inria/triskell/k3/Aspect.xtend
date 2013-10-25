@@ -513,13 +513,15 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				])
 			bodies.put(get, ''' return «clazz.qualifiedName»._self_.«f.simpleName»; ''')
 
-			var set = clazz.addMethod(f.simpleName,
-				[
-					returnType = newTypeReference("void")
-					addParameter("_self", newTypeReference(identifier))
-					addParameter(f.simpleName, f.type)
-				])
-			bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
+			if(!f.final) {
+				var set = clazz.addMethod(f.simpleName,
+					[
+						returnType = newTypeReference("void")
+						addParameter("_self", newTypeReference(identifier))
+						addParameter(f.simpleName, f.type)
+					])
+				bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
+			}
 
 		}
 		for (f : toRemove) {
