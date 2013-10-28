@@ -4,6 +4,6 @@ class TestExecution {
 	
 	def static void main(String[] args)  {
 		var Simulator simulator = new Simulator
-		simulator.simulateWithAsciiArt2Dvisualizer("src/main/k3/samples_simulator/lifeGame.evol.xmi", "src/main/k3/samples_simulator/Moore5x5_corner.vm.xmi", "5")
+		simulator.simulateWithAsciiArt2Dvisualizer("src/main/examples/simulator/lifeGame.evol.xmi", "src/main/examples/simulator/Moore5x5_corner.vm.xmi", "5")
 	}
 }

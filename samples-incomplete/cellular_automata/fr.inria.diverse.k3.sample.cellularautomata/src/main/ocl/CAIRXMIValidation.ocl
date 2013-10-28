@@ -1,0 +1,18 @@
+/**
+ * 
+ */
+import ecore : 'platform:/resource/org.kermeta.language.sample.cellularautomata.rules.initialization.model/metamodel/rules_init.ecore'
+import ecore : 'platform:/resource/org.kermeta.language.sample.cellularautomata.geometry.model/metamodel/geometry.ecore'
+
+/* package ruleInit */
+
+context ruleInit::GlobalPosition
+
+/* if geometry is RegularGeometry, then the number of coordinatesRanges of a GlobalPosition must be equals to the geometry dimensions */
+inv coordinatesMustMatchRegularGeometry : let regularGeometry = self.oclContainer().oclContainer().oclAsType(CellularAutomatatInitialization).geometry.oclAsType(geometry::RegularGeometry)
+	in  if not regularGeometry.oclIsUndefined()
+		then regularGeometry.dimensions->size() = coordinateRanges->size()
+		else true
+		endif
+
+/* endpackage*/
