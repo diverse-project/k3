@@ -299,7 +299,7 @@ class MaxAspect extends NeighborsExpressionAspect {
 		if (_self.neighborsFilter == null) {
 			selectedCellValues = context.currentCell.neighbors.map[cellValue | cellValue.^val]
 		} else {
-			selectedCellValues = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List
+			selectedCellValues = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List<Integer>
 		}
 		return selectedCellValues.reduce[p1, p2| if(p1 < p2) {p2} else {p1}] 
 	}
@@ -312,7 +312,7 @@ class MinAspect extends NeighborsExpressionAspect {
 		if (_self.neighborsFilter == null) {
 			selectedCellValues = context.currentCell.neighbors.map[cellValue | cellValue.^val]
 		} else {
-			selectedCellValues = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List			
+			selectedCellValues = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List<Integer>			
 		}
 		return selectedCellValues.reduce[p1, p2| if(p1 > p2) {p2} else {p1}]
 	}
@@ -326,7 +326,7 @@ class SizeAspect extends NeighborsExpressionAspect {
 		if (_self.neighborsFilter == null) {
 			selectedCells = context.currentCell.neighbors
 		} else {
-			selectedCells = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List
+			selectedCells = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)] as List<Cell>
 		}
 		if (selectedCells != null) {
 			result = selectedCells.size
@@ -342,7 +342,7 @@ class SumAspect extends NeighborsExpressionAspect {
 		if (_self.neighborsFilter == null) {
 			selectedCellValues = context.currentCell.neighbors.map[cellValue | cellValue.^val]
 		} else {
-			selectedCellValues = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List
+			selectedCellValues = context.currentCell.neighbors.filter[cell | _self.neighborsFilter.matchesValue(cell.^val)].map[cellValue | cellValue.^val] as List<Integer>
 		}
 		return selectedCellValues.reduce[p1, p2| p1 + p2]
 	}

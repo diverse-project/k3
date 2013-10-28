@@ -22,7 +22,6 @@ import core.BinaryExpression
 import core.UMinus
 import core.Not
 import core.Mod
-import core.Filter
 
 import static extension fr.inria.diverse.k3.sample.cellularautomata.vm.generator.FilterAspect.*
 import static extension fr.inria.diverse.k3.sample.cellularautomata.vm.generator.IntegerExpressionAspect.*

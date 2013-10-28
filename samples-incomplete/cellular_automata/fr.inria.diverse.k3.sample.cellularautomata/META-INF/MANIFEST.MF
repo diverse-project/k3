@@ -12,4 +12,5 @@ Require-Bundle: fr.inria.diverse.k3.eclipse.core.plugin;bundle-version="1.0.0",
  org.kermeta.language.sample.cellularautomata.rules.initialization.model;bundle-version="1.0.0",
  org.kermeta.language.sample.cellularautomata.geometry.model;bundle-version="1.0.0",
  org.kermeta.language.sample.cellularautomata.vm.model;bundle-version="1.0.0"
-Bundle-ClassPath: .,resources/k3-3.0-SNAPSHOT.jar,resources/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar,resources/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
