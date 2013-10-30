@@ -50,6 +50,13 @@
       <coordinateRanges/>
     </filter>
   </seedRules>
+  <seedRules>
+    <filter
+        xsi:type="ruleInit:GlobalPosition">
+      <coordinateRanges
+          lowerCoordinate="1"/>
+    </filter>
+  </seedRules>
   <geometry
       xsi:type="geometry:RegularGeometry"
       neighborsNumber="4">

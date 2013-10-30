@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?>
+<evol:CellularAutomata
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:core="http://rules/core/1.0"
+    xmlns:evol="http://rules/evol/1.0"
+    xsi:schemaLocation="http://rules/core/1.0 ../../../../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.ecore http://rules/evol/1.0 ../../../../../org.kermeta.language.sample.cellularautomata.rules.evolution.model/metamodel/rules_evol.ecore">
+  <rules>
+    <evaluatedVal
+        xsi:type="core:Conditional">
+      <ifTrueExpression
+          xsi:type="core:IntegerLiteral"
+          val="1"/>
+      <ifFalseExpression
+          xsi:type="core:IntegerLiteral"/>
+      <condition
+          xsi:type="core:Equal">
+        <left
+            xsi:type="evol:CurrentCellPopulation"/>
+        <right
+            xsi:type="core:IntegerLiteral"/>
+      </condition>
+    </evaluatedVal>
+    <filter
+        xsi:type="evol:PopulationRange"
+        lowerRange="0"
+        upperRange="1"/>
+  </rules>
+</evol:CellularAutomata>
