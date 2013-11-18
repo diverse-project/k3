@@ -1,29 +1,36 @@
 
 package idm.expArithm
 
-import expArithm.Division
+import expArithm.OperateurBinaire
 import expArithm.Valeur
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.Contracted
 import fr.inria.triskell.k3.Inv
+import fr.inria.triskell.k3.Pre
+import fr.inria.triskell.k3.Post
 
-// Pas de valeur negative
+// Negative value not allowed
 @Contracted
 @Aspect(className=typeof(Valeur))
-public class ValeurInvariant {
+public class ValeurInvariant extends Calculable {
 	@Inv
-	def boolean doitEtreSupAZero() {
+	def boolean mustBeGreaterThanZero() {
 		_self.valeur > 0
 	}
+	
+//	// Value operation must add 1 element to the context
+//	@Post
+//	def boolean precalculer(Contexte ctx) {
+//		!ctx.empty
+//	}
 }
 
-// Pas de division par zéro
+// Binary operations must use 2 values of the context
 @Contracted
-@Aspect(className=typeof(Division))
-public class DivisionPre extends Calculable {
+@Aspect(className=typeof(OperateurBinaire))
+public class OperateurBinaireAspectPre extends Calculable {
 //	@Pre
-//	def boolean precalculer() {
-////		 ctx.pop != 0
-//		false
+//	def boolean precalculer(Contexte ctx) {
+//		ctx.size>1
 //	}
 }

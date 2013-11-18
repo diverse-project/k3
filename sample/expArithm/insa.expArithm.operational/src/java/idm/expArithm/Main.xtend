@@ -12,7 +12,7 @@ import static extension idm.expArithm.Calculable.*
 
 public class Main {
 	def static void main(String[] args) {
-		val exp = load("src/resources/model/model1.expArithm")
+		val exp = load("src/resources/model1.xmi")
 		
 //		exp.checkAllInvariants // Checks the constraints
 		
@@ -28,7 +28,7 @@ public class Main {
 		// init the required package
 		ExpArithmPackage.eINSTANCE.eClass
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap.put("*", new XMIResourceFactoryImpl)
-		val res = rs.getResource(URI.createURI("src/resources/model1.xmi"), true)
+		val res = rs.getResource(URI.createURI(path), true)
 		res.load(Collections.emptyMap)
 		res.contents.filter(ExpressionArithm).head
 	}

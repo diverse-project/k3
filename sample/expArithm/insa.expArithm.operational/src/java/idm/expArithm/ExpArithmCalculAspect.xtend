@@ -2,7 +2,6 @@
 package idm.expArithm
 
 import expArithm.Division
-import expArithm.EltExp
 import expArithm.ExpressionArithm
 import expArithm.Moins
 import expArithm.Mult
@@ -40,13 +39,9 @@ public class ExpressionArithmAspect extends Calculable {
 	}
 }
 
-// Augments ExpressionArithm with the aspect Calculable
-@Aspect(className=typeof(EltExp)) 
-public abstract class EltExpAspect extends Calculable {}
-
 
 @Aspect(className=typeof(OperateurBinaire))
-public abstract class OperateurBinaireAspect extends EltExpAspect {
+public abstract class OperateurBinaireAspect extends Calculable {
 	@OverrideAspectMethod
 	def void calculer(Contexte ctx) {
 		_self.eltGauche.calculer(ctx)
@@ -99,7 +94,7 @@ public class MultAspect extends OperateurBinaireAspect {
 
 
 @Aspect(className=typeof(Valeur))
-public class ValeurAspect extends EltExpAspect { 
+public class ValeurAspect extends Calculable { 
 	@OverrideAspectMethod
 	def void calculer(Contexte ctx) {
 		ctx.push(_self.valeur)
