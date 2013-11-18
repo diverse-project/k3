@@ -1,9 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EMFText Parser Plugin: expArithmtxt
+Bundle-Name: ExpArithm textual editor
 Bundle-SymbolicName: expArithm.resource.expArithmtxt;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Vendor: Software Technology Group - TU Dresden Germany
 Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
   org.eclipse.emf.ecore,
   org.eclipse.emf.ecore.change,
