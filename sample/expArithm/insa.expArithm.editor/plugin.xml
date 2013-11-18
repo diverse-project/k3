@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="expArithm.presentation.ExpArithmModelWizardID"
+            name="%_UI_ExpArithmModelWizard_label"
+            class="expArithm.presentation.ExpArithmModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/ExpArithmModelFile.gif">
+         <description>%_UI_ExpArithmModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="expArithm.presentation.ExpArithmEditorID"
+            name="%_UI_ExpArithmEditor_label"
+            icon="icons/full/obj16/ExpArithmModelFile.gif"
+            extensions="exparithm"
+            class="expArithm.presentation.ExpArithmEditor"
+            contributorClass="expArithm.presentation.ExpArithmActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>
