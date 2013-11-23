@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated robot -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="robot.robot.presentation.RobotModelWizardID"
+            name="%_UI_RobotModelWizard_label"
+            class="robot.robot.presentation.RobotModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/RobotModelFile.gif">
+         <description>%_UI_RobotModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated robot -->
+      <editor
+            id="robot.robot.presentation.RobotEditorID"
+            name="%_UI_RobotEditor_label"
+            icon="icons/full/obj16/RobotModelFile.gif"
+            extensions="robot"
+            class="robot.robot.presentation.RobotEditor"
+            contributorClass="robot.robot.presentation.RobotActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated robot -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="robot.FlotCtrl.presentation.FlotCtrlModelWizardID"
+            name="%_UI_FlotCtrlModelWizard_label"
+            class="robot.FlotCtrl.presentation.FlotCtrlModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/FlotCtrlModelFile.gif">
+         <description>%_UI_FlotCtrlModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated robot -->
+      <editor
+            id="robot.FlotCtrl.presentation.FlotCtrlEditorID"
+            name="%_UI_FlotCtrlEditor_label"
+            icon="icons/full/obj16/FlotCtrlModelFile.gif"
+            extensions="flotctrl"
+            class="robot.FlotCtrl.presentation.FlotCtrlEditor"
+            contributorClass="robot.FlotCtrl.presentation.FlotCtrlActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

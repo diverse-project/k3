@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="robot" nsURI="http://robot/1.0" nsPrefix="robot">
+  <eClassifiers xsi:type="ecore:EDataType" name="Double" instanceClassName="java.lang.Double"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Bool" instanceClassName="java.lang.Boolean"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Int" instanceClassName="java.lang.Integer"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="String" instanceClassName="java.lang.String"/>
+  <eSubpackages name="robot" nsURI="http://TPIDMINSA/robot" nsPrefix="robot.robot">
+    <eClassifiers xsi:type="ecore:EClass" name="Command" abstract="true" interface="true"
+        eSuperTypes="#//FlotCtrl/Expression"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MoveCmd" eSuperTypes="#//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="power" lowerBound="1"
+          eType="#//Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ObstacleCmd" eSuperTypes="#//FlotCtrl/BoolExp #//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="distance" lowerBound="1"
+          eType="#//Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Bip" eSuperTypes="#//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" lowerBound="1"
+          eType="#//Int"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="power" lowerBound="1"
+          eType="#//Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="repet" lowerBound="1"
+          eType="#//Bool"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SetTurnAngleCmd" eSuperTypes="#//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="angle" lowerBound="1"
+          eType="#//Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="HasTurnedCmd" eSuperTypes="#//FlotCtrl/BoolExp #//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="angle" lowerBound="1"
+          eType="#//Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TurnCmd" eSuperTypes="#//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="power" lowerBound="1"
+          eType="#//Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="angle" lowerBound="1"
+          eType="#//Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StopEngineCmd" eSuperTypes="#//robot/Command"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StopProgramCmd" eSuperTypes="#//robot/Command"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PrintCmd" eSuperTypes="#//robot/Command">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="msg" lowerBound="1" eType="#//String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" lowerBound="1"
+          eType="#//Int"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="line" lowerBound="1"
+          eType="#//Int"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="col" lowerBound="1" eType="#//Int"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="FlotCtrl" nsURI="http://TPIDMINSA/MRL" nsPrefix="robot.MRL">
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramUnit">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block" upperBound="-1"
+          eType="#//FlotCtrl/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Expression" abstract="true" interface="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="WhileLoop" eSuperTypes="#//FlotCtrl/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="loopCond" lowerBound="1"
+          eType="#//FlotCtrl/BoolExp" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block" upperBound="-1"
+          eType="#//FlotCtrl/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NegExp" eSuperTypes="#//FlotCtrl/BoolExp">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="exp" lowerBound="1" eType="#//FlotCtrl/BoolExp"
+          containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BoolExp" abstract="true" interface="true"
+        eSuperTypes="#//FlotCtrl/Expression"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AndExp" eSuperTypes="#//FlotCtrl/BoolExp">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="leftExp" lowerBound="1"
+          eType="#//FlotCtrl/BoolExp" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rightExp" lowerBound="1"
+          eType="#//FlotCtrl/BoolExp" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IfBlock" eSuperTypes="#//FlotCtrl/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="1"
+          eType="#//FlotCtrl/BoolExp" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thenBlock" lowerBound="1"
+          upperBound="-1" eType="#//FlotCtrl/Expression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elseBlock" upperBound="-1"
+          eType="#//FlotCtrl/Expression" containment="true"/>
+    </eClassifiers>
+  </eSubpackages>
+</ecore:EPackage>

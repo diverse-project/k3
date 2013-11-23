@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated robot -->
+      <package
+            uri="http://robot/1.0"
+            class="robot.RobotPackage"
+            genModel="metamodel/robot.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated robot -->
+      <package
+            uri="http://TPIDMINSA/robot"
+            class="robot.robot.RobotPackage"
+            genModel="metamodel/robot.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated robot -->
+      <package
+            uri="http://TPIDMINSA/MRL"
+            class="robot.FlotCtrl.FlotCtrlPackage"
+            genModel="metamodel/robot.genmodel"/>
+   </extension>
+
+</plugin>

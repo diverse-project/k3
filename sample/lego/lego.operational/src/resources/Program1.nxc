@@ -1,0 +1,27 @@
+#include "NXCDefs.h"
+
+task main(){
+	SetSensorLowspeed(S4);
+	int angle;
+	
+	while(1){
+		while(!(SensorUS(S4)<40)) {
+			OnFwdSync(OUT_BC, 75, 0);
+		}
+		PlayToneEx(100, 250, 100, false);
+		angle=0;
+		while(SensorUS(S4)<40 && !(angle>=360)) {
+			OnFwdSync(OUT_B, 25, -99);
+			angle += 3;
+			Wait(20);
+		}
+		if(angle>=360) {
+			Off(OUT_BC);
+			TextOut(0, LCD_LINE4, ""Stuck!!!"");
+			Wait(3000);
+			Stop(true);
+		}
+		else {
+		}
+	}
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ASCII"?>
+<robot.MRL:ProgramUnit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:robot.MRL="http://TPIDMINSA/MRL" xmlns:robot.robot="http://TPIDMINSA/robot">
+  <block xsi:type="robot.MRL:WhileLoop">
+    <loopCond xsi:type="robot.MRL:NegExp">
+      <exp xsi:type="robot.robot:ObstacleCmd" distance="40.0"/>
+    </loopCond>
+    <block xsi:type="robot.robot:MoveCmd" power="75.0"/>
+  </block>
+  <block xsi:type="robot.robot:Bip" duration="250" power="100.0" repet="false"/>
+  <block xsi:type="robot.robot:SetTurnAngleCmd" angle="0.0"/>
+  <block xsi:type="robot.MRL:WhileLoop">
+    <loopCond xsi:type="robot.MRL:AndExp">
+      <leftExp xsi:type="robot.robot:ObstacleCmd" distance="40.0"/>
+      <rightExp xsi:type="robot.MRL:NegExp">
+        <exp xsi:type="robot.robot:HasTurnedCmd" angle="360.0"/>
+      </rightExp>
+    </loopCond>
+    <block xsi:type="robot.robot:TurnCmd" power="25.0" angle="3.0"/>
+  </block>
+  <block xsi:type="robot.MRL:IfBlock">
+    <condition xsi:type="robot.robot:HasTurnedCmd" angle="360.0"/>
+    <thenBlock xsi:type="robot.robot:StopEngineCmd"/>
+    <thenBlock xsi:type="robot.robot:PrintCmd" msg="&quot;Stuck!!!&quot;" duration="3000" line="4" col="0"/>
+    <thenBlock xsi:type="robot.robot:StopProgramCmd"/>
+  </block>
+</robot.MRL:ProgramUnit>
