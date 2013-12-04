@@ -234,8 +234,8 @@ options {
 			return start();
 		} else if (typeObject instanceof org.eclipse.emf.ecore.EClass) {
 			org.eclipse.emf.ecore.EClass type = (org.eclipse.emf.ecore.EClass) typeObject;
-			if (type.getInstanceClass() == robot.FlotCtrl.ProgramUnit.class) {
-				return parse_robot_FlotCtrl_ProgramUnit();
+			if (type.getInstanceClass() == robot.robot.ProgramUnit.class) {
+				return parse_robot_robot_ProgramUnit();
 			}
 		}
 		throw new robot.resource.robot.mopp.RobotUnexpectedContentTypeException(typeObject);
@@ -500,22 +500,22 @@ start returns [ org.eclipse.emf.ecore.EObject element = null]
 :
 	{
 		// follow set for start rule(s)
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[0]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[1]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[2]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[3]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[4]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[5]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[6]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[7]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[8]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[9]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[10]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[11]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[0]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[1]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[2]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[3]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[4]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[5]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[6]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[7]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[8]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[9]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[10]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[11]);
 		expectedElementsIndexOfLastCompleteElement = 0;
 	}
 	(
-		c0 = parse_robot_FlotCtrl_ProgramUnit{ element = c0; }
+		c0 = parse_robot_robot_ProgramUnit{ element = c0; }
 	)
 	EOF	{
 		retrieveLayoutInformation(element, null, null, false);
@@ -523,7 +523,7 @@ start returns [ org.eclipse.emf.ecore.EObject element = null]
 	
 ;
 
-parse_robot_FlotCtrl_ProgramUnit returns [robot.FlotCtrl.ProgramUnit element = null]
+parse_robot_robot_ProgramUnit returns [robot.robot.ProgramUnit element = null]
 @init{
 }
 :
@@ -534,13 +534,13 @@ parse_robot_FlotCtrl_ProgramUnit returns [robot.FlotCtrl.ProgramUnit element = n
 					throw new robot.resource.robot.mopp.RobotTerminateParsingException();
 				}
 				if (element == null) {
-					element = robot.FlotCtrl.FlotCtrlFactory.eINSTANCE.createProgramUnit();
+					element = robot.robot.RobotFactory.eINSTANCE.createProgramUnit();
 					startIncompleteElement(element);
 				}
 				if (a0_0 != null) {
 					if (a0_0 != null) {
 						Object value = a0_0;
-						addObjectToList(element, robot.FlotCtrl.FlotCtrlPackage.PROGRAM_UNIT__BLOCK, value);
+						addObjectToList(element, robot.robot.RobotPackage.PROGRAM_UNIT__BLOCK, value);
 						completedElement(value, true);
 					}
 					collectHiddenTokens(element);
@@ -552,18 +552,18 @@ parse_robot_FlotCtrl_ProgramUnit returns [robot.FlotCtrl.ProgramUnit element = n
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[12]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[13]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[14]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[15]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[16]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[17]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[18]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[19]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[20]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[21]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[22]);
-		addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[23]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[12]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[13]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[14]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[15]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[16]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[17]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[18]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[19]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[20]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[21]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[22]);
+		addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[23]);
 	}
 	
 ;
@@ -794,18 +794,18 @@ a5 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[35]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[36]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[37]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[38]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[39]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[40]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[41]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[42]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[43]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[44]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[45]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[46]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[35]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[36]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[37]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[38]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[39]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[40]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[41]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[42]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[43]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[44]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[45]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[46]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[47]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[48]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[49]);
@@ -920,18 +920,18 @@ a5 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[55]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[56]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[57]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[58]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[59]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[60]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[61]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[62]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[63]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[64]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[65]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[66]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[55]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[56]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[57]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[58]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[59]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[60]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[61]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[62]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[63]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[64]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[65]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[66]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[67]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[68]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[69]);
@@ -1077,18 +1077,18 @@ a4 = 'end' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[100]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[101]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[102]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[103]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[104]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[105]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[106]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[107]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[108]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[109]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[110]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[111]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[100]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[101]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[102]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[103]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[104]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[105]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[106]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[107]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[108]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[109]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[110]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[111]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[112]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[113]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[114]);
@@ -1294,18 +1294,18 @@ a6 = 'end' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[172]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[173]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[174]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[175]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[176]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[177]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[178]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[179]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[180]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[181]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[182]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[183]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[172]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[173]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[174]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[175]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[176]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[177]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[178]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[179]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[180]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[181]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[182]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[183]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[184]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[185]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[186]);
@@ -1576,18 +1576,18 @@ a13 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[200]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[201]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[202]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[203]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[204]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[205]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[206]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[207]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[208]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[209]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[210]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[211]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[200]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[201]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[202]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[203]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[204]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[205]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[206]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[207]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[208]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[209]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[210]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[211]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[212]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[213]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[214]);
@@ -1702,18 +1702,18 @@ a5 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[220]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[221]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[222]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[223]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[224]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[225]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[226]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[227]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[228]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[229]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[230]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[231]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[220]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[221]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[222]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[223]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[224]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[225]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[226]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[227]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[228]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[229]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[230]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[231]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[232]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[233]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[234]);
@@ -2062,18 +2062,18 @@ a17 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[252]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[253]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[254]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[255]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[256]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[257]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[258]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[259]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[260]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[261]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[262]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[263]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[252]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[253]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[254]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[255]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[256]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[257]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[258]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[259]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[260]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[261]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[262]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[263]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[264]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[265]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[266]);
@@ -2188,18 +2188,18 @@ a5 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[272]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[273]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[274]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[275]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[276]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[277]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[278]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[279]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[280]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[281]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[282]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[283]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[272]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[273]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[274]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[275]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[276]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[277]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[278]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[279]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[280]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[281]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[282]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[283]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[284]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[285]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[286]);
@@ -2222,18 +2222,18 @@ a0 = 'stopEngine' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[287]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[288]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[289]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[290]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[291]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[292]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[293]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[294]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[295]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[296]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[297]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[298]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[287]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[288]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[289]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[290]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[291]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[292]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[293]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[294]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[295]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[296]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[297]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[298]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[299]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[300]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[301]);
@@ -2256,18 +2256,18 @@ a0 = 'stopProgram' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[302]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[303]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[304]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[305]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[306]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[307]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[308]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[309]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[310]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[311]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[312]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[313]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[302]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[303]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[304]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[305]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[306]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[307]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[308]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[309]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[310]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[311]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[312]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[313]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[314]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[315]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[316]);
@@ -2460,18 +2460,18 @@ a9 = ')' {
 }
 {
 	// expected elements (follow set)
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[326]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[327]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[328]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[329]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[330]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[331]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[332]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[333]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[334]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[335]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[336]);
-	addExpectedElement(robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[337]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[326]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[327]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[328]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[329]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[330]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[331]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[332]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[333]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[334]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[335]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[336]);
+	addExpectedElement(robot.robot.RobotPackage.eINSTANCE.getProgramUnit(), robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[337]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[338]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[339]);
 	addExpectedElement(null, robot.resource.robot.mopp.RobotExpectationConstants.EXPECTATIONS[340]);

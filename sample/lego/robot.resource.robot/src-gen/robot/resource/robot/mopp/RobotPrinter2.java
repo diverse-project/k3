@@ -192,7 +192,7 @@ public class RobotPrinter2 implements robot.resource.robot.IRobotTextPrinter {
 			throw new java.lang.IllegalArgumentException("Nothing to write on.");
 		}
 		
-		if (element instanceof robot.FlotCtrl.ProgramUnit) {
+		if (element instanceof robot.robot.ProgramUnit) {
 			printInternal(element, robot.resource.robot.grammar.RobotGrammarInformationProvider.ROBOT_0, foundFormattingElements);
 			return;
 		}

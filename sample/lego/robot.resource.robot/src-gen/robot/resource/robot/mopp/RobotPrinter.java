@@ -52,8 +52,8 @@ public class RobotPrinter implements robot.resource.robot.IRobotTextPrinter {
 			throw new java.lang.IllegalArgumentException("Nothing to write on.");
 		}
 		
-		if (element instanceof robot.FlotCtrl.ProgramUnit) {
-			print_robot_FlotCtrl_ProgramUnit((robot.FlotCtrl.ProgramUnit) element, globaltab, out);
+		if (element instanceof robot.robot.ProgramUnit) {
+			print_robot_robot_ProgramUnit((robot.robot.ProgramUnit) element, globaltab, out);
 			return;
 		}
 		if (element instanceof robot.FlotCtrl.AndExp) {
@@ -158,7 +158,7 @@ public class RobotPrinter implements robot.resource.robot.IRobotTextPrinter {
 		out.close();
 	}
 	
-	public void print_robot_FlotCtrl_ProgramUnit(robot.FlotCtrl.ProgramUnit element, String outertab, java.io.PrintWriter out) {
+	public void print_robot_robot_ProgramUnit(robot.robot.ProgramUnit element, String outertab, java.io.PrintWriter out) {
 		String localtab = outertab;
 		// The printCountingMap contains a mapping from feature names to the number of
 		// remaining elements that still need to be printed. The map is initialized with
@@ -167,14 +167,14 @@ public class RobotPrinter implements robot.resource.robot.IRobotTextPrinter {
 		// 0 (if the feature is null).
 		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
 		Object temp;
-		temp = element.eGet(element.eClass().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.PROGRAM_UNIT__BLOCK));
+		temp = element.eGet(element.eClass().getEStructuralFeature(robot.robot.RobotPackage.PROGRAM_UNIT__BLOCK));
 		printCountingMap.put("block", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		// print collected hidden tokens
 		int count;
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("block");
 		if (count > 0) {
-			java.util.List<?> list = (java.util.List<?>)element.eGet(element.eClass().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.PROGRAM_UNIT__BLOCK));
+			java.util.List<?> list = (java.util.List<?>)element.eGet(element.eClass().getEStructuralFeature(robot.robot.RobotPackage.PROGRAM_UNIT__BLOCK));
 			int index  = list.size() - count;
 			if (index < 0) {
 				index = 0;

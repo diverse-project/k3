@@ -103,6 +103,15 @@ public interface RobotFactory extends EFactory {
 	PrintCmd createPrintCmd();
 
 	/**
+	 * Returns a new object of class '<em>Program Unit</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Program Unit</em>'.
+	 * @generated
+	 */
+	ProgramUnit createProgramUnit();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

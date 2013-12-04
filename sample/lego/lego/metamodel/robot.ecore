@@ -48,12 +48,12 @@
           eType="#//Int"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="col" lowerBound="1" eType="#//Int"/>
     </eClassifiers>
-  </eSubpackages>
-  <eSubpackages name="FlotCtrl" nsURI="http://TPIDMINSA/MRL" nsPrefix="robot.MRL">
     <eClassifiers xsi:type="ecore:EClass" name="ProgramUnit">
       <eStructuralFeatures xsi:type="ecore:EReference" name="block" upperBound="-1"
           eType="#//FlotCtrl/Expression" containment="true"/>
     </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="FlotCtrl" nsURI="http://TPIDMINSA/MRL" nsPrefix="robot.MRL">
     <eClassifiers xsi:type="ecore:EClass" name="Expression" abstract="true" interface="true"/>
     <eClassifiers xsi:type="ecore:EClass" name="WhileLoop" eSuperTypes="#//FlotCtrl/Expression">
       <eStructuralFeatures xsi:type="ecore:EReference" name="loopCond" lowerBound="1"

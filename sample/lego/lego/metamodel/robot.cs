@@ -1,6 +1,6 @@
 SYNTAXDEF robot
 FOR <http://robot/1.0>
-START FlotCtrl.ProgramUnit
+START Robot.ProgramUnit
 
 TOKENS {
 DEFINE BOOLEAN_LITERAL $'true'|'false'$;
@@ -38,7 +38,7 @@ TOKENSTYLES {
 }
 
 RULES {
-	FlotCtrl.ProgramUnit ::=  block* ;
+	Robot.ProgramUnit ::=  block* ;
 
 	@Operator(type="binary_left_associative", weight="1", superclass="BoolExp")
 	FlotCtrl.AndExp ::= leftExp "and" rightExp ;

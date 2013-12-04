@@ -279,6 +279,29 @@ public class RobotItemProviderAdapterFactory extends RobotAdapterFactory impleme
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link robot.robot.ProgramUnit} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProgramUnitItemProvider programUnitItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link robot.robot.ProgramUnit}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProgramUnitAdapter() {
+		if (programUnitItemProvider == null) {
+			programUnitItemProvider = new ProgramUnitItemProvider(this);
+		}
+
+		return programUnitItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -386,6 +409,7 @@ public class RobotItemProviderAdapterFactory extends RobotAdapterFactory impleme
 		if (stopEngineCmdItemProvider != null) stopEngineCmdItemProvider.dispose();
 		if (stopProgramCmdItemProvider != null) stopProgramCmdItemProvider.dispose();
 		if (printCmdItemProvider != null) printCmdItemProvider.dispose();
+		if (programUnitItemProvider != null) programUnitItemProvider.dispose();
 	}
 
 }

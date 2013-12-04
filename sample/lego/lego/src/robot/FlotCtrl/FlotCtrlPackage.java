@@ -56,43 +56,6 @@ public interface FlotCtrlPackage extends EPackage {
 	FlotCtrlPackage eINSTANCE = robot.FlotCtrl.impl.FlotCtrlPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link robot.FlotCtrl.impl.ProgramUnitImpl <em>Program Unit</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see robot.FlotCtrl.impl.ProgramUnitImpl
-	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getProgramUnit()
-	 * @generated
-	 */
-	int PROGRAM_UNIT = 0;
-
-	/**
-	 * The feature id for the '<em><b>Block</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROGRAM_UNIT__BLOCK = 0;
-
-	/**
-	 * The number of structural features of the '<em>Program Unit</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROGRAM_UNIT_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Program Unit</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROGRAM_UNIT_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link robot.FlotCtrl.Expression <em>Expression</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -100,7 +63,7 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getExpression()
 	 * @generated
 	 */
-	int EXPRESSION = 1;
+	int EXPRESSION = 0;
 
 	/**
 	 * The number of structural features of the '<em>Expression</em>' class.
@@ -128,7 +91,7 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getWhileLoop()
 	 * @generated
 	 */
-	int WHILE_LOOP = 2;
+	int WHILE_LOOP = 1;
 
 	/**
 	 * The feature id for the '<em><b>Loop Cond</b></em>' containment reference.
@@ -174,7 +137,7 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getBoolExp()
 	 * @generated
 	 */
-	int BOOL_EXP = 4;
+	int BOOL_EXP = 3;
 
 	/**
 	 * The number of structural features of the '<em>Bool Exp</em>' class.
@@ -202,7 +165,7 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getNegExp()
 	 * @generated
 	 */
-	int NEG_EXP = 3;
+	int NEG_EXP = 2;
 
 	/**
 	 * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -239,7 +202,7 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getAndExp()
 	 * @generated
 	 */
-	int AND_EXP = 5;
+	int AND_EXP = 4;
 
 	/**
 	 * The feature id for the '<em><b>Left Exp</b></em>' containment reference.
@@ -285,7 +248,7 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getIfBlock()
 	 * @generated
 	 */
-	int IF_BLOCK = 6;
+	int IF_BLOCK = 5;
 
 	/**
 	 * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -332,27 +295,6 @@ public interface FlotCtrlPackage extends EPackage {
 	 */
 	int IF_BLOCK_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 0;
 
-
-	/**
-	 * Returns the meta object for class '{@link robot.FlotCtrl.ProgramUnit <em>Program Unit</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Program Unit</em>'.
-	 * @see robot.FlotCtrl.ProgramUnit
-	 * @generated
-	 */
-	EClass getProgramUnit();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link robot.FlotCtrl.ProgramUnit#getBlock <em>Block</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Block</em>'.
-	 * @see robot.FlotCtrl.ProgramUnit#getBlock()
-	 * @see #getProgramUnit()
-	 * @generated
-	 */
-	EReference getProgramUnit_Block();
 
 	/**
 	 * Returns the meta object for class '{@link robot.FlotCtrl.Expression <em>Expression</em>}'.
@@ -525,24 +467,6 @@ public interface FlotCtrlPackage extends EPackage {
 	 * @generated
 	 */
 	interface Literals {
-		/**
-		 * The meta object literal for the '{@link robot.FlotCtrl.impl.ProgramUnitImpl <em>Program Unit</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see robot.FlotCtrl.impl.ProgramUnitImpl
-		 * @see robot.FlotCtrl.impl.FlotCtrlPackageImpl#getProgramUnit()
-		 * @generated
-		 */
-		EClass PROGRAM_UNIT = eINSTANCE.getProgramUnit();
-
-		/**
-		 * The meta object literal for the '<em><b>Block</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROGRAM_UNIT__BLOCK = eINSTANCE.getProgramUnit_Block();
-
 		/**
 		 * The meta object literal for the '{@link robot.FlotCtrl.Expression <em>Expression</em>}' class.
 		 * <!-- begin-user-doc -->

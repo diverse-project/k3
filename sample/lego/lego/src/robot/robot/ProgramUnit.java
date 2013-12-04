@@ -1,10 +1,12 @@
 /**
  */
-package robot.FlotCtrl;
+package robot.robot;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
+
+import robot.FlotCtrl.Expression;
 
 /**
  * <!-- begin-user-doc -->
@@ -14,11 +16,11 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link robot.FlotCtrl.ProgramUnit#getBlock <em>Block</em>}</li>
+ *   <li>{@link robot.robot.ProgramUnit#getBlock <em>Block</em>}</li>
  * </ul>
  * </p>
  *
- * @see robot.FlotCtrl.FlotCtrlPackage#getProgramUnit()
+ * @see robot.robot.RobotPackage#getProgramUnit()
  * @model
  * @generated
  */
@@ -33,7 +35,7 @@ public interface ProgramUnit extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Block</em>' containment reference list.
-	 * @see robot.FlotCtrl.FlotCtrlPackage#getProgramUnit_Block()
+	 * @see robot.robot.RobotPackage#getProgramUnit_Block()
 	 * @model containment="true"
 	 * @generated
 	 */

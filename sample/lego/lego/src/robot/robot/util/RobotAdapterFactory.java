@@ -111,6 +111,10 @@ public class RobotAdapterFactory extends AdapterFactoryImpl {
 				return createPrintCmdAdapter();
 			}
 			@Override
+			public Adapter caseProgramUnit(ProgramUnit object) {
+				return createProgramUnitAdapter();
+			}
+			@Override
 			public Adapter caseExpression(Expression object) {
 				return createExpressionAdapter();
 			}
@@ -275,6 +279,20 @@ public class RobotAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPrintCmdAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link robot.robot.ProgramUnit <em>Program Unit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see robot.robot.ProgramUnit
+	 * @generated
+	 */
+	public Adapter createProgramUnitAdapter() {
 		return null;
 	}
 

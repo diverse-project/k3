@@ -5,6 +5,7 @@ package robot.robot;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 
 import robot.FlotCtrl.FlotCtrlPackage;
 
@@ -454,6 +455,43 @@ public interface RobotPackage extends EPackage {
 	 */
 	int PRINT_CMD_OPERATION_COUNT = COMMAND_OPERATION_COUNT + 0;
 
+	/**
+	 * The meta object id for the '{@link robot.robot.impl.ProgramUnitImpl <em>Program Unit</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see robot.robot.impl.ProgramUnitImpl
+	 * @see robot.robot.impl.RobotPackageImpl#getProgramUnit()
+	 * @generated
+	 */
+	int PROGRAM_UNIT = 10;
+
+	/**
+	 * The feature id for the '<em><b>Block</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROGRAM_UNIT__BLOCK = 0;
+
+	/**
+	 * The number of structural features of the '<em>Program Unit</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROGRAM_UNIT_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Program Unit</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROGRAM_UNIT_OPERATION_COUNT = 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link robot.robot.Command <em>Command</em>}'.
@@ -699,6 +737,27 @@ public interface RobotPackage extends EPackage {
 	EAttribute getPrintCmd_Col();
 
 	/**
+	 * Returns the meta object for class '{@link robot.robot.ProgramUnit <em>Program Unit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Program Unit</em>'.
+	 * @see robot.robot.ProgramUnit
+	 * @generated
+	 */
+	EClass getProgramUnit();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link robot.robot.ProgramUnit#getBlock <em>Block</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Block</em>'.
+	 * @see robot.robot.ProgramUnit#getBlock()
+	 * @see #getProgramUnit()
+	 * @generated
+	 */
+	EReference getProgramUnit_Block();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -924,6 +983,24 @@ public interface RobotPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PRINT_CMD__COL = eINSTANCE.getPrintCmd_Col();
+
+		/**
+		 * The meta object literal for the '{@link robot.robot.impl.ProgramUnitImpl <em>Program Unit</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see robot.robot.impl.ProgramUnitImpl
+		 * @see robot.robot.impl.RobotPackageImpl#getProgramUnit()
+		 * @generated
+		 */
+		EClass PROGRAM_UNIT = eINSTANCE.getProgramUnit();
+
+		/**
+		 * The meta object literal for the '<em><b>Block</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROGRAM_UNIT__BLOCK = eINSTANCE.getProgramUnit_Block();
 
 	}
 

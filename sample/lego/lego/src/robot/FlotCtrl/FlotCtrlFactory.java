@@ -22,15 +22,6 @@ public interface FlotCtrlFactory extends EFactory {
 	FlotCtrlFactory eINSTANCE = robot.FlotCtrl.impl.FlotCtrlFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Program Unit</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Program Unit</em>'.
-	 * @generated
-	 */
-	ProgramUnit createProgramUnit();
-
-	/**
 	 * Returns a new object of class '<em>While Loop</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

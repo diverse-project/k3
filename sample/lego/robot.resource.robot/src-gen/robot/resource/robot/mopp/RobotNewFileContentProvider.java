@@ -14,7 +14,7 @@ public class RobotNewFileContentProvider {
 	
 	public String getNewFileContent(String newFileName) {
 		return getExampleContent(new org.eclipse.emf.ecore.EClass[] {
-			robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(),
+			robot.robot.RobotPackage.eINSTANCE.getProgramUnit(),
 		}, getMetaInformation().getClassesWithSyntax(), newFileName);
 	}
 	

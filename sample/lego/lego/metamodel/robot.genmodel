@@ -41,12 +41,12 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/PrintCmd/line"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/PrintCmd/col"/>
       </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/ProgramUnit">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//robot/ProgramUnit/block"/>
+      </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="FlotCtrl" basePackage="robot" disposableProviderFactory="true"
-        ecorePackage="robot.ecore#//FlotCtrl">
-      <genClasses ecoreClass="robot.ecore#//FlotCtrl/ProgramUnit">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/ProgramUnit/block"/>
-      </genClasses>
+        generateModelWizard="false" ecorePackage="robot.ecore#//FlotCtrl">
       <genClasses image="false" ecoreClass="robot.ecore#//FlotCtrl/Expression"/>
       <genClasses ecoreClass="robot.ecore#//FlotCtrl/WhileLoop">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/WhileLoop/loopCond"/>

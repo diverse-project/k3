@@ -1,6 +1,6 @@
 /**
  */
-package robot.FlotCtrl.provider;
+package robot.robot.provider;
 
 
 import java.util.Collection;
@@ -23,15 +23,15 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import robot.FlotCtrl.FlotCtrlFactory;
-import robot.FlotCtrl.FlotCtrlPackage;
-import robot.FlotCtrl.ProgramUnit;
 
 import robot.provider.RobotEditPlugin;
 
+import robot.robot.ProgramUnit;
 import robot.robot.RobotFactory;
+import robot.robot.RobotPackage;
 
 /**
- * This is the item provider adapter for a {@link robot.FlotCtrl.ProgramUnit} object.
+ * This is the item provider adapter for a {@link robot.robot.ProgramUnit} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
@@ -81,7 +81,7 @@ public class ProgramUnitItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK);
+			childrenFeatures.add(RobotPackage.Literals.PROGRAM_UNIT__BLOCK);
 		}
 		return childrenFeatures;
 	}
@@ -133,7 +133,7 @@ public class ProgramUnitItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(ProgramUnit.class)) {
-			case FlotCtrlPackage.PROGRAM_UNIT__BLOCK:
+			case RobotPackage.PROGRAM_UNIT__BLOCK:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -153,68 +153,68 @@ public class ProgramUnitItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
-				 FlotCtrlFactory.eINSTANCE.createWhileLoop()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
-				 FlotCtrlFactory.eINSTANCE.createNegExp()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
-				 FlotCtrlFactory.eINSTANCE.createAndExp()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
-				 FlotCtrlFactory.eINSTANCE.createIfBlock()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createMoveCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createObstacleCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createBip()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createSetTurnAngleCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createHasTurnedCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createTurnCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createStopEngineCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createStopProgramCmd()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(FlotCtrlPackage.Literals.PROGRAM_UNIT__BLOCK,
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
 				 RobotFactory.eINSTANCE.createPrintCmd()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
+				 FlotCtrlFactory.eINSTANCE.createWhileLoop()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
+				 FlotCtrlFactory.eINSTANCE.createNegExp()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
+				 FlotCtrlFactory.eINSTANCE.createAndExp()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RobotPackage.Literals.PROGRAM_UNIT__BLOCK,
+				 FlotCtrlFactory.eINSTANCE.createIfBlock()));
 	}
 
 	/**

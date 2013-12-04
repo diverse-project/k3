@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<robot.MRL:ProgramUnit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:robot.MRL="http://TPIDMINSA/MRL" xmlns:robot.robot="http://TPIDMINSA/robot">
+<robot.robot:ProgramUnit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:robot.MRL="http://TPIDMINSA/MRL" xmlns:robot.robot="http://TPIDMINSA/robot">
   <block xsi:type="robot.MRL:WhileLoop">
     <loopCond xsi:type="robot.MRL:NegExp">
       <exp xsi:type="robot.robot:ObstacleCmd" distance="40.0"/>
@@ -23,4 +23,4 @@
     <thenBlock xsi:type="robot.robot:PrintCmd" msg="&quot;Stuck!!!&quot;" duration="3000" line="4" col="0"/>
     <thenBlock xsi:type="robot.robot:StopProgramCmd"/>
   </block>
-</robot.MRL:ProgramUnit>
+</robot.robot:ProgramUnit>

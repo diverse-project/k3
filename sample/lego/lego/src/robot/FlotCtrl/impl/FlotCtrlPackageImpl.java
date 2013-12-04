@@ -15,7 +15,6 @@ import robot.FlotCtrl.FlotCtrlFactory;
 import robot.FlotCtrl.FlotCtrlPackage;
 import robot.FlotCtrl.IfBlock;
 import robot.FlotCtrl.NegExp;
-import robot.FlotCtrl.ProgramUnit;
 import robot.FlotCtrl.WhileLoop;
 
 import robot.RobotPackage;
@@ -29,13 +28,6 @@ import robot.impl.RobotPackageImpl;
  * @generated
  */
 public class FlotCtrlPackageImpl extends EPackageImpl implements FlotCtrlPackage {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass programUnitEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -145,24 +137,6 @@ public class FlotCtrlPackageImpl extends EPackageImpl implements FlotCtrlPackage
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(FlotCtrlPackage.eNS_URI, theFlotCtrlPackage);
 		return theFlotCtrlPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getProgramUnit() {
-		return programUnitEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProgramUnit_Block() {
-		return (EReference)programUnitEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -319,9 +293,6 @@ public class FlotCtrlPackageImpl extends EPackageImpl implements FlotCtrlPackage
 		isCreated = true;
 
 		// Create classes and their features
-		programUnitEClass = createEClass(PROGRAM_UNIT);
-		createEReference(programUnitEClass, PROGRAM_UNIT__BLOCK);
-
 		expressionEClass = createEClass(EXPRESSION);
 
 		whileLoopEClass = createEClass(WHILE_LOOP);
@@ -378,9 +349,6 @@ public class FlotCtrlPackageImpl extends EPackageImpl implements FlotCtrlPackage
 		ifBlockEClass.getESuperTypes().add(this.getExpression());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(programUnitEClass, ProgramUnit.class, "ProgramUnit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProgramUnit_Block(), this.getExpression(), null, "block", null, 0, -1, ProgramUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(expressionEClass, Expression.class, "Expression", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(whileLoopEClass, WhileLoop.class, "WhileLoop", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

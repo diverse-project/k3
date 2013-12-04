@@ -5,6 +5,7 @@ package robot.robot.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -18,6 +19,7 @@ import robot.robot.HasTurnedCmd;
 import robot.robot.MoveCmd;
 import robot.robot.ObstacleCmd;
 import robot.robot.PrintCmd;
+import robot.robot.ProgramUnit;
 import robot.robot.RobotFactory;
 import robot.robot.RobotPackage;
 import robot.robot.SetTurnAngleCmd;
@@ -101,6 +103,13 @@ public class RobotPackageImpl extends EPackageImpl implements RobotPackage {
 	 * @generated
 	 */
 	private EClass printCmdEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass programUnitEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -383,6 +392,24 @@ public class RobotPackageImpl extends EPackageImpl implements RobotPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getProgramUnit() {
+		return programUnitEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProgramUnit_Block() {
+		return (EReference)programUnitEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public RobotFactory getRobotFactory() {
 		return (RobotFactory)getEFactoryInstance();
 	}
@@ -438,6 +465,9 @@ public class RobotPackageImpl extends EPackageImpl implements RobotPackage {
 		createEAttribute(printCmdEClass, PRINT_CMD__DURATION);
 		createEAttribute(printCmdEClass, PRINT_CMD__LINE);
 		createEAttribute(printCmdEClass, PRINT_CMD__COL);
+
+		programUnitEClass = createEClass(PROGRAM_UNIT);
+		createEReference(programUnitEClass, PROGRAM_UNIT__BLOCK);
 	}
 
 	/**
@@ -518,6 +548,9 @@ public class RobotPackageImpl extends EPackageImpl implements RobotPackage {
 		initEAttribute(getPrintCmd_Duration(), theRobotPackage_1.getInt(), "duration", null, 1, 1, PrintCmd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPrintCmd_Line(), theRobotPackage_1.getInt(), "line", null, 1, 1, PrintCmd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPrintCmd_Col(), theRobotPackage_1.getInt(), "col", null, 1, 1, PrintCmd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(programUnitEClass, ProgramUnit.class, "ProgramUnit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProgramUnit_Block(), theFlotCtrlPackage.getExpression(), null, "block", null, 0, -1, ProgramUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 	}
 
 } //RobotPackageImpl

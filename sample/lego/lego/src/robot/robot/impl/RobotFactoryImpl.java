@@ -65,6 +65,7 @@ public class RobotFactoryImpl extends EFactoryImpl implements RobotFactory {
 			case RobotPackage.STOP_ENGINE_CMD: return createStopEngineCmd();
 			case RobotPackage.STOP_PROGRAM_CMD: return createStopProgramCmd();
 			case RobotPackage.PRINT_CMD: return createPrintCmd();
+			case RobotPackage.PROGRAM_UNIT: return createProgramUnit();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -158,6 +159,16 @@ public class RobotFactoryImpl extends EFactoryImpl implements RobotFactory {
 	public PrintCmd createPrintCmd() {
 		PrintCmdImpl printCmd = new PrintCmdImpl();
 		return printCmd;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProgramUnit createProgramUnit() {
+		ProgramUnitImpl programUnit = new ProgramUnitImpl();
+		return programUnit;
 	}
 
 	/**

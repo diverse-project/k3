@@ -72,29 +72,6 @@ public class FlotCtrlItemProviderAdapterFactory extends FlotCtrlAdapterFactory i
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link robot.FlotCtrl.ProgramUnit} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ProgramUnitItemProvider programUnitItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link robot.FlotCtrl.ProgramUnit}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createProgramUnitAdapter() {
-		if (programUnitItemProvider == null) {
-			programUnitItemProvider = new ProgramUnitItemProvider(this);
-		}
-
-		return programUnitItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link robot.FlotCtrl.WhileLoop} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -285,7 +262,6 @@ public class FlotCtrlItemProviderAdapterFactory extends FlotCtrlAdapterFactory i
 	 * @generated
 	 */
 	public void dispose() {
-		if (programUnitItemProvider != null) programUnitItemProvider.dispose();
 		if (whileLoopItemProvider != null) whileLoopItemProvider.dispose();
 		if (negExpItemProvider != null) negExpItemProvider.dispose();
 		if (andExpItemProvider != null) andExpItemProvider.dispose();

@@ -10,7 +10,7 @@ public class RobotSyntaxCoverageInformationProvider {
 	
 	public org.eclipse.emf.ecore.EClass[] getClassesWithSyntax() {
 		return new org.eclipse.emf.ecore.EClass[] {
-			robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(),
+			robot.robot.RobotPackage.eINSTANCE.getProgramUnit(),
 			robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getAndExp(),
 			robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getNegExp(),
 			robot.robot.RobotPackage.eINSTANCE.getHasTurnedCmd(),
@@ -29,7 +29,7 @@ public class RobotSyntaxCoverageInformationProvider {
 	
 	public org.eclipse.emf.ecore.EClass[] getStartSymbols() {
 		return new org.eclipse.emf.ecore.EClass[] {
-			robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit(),
+			robot.robot.RobotPackage.eINSTANCE.getProgramUnit(),
 		};
 	}
 	

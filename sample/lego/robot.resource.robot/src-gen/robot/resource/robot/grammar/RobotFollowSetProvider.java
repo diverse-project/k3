@@ -108,7 +108,7 @@ public class RobotFollowSetProvider {
 		FEATURES[0] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getAndExp().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.AND_EXP__LEFT_EXP);
 		FEATURES[1] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getAndExp().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.AND_EXP__RIGHT_EXP);
 		FEATURES[2] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getNegExp().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.NEG_EXP__EXP);
-		FEATURES[3] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getProgramUnit().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.PROGRAM_UNIT__BLOCK);
+		FEATURES[3] = robot.robot.RobotPackage.eINSTANCE.getProgramUnit().getEStructuralFeature(robot.robot.RobotPackage.PROGRAM_UNIT__BLOCK);
 		FEATURES[4] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getWhileLoop().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.WHILE_LOOP__LOOP_COND);
 		FEATURES[5] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getWhileLoop().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.WHILE_LOOP__BLOCK);
 		FEATURES[6] = robot.FlotCtrl.FlotCtrlPackage.eINSTANCE.getIfBlock().getEStructuralFeature(robot.FlotCtrl.FlotCtrlPackage.IF_BLOCK__CONDITION);

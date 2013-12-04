@@ -1,6 +1,6 @@
 /**
  */
-package robot.FlotCtrl.impl;
+package robot.robot.impl;
 
 import java.util.Collection;
 
@@ -17,8 +17,9 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import robot.FlotCtrl.Expression;
-import robot.FlotCtrl.FlotCtrlPackage;
-import robot.FlotCtrl.ProgramUnit;
+
+import robot.robot.ProgramUnit;
+import robot.robot.RobotPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +28,7 @@ import robot.FlotCtrl.ProgramUnit;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link robot.FlotCtrl.impl.ProgramUnitImpl#getBlock <em>Block</em>}</li>
+ *   <li>{@link robot.robot.impl.ProgramUnitImpl#getBlock <em>Block</em>}</li>
  * </ul>
  * </p>
  *
@@ -60,7 +61,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return FlotCtrlPackage.Literals.PROGRAM_UNIT;
+		return RobotPackage.Literals.PROGRAM_UNIT;
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	 */
 	public EList<Expression> getBlock() {
 		if (block == null) {
-			block = new EObjectContainmentEList<Expression>(Expression.class, this, FlotCtrlPackage.PROGRAM_UNIT__BLOCK);
+			block = new EObjectContainmentEList<Expression>(Expression.class, this, RobotPackage.PROGRAM_UNIT__BLOCK);
 		}
 		return block;
 	}
@@ -83,7 +84,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case FlotCtrlPackage.PROGRAM_UNIT__BLOCK:
+			case RobotPackage.PROGRAM_UNIT__BLOCK:
 				return ((InternalEList<?>)getBlock()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -97,7 +98,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case FlotCtrlPackage.PROGRAM_UNIT__BLOCK:
+			case RobotPackage.PROGRAM_UNIT__BLOCK:
 				return getBlock();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -112,7 +113,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case FlotCtrlPackage.PROGRAM_UNIT__BLOCK:
+			case RobotPackage.PROGRAM_UNIT__BLOCK:
 				getBlock().clear();
 				getBlock().addAll((Collection<? extends Expression>)newValue);
 				return;
@@ -128,7 +129,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case FlotCtrlPackage.PROGRAM_UNIT__BLOCK:
+			case RobotPackage.PROGRAM_UNIT__BLOCK:
 				getBlock().clear();
 				return;
 		}
@@ -143,7 +144,7 @@ public class ProgramUnitImpl extends MinimalEObjectImpl.Container implements Pro
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case FlotCtrlPackage.PROGRAM_UNIT__BLOCK:
+			case RobotPackage.PROGRAM_UNIT__BLOCK:
 				return block != null && !block.isEmpty();
 		}
 		return super.eIsSet(featureID);

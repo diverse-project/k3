@@ -34,22 +34,7 @@
       </editor>
    </extension>
 
-   <extension point="org.eclipse.ui.newWizards">
-      <!-- @generated robot -->
-      <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
-      <wizard
-            id="robot.FlotCtrl.presentation.FlotCtrlModelWizardID"
-            name="%_UI_FlotCtrlModelWizard_label"
-            class="robot.FlotCtrl.presentation.FlotCtrlModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/FlotCtrlModelFile.gif">
-         <description>%_UI_FlotCtrlModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard>
-   </extension>
-
+null
    <extension point="org.eclipse.ui.editors">
       <!-- @generated robot -->
       <editor
