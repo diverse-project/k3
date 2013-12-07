@@ -39,11 +39,11 @@ public annotation Opposite
  */
 class OppositeProcessor extends AbstractFieldProcessor
 {
-	protected MutableTypeDeclaration  containingType
-	protected MutableFieldDeclaration field
-	protected MutableTypeDeclaration  oppositeType
-	protected MutableFieldDeclaration oppositeField
-	protected TransformationContext   context
+	protected MutableTypeDeclaration          containingType
+	protected MutableFieldDeclaration         field
+	protected MutableTypeDeclaration          oppositeType
+	protected MutableFieldDeclaration         oppositeField
+	protected extension TransformationContext context
 	
 	/**
 	 * Weaves opposite behavior
@@ -52,17 +52,17 @@ class OppositeProcessor extends AbstractFieldProcessor
 	{
 		context = ctx
 		
-		val oppositeRefName = field.annotations.findFirst[a | a.annotationTypeDeclaration.qualifiedName.equals(Opposite.name)].getValue("value")
+		val oppositeRefName = field.annotations.findFirst[annotationTypeDeclaration == Opposite.newTypeReference.type].getValue("value")
 		
 		if (isCollection(field.type)) {
 			if (field.type.actualTypeArguments.size != 1) {
-				this.context.addError(field, "Only collections with 1 type parameter are supported")
+				field.addError("Only collections with 1 type parameter are supported")
 				return
 			}
 			
-			this.oppositeType = context.findClass(field.type.actualTypeArguments.head.name)
+			this.oppositeType = findClass(field.type.actualTypeArguments.head.name)
 		} else {
-			this.oppositeType = context.findClass(field.type.name)
+			this.oppositeType = findClass(field.type.name)
 		}
 		
 		this.field          = field
@@ -107,7 +107,7 @@ class OppositeProcessor extends AbstractFieldProcessor
 		{
 			containingType.addMethod(f)[
 				visibility = Visibility.PUBLIC
-				returnType = context.newTypeReference(ImmutableList, field.type.actualTypeArguments.head)
+				returnType = newTypeReference(ImmutableList, field.type.actualTypeArguments.head)
 				body = ['''return com.google.common.collect.ImmutableList.copyOf(«f») ;''']
 			]
 		} else {
@@ -256,53 +256,43 @@ class OppositeProcessor extends AbstractFieldProcessor
 	protected def check()
 	{
 		// No primitive types
-		if (field.type.primitive) {
-			context.addError(field, "Can't declare a primitive type " + field.type.simpleName + " as opposite")
+		if (field.type.primitive || field.type.wrapper) {
+			field.addError("Can't declare a primitive type " + field.type.simpleName + " as opposite")
 			return false
 		}
 		
 		// Opposite field exists
 		if (oppositeField == null) {
-			context.addError(field, "Referenced opposite attribute doesn't exist")
+			field.addError("Referenced opposite attribute doesn't exist")
 			return false
 		}
 		
 		// Types match
-		// TODO Kill the one who dares comparing types based on their simpleName
-		if (isCollection(field.type)) {
-			if (!isCollection(oppositeField.type) && !oppositeField.type.simpleName.equals(containingType.simpleName)) {
-				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-				return false
-			} else if (isCollection(oppositeField.type) && !oppositeField.type.actualTypeArguments.head.simpleName.equals(containingType.simpleName)) {
-				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-				return false
-			}
-		} else {
-			if (!isCollection(oppositeField.type) && !oppositeField.type.simpleName.equals(containingType.simpleName)) {
-				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-				return false
-			}
-			else if (isCollection(oppositeField.type) && !oppositeField.type.actualTypeArguments.head.simpleName.equals(containingType.simpleName)) {
-				context.addError(field, "The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
-				return false
-			}
+		if (
+			(!isCollection(oppositeField.type) && oppositeField.type != containingType.newTypeReference) ||
+			(isCollection(oppositeField.type) && oppositeField.type.actualTypeArguments.head != containingType.newTypeReference)
+		) {
+			field.addError("The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
+			return false
 		}
 		
 		// No double-containment
 		if (
-			field.annotations.exists[a | a.annotationTypeDeclaration.qualifiedName.equals(Composition.name)] &&
-			oppositeField.annotations.exists[a | a.annotationTypeDeclaration.qualifiedName.equals(Composition.name)]
+			field.annotations.exists[annotationTypeDeclaration == Composition.newTypeReference.type] &&
+			oppositeField.annotations.exists[annotationTypeDeclaration == Composition.newTypeReference.type]
 		) {
-			context.addError(field, "Can't declare as opposites two composition references")
+			field.addError("Can't declare as opposites two composition references")
 			return false
 		}
 		
 		// Opposite field also declares the right opposite
-		if (!oppositeField.annotations.exists[
-			a | a.annotationTypeDeclaration.qualifiedName.equals(Opposite.name) &&
-				a.getValue("value").equals(field.simpleName)]
+		if (
+			!oppositeField.annotations.exists[
+				annotationTypeDeclaration == Opposite.newTypeReference.type &&
+				getValue("value").equals(field.simpleName)
+			]
 		) {
-			context.addError(field, "The opposite attribute must be marked as opposite of this attribute")
+			field.addError("The opposite attribute must be marked as opposite of this attribute")
 		}
 		
 		// TODO
@@ -320,6 +310,6 @@ class OppositeProcessor extends AbstractFieldProcessor
 	 */
 	protected def isCollection(TypeReference type)
 	{
-		context.newTypeReference(Collection, context.newWildcardTypeReference).isAssignableFrom(type)
+		Collection.newTypeReference(newWildcardTypeReference).isAssignableFrom(type)
 	}
 }
