@@ -18,22 +18,22 @@ import static extension fr.inria.triskell.k3.aspectinheritance.test.EClassifierA
 import java.util.List
 
 class A{
+	 	
 	 
 	
-	
 } 
-
-class B extends A{
-	 
-} 
+   
+class B extends A{ 
+	  
+}   
 
 @Aspect(className=typeof(A))
-public class AAspect{ 
-	 def void bar(){   
-		println("A")
-	}
-}
-
+public class AAspect{
+	 def void bar(){    
+		println("A") 
+	} 
+} 
+ 
 @Aspect(className=typeof(B)) 
 public class BAspect extends AAspect{ 
 	  def void bar(){ 
@@ -72,7 +72,7 @@ class D{
 	def void testfoo(){ 
 		var A a  = new B()  
 		//a.foo
-		a.bar  
+		a.bar   
 		  
 	}
 }
@@ -81,7 +81,7 @@ class D{
 class EClassAspect extends EClassifierAspect{
 	
 	def void testInheritance(String a){
-		println(""+a+" EClass " + a)
+		println(""+a+" EClass " + a) 
 	} 
 	
 }

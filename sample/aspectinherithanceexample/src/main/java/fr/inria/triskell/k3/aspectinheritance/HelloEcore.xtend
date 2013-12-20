@@ -31,9 +31,9 @@ class HelloEcore {
 		var res = rs.getResource(uri, true);
 
 		var EPackage p = res.contents.get(0) as EPackage
-
+ 
 		var EClass c = EcoreFactory.eINSTANCE.createEClass
-		c.test1
+		c.test1 
 		c.test2("hello")
 		c.test3
 		c.sayHello("hello1")
