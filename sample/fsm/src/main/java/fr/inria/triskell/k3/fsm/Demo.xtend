@@ -11,11 +11,14 @@ import static extension fr.inria.triskell.k3.fsm.FSMAspect.*
 
 class Demo {
  
+ 
+ 	
 	public def run() {
 		var fact = new XMIResourceFactoryImpl
 		if (!EPackage.Registry.INSTANCE.containsKey(FsmPackage.eNS_URI)) {
 			EPackage.Registry.INSTANCE.put(FsmPackage.eNS_URI, FsmPackage.eINSTANCE);
 		}
+		//FsmPackage.eINSTANCE;
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", fact);
 
 		var rs = new ResourceSetImpl()
