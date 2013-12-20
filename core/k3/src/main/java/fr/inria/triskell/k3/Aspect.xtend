@@ -251,8 +251,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 					l.add(new Tuple(p1.simpleName, p1.type))
 				}
 				
-				m.parameters.toList.clear
-				
+				m.parameters.toList.clear				
 				
 
 				m.addParameter("_self", newTypeReference(identifier))
