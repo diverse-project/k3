@@ -385,7 +385,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				m.body = [
 					'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
 						className»AspectContext.getInstance();
-				    java.util.Map<«className + mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
+				    java.util.Map<«identifier + mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
 					boolean _containsKey = selfProp.containsKey(_self);
 				    boolean _not = (!_containsKey);
 				    if (_not) {
@@ -435,7 +435,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				type = newTypeReference("java.util.Map", newTypeReference(identifier),
 					newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
 				initializer = [
-					'''new java.util.HashMap<«className + mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className»AspectProperties>()''']
+					'''new java.util.HashMap<«identifier + mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className»AspectProperties>()''']
 			])
  
 		holderClass.addMethod('getMap') [
@@ -443,9 +443,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			static = false
 			returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
 				newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
-			body = [
-				'''return map;'''
-			]
+			body = ['''return map;''']
 		]
 	}
 
@@ -515,13 +513,15 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				])
 			bodies.put(get, ''' return «clazz.qualifiedName»._self_.«f.simpleName»; ''')
 
-			var set = clazz.addMethod(f.simpleName,
-				[
-					returnType = newTypeReference("void")
-					addParameter("_self", newTypeReference(identifier))
-					addParameter(f.simpleName, f.type)
-				])
-			bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
+			if(!f.final) {
+				var set = clazz.addMethod(f.simpleName,
+					[
+						returnType = newTypeReference("void")
+						addParameter("_self", newTypeReference(identifier))
+						addParameter(f.simpleName, f.type)
+					])
+				bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
+			}
 
 		}
 		for (f : toRemove) {

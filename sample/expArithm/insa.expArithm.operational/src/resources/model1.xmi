@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<expArithm:ExpressionArithm xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:expArithm="http://expArithm">
+  <racine xsi:type="expArithm:Plus">
+    <EltGauche xsi:type="expArithm:Valeur" valeur="1.0"/>
+    <eltDroit xsi:type="expArithm:Division">
+      <EltGauche xsi:type="expArithm:Mult">
+        <EltGauche xsi:type="expArithm:Valeur" valeur="5.0"/>
+        <eltDroit xsi:type="expArithm:Valeur" valeur="6.0"/>
+      </EltGauche>
+      <eltDroit xsi:type="expArithm:Valeur" valeur="4.0"/>
+    </eltDroit>
+  </racine>
+</expArithm:ExpressionArithm>

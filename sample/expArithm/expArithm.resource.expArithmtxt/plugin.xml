@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.emftext.access.syntax">
+		<metaInformationProvider class="expArithm.resource.expArithmtxt.mopp.ExpArithmtxtMetaInformation" id="expArithm.resource.expArithmtxt.mopp.ExpArithmtxtMetaInformation">
+		</metaInformationProvider>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.problem" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="org.eclipse.core.resources.problemmarker">
+		</super>
+		<super type="org.eclipse.core.resources.textmarker">
+		</super>
+		<super type="org.eclipse.emf.ecore.diagnostic">
+		</super>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.problem.syntax_error" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="expArithm.resource.expArithmtxt.problem">
+		</super>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.problem.print_problem" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="expArithm.resource.expArithmtxt.problem">
+		</super>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.problem.unresolved_reference" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="expArithm.resource.expArithmtxt.problem">
+		</super>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.problem.analysis_problem" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="expArithm.resource.expArithmtxt.problem">
+		</super>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.problem.builder_error" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="expArithm.resource.expArithmtxt.problem">
+		</super>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.nature" name="expArithmtxt nature" point="org.eclipse.core.resources.natures">
+		<runtime>
+			<run class="expArithm.resource.expArithmtxt.mopp.ExpArithmtxtNature">
+			</run>
+		</runtime>
+		<builder id="expArithm.resource.expArithmtxt.builder">
+		</builder>
+	</extension>
+	
+	<extension point="org.eclipse.core.resources.builders" id="expArithm.resource.expArithmtxt.builder" name="expArithmtxt Builder">
+		<builder hasNature="true">
+			<run class="expArithm.resource.expArithmtxt.mopp.ExpArithmtxtBuilderAdapter">
+			</run>
+		</builder>
+	</extension>
+	
+	<extension-point id="expArithm.resource.expArithmtxt.default_load_options" name="Default Load Options" schema="schema/default_load_options.exsd">
+	</extension-point>
+	
+	<extension point="org.eclipse.emf.ecore.extension_parser">
+		<parser class="expArithm.resource.expArithmtxt.mopp.ExpArithmtxtResourceFactoryDelegator" type="expArithmtxt">
+		</parser>
+	</extension>
+	
+	<extension-point id="expArithm.resource.expArithmtxt.additional_extension_parser" name="Additional Extension Parser" schema="schema/additional_extension_parser.exsd">
+	</extension-point>
+	
+	<extension point="org.eclipse.debug.core.breakpoints">
+		<breakpoint class="expArithm.resource.expArithmtxt.debug.ExpArithmtxtLineBreakpoint" id="expArithm.resource.expArithmtxt.debug.breakpoint" markerType="expArithm.resource.expArithmtxt.debug.lineBreakpoint.marker" name="expArithmtxt Breakpoint">
+		</breakpoint>
+	</extension>
+	
+	<extension id="expArithm.resource.expArithmtxt.debug.lineBreakpoint.marker" point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.debug.core.lineBreakpointMarker">
+		</super>
+		<super type="org.eclipse.core.resources.textmarker">
+		</super>
+		<persistent value="true">
+		</persistent>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType id="expArithm.resource.expArithmtxt.ui.launchConfigurationType" delegate="expArithm.resource.expArithmtxt.launch.ExpArithmtxtLaunchConfigurationDelegate" modes="run,debug" name="expArithmtxt Application" sourceLocatorId="expArithm.resource.expArithmtxt.ui.sourceLocator" sourcePathComputerId="expArithm.resource.expArithmtxt.ui.sourcePathComputer" delegateName="expArithmtxt Launch Tooling" delegateDescription="This will run or debug .expArithmtxt files.">
+		</launchConfigurationType>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.sourcePathComputers">
+		<sourcePathComputer class="expArithm.resource.expArithmtxt.debug.ExpArithmtxtSourcePathComputerDelegate" id="expArithm.resource.expArithmtxt.ui.sourcePathComputer">
+		</sourcePathComputer>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.sourceLocators">
+		<sourceLocator id="expArithm.resource.expArithmtxt.ui.sourceLocator" class="expArithm.resource.expArithmtxt.debug.ExpArithmtxtSourceLocator" name="expArithmtxt Source Locator">
+		</sourceLocator>
+	</extension>
+	
+</plugin>

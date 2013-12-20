@@ -11,9 +11,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="Max" eSuperTypes="#//NeighborsExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="Min" eSuperTypes="#//NeighborsExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="PopulationRange" eSuperTypes="../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.ecore#//Filter">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
         defaultValueLiteral="-2147483648"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
         defaultValueLiteral="2147483647"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CellularAutomata">

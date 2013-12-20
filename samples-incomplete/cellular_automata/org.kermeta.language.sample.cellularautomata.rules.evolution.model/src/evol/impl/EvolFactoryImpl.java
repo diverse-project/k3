@@ -27,7 +27,7 @@ public class EvolFactoryImpl extends EFactoryImpl implements EvolFactory {
 	 */
 	public static EvolFactory init() {
 		try {
-			EvolFactory theEvolFactory = (EvolFactory)EPackage.Registry.INSTANCE.getEFactory("http://rules/evol/1.0"); 
+			EvolFactory theEvolFactory = (EvolFactory)EPackage.Registry.INSTANCE.getEFactory(EvolPackage.eNS_URI);
 			if (theEvolFactory != null) {
 				return theEvolFactory;
 			}

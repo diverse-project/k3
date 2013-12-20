@@ -1,119 +1,315 @@
+/**
+ * Opposite annotation
+ * 
+ * Example:
+ * class A { @Opposite("a") public B b }
+ * class B { @Opposite("b") public A a }
+ * 
+ * @author Arnaud Blouin / Thomas Degueule
+ */
 package fr.inria.triskell.k3
 
-import java.lang.annotation.ElementType
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
-import org.eclipse.xtend.lib.macro.AbstractFieldProcessor
 import org.eclipse.xtend.lib.macro.Active
-import org.eclipse.xtend.lib.macro.TransformationContext
-import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
+import java.lang.annotation.Retention
+import java.lang.annotation.ElementType
+import java.lang.annotation.RetentionPolicy
+import org.eclipse.xtend.lib.macro.AbstractFieldProcessor
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
+import org.eclipse.xtend.lib.macro.TransformationContext
+import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
-import org.eclipse.xtend.lib.macro.declaration.Visibility
+import java.util.Collection
+import com.google.common.collect.ImmutableList
 
 /**
- * The Opposite annotation.
- * @author Arnaud Blouin
+ * Opposite annotation declaration
  */
 @Target(ElementType::FIELD)
-@Active(typeof(OppositeProcessor))
+@Active(OppositeProcessor)
 @Retention(RetentionPolicy.SOURCE)
-public annotation Opposite {
-	String value;
+public annotation Opposite
+{
+	String value /* Name of the opposite reference */
 }
 
-
 /**
- * The processor for the Opposite annotation.
- * TODO: does not support collection yet.
- * @author Arnaud Blouin
+ * Opposite annotation processing
  */
-public class OppositeProcessor extends AbstractFieldProcessor {
-	override void doTransform(MutableFieldDeclaration field, TransformationContext ctx) {
-    	val clazzTypeField = ctx.findClass(field.type.name)
-    	val clazzContainField = field.declaringType
-    	val annotationAttrName = field.annotations.findFirst[ann | ann.annotationTypeDeclaration.qualifiedName.equals(Opposite.name)].getValue("value")
-    	val oppositeField = clazzTypeField.declaredFields.findFirst[fi| fi.simpleName.equals(annotationAttrName)]
-
-		if(!check(field, ctx, clazzTypeField, oppositeField, annotationAttrName, clazzContainField))
-			return;
-		 
-		// The annotated field is now private in order to force the use of the generated getter/setter
-		// used as proxies for supporting the composition.		
-		field.visibility = Visibility.PRIVATE
-		
-		generateSetterProxy(field, clazzContainField, oppositeField, ctx)
-		//TODO
-	}
-	
-	
-	protected def void generateSetterProxy(MutableFieldDeclaration field, MutableTypeDeclaration clazzContainField,
-		MutableFieldDeclaration oppositeField, TransformationContext ctx) {
-		// Adding a setter for the annotated field.
-		
-//		if(isArray(field.type)) {
-//      		ctx.addError(field, "Opposite on multiplicity * not supported yet." + field.type.name)
-//		}else
-		clazzContainField.addMethod(field.simpleName)[
-			visibility = Visibility.PUBLIC // Have to be public since the opposite may not 
-			addParameter("obj", field.type)
-			// This setter is a proxy to do jobs related to composition.
-			body = ['''
-				«field.simpleName» = obj;
-				if(obj.«oppositeField.simpleName»()!=this) obj.«oppositeField.simpleName»(this);
-			''']
-		]
-		
-		// Adding a getter to access the annotated field.
-		clazzContainField.addMethod(field.simpleName)[
-			returnType = field.type
-			body = ['''return  «field.simpleName»;''']
-		]
-	}
-	
+class OppositeProcessor extends AbstractFieldProcessor
+{
+	protected MutableTypeDeclaration          containingType
+	protected MutableFieldDeclaration         field
+	protected MutableTypeDeclaration          oppositeType
+	protected MutableFieldDeclaration         oppositeField
+	protected extension TransformationContext context
 	
 	/**
-	 * Checks the constraints to validate the opposite.
+	 * Weaves opposite behavior
+	 */	
+	override void doTransform(MutableFieldDeclaration field, TransformationContext ctx)
+	{
+		context = ctx
+		
+		val oppositeRefName = field.annotations.findFirst[annotationTypeDeclaration == Opposite.newTypeReference.type].getValue("value")
+		
+		if (isCollection(field.type)) {
+			if (field.type.actualTypeArguments.size != 1) {
+				field.addError("Only collections with 1 type parameter are supported")
+				return
+			}
+			
+			this.oppositeType = findClass(field.type.actualTypeArguments.head.name)
+		} else {
+			this.oppositeType = findClass(field.type.name)
+		}
+		
+		this.field          = field
+		this.containingType = field.declaringType
+		this.oppositeField  = oppositeType.declaredFields.findFirst[f | f.simpleName.equals(oppositeRefName)]
+		
+		if (check())
+		{
+			// Annotated field needs to be private
+			// since the opposite behavior is defined
+			// by the generated setter
+			this.field.visibility = Visibility.PRIVATE
+			
+			generateInitializer()
+			generateGetterMethod()
+			generateSetterProxyMethod()
+			generateResetMethod()
+			generateSetMethod()
+		}
+	}
+	
+	protected def void generateInitializer()
+	{
+		if (isCollection(field.type))
+		{
+			val t = field.type.actualTypeArguments.head.simpleName
+			
+			field.initializer = ['''new java.util.ArrayList<«t»>()''']
+		} else {
+			field.initializer = ['''null''']
+		}
+	}
+	
+	/**
+	 * Generates a simple getter method
 	 */
-	protected def boolean check(MutableFieldDeclaration field, TransformationContext ctx, MutableClassDeclaration clazzTypeField,
-		MutableFieldDeclaration oppositeField, Object annotationAttrName, MutableTypeDeclaration clazzContainField) {
-    	// I do not know why but for instance with Object the context is not able to find it.
-	    if(clazzTypeField==null) {
-      		ctx.addError(field, "Cannot find the class " + field.type.name)
-      		return false
-  		}
-  		
-		// Primitive types cannot be opposites.
-	    if(field.getType.primitive) {
-      		ctx.addError(field, "Primitive attributes cannot be opposites")
-      		return false
-  		}
-  		// Checking that the opposite attribute exists
-    	if(oppositeField==null) {
-    		ctx.addError(field, "Not attribute " + annotationAttrName + " in the class " + clazzTypeField.qualifiedName)
-    		return false
+	protected def void generateGetterMethod()
+	{
+		val f = field.simpleName
+		
+		if (isCollection(field.type))
+		{
+			containingType.addMethod(f)[
+				visibility = Visibility.PUBLIC
+				returnType = newTypeReference(ImmutableList, field.type.actualTypeArguments.head)
+				body = ['''return com.google.common.collect.ImmutableList.copyOf(«f») ;''']
+			]
+		} else {
+			containingType.addMethod(f)[
+				visibility = Visibility.PUBLIC
+				returnType = field.type
+				body = ['''return «f» ;''']
+			]
 		}
-		// Checking that the types are ok
-    	if(!oppositeField.type.equals(ctx.newTypeReference(clazzContainField.qualifiedName))) {
-    		ctx.addError(field, "The types of the opposite attribute and of the class containing the annotated attribute must be the same")
-    		return false
+	}
+	
+	/**
+	 * Generates a proxy setter for the annotated
+	 * field in order to inject the opposite behavior
+	 */
+	protected def void generateSetterProxyMethod()
+	{
+		val f = field.simpleName
+		val o = oppositeField.simpleName
+		val t = oppositeField.type
+		
+		if (isCollection(field.type))
+		{
+			containingType.addMethod("add" + field.simpleName.toFirstUpper)[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					if (!«f».contains(obj))
+					{
+						if (obj != null)
+							«IF isCollection(t)»
+								obj.__K3_«o»_set(this) ;
+							«ELSE»
+								obj.__K3_«o»_set(this) ;
+							«ENDIF»
+						
+						«f».add(obj) ;
+					}
+				''']
+			]
+		} else {
+			containingType.addMethod(field.simpleName)[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type)
+				body = ['''
+					if (obj != «f»)
+					{
+						if («f» != null)
+							«IF isCollection(t)»
+								«f».__K3_«o»_reset(this) ;
+							«ELSE»
+								«f».__K3_«o»_reset() ;
+							«ENDIF»
+						if (obj != null)
+							obj.__K3_«o»_set(this) ;
+						
+						«f» = obj ;
+					}
+				''']
+			]
+		}
+	}
+	
+	/**
+	 * Reset annotated field value
+	 */
+	protected def void generateResetMethod()
+	{
+		val f = field.simpleName
+		val o = oppositeField.simpleName
+		val t = oppositeField.type
+		
+		if (isCollection(field.type))
+		{
+			containingType.addMethod("__K3_" + field.simpleName + "_reset")[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					if («f».contains(obj))
+						«f».remove(obj) ;
+				''']
+			]
+			
+			containingType.addMethod("remove" + field.simpleName.toFirstUpper)[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					if (obj != null)
+						«IF isCollection(t)»
+							obj.__K3_«o»_reset(this) ;
+						«ELSE»
+							obj.__K3_«o»_reset() ;
+						«ENDIF»
+						
+					«f».remove(obj) ;
+				''']
+			]
+		} else {
+			containingType.addMethod("__K3_" + f + "_reset")[
+				visibility = Visibility.PUBLIC
+				body = ['''«f» = null ;''']
+			]
+		}
+	}
+	
+	/**
+	 * Set field value 
+	 */
+	protected def void generateSetMethod()
+	{
+		val f = field.simpleName
+		val o = oppositeField.simpleName
+		val t = oppositeField.type
+		
+		if (isCollection(field.type))
+		{
+			containingType.addMethod("__K3_" + f + "_set")[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type.actualTypeArguments.head)
+				body = ['''
+					«f».add(obj) ;
+					''']
+				]
+		} else {
+			containingType.addMethod("__K3_" + f + "_set")[
+				visibility = Visibility.PUBLIC
+				addParameter("obj", field.type)
+				body = ['''
+					if («f» != null)
+						«IF isCollection(t)»
+							«f».__K3_«o»_reset(this) ;
+						«ELSE»
+							«f».__K3_«o»_reset() ;
+						«ENDIF»
+					
+					«f» = obj ;
+					''']
+				]
+		}
+	}
+	
+	/**
+	 * Checks whether the opposite references
+	 * are properly defined
+	 */
+	protected def check()
+	{
+		// No primitive types
+		if (field.type.primitive || field.type.wrapper) {
+			field.addError("Can't declare a primitive type " + field.type.simpleName + " as opposite")
+			return false
 		}
 		
-		// Constraint from k1: the 2 concerned fields cannot be composite
-		if(field.annotations.exists[ann | ann.annotationTypeDeclaration.qualifiedName.equals(Composition.name)] &&
-			oppositeField.annotations.exists[ann | ann.annotationTypeDeclaration.qualifiedName.equals(Composition.name)]){
-    		ctx.addError(field, "Double composition problem (container contained by its content)")
-    		return false
+		// Opposite field exists
+		if (oppositeField == null) {
+			field.addError("Referenced opposite attribute doesn't exist")
+			return false
 		}
 		
-		// Checking that the other field has also an opposite annotation corresponding to this field
-		if(!oppositeField.annotations.exists[ann | ann.annotationTypeDeclaration.qualifiedName.equals(Opposite.name) &&
-			ann.getValue("value").equals(field.simpleName)]) {
-    		ctx.addError(field, "The opposite attribute must have an opposite on this attribute.")
-    		return false
+		// Types match
+		if (
+			(!isCollection(oppositeField.type) && oppositeField.type != containingType.newTypeReference) ||
+			(isCollection(oppositeField.type) && oppositeField.type.actualTypeArguments.head != containingType.newTypeReference)
+		) {
+			field.addError("The opposite attribute type (" + oppositeField.type.simpleName + ") doesn't match")
+			return false
 		}
+		
+		// No double-containment
+		if (
+			field.annotations.exists[annotationTypeDeclaration == Composition.newTypeReference.type] &&
+			oppositeField.annotations.exists[annotationTypeDeclaration == Composition.newTypeReference.type]
+		) {
+			field.addError("Can't declare as opposites two composition references")
+			return false
+		}
+		
+		// Opposite field also declares the right opposite
+		if (
+			!oppositeField.annotations.exists[
+				annotationTypeDeclaration == Opposite.newTypeReference.type &&
+				getValue("value").equals(field.simpleName)
+			]
+		) {
+			field.addError("The opposite attribute must be marked as opposite of this attribute")
+		}
+		
+		// TODO
+		// In the case of auto-reference,
+		// need to check both references
+		// are not the same
+		// (ex: class A { @Opposite("a2") A a1 @Opposite("a1") A a2 })
+		
 		return true
+	}
+	
+	/**
+	 * Checks whether the specified TypeReference refers
+	 * to a collection
+	 */
+	protected def isCollection(TypeReference type)
+	{
+		Collection.newTypeReference(newWildcardTypeReference).isAssignableFrom(type)
 	}
 }

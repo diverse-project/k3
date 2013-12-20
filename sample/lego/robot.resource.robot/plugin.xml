@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.emftext.access.syntax">
+		<metaInformationProvider class="robot.resource.robot.mopp.RobotMetaInformation" id="robot.resource.robot.mopp.RobotMetaInformation">
+		</metaInformationProvider>
+	</extension>
+	
+	<extension id="robot.resource.robot.problem" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="org.eclipse.core.resources.problemmarker">
+		</super>
+		<super type="org.eclipse.core.resources.textmarker">
+		</super>
+		<super type="org.eclipse.emf.ecore.diagnostic">
+		</super>
+	</extension>
+	
+	<extension id="robot.resource.robot.problem.syntax_error" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="robot.resource.robot.problem">
+		</super>
+	</extension>
+	
+	<extension id="robot.resource.robot.problem.print_problem" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="robot.resource.robot.problem">
+		</super>
+	</extension>
+	
+	<extension id="robot.resource.robot.problem.unresolved_reference" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="robot.resource.robot.problem">
+		</super>
+	</extension>
+	
+	<extension id="robot.resource.robot.problem.analysis_problem" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="robot.resource.robot.problem">
+		</super>
+	</extension>
+	
+	<extension id="robot.resource.robot.problem.builder_error" name="EMFText Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="true">
+		</persistent>
+		<super type="robot.resource.robot.problem">
+		</super>
+	</extension>
+	
+	<extension id="robot.resource.robot.nature" name="robot nature" point="org.eclipse.core.resources.natures">
+		<runtime>
+			<run class="robot.resource.robot.mopp.RobotNature">
+			</run>
+		</runtime>
+		<builder id="robot.resource.robot.builder">
+		</builder>
+	</extension>
+	
+	<extension point="org.eclipse.core.resources.builders" id="robot.resource.robot.builder" name="robot Builder">
+		<builder hasNature="true">
+			<run class="robot.resource.robot.mopp.RobotBuilderAdapter">
+			</run>
+		</builder>
+	</extension>
+	
+	<extension-point id="robot.resource.robot.default_load_options" name="Default Load Options" schema="schema/default_load_options.exsd">
+	</extension-point>
+	
+	<extension point="org.eclipse.emf.ecore.extension_parser">
+		<parser class="robot.resource.robot.mopp.RobotResourceFactoryDelegator" type="robot">
+		</parser>
+	</extension>
+	
+	<extension-point id="robot.resource.robot.additional_extension_parser" name="Additional Extension Parser" schema="schema/additional_extension_parser.exsd">
+	</extension-point>
+	
+	<extension point="org.eclipse.debug.core.breakpoints">
+		<breakpoint class="robot.resource.robot.debug.RobotLineBreakpoint" id="robot.resource.robot.debug.breakpoint" markerType="robot.resource.robot.debug.lineBreakpoint.marker" name="robot Breakpoint">
+		</breakpoint>
+	</extension>
+	
+	<extension id="robot.resource.robot.debug.lineBreakpoint.marker" point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.debug.core.lineBreakpointMarker">
+		</super>
+		<super type="org.eclipse.core.resources.textmarker">
+		</super>
+		<persistent value="true">
+		</persistent>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType id="robot.resource.robot.ui.launchConfigurationType" delegate="robot.resource.robot.launch.RobotLaunchConfigurationDelegate" modes="run,debug" name="robot Application" sourceLocatorId="robot.resource.robot.ui.sourceLocator" sourcePathComputerId="robot.resource.robot.ui.sourcePathComputer" delegateName="robot Launch Tooling" delegateDescription="This will run or debug .robot files.">
+		</launchConfigurationType>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.sourcePathComputers">
+		<sourcePathComputer class="robot.resource.robot.debug.RobotSourcePathComputerDelegate" id="robot.resource.robot.ui.sourcePathComputer">
+		</sourcePathComputer>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.sourceLocators">
+		<sourceLocator id="robot.resource.robot.ui.sourceLocator" class="robot.resource.robot.debug.RobotSourceLocator" name="robot Source Locator">
+		</sourceLocator>
+	</extension>
+	
+</plugin>

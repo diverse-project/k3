@@ -36,7 +36,7 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int LOWER_RANGE_EDEFAULT = -2147483648;
+	protected static final Integer LOWER_RANGE_EDEFAULT = new Integer(-2147483648);
 
 	/**
 	 * The cached value of the '{@link #getLowerRange() <em>Lower Range</em>}' attribute.
@@ -46,7 +46,7 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * @generated
 	 * @ordered
 	 */
-	protected int lowerRange = LOWER_RANGE_EDEFAULT;
+	protected Integer lowerRange = LOWER_RANGE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getUpperRange() <em>Upper Range</em>}' attribute.
@@ -56,7 +56,7 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int UPPER_RANGE_EDEFAULT = 2147483647;
+	protected static final Integer UPPER_RANGE_EDEFAULT = new Integer(2147483647);
 
 	/**
 	 * The cached value of the '{@link #getUpperRange() <em>Upper Range</em>}' attribute.
@@ -66,7 +66,7 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * @generated
 	 * @ordered
 	 */
-	protected int upperRange = UPPER_RANGE_EDEFAULT;
+	protected Integer upperRange = UPPER_RANGE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -92,7 +92,7 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getLowerRange() {
+	public Integer getLowerRange() {
 		return lowerRange;
 	}
 
@@ -101,8 +101,8 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLowerRange(int newLowerRange) {
-		int oldLowerRange = lowerRange;
+	public void setLowerRange(Integer newLowerRange) {
+		Integer oldLowerRange = lowerRange;
 		lowerRange = newLowerRange;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EvolPackage.POPULATION_RANGE__LOWER_RANGE, oldLowerRange, lowerRange));
@@ -113,7 +113,7 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getUpperRange() {
+	public Integer getUpperRange() {
 		return upperRange;
 	}
 
@@ -122,8 +122,8 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setUpperRange(int newUpperRange) {
-		int oldUpperRange = upperRange;
+	public void setUpperRange(Integer newUpperRange) {
+		Integer oldUpperRange = upperRange;
 		upperRange = newUpperRange;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EvolPackage.POPULATION_RANGE__UPPER_RANGE, oldUpperRange, upperRange));
@@ -190,9 +190,9 @@ public class PopulationRangeImpl extends FilterImpl implements PopulationRange {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case EvolPackage.POPULATION_RANGE__LOWER_RANGE:
-				return lowerRange != LOWER_RANGE_EDEFAULT;
+				return LOWER_RANGE_EDEFAULT == null ? lowerRange != null : !LOWER_RANGE_EDEFAULT.equals(lowerRange);
 			case EvolPackage.POPULATION_RANGE__UPPER_RANGE:
-				return upperRange != UPPER_RANGE_EDEFAULT;
+				return UPPER_RANGE_EDEFAULT == null ? upperRange != null : !UPPER_RANGE_EDEFAULT.equals(upperRange);
 		}
 		return super.eIsSet(featureID);
 	}

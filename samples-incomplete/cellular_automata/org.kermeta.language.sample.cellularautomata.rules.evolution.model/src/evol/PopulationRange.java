@@ -32,12 +32,12 @@ public interface PopulationRange extends Filter {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Lower Range</em>' attribute.
-	 * @see #setLowerRange(int)
+	 * @see #setLowerRange(Integer)
 	 * @see evol.EvolPackage#getPopulationRange_LowerRange()
 	 * @model default="-2147483648"
 	 * @generated
 	 */
-	int getLowerRange();
+	Integer getLowerRange();
 
 	/**
 	 * Sets the value of the '{@link evol.PopulationRange#getLowerRange <em>Lower Range</em>}' attribute.
@@ -47,7 +47,7 @@ public interface PopulationRange extends Filter {
 	 * @see #getLowerRange()
 	 * @generated
 	 */
-	void setLowerRange(int value);
+	void setLowerRange(Integer value);
 
 	/**
 	 * Returns the value of the '<em><b>Upper Range</b></em>' attribute.
@@ -59,12 +59,12 @@ public interface PopulationRange extends Filter {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Upper Range</em>' attribute.
-	 * @see #setUpperRange(int)
+	 * @see #setUpperRange(Integer)
 	 * @see evol.EvolPackage#getPopulationRange_UpperRange()
 	 * @model default="2147483647"
 	 * @generated
 	 */
-	int getUpperRange();
+	Integer getUpperRange();
 
 	/**
 	 * Sets the value of the '{@link evol.PopulationRange#getUpperRange <em>Upper Range</em>}' attribute.
@@ -74,6 +74,6 @@ public interface PopulationRange extends Filter {
 	 * @see #getUpperRange()
 	 * @generated
 	 */
-	void setUpperRange(int value);
+	void setUpperRange(Integer value);
 
 } // PopulationRange

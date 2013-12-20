@@ -30,7 +30,7 @@ class AspectGenerator{
 		operationParams.add("Context context")
 		operationParams.add("Essai test")
 		
-		aspectGenerate(null, projectPath, projectName, operationName, "ASMLogo.ecore", listNewClass, operationParams)
+		aspectGenerate(new ArrayList<String>(), projectPath, projectName, operationName, "ASMLogo.ecore", listNewClass, operationParams)
 
 	}
 	
@@ -42,7 +42,7 @@ class AspectGenerator{
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {
 			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE)
 		}
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", fact)
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", fact)
 		
 		var rs = new ResourceSetImpl()
 		var uri = URI.createURI(ecorePath)
