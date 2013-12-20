@@ -23,6 +23,8 @@ import java.util.Collections
 import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.CodeGenerationParticipant
 
+import static extension org.eclipse.xtext.xbase.lib.CollectionExtensions.*
+
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
 	Class<?> className;
@@ -89,15 +91,17 @@ public class Tuple<X, Y> {
 		this.x = x;
 		this.y = y;
 	} 
-}
+} 
 
 public class AspectProcessor extends AbstractClassProcessor implements CodeGenerationParticipant<ClassDeclaration>{
-	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz) {
+	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz, extension TransformationContext context) {
 		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')		
+		//addError(clazz, classNam.toString)
+		
 		//var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
 		//return classNam.eGet(identF) as String
-		return classNam.class.getMethod("getIdentifier").invoke(classNam) as String
-	}
+		return classNam.class.getMethod("getName").invoke(classNam) as String
+	}  
 
 	/**
 	 * Fill s with super classes of c, ordered by hierarchy
@@ -111,7 +115,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				s.add(l)
 				getSuperClass(s, l, context)
 			}
-		}
+		} 
 	}
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
@@ -218,7 +222,10 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			val className = classNam.class.getMethod("getSimpleName").invoke(classNam) as String
 			//var identF = classNam.eClass.getEAllStructuralFeatures().findFirst[name == "identifier"]
 			//val identifier = classNam.eGet(identF) as String
-			val identifier = classNam.class.getMethod("getIdentifier").invoke(classNam) as String
+			val identifier = classNam.class.getMethod("getName").invoke(classNam) as String
+			//addError(clazz, identifier)
+			 
+			
 			val Map<MutableMethodDeclaration, String> bodies = new HashMap<MutableMethodDeclaration, String>()
 
 			//clazz.addError(className)
@@ -243,8 +250,10 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				for (p1 : m.parameters) {
 					l.add(new Tuple(p1.simpleName, p1.type))
 				}
-
-				m.parameters.clear
+				
+				m.parameters.toList.clear
+				
+				
 
 				m.addParameter("_self", newTypeReference(identifier))
 
@@ -370,9 +379,9 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 					//m.addError(toto1)
 					//								m.addError(listmethod.)
 					var ifst = '''«FOR md : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(
-						md.declaringType)»){
+						md.declaringType,context)»){
 							«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
-						"(" + getIdentifierOfAnAspectedClass(md.declaringType) + ")_self")»);
+						"(" + getIdentifierOfAnAspectedClass(md.declaringType,context) + ")_self")»);
 							} else «ENDFOR»
 							'''
 					callt = ifst + ''' {
