@@ -213,10 +213,9 @@ class CacheKey {
 	}
 
 	override equals(Object obj) {
-		if (obj instanceof CacheKey) {
-			return Arrays::equals(parameters, (obj as CacheKey).parameters)
-		}
-		false
+		if (obj instanceof CacheKey)
+			return Arrays::equals(parameters, obj.parameters)
+		return false
 	}
 
 	override hashCode() {
