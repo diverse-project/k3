@@ -53,22 +53,18 @@ class sortMethod implements Comparator<MutableMethodDeclaration> {
 		getSuperClass(ext1, arg2.declaringType as MutableClassDeclaration, context)
 
 		if (ext.contains(arg2.declaringType)) {
-
 			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " > " + arg2.declaringType.simpleName+" " +ext.size)
 			return -1
 		} else if (ext1.contains(arg0.declaringType)) {
-
 			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " < " + arg2.declaringType.simpleName + " " +ext1.size)
 			return 1
 		} else {
-
 			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " = " + arg2.declaringType.simpleName)
 			return 0
 		}
 	}
 
-	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,
-		extension TransformationContext context) {
+	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c, extension TransformationContext context) {
 		if (c.extendedClass != null) {
 			val l = findClass(c.extendedClass.name)
 			if (l != null) {
@@ -80,19 +76,12 @@ class sortMethod implements Comparator<MutableMethodDeclaration> {
 
 }
 
-public class Tuple<X, Y> {
-	@Property
-	X x
-	@Property
-	Y y
-
-	new(X x, Y y) {
-		this.x = x;
-		this.y = y;
-	} 
-} 
 
 public class AspectProcessor extends AbstractClassProcessor implements CodeGenerationParticipant<ClassDeclaration>{
+	
+	val Map<MutableClassDeclaration,List<MutableClassDeclaration>> listResMap = new HashMap
+	
+	
 	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz, extension TransformationContext context) {
 		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')		
 		//addError(clazz, classNam.toString)
@@ -106,8 +95,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 	 * Fill s with super classes of c, ordered by hierarchy
 	 * (the first element is the direct super type of c)
 	 */
-	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c,
-		extension TransformationContext context) {
+	def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c, extension TransformationContext context) {
 		if (c.extendedClass != null) {
 			val l = findClass(c.extendedClass.name)
 			if (l != null) {
@@ -117,24 +105,20 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 		} 
 	}
 
+
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
 		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') 
 		//var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
 		//val className = classNam.eGet(simpleNameF) as String
 		val className = classNam.class.getMethod("getSimpleName").invoke(classNam) as String
 		context.registerClass(annotatedClass.qualifiedName + className + "AspectProperties")
-
 		context.registerClass(annotatedClass.qualifiedName + className + "AspectContext")
-		
-
 	}
 
+
 	def List<MutableClassDeclaration> sortByClassInheritance(MutableClassDeclaration clazz, List<? extends MutableClassDeclaration> classes,extension TransformationContext context) {
-		
-		
-		val List<MutableClassDeclaration> listTmp = new ArrayList<MutableClassDeclaration>()
-		
-		val List<MutableClassDeclaration> listRes = new ArrayList<MutableClassDeclaration>()
+		val List<MutableClassDeclaration> listTmp = new ArrayList
+		val List<MutableClassDeclaration> listRes = new ArrayList
 		
 		sortByClassInheritance1(clazz,listRes,context)
 		
@@ -156,6 +140,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 		return listRes
 	} 
 
+
 	def void sortByClassInheritance1(MutableClassDeclaration clazz, List<MutableClassDeclaration> res,extension TransformationContext context) {
 		res.add(clazz)
 		val l  = findClass(clazz.extendedClass.name)		
@@ -165,43 +150,23 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 	}
 
 
-
 	def List<MutableMethodDeclaration> sortByMethodInheritance(Set<MutableMethodDeclaration> methods, List<String> inheritOrder) {
-		var List<MutableMethodDeclaration> listRes = new ArrayList<MutableMethodDeclaration>()
-		
-		for(classe : inheritOrder) {
-			for (md : methods) {
-				if( md.declaringType.simpleName == classe) {
-					listRes.add(md)
-				}
-			}
-		}
-		
-		return listRes
+		inheritOrder.map[classe | methods.filter[declaringType.simpleName == classe]].flatten.toList
 	}
 
-	var Map<MutableClassDeclaration,List<MutableClassDeclaration>> listResMap = new HashMap<MutableClassDeclaration,List<MutableClassDeclaration>>;
 
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		
-		
 		//Method name_parameterlengths, 
-		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>()
-		val Map<MutableMethodDeclaration, Set<MutableMethodDeclaration>> dispatchmethod = new HashMap<MutableMethodDeclaration, Set<MutableMethodDeclaration>>()		
+		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap
+		val Map<MutableMethodDeclaration, Set<MutableMethodDeclaration>> dispatchmethod = new HashMap
 		init_superclass(classes, context, superclass)
 		init_dispatchmethod(superclass, dispatchmethod, context)
-
-		
 		
 		for (clazz : classes) {
-//
-		
 			//var List<String> inheritList1 = new ArrayList<String>() //sortByClassInheritance(clazz)
-			
-			
-			var List<MutableClassDeclaration> listRes = sortByClassInheritance(clazz, classes,context)
-			val List<String> inheritList = new ArrayList<String>()
-			listRes.forEach[c|  inheritList.add(c.simpleName)]			
+			val List<MutableClassDeclaration> listRes = sortByClassInheritance(clazz, classes,context)
+			val List<String> inheritList = listRes.map[simpleName]
+
 			listResMap.put(clazz,listRes)
 			//sortByClassInheritance(clazz, inheritList1,context)
 			
@@ -223,9 +188,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			//val identifier = classNam.eGet(identF) as String
 			val identifier = classNam.class.getMethod("getName").invoke(classNam) as String
 			//addError(clazz, identifier)
-			 
 			
-			val Map<MutableMethodDeclaration, String> bodies = new HashMap<MutableMethodDeclaration, String>()
+			val Map<MutableMethodDeclaration, String> bodies = new HashMap
 
 			//clazz.addError(className)
 			//MOVE non static fields
@@ -235,42 +199,34 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
 
 			aspectContextMaker(context, clazz, className, identifier)
-
 		}
-
 	}
+
 
 	def methods_processing(MutableClassDeclaration clazz, extension TransformationContext context, String identifier, Map<MutableMethodDeclaration,String> bodies, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, List<String> inheritList, String className) {
 		for (m : clazz.declaredMethods) {
 			//clazz.addError(m.simpleName)
 			//In not visited method, add _self as first parameter and set it static
 			if (m.parameters.size == 0 || (m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')) {
-				val l = new ArrayList<Tuple<String, TypeReference>>()
-				for (p1 : m.parameters) {
-					l.add(new Tuple(p1.simpleName, p1.type))
-				}
+				val l = new ArrayList<Pair<String, TypeReference>>()
+				for (p1 : m.parameters)
+					l.add(new Pair(p1.simpleName, p1.type))
 				
 				m.parameters.toList.clear				
-				
-
 				m.addParameter("_self", newTypeReference(identifier))
 
-				for (param : l) {
-
-					m.addParameter(param.x, param.y)
-				}
-
+				for (param : l)
+					m.addParameter(param.key, param.value)
 				//m.parameters.add(1,m.parameters.remove(m.parameters.size-1))
-				}
+			}
 
 				/*/						clazz.addError("Each method must have at least one parameter")
 				if ()
 					clazz.addError("First parameter must be nammed self")*/
 				//if (m.parameters.size > 0 && m.parameters.get(0).type.simpleName != className)
 				//	clazz.addError("First parameter must be typed by the aspect "  + m.parameters.get(0).type.simpleName) //MOVE non static fields
-				if (!m.static) {
+				if (!m.static)
 					m.setStatic(true)
-				}
 
 				//Add a method "super_methodName" which call first method in the
 				//super class hierarchy with the same name.
@@ -282,15 +238,12 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 							visibility = Visibility::PRIVATE
 							static = true
 							returnType = m.returnType
-							for (p : m.parameters) {
-
+							for (p : m.parameters)
 								//if (p.simpleName != "self")
 								addParameter(p.simpleName, p.type)
-							}
 							var s = "";
-							for (p : m.parameters) {
+							for (p : m.parameters)
 								s = s + p.simpleName + ","
-							}
 							if (s.length > 0)
 								s = s.substring(0, s.length - 1)
 							val s1 = s
@@ -313,8 +266,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				}
 
 				//Add "_hidden_" at the beginning of the replaced method name
-				if (m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"] !=
-					null) {
+				if (m.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"] != null) {
 					val cl = findClass(identifier)
 					if (cl != null) {
 						val m2 = cl.declaredMethods.findFirst[m2|
@@ -335,25 +287,21 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 						if (m.abstract)
 							body = ['''throw new java.lang.RuntimeException("Not implemented");''']
 						else {
-						if (m.body == null) {
-							body = [bodies.get(m)] //getters & setters
-
-							//addError(bodies.get(m))
+							if (m.body == null) {
+								body = [bodies.get(m)] //getters & setters
+								//addError(bodies.get(m))
 							} else
-								body = m.body
-							}
-							for (p : m.parameters) {
-								addParameter(p.simpleName, p.type)
-							}
-							
-						])
+									body = m.body
+						}
+						for (p : m.parameters)
+							addParameter(p.simpleName, p.type)
+					])
 
 				//Change the body of the method to call the closest 
 				//method "priv"+methodName in the aspect hierarchy
 				var s = "";
-				for (p : m.parameters) {
+				for (p : m.parameters)
 					s = s + p.simpleName + ","
-				}
 				if (s.length > 0)
 					s = s.substring(0, s.length - 1)
 				val s1 = s
@@ -471,19 +419,16 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 	 * Move fields of the aspect to the AspectProperties class
 	 */
 	def fields_processing(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier, Map<MutableMethodDeclaration,String> bodies) {
-		var List<MutableFieldDeclaration> toRemove = new ArrayList<MutableFieldDeclaration>();
-		var List<MutableFieldDeclaration> propertyAspect = new ArrayList<MutableFieldDeclaration>();
-
-		var c = findClass(clazz.qualifiedName + className + "AspectProperties")
+		val List<MutableFieldDeclaration> toRemove = new ArrayList
+		val List<MutableFieldDeclaration> propertyAspect = new ArrayList
+		val c = findClass(clazz.qualifiedName + className + "AspectProperties")
+		
 		for (f : clazz.declaredFields) {
-
 			//MOVE non static fields
 			if (/*!f.static &&*/f.simpleName != "_self_") {
 				toRemove.add(f)
-				if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] ==
-					null) {
+				if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null)
 					propertyAspect.add(f)
-				}
 
 				c.addField(f.simpleName) [
 					visibility = Visibility::PUBLIC
@@ -531,9 +476,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			}
 
 		}
-		for (f : toRemove) {
+		for (f : toRemove)
 			f.remove
-		}
 	}
 
 	/**
@@ -551,7 +495,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			val clazzes = new ArrayList<MutableClassDeclaration>()
 			clazzes.add(cl)
 			clazzes.addAll(superclass.get(cl))
-			val Map<String, Set<MutableMethodDeclaration>> dispatchs = new HashMap<String, Set<MutableMethodDeclaration>>()
+			val Map<String, Set<MutableMethodDeclaration>> dispatchs = new HashMap
 			for (clazz : clazzes) {
 				for (m : clazz.declaredMethods) {
 					val mname = m.simpleName + "__" + m.parameters.size
@@ -610,9 +554,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			allparent.addAll(superclass.get(child))
 		}
 		//Remove super classes which are annotated
-		for (p : allparent) {
+		for (p : allparent)
 			superclass.remove(p)
-		}
 	}
 
 	
@@ -634,10 +577,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				return null
 			else
 				return findMethod(findClass(clazz.extendedClass.name), methodName, context)
-
 		} else
 			return m;
-
 	}
 	
 	
@@ -673,8 +614,6 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			}
 			
 		}
-		
 	}
-	
 }
 		
