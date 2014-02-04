@@ -23,7 +23,6 @@ import java.util.Collections
 import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.CodeGenerationParticipant
 
-import static extension org.eclipse.xtext.xbase.lib.CollectionExtensions.*
 
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
@@ -502,8 +501,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			}
 
 		}
-		var self = clazz.declaredFields.findFirst[simpleName == "_self_"]
-		if (self == null) {
+		var selfVar = clazz.declaredFields.findFirst[simpleName == "_self_"]
+		if (selfVar == null) {
 			clazz.addField("_self_",
 				[
 					type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
@@ -589,8 +588,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 	}
 	
 	/**
-	 * For each annoted class store his super classes hierarchy.
-	 * An annoted class which is a parent of an other annoted
+	 * For each annotated class store his super classes hierarchy.
+	 * An annotated class which is a parent of an other annotated
 	 * class is not in the final result.
 	 * 
 	 * @annotedClasses All aspects
