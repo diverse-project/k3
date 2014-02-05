@@ -3,7 +3,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>fr.inria.diverse.k3.core</artifactId>
-	<version>3.0-SNAPSHOT</version>
 	<name>kermeta3 as a kind of internal DSL in XTEND</name>
 
     <parent>

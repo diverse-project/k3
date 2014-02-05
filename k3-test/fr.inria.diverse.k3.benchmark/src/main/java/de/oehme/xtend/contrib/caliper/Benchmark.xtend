@@ -1,15 +1,15 @@
 package de.oehme.xtend.contrib.caliper
 
 import com.google.caliper.Param
-import com.google.caliper.Runner
 import com.google.caliper.SimpleBenchmark
+import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
-import org.eclipse.xtend.lib.macro.AbstractClassProcessor
+
 import static extension de.oehme.xtend.contrib.base.ASTExtensions.*
-  
+
 /**
  * <p>
  * Classes marked with this annotation will be transformed into Caliper benchmarks.
@@ -53,7 +53,7 @@ import static extension de.oehme.xtend.contrib.base.ASTExtensions.*
  * </pre>
  * </p>
  * <p>
- * You can also specify parameters without hardcoded values by using the {@link com.google.caliper.Param} annotation, e.g.:
+ * You can also specify parameters without hardcoded values by using the {@link Param} annotation, e.g.:
  * <pre>@Param boolean useTheForce</pre>
  * When you do so, Caliper will just try all known values for Enums and Booleans.
  * For everything else you will need to supply parameters on the command line.
@@ -80,7 +80,7 @@ class BenchmarkProcessor extends AbstractClassProcessor {
 				body = [
 					'''
 						for (int i = 0; i < iterations;i++) {
-							«method.simpleName»();
+							ï¿½method.simpleNameï¿½();
 						}
 					''']
 			]
@@ -100,7 +100,7 @@ class BenchmarkProcessor extends AbstractClassProcessor {
 			addParameter("args", newArrayTypeReference(string))
 			body = [extension it|
 				'''
-					«typeof(Runner).newTypeReference.toJavaCode».main(«benchmark.simpleName».class, args);
+					ï¿½typeof(Runner).newTypeReference.toJavaCodeï¿½.main(ï¿½benchmark.simpleNameï¿½.class, args);
 				''']
 		]
 	}
