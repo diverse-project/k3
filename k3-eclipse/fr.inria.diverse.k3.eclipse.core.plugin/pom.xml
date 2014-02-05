@@ -5,7 +5,7 @@
 		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
 		<groupId>fr.inria.diverse.k3.eclipse</groupId>
 		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-		<version>3.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
   	<artifactId>fr.inria.diverse.k3.eclipse.core.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -29,7 +29,7 @@
 								<artifactItem>
 									<groupId>fr.inria.diverse</groupId>
 									<artifactId>fr.inria.diverse.k3.core</artifactId>
-									<version>3.0-SNAPSHOT</version>
+									<version>3.0.0-SNAPSHOT</version>
 									<outputDirectory>lib</outputDirectory>
 								</artifactItem>
 							</artifactItems>

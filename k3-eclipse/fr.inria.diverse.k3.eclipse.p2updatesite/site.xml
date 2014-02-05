@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/fr.inria.diverse.k3.eclipse.K3Feature_1.0.0.qualifier.jar" id="fr.inria.diverse.k3.eclipse.K3Feature" version="1.0.0.qualifier">
+   <feature url="features/fr.inria.diverse.k3.eclipse.feature_1.0.0.qualifier.jar" id="fr.inria.diverse.k3.eclipse.feature" version="3.0.0.qualifier">
       <category name="k3"/>
    </feature>
    <category-def name="k3" label="k3"/>

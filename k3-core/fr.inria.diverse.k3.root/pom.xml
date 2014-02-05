@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.inria.diverse.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.root</artifactId>
-	<version>3.0-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -11,7 +11,7 @@
 			<xtend.version>2.5.1</xtend.version>
 			<junit.version>4.11</junit.version>
 			<java.version>1.6</java.version>
-			<k3.version>3.0-SNAPSHOT</k3.version>
+			<k3.version>3.0.0-SNAPSHOT</k3.version>
 			<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 			<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 	</properties>
