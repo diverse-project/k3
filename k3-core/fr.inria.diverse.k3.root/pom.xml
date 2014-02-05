@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.inria.diverse.k3</groupId>
+	<artifactId>fr.inria.diverse.k3.root</artifactId>
+	<version>3.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+			<xtend.version>2.5.1</xtend.version>
+			<junit.version>4.11</junit.version>
+			<java.version>1.6</java.version>
+			<k3.version>3.0-SNAPSHOT</k3.version>
+			<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+			<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
+	</properties>
+
+	<repositories>
+		 <repository>
+		     <id>mavenInriaSnapshot</id>
+		     <name>http://maven.inria.fr-snapshots</name>
+		     <url>http://maven.inria.fr/artifactory/kermeta-public-snapshot</url>
+		 </repository>
+		<repository>
+		     <id>mavenInriaRelease</id>
+		     <name>http://maven.inria.fr-releases</name>
+		     <url>http://maven.inria.fr/artifactory/kermeta-public-release</url>
+		 </repository>
+	</repositories> 
+</project> 
