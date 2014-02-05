@@ -6,13 +6,19 @@
 		id="fr.inria.diverse.k3.sle"
 		download-size="0"
 		install-size="0"
-		version="0.1.0"
+		version="0.1.0.beta"
 		unpack="false"/>
 	<plugin
 		id="fr.inria.diverse.k3.sle.ui"
 		download-size="0"
 		install-size="0"
-		version="0.1.0"
+		version="0.1.0.beta"
 		unpack="false"/>
+        <plugin
+                id="fr.inria.diverse.k3.sle.metamodel"
+                download-size="0"
+                install-size="0"
+                version="0.1.0.beta"
+                unpack="false"/>
 </feature>
 
