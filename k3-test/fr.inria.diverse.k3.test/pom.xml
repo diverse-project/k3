@@ -46,7 +46,7 @@
 			<version>${xtend.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.inria.diverse</groupId>
+			<groupId>fr.inria.diverse.k3</groupId>
 			<artifactId>fr.inria.diverse.k3.core</artifactId>
 			<version>${k3.version}</version>
 		</dependency>
@@ -59,18 +59,18 @@
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-			<version>2.8.0-v20120911-0500</version>
+			<version>${emf.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.ecore</artifactId>
-			<version>2.8.0-v20120911-0500</version>
+			<version>${emf.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.common</artifactId>
-			<version>2.8.0-v20120911-0500</version>
+			<version>${emf.version}</version>
 		</dependency>
 
 	</dependencies>
