@@ -2,6 +2,7 @@
  */
 package fr.inria.diverse.k3.sle.metamodel.k3sle;
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EPackage;
@@ -20,6 +21,7 @@ import org.eclipse.emf.ecore.EPackage;
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getImplements <em>Implements</em>}</li>
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getInheritanceRelation <em>Inheritance Relation</em>}</li>
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getPkg <em>Pkg</em>}</li>
+ *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getGenmodel <em>Genmodel</em>}</li>
  * </ul>
  * </p>
  *
@@ -165,6 +167,32 @@ public interface Metamodel extends Element {
 	 * @generated
 	 */
 	void setPkg(EPackage value);
+
+	/**
+	 * Returns the value of the '<em><b>Genmodel</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Genmodel</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Genmodel</em>' containment reference.
+	 * @see #setGenmodel(GenModel)
+	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.K3slePackage#getMetamodel_Genmodel()
+	 * @model containment="true"
+	 * @generated
+	 */
+	GenModel getGenmodel();
+
+	/**
+	 * Sets the value of the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getGenmodel <em>Genmodel</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Genmodel</em>' containment reference.
+	 * @see #getGenmodel()
+	 * @generated
+	 */
+	void setGenmodel(GenModel value);
 
 	/**
 	 * <!-- begin-user-doc -->

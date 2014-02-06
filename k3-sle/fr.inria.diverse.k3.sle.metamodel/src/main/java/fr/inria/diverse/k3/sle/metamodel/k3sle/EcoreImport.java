@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.EcoreImport#getUri <em>Uri</em>}</li>
+ *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.EcoreImport#getGenmodelUri <em>Genmodel Uri</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,5 +47,31 @@ public interface EcoreImport extends EObject {
 	 * @generated
 	 */
 	void setUri(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Genmodel Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Genmodel Uri</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Genmodel Uri</em>' attribute.
+	 * @see #setGenmodelUri(String)
+	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.K3slePackage#getEcoreImport_GenmodelUri()
+	 * @model
+	 * @generated
+	 */
+	String getGenmodelUri();
+
+	/**
+	 * Sets the value of the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.EcoreImport#getGenmodelUri <em>Genmodel Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Genmodel Uri</em>' attribute.
+	 * @see #getGenmodelUri()
+	 * @generated
+	 */
+	void setGenmodelUri(String value);
 
 } // EcoreImport

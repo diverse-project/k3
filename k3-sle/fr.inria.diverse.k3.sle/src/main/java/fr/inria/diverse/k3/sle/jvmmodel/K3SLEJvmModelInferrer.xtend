@@ -69,6 +69,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 		pkg.weaveAspects(mm)
 
 		mm.pkg = pkg
+		mm.genmodel = mm.inferredGenModel
 	}
 
 	def dispatch buildPkg(ModelType mt) {
@@ -103,9 +104,9 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					body = '''
 						java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;
 						for (org.eclipse.emf.ecore.EObject o : adaptee.getContents()) {
-							«FOR r : pkg.EClassifiers.filter(EClass)»
-							if (o instanceof «r.fullyQualifiedName.toString») {
-								«r.fullyQualifiedName.toString» wrap = («r.fullyQualifiedName.toString») o ;
+							«FOR r : pkg.EClassifiers.filter(EClass).filter[instanceTypeName === null]»
+							if (o instanceof «mm.getFqnFor(r)») {
+								«mm.getFqnFor(r)» wrap = («mm.getFqnFor(r)») o ;
 								ret.add(new «mm.adapterNameFor(superType, r.name)»(wrap)) ;
 							} else
 							«ENDFOR» {}
@@ -121,16 +122,16 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 				]
 			]
 
-			superPkg.EClassifiers.filter(EClass).forEach[cls |
+			superPkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].forEach[cls |
 				val inCls = pkg.EClassifiers.filter(EClass).findFirst[it.name == cls.name]
 
 				acceptor.accept(mm.toClass(mm.adapterNameFor(superType, inCls.name)))
 				.initializeLater[
-					superTypes += newTypeRef(GenericAdapter, newTypeRef(inCls.fullyQualifiedName.toString))
+					superTypes += newTypeRef(GenericAdapter, newTypeRef(mm.getFqnFor(inCls)))
 					superTypes += newTypeRef(superType.interfaceNameFor(inCls.name))
 
 					members += mm.toConstructor[
-						parameters += mm.toParameter("adaptee", newTypeRef(inCls.fullyQualifiedName.toString))
+						parameters += mm.toParameter("adaptee", newTypeRef(mm.getFqnFor(inCls)))
 						body = '''super(adaptee) ;'''
 					]
 
@@ -149,7 +150,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 							body = '''return adaptee.«attr.getterName»() ;'''
 						]
 
-						if (!attr.many)
+						if (!attr.many && attr.changeable)
 							members += attr.toMethod(attr.setterName, newTypeRef(Void::TYPE))[
 								parameters += attr.toParameter("o", baseType)
 								body = '''adaptee.«attr.setterName»(o) ;'''
@@ -157,7 +158,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					]
 
 					cls.EAllReferences.forEach[ref |
-						val inRef = inCls.EReferences.findFirst[it.name == ref.name]
+						val inRef = inCls.EAllReferences.findFirst[it.name == ref.name]
 						val intName = superType.interfaceNameFor(ref.EReferenceType.name)
 						val adapName = mm.adapterNameFor(superType, ref.EReferenceType.name)
 						val baseType = newTypeRef(intName)
@@ -167,7 +168,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 								body = '''
 									return new fr.inria.diverse.k3.sle.lib.ListAdapter<
 										«intName»,
-										«inRef.EReferenceType.fullyQualifiedName.toString»
+										«mm.getFqnFor(inRef.EReferenceType)»
 										>(adaptee.«ref.getterName»(), «adapName».class
 									) ;
 								'''
@@ -176,13 +177,15 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 							members += ref.toMethod(ref.getterName, baseType)[
 								body = '''return new «adapName»(adaptee.«ref.getterName»()) ;'''
 							]
-							members += ref.toMethod(ref.setterName, newTypeRef(Void::TYPE))[
-								parameters += ref.toParameter("o", newTypeRef(intName))
-								body = '''
-									«adapName» wrap = («adapName») o ;
-									adaptee.«ref.setterName»(wrap.getAdaptee()) ;
-								'''
-							]
+
+							if (ref.changeable)
+								members += ref.toMethod(ref.setterName, newTypeRef(Void::TYPE))[
+									parameters += ref.toParameter("o", newTypeRef(intName))
+									body = '''
+										«adapName» wrap = («adapName») o ;
+										adaptee.«ref.setterName»(wrap.getAdaptee()) ;
+									'''
+								]
 						}
 					]
 
@@ -282,11 +285,11 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 				superTypes += newTypeRef(superType.interfaceNameFor(superPkg.factoryName))
 
 				// !!!
-				members += mm.toField("adaptee", newTypeRef(pkg.name + "." + pkg.name.toFirstUpper + "Factory"))[
-					initializer = '''«pkg.name».«pkg.name.toFirstUpper»Factory.eINSTANCE'''
+				members += mm.toField("adaptee", newTypeRef(mm.getFactoryFqn))[
+					initializer = '''«mm.getFactoryFqn».eINSTANCE'''
 				]
 
-				superPkg.EClassifiers.filter(EClass).filter[!^abstract && !^interface].forEach[cls |
+				superPkg.EClassifiers.filter(EClass).filter[!^abstract && !^interface && instanceTypeName === null].forEach[cls |
 					members += mm.toMethod("create" + cls.name, newTypeRef(superType.interfaceNameFor(cls.name)), [
 						body = '''
 							return new «mm.adapterNameFor(superType, cls.name)»(adaptee.create«cls.name»()) ;
@@ -298,7 +301,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 			adapSwitch.append('''case "«mt.fullyQualifiedName»": return (T) new «mm.adapterNameFor(superType, mm.name)»(res) ;''' + "\n")
 		]
 
-		acceptor.accept(mm.toClass(mm.fullyQualifiedName.normalize))
+		acceptor.accept(mm.toClass(mm.fullyQualifiedName.normalize.toString))
 		.initializeLater[
 			val paramT = TypesFactory::eINSTANCE.createJvmTypeParameter => [
 				name = "T"
@@ -333,16 +336,16 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 			val superMM = mm.inheritanceRelation.superMetamodel
 			val superPkg = superMM.pkg
 
-			superPkg.EClassifiers.filter(EClass).forEach[cls |
+			superPkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].forEach[cls |
 				val inCls = pkg.EClassifiers.filter(EClass).findFirst[name == cls.name]
 
 				acceptor.accept(mm.toClass(mm.adapterNameFor(superMM, cls.name)))
 				.initializeLater[
-					superTypes += newTypeRef(cls.fullyQualifiedName.toString)
+					superTypes += newTypeRef(mm.getFqnFor(cls))
 					superTypes += newTypeRef(EObjectAdapter, newTypeRef(inCls.fullyQualifiedName.toString))
 
 					members += mm.toConstructor[
-							parameters += mm.toParameter("adaptee", newTypeRef(inCls.fullyQualifiedName.toString))
+							parameters += mm.toParameter("adaptee", newTypeRef(mm.getFqnFor(inCls)))
 							body = '''super(adaptee) ;'''
 						]
 
@@ -353,7 +356,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 							else if (attr.EAttributeType !== null && attr.EAttributeType instanceof EEnum)
 								newTypeRef(attr.EAttributeType.name)
 							else
-								newTypeRef(inCls.fullyQualifiedName.toString)
+								newTypeRef(mm.getFqnFor(inCls))
 
 						val returnType = if (attr.many) newTypeRef(List, baseType) else	baseType
 
@@ -361,7 +364,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 							body = '''return adaptee.«attr.getterName»() ;'''
 						]
 
-						if (!attr.many)
+						if (!attr.many && attr.changeable)
 							members += attr.toMethod(attr.setterName, newTypeRef(Void::TYPE))[
 								parameters += attr.toParameter("o", baseType)
 								body = '''adaptee.«attr.setterName»(o) ;'''
@@ -371,14 +374,14 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					cls.EAllReferences.forEach[ref |
 						val inRef = inCls.EReferences.findFirst[it.name == ref.name]
 						val adapName = mm.adapterNameFor(superMM, ref.EReferenceType.name)
-						val baseType = newTypeRef(ref.EReferenceType.fullyQualifiedName.toString)
+						val baseType = newTypeRef(mm.getFqnFor(ref.EReferenceType))
 
 						if (ref.many)
 							members += ref.toMethod(ref.getterName, newTypeRef(EList, baseType))[
 								body = '''
 									return new fr.inria.diverse.k3.sle.lib.EListAdapter<
-										«ref.EReferenceType.fullyQualifiedName.toString»,
-										«inRef.EReferenceType.fullyQualifiedName.toString»
+										«superMM.getFqnFor(ref.EReferenceType)»,
+										«mm.getFqnFor(inRef.EReferenceType)»
 										>(adaptee.«ref.getterName»(), «adapName».class
 									) ;
 								'''
@@ -387,13 +390,15 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 							members += ref.toMethod(ref.getterName, baseType)[
 									body = '''return new «adapName»(adaptee.«ref.getterName»()) ;'''
 								]
-							members += ref.toMethod(ref.setterName, newTypeRef(Void::TYPE))[
-									parameters += ref.toParameter("o", newTypeRef(ref.EReferenceType.fullyQualifiedName.toString))
-									body = '''
-										«adapName» wrap = («adapName») o ;
-										adaptee.«ref.setterName»(wrap.getAdaptee()) ;
-									'''
-								]
+
+							if (ref.changeable)
+								members += ref.toMethod(ref.setterName, newTypeRef(Void::TYPE))[
+										parameters += ref.toParameter("o", newTypeRef(superMM.getFqnFor(ref.EReferenceType)))
+										body = '''
+											«adapName» wrap = («adapName») o ;
+											adaptee.«ref.setterName»(wrap.getAdaptee()) ;
+										'''
+									]
 						}
 					]
 				]
@@ -415,7 +420,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 			]
 		]
 
-		mt.pkg.EClassifiers.filter(EClass).forEach[cls |
+		mt.pkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].forEach[cls |
 			acceptor.accept(cls.toInterface(mt.interfaceNameFor(cls.name), []))
 			.initializeLater[
 				cls.ESuperTypes.forEach[sup |
@@ -435,7 +440,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 
 					members += attr.toGetterSignature(attr.name, returnType)
 
-					if (!attr.many)
+					if (!attr.many && attr.changeable)
 						members += attr.toSetterSignature(attr.name, returnType)
 				]
 
@@ -444,7 +449,9 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 						members += ref.toGetterSignature(ref.name, newTypeRef(typeof(List), newTypeRef(mt.interfaceNameFor(ref.EReferenceType.name))))
 					} else {
 						members += ref.toGetterSignature(ref.name, ref.newTypeRef(ref.EReferenceType.name))
-						members += ref.toSetterSignature(ref.name, ref.newTypeRef(ref.EReferenceType.name))
+
+						if (ref.changeable)
+							members += ref.toSetterSignature(ref.name, ref.newTypeRef(ref.EReferenceType.name))
 					}
 				]
 
@@ -485,7 +492,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 	}
 
 	def void generateTransformation(Transformation transfo, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
-		acceptor.accept(transfo.toClass(transfo.fullyQualifiedName))
+		acceptor.accept(transfo.toClass(transfo.fullyQualifiedName.toString))
 		.initializeLater[
 			// !!!
 			val returnType = transfo.returnTypeRef ?: transfo.newTypeRef(Void::TYPE)
@@ -505,8 +512,8 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					body = '''
 						«FOR mm : mgmRoot.elements.filter(Metamodel).filter[pkg !== null]»
 						org.eclipse.emf.ecore.EPackage.Registry.INSTANCE.put(
-							«mm.pkg.fullyQualifiedName.toString».«mm.pkg.fullyQualifiedName.toString.toFirstUpper»Package.eNS_URI,
-							«mm.pkg.fullyQualifiedName.toString».«mm.pkg.fullyQualifiedName.toString.toFirstUpper»Package.eINSTANCE
+							«mm.getPackageFqn».eNS_URI,
+							«mm.getPackageFqn».eINSTANCE
 						) ;
 						«ENDFOR»
 						org.eclipse.emf.ecore.resource.Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
@@ -527,7 +534,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 		.initializeLater[
 			superTypes += newTypeRef(IFactory)
 
-			pkg.EClassifiers.filter(EClass).filter[!^abstract && !^interface].forEach[cls |
+			pkg.EClassifiers.filter(EClass).filter[!^abstract && !^interface && instanceTypeName === null].forEach[cls |
 				members += cls.toMethod("create" + cls.name, newTypeRef(targetPkg.append(cls.name).normalize.toString), [
 					abstract = true
 				])
@@ -584,3 +591,4 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 		mt.fullyQualifiedName.append(cls).normalize.toString
 	}
 }
+
