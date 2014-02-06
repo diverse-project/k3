@@ -123,6 +123,24 @@ class TestDynamicBinding {
 		val x = new X7
 		assertEquals("test.X7 X7 test.X7 X4 test.X7 XExp test.X7 Root", x.visit)
 	}
+	
+	
+	
+	
+	@Test def void testX8_as_XExpression() {
+		val XExpression x = new X8
+		assertEquals("test.X8 X8 test.X8 X2 test.X8 XExp test.X8 Root", x.visit)
+	}
+	
+	@Test def void testX8_as_XSubExp2() {
+		val XSubExp2 x = new X8
+		assertEquals("test.X8 X8 test.X8 X2 test.X8 XExp test.X8 Root", x.visit)
+	}
+	
+	@Test def void testX8_as_X8() {
+		val x = new X8
+		assertEquals("test.X8 X8 test.X8 X2 test.X8 XExp test.X8 Root", x.visit)
+	}
 }
 
 interface XExpression {}
@@ -147,8 +165,8 @@ abstract class RootAspect {
 }
 
 
-@Aspect(className=typeof(XSubExp3))
-class X8Aspect extends XExpressionAspect{
+@Aspect(className=typeof(X8))
+class X8Aspect extends X2Aspect{
 	@OverrideAspectMethod
 	def String visit() {
 		_self.class.name + " X8" + " " + _self.super_visit
