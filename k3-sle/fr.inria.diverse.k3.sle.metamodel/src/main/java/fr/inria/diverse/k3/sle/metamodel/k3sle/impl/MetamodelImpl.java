@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -41,6 +42,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.MetamodelImpl#getImplements <em>Implements</em>}</li>
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.MetamodelImpl#getInheritanceRelation <em>Inheritance Relation</em>}</li>
  *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.MetamodelImpl#getPkg <em>Pkg</em>}</li>
+ *   <li>{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.MetamodelImpl#getGenmodel <em>Genmodel</em>}</li>
  * </ul>
  * </p>
  *
@@ -106,6 +108,16 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 	 * @ordered
 	 */
 	protected EPackage pkg;
+
+	/**
+	 * The cached value of the '{@link #getGenmodel() <em>Genmodel</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGenmodel()
+	 * @generated
+	 * @ordered
+	 */
+	protected GenModel genmodel;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -322,6 +334,49 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public GenModel getGenmodel() {
+		return genmodel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetGenmodel(GenModel newGenmodel, NotificationChain msgs) {
+		GenModel oldGenmodel = genmodel;
+		genmodel = newGenmodel;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, K3slePackage.METAMODEL__GENMODEL, oldGenmodel, newGenmodel);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setGenmodel(GenModel newGenmodel) {
+		if (newGenmodel != genmodel) {
+			NotificationChain msgs = null;
+			if (genmodel != null)
+				msgs = ((InternalEObject)genmodel).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - K3slePackage.METAMODEL__GENMODEL, null, msgs);
+			if (newGenmodel != null)
+				msgs = ((InternalEObject)newGenmodel).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - K3slePackage.METAMODEL__GENMODEL, null, msgs);
+			msgs = basicSetGenmodel(newGenmodel, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, K3slePackage.METAMODEL__GENMODEL, newGenmodel, newGenmodel));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void footprint() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -371,6 +426,8 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 				return basicSetInheritanceRelation(null, msgs);
 			case K3slePackage.METAMODEL__PKG:
 				return basicSetPkg(null, msgs);
+			case K3slePackage.METAMODEL__GENMODEL:
+				return basicSetGenmodel(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -396,6 +453,8 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 				return getInheritanceRelation();
 			case K3slePackage.METAMODEL__PKG:
 				return getPkg();
+			case K3slePackage.METAMODEL__GENMODEL:
+				return getGenmodel();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -429,6 +488,9 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 			case K3slePackage.METAMODEL__PKG:
 				setPkg((EPackage)newValue);
 				return;
+			case K3slePackage.METAMODEL__GENMODEL:
+				setGenmodel((GenModel)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -459,6 +521,9 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 			case K3slePackage.METAMODEL__PKG:
 				setPkg((EPackage)null);
 				return;
+			case K3slePackage.METAMODEL__GENMODEL:
+				setGenmodel((GenModel)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -483,6 +548,8 @@ public class MetamodelImpl extends ElementImpl implements Metamodel {
 				return inheritanceRelation != null;
 			case K3slePackage.METAMODEL__PKG:
 				return pkg != null;
+			case K3slePackage.METAMODEL__GENMODEL:
+				return genmodel != null;
 		}
 		return super.eIsSet(featureID);
 	}

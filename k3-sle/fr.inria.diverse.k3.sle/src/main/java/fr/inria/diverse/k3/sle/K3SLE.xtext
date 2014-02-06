@@ -41,7 +41,7 @@ Transformation:
 ;
 
 EcoreImport:
-	'ecore' uri = STRING
+	'ecore' uri = STRING ('with genmodel' genmodelUri = STRING)?
 ;
 
 AspectImport:

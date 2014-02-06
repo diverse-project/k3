@@ -15,6 +15,7 @@ import fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.Subtyping;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.Transformation;
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EOperation;
@@ -154,7 +155,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		EcorePackage.eINSTANCE.eClass();
+		GenModelPackage.eINSTANCE.eClass();
 		XtypePackage.eINSTANCE.eClass();
 		XbasePackage.eINSTANCE.eClass();
 
@@ -313,6 +314,15 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getMetamodel_Genmodel() {
+		return (EReference)metamodelEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EOperation getMetamodel__Footprint() {
 		return metamodelEClass.getEOperations().get(0);
 	}
@@ -439,6 +449,15 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getEcoreImport_GenmodelUri() {
+		return (EAttribute)ecoreImportEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getAspectImport() {
 		return aspectImportEClass;
 	}
@@ -552,6 +571,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 		createEReference(metamodelEClass, METAMODEL__IMPLEMENTS);
 		createEReference(metamodelEClass, METAMODEL__INHERITANCE_RELATION);
 		createEReference(metamodelEClass, METAMODEL__PKG);
+		createEReference(metamodelEClass, METAMODEL__GENMODEL);
 		createEOperation(metamodelEClass, METAMODEL___FOOTPRINT);
 		createEOperation(metamodelEClass, METAMODEL___MERGE);
 
@@ -569,6 +589,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 
 		ecoreImportEClass = createEClass(ECORE_IMPORT);
 		createEAttribute(ecoreImportEClass, ECORE_IMPORT__URI);
+		createEAttribute(ecoreImportEClass, ECORE_IMPORT__GENMODEL_URI);
 
 		aspectImportEClass = createEClass(ASPECT_IMPORT);
 		createEReference(aspectImportEClass, ASPECT_IMPORT__ASPECT_REF);
@@ -608,6 +629,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 		// Obtain other dependent packages
 		XtypePackage theXtypePackage = (XtypePackage)EPackage.Registry.INSTANCE.getEPackage(XtypePackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		GenModelPackage theGenModelPackage = (GenModelPackage)EPackage.Registry.INSTANCE.getEPackage(GenModelPackage.eNS_URI);
 		TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
 		XbasePackage theXbasePackage = (XbasePackage)EPackage.Registry.INSTANCE.getEPackage(XbasePackage.eNS_URI);
 
@@ -639,6 +661,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 		initEReference(getMetamodel_Implements(), this.getModelType(), null, "implements", null, 0, -1, Metamodel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMetamodel_InheritanceRelation(), this.getInheritance(), this.getInheritance_SubMetamodel(), "inheritanceRelation", null, 0, 1, Metamodel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMetamodel_Pkg(), theEcorePackage.getEPackage(), null, "pkg", null, 0, 1, Metamodel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMetamodel_Genmodel(), theGenModelPackage.getGenModel(), null, "genmodel", null, 0, 1, Metamodel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getMetamodel__Footprint(), null, "footprint", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -658,6 +681,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 
 		initEClass(ecoreImportEClass, EcoreImport.class, "EcoreImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEcoreImport_Uri(), ecorePackage.getEString(), "uri", null, 0, 1, EcoreImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEcoreImport_GenmodelUri(), ecorePackage.getEString(), "genmodelUri", null, 0, 1, EcoreImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(aspectImportEClass, AspectImport.class, "AspectImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAspectImport_AspectRef(), theTypesPackage.getJvmTypeReference(), null, "aspectRef", null, 1, 1, AspectImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

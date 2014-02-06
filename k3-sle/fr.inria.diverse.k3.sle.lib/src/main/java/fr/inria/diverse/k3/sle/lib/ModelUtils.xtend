@@ -6,6 +6,8 @@ import org.eclipse.emf.ecore.EcorePackage
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel
 
 class ModelUtils
 {
@@ -21,4 +23,18 @@ class ModelUtils
 
 		pkg.contents.get(0) as EPackage
 	}
+
+	def static loadGenModel(String path) {
+		if (!EPackage.Registry.INSTANCE.containsKey(GenModelPackage.eNS_URI))
+			EPackage.Registry.INSTANCE.put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE)
+
+		Resource.Factory.Registry.INSTANCE.extensionToFactoryMap.put("genmodel", new XMIResourceFactoryImpl)
+
+		val rs = new ResourceSetImpl
+		val uri = URI.createURI(path)
+		val pkg = rs.getResource(uri, true)
+
+		pkg.contents.get(0) as GenModel
+	}
 }
+

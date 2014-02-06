@@ -260,13 +260,22 @@ public interface K3slePackage extends EPackage {
 	int METAMODEL__PKG = ELEMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Genmodel</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METAMODEL__GENMODEL = ELEMENT_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>Metamodel</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int METAMODEL_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 6;
+	int METAMODEL_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Footprint</em>' operation.
@@ -461,13 +470,22 @@ public interface K3slePackage extends EPackage {
 	int ECORE_IMPORT__URI = 0;
 
 	/**
+	 * The feature id for the '<em><b>Genmodel Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ECORE_IMPORT__GENMODEL_URI = 1;
+
+	/**
 	 * The number of structural features of the '<em>Ecore Import</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ECORE_IMPORT_FEATURE_COUNT = 1;
+	int ECORE_IMPORT_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Ecore Import</em>' class.
@@ -770,6 +788,17 @@ public interface K3slePackage extends EPackage {
 	EReference getMetamodel_Pkg();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getGenmodel <em>Genmodel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Genmodel</em>'.
+	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#getGenmodel()
+	 * @see #getMetamodel()
+	 * @generated
+	 */
+	EReference getMetamodel_Genmodel();
+
+	/**
 	 * Returns the meta object for the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel#footprint() <em>Footprint</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -917,6 +946,17 @@ public interface K3slePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getEcoreImport_Uri();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.EcoreImport#getGenmodelUri <em>Genmodel Uri</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Genmodel Uri</em>'.
+	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.EcoreImport#getGenmodelUri()
+	 * @see #getEcoreImport()
+	 * @generated
+	 */
+	EAttribute getEcoreImport_GenmodelUri();
 
 	/**
 	 * Returns the meta object for class '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.AspectImport <em>Aspect Import</em>}'.
@@ -1155,6 +1195,14 @@ public interface K3slePackage extends EPackage {
 		EReference METAMODEL__PKG = eINSTANCE.getMetamodel_Pkg();
 
 		/**
+		 * The meta object literal for the '<em><b>Genmodel</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference METAMODEL__GENMODEL = eINSTANCE.getMetamodel_Genmodel();
+
+		/**
 		 * The meta object literal for the '<em><b>Footprint</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1271,6 +1319,14 @@ public interface K3slePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ECORE_IMPORT__URI = eINSTANCE.getEcoreImport_Uri();
+
+		/**
+		 * The meta object literal for the '<em><b>Genmodel Uri</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ECORE_IMPORT__GENMODEL_URI = eINSTANCE.getEcoreImport_GenmodelUri();
 
 		/**
 		 * The meta object literal for the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.AspectImportImpl <em>Aspect Import</em>}' class.

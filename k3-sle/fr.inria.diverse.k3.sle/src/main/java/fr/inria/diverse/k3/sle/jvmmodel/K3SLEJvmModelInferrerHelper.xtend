@@ -131,6 +131,14 @@ class K3SLEJvmModelInferrerHelper
 		}
 	}
 
+	static def getInferredGenModel(Metamodel mm) {
+		if (mm.ecore === null && mm.inheritanceRelation?.superMetamodel?.ecore !== null) {
+			return ModelUtils.loadGenModel(mm.inheritanceRelation.superMetamodel.ecore.genmodelUri)
+		} else {
+			return ModelUtils.loadGenModel(mm.ecore.genmodelUri)
+		}
+	}
+
 	static def dispatch getInferredPkg(ModelType mt) {
 		if (mt.ecore === null && mt.extracted !== null)
 			return mt.extracted.pkg.copy
@@ -254,6 +262,8 @@ class K3SLEJvmModelInferrerHelper
 		  (mm.ecore?.uri !== null ||
 		  	(mm.inheritanceRelation?.superMetamodel !== null && mm.inheritanceRelation.superMetamodel.isValid))
 		&& mm.aspects.forall[aspectRef.type instanceof JvmGenericType]
+		&& (mm.ecore?.genmodelUri !== null ||
+			(mm.inheritanceRelation?.superMetamodel !== null && mm.inheritanceRelation.superMetamodel.isValid))
 	}
 
 	static def dispatch boolean isValid(ModelType mt) {
@@ -299,4 +309,32 @@ class K3SLEJvmModelInferrerHelper
 			e.printStackTrace
 		}
 	}
+
+	static def getFqnFor(Metamodel mm, EClass cls) {
+		val genPkg = mm.genmodel.genPackages.head
+
+		return if (genPkg.basePackage !== null)
+				QualifiedName.create(genPkg.basePackage, genPkg.prefix, cls.name).normalize.toString
+			else
+				QualifiedName.create(genPkg.prefix, cls.name).normalize.toString
+	}
+
+	static def getPackageFqn(Metamodel mm) {
+		val genPkg = mm.genmodel.genPackages.head
+
+		return if (genPkg.basePackage !== null)
+				QualifiedName.create(genPkg.basePackage, genPkg.prefix, genPkg.prefix + "Package").normalize.toString
+			else
+				QualifiedName.create(genPkg.prefix, genPkg.prefix + "Package").normalize.toString
+	}
+
+	static def getFactoryFqn(Metamodel mm) {
+		val genPkg = mm.genmodel.genPackages.head
+
+		return if (genPkg.basePackage !== null)
+				QualifiedName.create(genPkg.basePackage, genPkg.prefix, genPkg.prefix + "Factory").normalize.toString
+			else
+				QualifiedName.create(genPkg.prefix, genPkg.prefix + "Factory").normalize.toString
+	}
 }
+

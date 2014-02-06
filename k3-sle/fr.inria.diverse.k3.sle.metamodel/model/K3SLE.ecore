@@ -29,6 +29,8 @@
         containment="true" eOpposite="#//Inheritance/subMetamodel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pkg" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EPackage"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="genmodel" eType="ecore:EClass ../../org.eclipse.emf.codegen.ecore/model/GenModel.ecore#//GenModel"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelType" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ecore" eType="#//EcoreImport"
@@ -51,6 +53,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EcoreImport">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="uri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="genmodelUri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AspectImport">
     <eStructuralFeatures xsi:type="ecore:EReference" name="aspectRef" lowerBound="1"
