@@ -1,14 +1,17 @@
 package fr.inria.triskell.k3
 
 import java.util.ArrayList
+import java.util.Collections
 import java.util.Comparator
 import java.util.HashMap
+import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
-import java.util.Set 
-//import org.eclipse.emf.ecore.EObject
+import java.util.Set
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
+import org.eclipse.xtend.lib.macro.CodeGenerationContext
+import org.eclipse.xtend.lib.macro.CodeGenerationParticipant
 import org.eclipse.xtend.lib.macro.RegisterGlobalsContext
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
@@ -16,13 +19,9 @@ import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
+import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
-import java.util.LinkedHashSet
-import java.util.Collections
-import org.eclipse.xtend.lib.macro.CodeGenerationContext
-import org.eclipse.xtend.lib.macro.CodeGenerationParticipant
-
 
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
@@ -73,23 +72,32 @@ class sortMethod implements Comparator<MutableMethodDeclaration> {
 			}
 		}
 	}
-
 }
 
 
 public class AspectProcessor extends AbstractClassProcessor implements CodeGenerationParticipant<ClassDeclaration>{
-	
+	val annotationName = "className"
+
 	val Map<MutableClassDeclaration,List<MutableClassDeclaration>> listResMap = new HashMap
+
+
+	private def TypeReference getAnnotationAspectType(TypeDeclaration cl) {
+		if(cl==null || cl.annotations==null) return null;
+		try{
+			val annot = cl.annotations.findFirst[getClassValue(annotationName) != null]
+			if(annot==null) return null
+			annot.getClassValue(annotationName)
+		}catch(NullPointerException ex){ return null }
+	}
+
+
+	def String getAspectedClassName(MutableTypeDeclaration clazz, extension TransformationContext context) {
+		val type = getAnnotationAspectType(clazz)
+		if(type==null)
+			return ""	
+		type.name
+	}
 	
-	
-	def String getIdentifierOfAnAspectedClass(MutableTypeDeclaration clazz, extension TransformationContext context) {
-		var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')		
-		//addError(clazz, classNam.toString)
-		
-		//var identF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "identifier"]
-		//return classNam.eGet(identF) as String
-		return classNam.class.getMethod("getName").invoke(classNam) as String
-	}  
 
 	/**
 	 * Fill s with super classes of c, ordered by hierarchy
@@ -107,12 +115,12 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-		var classNam = annotatedClass.annotations.findFirst[getValue('className') != null].getValue('className') 
-		//var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
-		//val className = classNam.eGet(simpleNameF) as String
-		val className = classNam.class.getMethod("getSimpleName").invoke(classNam) as String
-		context.registerClass(annotatedClass.qualifiedName + className + "AspectProperties")
-		context.registerClass(annotatedClass.qualifiedName + className + "AspectContext")
+		val type = getAnnotationAspectType(annotatedClass)
+		if(type!=null) {
+			val className = type.simpleName
+			context.registerClass(annotatedClass.qualifiedName + className + "AspectProperties")
+			context.registerClass(annotatedClass.qualifiedName + className + "AspectContext")
+		}
 	}
 
 
@@ -127,7 +135,6 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			sortByClassInheritance1(c,listTmp,context)
 			if (listTmp.contains(clazz))
 				listRes.add(c)
-			
 		} ]
 				
 		Collections.sort(listRes, [a, b | 
@@ -135,7 +142,6 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			sortByClassInheritance1(a,listTmp,context)
 			if (listTmp.contains(b)) -1 else 1
 		])
-	
 		
 		return listRes
 	} 
@@ -143,10 +149,9 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 
 	def void sortByClassInheritance1(MutableClassDeclaration clazz, List<MutableClassDeclaration> res,extension TransformationContext context) {
 		res.add(clazz)
-		val l  = findClass(clazz.extendedClass.name)		
-		if (l!= null)
+		val l = findClass(clazz.extendedClass.name)		
+		if(l!=null)
 			sortByClassInheritance1(l,res,context)
-		
 	}
 
 
@@ -163,42 +168,24 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 		init_dispatchmethod(superclass, dispatchmethod, context)
 		
 		for (clazz : classes) {
-			//var List<String> inheritList1 = new ArrayList<String>() //sortByClassInheritance(clazz)
 			val List<MutableClassDeclaration> listRes = sortByClassInheritance(clazz, classes,context)
 			val List<String> inheritList = listRes.map[simpleName]
-
 			listResMap.put(clazz,listRes)
-			//sortByClassInheritance(clazz, inheritList1,context)
-			
-			/*val StringBuffer log  = new StringBuffer
-			log.append("before ")
-			inheritList.forEach[ s | log.append(" " + s)]
-			log.append("\n after ")
-			inheritList1.forEach[ s | log.append(" " + s)]
-			*/
-			//clazz.addError(log .toString)
-		
-			var classNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')
-			//addError(clazz, classNam.class.toString)
-			 
-			//var simpleNameF = classNam.eClass.EAllStructuralFeatures.findFirst[name == "simpleName"]
-			//val className = classNam.eGet(simpleNameF) as String
-			val className = classNam.class.getMethod("getSimpleName").invoke(classNam) as String
-			//var identF = classNam.eClass.getEAllStructuralFeatures().findFirst[name == "identifier"]
-			//val identifier = classNam.eGet(identF) as String
-			val identifier = classNam.class.getMethod("getName").invoke(classNam) as String
-			//addError(clazz, identifier)
-			
-			val Map<MutableMethodDeclaration, String> bodies = new HashMap
-
-			//clazz.addError(className)
-			//MOVE non static fields
-			fields_processing(context, clazz, className, identifier, bodies)
-
-			//Transform method to static
-			methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
-
-			aspectContextMaker(context, clazz, className, identifier)
+			val typeRef = getAnnotationAspectType(clazz)
+			if(typeRef==null)
+				clazz.addError("The aspectised class cannot be resolved.")
+			else {
+				val className = typeRef.simpleName
+				val identifier = typeRef.name
+				val Map<MutableMethodDeclaration, String> bodies = new HashMap
+	
+				//MOVE non static fields
+				fields_processing(context, clazz, className, identifier, bodies)
+	
+				//Transform method to static
+				methods_processing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
+				aspectContextMaker(context, clazz, className, identifier)
+			}
 		}
 	}
 
@@ -324,10 +311,10 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 
 					//m.addError(toto1)
 					//								m.addError(listmethod.)
-					var ifst = '''«FOR md : listmethod»   if (_self instanceof «getIdentifierOfAnAspectedClass(
+					var ifst = '''«FOR md : listmethod»   if (_self instanceof «getAspectedClassName(
 						md.declaringType,context)»){
 							«retu» «md.declaringType.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
-						"(" + getIdentifierOfAnAspectedClass(md.declaringType,context) + ")_self")»);
+						"(" + getAspectedClassName(md.declaringType,context) + ")_self")»);
 							} else «ENDFOR»
 							'''
 					callt = ifst + ''' {
@@ -599,20 +586,22 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 			val filePath = clazz.compilationUnit.filePath
 			filePath.projectFolder.lastSegment
 			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
-			val aspectizedclassNam = clazz.annotations.findFirst[getValue('className') != null].getValue('className')
-			val aspectizedclassName = aspectizedclassNam.class.getMethod("getQualifiedName").invoke(aspectizedclassNam) as String
-				
-			if(file.exists){
-				file.contents = '''«file.contents»
-«aspectizedclassName» = «clazz.qualifiedName»
-			'''
+			val aspectizedclassNam = getAnnotationAspectType(clazz)
+
+			if(aspectizedclassNam!=null) {
+				val aspectizedclassName = aspectizedclassNam.class.getMethod("getQualifiedName").invoke(aspectizedclassNam) as String
+					
+				if(file.exists){
+					file.contents = '''«file.contents»
+	«aspectizedclassName» = «clazz.qualifiedName»
+				'''
+				}
+				else{
+				file.contents = '''
+	«aspectizedclassName» = «clazz.qualifiedName»
+				'''
+				}
 			}
-			else{
-			file.contents = '''
-«aspectizedclassName» = «clazz.qualifiedName»
-			'''
-			}
-			
 		}
 	}
 }
