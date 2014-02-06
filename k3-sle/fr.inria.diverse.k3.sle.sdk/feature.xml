@@ -20,5 +20,11 @@
                 install-size="0"
                 version="0.1.0.beta"
                 unpack="false"/>
+	<plugin
+		id="fr.inria.diverse.k3.sle.lib"
+		download-size="0"
+		install-size="0"
+		version="0.1.0.beta"
+		unpack="false"/>
 </feature>
 
