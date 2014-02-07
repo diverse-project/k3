@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="fr.inria.diverse.k3.eclipse.K3Feature"
-      label="K3Feature"
-      version="1.0.0.qualifier">
+      id="fr.inria.diverse.k3.eclipse.feature"
+      label="K3 feature"
+      version="3.0.0.qualifier">
 
    <description url="https://github.com/barais/k3/">
       k3 Project

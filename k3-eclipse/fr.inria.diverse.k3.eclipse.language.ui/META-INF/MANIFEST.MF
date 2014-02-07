@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Project
 Bundle-SymbolicName: fr.inria.diverse.k3.eclipse.language.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.k3.language.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
