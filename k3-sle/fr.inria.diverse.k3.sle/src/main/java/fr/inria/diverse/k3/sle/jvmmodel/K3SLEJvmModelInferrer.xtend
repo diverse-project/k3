@@ -7,22 +7,18 @@ import fr.inria.diverse.k3.sle.metamodel.k3sle.Transformation
 
 import fr.inria.diverse.k3.sle.metamodel.k3sle.K3sleFactory
 
-import fr.inria.diverse.k3.sle.lib.ModelTypeException
 import fr.inria.diverse.k3.sle.lib.GenericAdapter
 import fr.inria.diverse.k3.sle.lib.IModelType
-import fr.inria.diverse.k3.sle.lib.IFactory
 import fr.inria.diverse.k3.sle.lib.EObjectAdapter
 
 import org.eclipse.emf.common.util.EList
 
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EEnum
 import org.eclipse.emf.ecore.resource.Resource
 
 import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.TypesFactory
@@ -30,7 +26,6 @@ import org.eclipse.xtext.common.types.TypesFactory
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.eclipse.xtext.xbase.XExpression
 
 import java.util.List
 
@@ -78,7 +73,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 
 	def void generateAdapters(Metamodel mm, IJvmDeclaredTypeAcceptor acceptor) {
 		val pkg = mm.pkg
-		val adapSwitch = new StringBuilder
 
 		mgmRoot.elements.filter(ModelType)
 		.filter[mt | pkg.subtypeOf(mt.pkg)]
@@ -87,40 +81,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 			val superPkg  = mt.pkg
 
 			mm.^implements += mt
-
-			acceptor.accept(mm.toClass(mm.adapterNameFor(superType, mm.name)))
-			.initializeLater[
-				superTypes += newTypeRef(superType.fullyQualifiedName.normalize.toString)
-				superTypes += newTypeRef(GenericAdapter, newTypeRef(Resource))
-
-				members += mm.toConstructor[
-					parameters += mm.toParameter("adaptee", newTypeRef(Resource))
-					body = '''super(adaptee) ;'''
-				]
-
-				members += mm.toMethod("getContents", newTypeRef(List, newTypeRef(Object)))[
-					// !!!
-					documentation = '''FIXME'''
-					body = '''
-						java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;
-						for (org.eclipse.emf.ecore.EObject o : adaptee.getContents()) {
-							«FOR r : pkg.EClassifiers.filter(EClass).filter[instanceTypeName === null]»
-							if (o instanceof «mm.getFqnFor(r)») {
-								«mm.getFqnFor(r)» wrap = («mm.getFqnFor(r)») o ;
-								ret.add(new «mm.adapterNameFor(superType, r.name)»(wrap)) ;
-							} else
-							«ENDFOR» {}
-						}
-						return ret ;
-					'''
-				]
-
-				members += mm.toMethod("getFactory", newTypeRef(superType.fullyQualifiedName.append(superPkg.factoryName).normalize.toString))[
-					body = '''
-						return new «mm.adapterNameFor(superType, mm.factoryName)»() ;
-					'''
-				]
-			]
 
 			superPkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].forEach[cls |
 				val inCls = pkg.EClassifiers.filter(EClass).findFirst[it.name == cls.name]
@@ -279,55 +239,64 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					}
 				]
 			]
-
-			acceptor.accept(mm.toClass(mm.adapterNameFor(superType, mm.factoryName)))
-			.initializeLater[
-				superTypes += newTypeRef(superType.interfaceNameFor(superPkg.factoryName))
-
-				// !!!
-				members += mm.toField("adaptee", newTypeRef(mm.getFactoryFqn))[
-					initializer = '''«mm.getFactoryFqn».eINSTANCE'''
-				]
-
-				superPkg.EClassifiers.filter(EClass).filter[!^abstract && !^interface && instanceTypeName === null].forEach[cls |
-					members += mm.toMethod("create" + cls.name, newTypeRef(superType.interfaceNameFor(cls.name)), [
-						body = '''
-							return new «mm.adapterNameFor(superType, cls.name)»(adaptee.create«cls.name»()) ;
-						'''
-					])
-				]
-			]
-
-			adapSwitch.append('''case "«mt.fullyQualifiedName»": return (T) new «mm.adapterNameFor(superType, mm.name)»(res) ;''' + "\n")
 		]
 
 		acceptor.accept(mm.toClass(mm.fullyQualifiedName.normalize.toString))
 		.initializeLater[
-			val paramT = TypesFactory::eINSTANCE.createJvmTypeParameter => [
-				name = "T"
-				constraints += TypesFactory.eINSTANCE.createJvmUpperBound => [
-					typeReference = mm.newTypeRef(IModelType)
+			val paramT = TypesFactory::eINSTANCE.createJvmWildcardTypeReference => [
+				//name = "T"
+				constraints += TypesFactory.eINSTANCE.createJvmLowerBound => [
+					typeReference = mm.newTypeRef(mm.fullyQualifiedName.normalize.toString)
 				]
 			]
 
-			members += mm.toMethod("load", paramT.newTypeRef) [
+			superTypes += newTypeRef(GenericAdapter, newTypeRef(Resource))
+			mm.^implements.forEach[mt | superTypes += newTypeRef(mt.fullyQualifiedName.toString)]
+
+			members += mm.toField("type", mm.newTypeRef(Class, paramT))
+
+			members += mm.toConstructor[
+				parameters += mm.toParameter("a", mm.newTypeRef(Resource))
+				parameters += mm.toParameter("t", mm.newTypeRef(Class, paramT))
+
+				body = '''
+					super(a) ;
+					type = t ;
+				'''
+			]
+
+			members += mm.toMethod("load", newTypeRef(IModelType)) [
 				^static = true
 
-				typeParameters += paramT
 				parameters += mm.toParameter("uri", newTypeRef(String))
-				parameters += mm.toParameter("type", mm.newTypeRef(Class, paramT.newTypeRef))
-
-				exceptions += mm.newTypeRef(ModelTypeException)
+				parameters += mm.toParameter("type", mm.newTypeRef(Class, paramT))
 
 				body = '''
 					org.eclipse.emf.ecore.resource.ResourceSet resSet = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl() ;
 					org.eclipse.emf.ecore.resource.Resource res = resSet.getResource(org.eclipse.emf.common.util.URI.createURI(uri), true) ;
 
-					switch (type.getName()) {
-						«adapSwitch»
+					return new «mm.fullyQualifiedName.normalize.toString»(res, type) ;
+				'''
+			]
+
+			members += mm.toMethod("getContents", newTypeRef(List, newTypeRef(Object)))[
+				body = '''
+					java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;
+
+					for (org.eclipse.emf.ecore.EObject o : adaptee.getContents()) {
+					«FOR r : pkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].sortByClassInheritance»
+						if (o instanceof «mm.getFqnFor(r)») {
+							«mm.getFqnFor(r)» wrap = («mm.getFqnFor(r)») o ;
+							«FOR mt : mm.^implements»
+							if (type.equals(«mt.fullyQualifiedName.normalize.toString».class))
+								ret.add(new «mm.adapterNameFor(mt, r.name)»(wrap)) ;
+							else
+							«ENDFOR» {}
+						} else
+					«ENDFOR» {}
 					}
 
-					throw new fr.inria.diverse.k3.sle.lib.ModelTypeException("Cannot load " + uri + " using MT(" + type + ") : incompatible types") ;
+					return ret ;
 				'''
 			]
 		]
@@ -414,10 +383,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 			members += mt.toMethod("getContents", newTypeRef(List, newTypeRef(Object)))[
 				abstract = true
 			]
-
-			members += mt.toMethod("getFactory", newTypeRef(mt.interfaceNameFor(mt.pkg.factoryName)))[
-				abstract = true
-			]
 		]
 
 		mt.pkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].forEach[cls |
@@ -487,8 +452,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 				}
 			]
 		]
-
-		mt.pkg.extractFactoryInterface(mt.fullyQualifiedName, acceptor)
 	}
 
 	def void generateTransformation(Transformation transfo, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
@@ -526,19 +489,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					static = true
 				]
 			}
-		]
-	}
-
-	def extractFactoryInterface(EPackage pkg, QualifiedName targetPkg, IJvmDeclaredTypeAcceptor acceptor) {
-		acceptor.accept(pkg.toInterface(targetPkg.append(pkg.factoryName).normalize.toString, []))
-		.initializeLater[
-			superTypes += newTypeRef(IFactory)
-
-			pkg.EClassifiers.filter(EClass).filter[!^abstract && !^interface && instanceTypeName === null].forEach[cls |
-				members += cls.toMethod("create" + cls.name, newTypeRef(targetPkg.append(cls.name).normalize.toString), [
-					abstract = true
-				])
-			]
 		]
 	}
 

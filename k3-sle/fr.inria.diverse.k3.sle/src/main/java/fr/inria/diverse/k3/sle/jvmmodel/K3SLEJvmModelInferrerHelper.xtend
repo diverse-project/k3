@@ -258,7 +258,28 @@ class K3SLEJvmModelInferrerHelper
 		return pkg.EClassifiers.findFirst[it.name == name]
 	}
 
+	static def boolean inferGenModel(Metamodel mm) {
+		// !!!
+		if (mm.ecore?.genmodelUri !== null)
+			return true
+		else if (mm.ecore?.uri !== null && mm.ecore?.uri.endsWith(".ecore")) {
+			val speculativeGenmodelPath = mm.ecore.uri.substring(0, mm.ecore.uri.lastIndexOf(".")) + ".genmodel"
+
+			try {
+				if (ModelUtils.loadGenModel(speculativeGenmodelPath) !== null) {
+					mm.ecore.genmodelUri = speculativeGenmodelPath
+					return true
+				}
+			} catch (Exception e) {}
+		} else if (mm.inheritanceRelation !== null && mm.inheritanceRelation.superMetamodel.isValid)
+			return true
+
+		return false
+	}
+
 	static def dispatch boolean isValid(Metamodel mm) {
+		mm.inferGenModel
+		&&
 		  (mm.ecore?.uri !== null ||
 		  	(mm.inheritanceRelation?.superMetamodel !== null && mm.inheritanceRelation.superMetamodel.isValid))
 		&& mm.aspects.forall[aspectRef.type instanceof JvmGenericType]
@@ -336,5 +357,22 @@ class K3SLEJvmModelInferrerHelper
 			else
 				QualifiedName.create(genPkg.prefix, genPkg.prefix + "Factory").normalize.toString
 	}
+
+	static def Iterable<EClass> sortByClassInheritance(Iterable<EClass> classes) {
+		classes.sort(new ClassInheritanceComparator())
+	}
+}
+
+// What about multiple inheritance?
+class ClassInheritanceComparator implements java.util.Comparator<EClass> {
+        override int compare(EClass clsA, EClass clsB)
+        {
+                if (clsA.EAllSuperTypes.contains(clsB))
+                        return -1
+                else if (clsB.EAllSuperTypes.contains(clsA))
+                        return 1
+                else
+                        return 0
+        }
 }
 
