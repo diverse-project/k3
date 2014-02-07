@@ -20,6 +20,7 @@
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler/</kepler-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
+		<xtend.version>2.5.1</xtend.version>
 	</properties>
 
 
