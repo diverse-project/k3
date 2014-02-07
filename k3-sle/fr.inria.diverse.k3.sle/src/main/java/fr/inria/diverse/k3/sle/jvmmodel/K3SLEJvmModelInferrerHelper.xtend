@@ -290,7 +290,7 @@ class K3SLEJvmModelInferrerHelper
 					?.values.filter(JvmCustomAnnotationValue)
 					?.head?.values?.head?.toString
 
-			return cls.EAllSuperTypes.exists[name == className]
+			return cls.name == className || cls.EAllSuperTypes.exists[name == className]
 		}
 
 		return false
