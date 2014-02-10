@@ -42,10 +42,10 @@ class SimpleParsingTest {
 			ecore "tests-inputs/TimedFSM.ecore" with genmodel "tests-inputs/TimedFSM.genmodel"
 		}
 
-		modeltype MTA extract foo.A {}
-		modeltype MTB extract foo.B {}
+		modeltype MTA extract A {}
+		modeltype MTB extract B {}
 
-		transformation bar(foo.MTA o) {}
+		transformation bar(MTA o) {}
 		'''.parse
 	}
 
