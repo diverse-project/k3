@@ -38,7 +38,7 @@
 	</repositories>
 	
 	<build>
-                <sourceDirectory>src/main/java/:src-gen/</sourceDirectory>
+        <sourceDirectory>src/main/java/src-gen/</sourceDirectory>
 		<pluginManagement>
 			<plugins>
 				<!-- xtend-maven-plugin is in pluginManagement instead of in plugins
