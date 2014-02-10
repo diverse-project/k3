@@ -12,6 +12,9 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 
+import org.eclipse.xtext.generator.IGenerator
+import org.eclipse.xtext.generator.InMemoryFileSystemAccess
+
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +29,7 @@ class SimpleParsingTest {
 
 	@Inject extension ParseHelper<MegamodelRoot>
 	@Inject extension ValidationTestHelper
+	@Inject IGenerator generator
 
 	MegamodelRoot root
 
@@ -101,6 +105,15 @@ class SimpleParsingTest {
 		assertEquals(mtb.subtypingRelations.size, 1)
 		assertEquals(mtb.subtypingRelations.head.subType, mtb)
 		assertEquals(mtb.subtypingRelations.head.superType, mta)
+	}
+
+	// Just to show how we can generate code
+	@Test
+	def void testGeneration() {
+		val fsa = new InMemoryFileSystemAccess
+		generator.doGenerate(root.eResource, fsa)
+
+		assertEquals(fsa.allFiles.size, 20)
 	}
 
 	def getA() { root.elements.get(0) as Metamodel }
