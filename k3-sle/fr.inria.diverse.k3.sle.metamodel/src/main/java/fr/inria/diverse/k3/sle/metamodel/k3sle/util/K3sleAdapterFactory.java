@@ -72,10 +72,6 @@ public class K3sleAdapterFactory extends AdapterFactoryImpl {
 				return createMegamodelRootAdapter();
 			}
 			@Override
-			public Adapter casePackageDecl(PackageDecl object) {
-				return createPackageDeclAdapter();
-			}
-			@Override
 			public Adapter caseElement(Element object) {
 				return createElementAdapter();
 			}
@@ -138,20 +134,6 @@ public class K3sleAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMegamodelRootAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl <em>Package Decl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl
-	 * @generated
-	 */
-	public Adapter createPackageDeclAdapter() {
 		return null;
 	}
 

@@ -4,12 +4,16 @@ package fr.inria.diverse.k3.sle.metamodel.k3sle.impl;
 
 import fr.inria.diverse.k3.sle.metamodel.k3sle.AspectImport;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.K3slePackage;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.xtext.common.types.JvmTypeReference;
 
 /**
@@ -35,6 +39,7 @@ public class AspectImportImpl extends MinimalEObjectImpl.Container implements As
 	 * @ordered
 	 */
 	protected JvmTypeReference aspectRef;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

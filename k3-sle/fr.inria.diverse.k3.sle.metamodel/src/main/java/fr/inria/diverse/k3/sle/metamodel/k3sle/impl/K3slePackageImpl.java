@@ -11,11 +11,11 @@ import fr.inria.diverse.k3.sle.metamodel.k3sle.K3slePackage;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.MegamodelRoot;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.ModelType;
-import fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.Subtyping;
 import fr.inria.diverse.k3.sle.metamodel.k3sle.Transformation;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EOperation;
@@ -44,13 +44,6 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 	 * @generated
 	 */
 	private EClass megamodelRootEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass packageDeclEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -188,7 +181,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMegamodelRoot_Package() {
+	public EReference getMegamodelRoot_Elements() {
 		return (EReference)megamodelRootEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -197,7 +190,7 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMegamodelRoot_Elements() {
+	public EReference getMegamodelRoot_Imports() {
 		return (EReference)megamodelRootEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -206,26 +199,8 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMegamodelRoot_Imports() {
-		return (EReference)megamodelRootEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getPackageDecl() {
-		return packageDeclEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPackageDecl_Name() {
-		return (EAttribute)packageDeclEClass.getEStructuralFeatures().get(0);
+	public EAttribute getMegamodelRoot_Name() {
+		return (EAttribute)megamodelRootEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -554,12 +529,9 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 
 		// Create classes and their features
 		megamodelRootEClass = createEClass(MEGAMODEL_ROOT);
-		createEReference(megamodelRootEClass, MEGAMODEL_ROOT__PACKAGE);
 		createEReference(megamodelRootEClass, MEGAMODEL_ROOT__ELEMENTS);
 		createEReference(megamodelRootEClass, MEGAMODEL_ROOT__IMPORTS);
-
-		packageDeclEClass = createEClass(PACKAGE_DECL);
-		createEAttribute(packageDeclEClass, PACKAGE_DECL__NAME);
+		createEAttribute(megamodelRootEClass, MEGAMODEL_ROOT__NAME);
 
 		elementEClass = createEClass(ELEMENT);
 		createEAttribute(elementEClass, ELEMENT__NAME);
@@ -644,12 +616,9 @@ public class K3slePackageImpl extends EPackageImpl implements K3slePackage {
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(megamodelRootEClass, MegamodelRoot.class, "MegamodelRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMegamodelRoot_Package(), this.getPackageDecl(), null, "package", null, 0, 1, MegamodelRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMegamodelRoot_Elements(), this.getElement(), null, "elements", null, 0, -1, MegamodelRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMegamodelRoot_Imports(), theXtypePackage.getXImportSection(), null, "imports", null, 0, 1, MegamodelRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(packageDeclEClass, PackageDecl.class, "PackageDecl", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPackageDecl_Name(), ecorePackage.getEString(), "name", null, 0, 1, PackageDecl.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMegamodelRoot_Name(), theEcorePackage.getEString(), "name", null, 0, 1, MegamodelRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(elementEClass, Element.class, "Element", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

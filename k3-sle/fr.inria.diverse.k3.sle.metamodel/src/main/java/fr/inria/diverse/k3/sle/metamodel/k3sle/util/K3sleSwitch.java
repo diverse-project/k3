@@ -72,12 +72,6 @@ public class K3sleSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case K3slePackage.PACKAGE_DECL: {
-				PackageDecl packageDecl = (PackageDecl)theEObject;
-				T result = casePackageDecl(packageDecl);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case K3slePackage.ELEMENT: {
 				Element element = (Element)theEObject;
 				T result = caseElement(element);
@@ -145,21 +139,6 @@ public class K3sleSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseMegamodelRoot(MegamodelRoot object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Package Decl</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Package Decl</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T casePackageDecl(PackageDecl object) {
 		return null;
 	}
 

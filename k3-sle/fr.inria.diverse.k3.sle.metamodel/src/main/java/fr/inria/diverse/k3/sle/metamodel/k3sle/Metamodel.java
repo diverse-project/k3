@@ -3,6 +3,7 @@
 package fr.inria.diverse.k3.sle.metamodel.k3sle;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EPackage;

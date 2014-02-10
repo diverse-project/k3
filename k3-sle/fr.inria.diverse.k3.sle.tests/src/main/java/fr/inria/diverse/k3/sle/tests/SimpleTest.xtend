@@ -60,7 +60,7 @@ class SimpleParsingTest {
 
 	@Test
 	def testStructure() {
-		assertEquals(root.package.name, "foo")
+		assertEquals(root.name, "foo")
 		assertNull(root.imports)
 
 		assertTrue(root.elements.get(0) instanceof Metamodel)

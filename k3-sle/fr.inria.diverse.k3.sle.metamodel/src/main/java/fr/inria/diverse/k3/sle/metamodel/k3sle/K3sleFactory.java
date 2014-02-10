@@ -31,15 +31,6 @@ public interface K3sleFactory extends EFactory {
 	MegamodelRoot createMegamodelRoot();
 
 	/**
-	 * Returns a new object of class '<em>Package Decl</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Package Decl</em>'.
-	 * @generated
-	 */
-	PackageDecl createPackageDecl();
-
-	/**
 	 * Returns a new object of class '<em>Metamodel</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

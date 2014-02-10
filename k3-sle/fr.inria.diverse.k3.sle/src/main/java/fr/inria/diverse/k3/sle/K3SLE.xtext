@@ -3,13 +3,9 @@ grammar fr.inria.diverse.k3.sle.K3SLE with org.eclipse.xtext.xbase.Xbase
 import "http://www.inria.fr/diverse/k3/sle"
 
 MegamodelRoot:
-	(package = PackageDecl)?
+	('package' name = QualifiedName)?
 	(imports = XImportSection)?
 	(elements += Element)*
-;
-
-PackageDecl:
-	'package' name = QualifiedName
 ;
 
 Element:

@@ -9,12 +9,9 @@
   <genPackages prefix="K3sle" basePackage="fr.inria.diverse.k3.sle.metamodel" disposableProviderFactory="true"
       ecorePackage="K3SLE.ecore#/">
     <genClasses ecoreClass="K3SLE.ecore#//MegamodelRoot">
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference K3SLE.ecore#//MegamodelRoot/package"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference K3SLE.ecore#//MegamodelRoot/elements"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference K3SLE.ecore#//MegamodelRoot/imports"/>
-    </genClasses>
-    <genClasses ecoreClass="K3SLE.ecore#//PackageDecl">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute K3SLE.ecore#//PackageDecl/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute K3SLE.ecore#//MegamodelRoot/name"/>
     </genClasses>
     <genClasses image="false" ecoreClass="K3SLE.ecore#//Element">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute K3SLE.ecore#//Element/name"/>

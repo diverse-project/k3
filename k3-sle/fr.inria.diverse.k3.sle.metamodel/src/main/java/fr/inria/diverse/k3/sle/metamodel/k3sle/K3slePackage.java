@@ -68,22 +68,13 @@ public interface K3slePackage extends EPackage {
 	int MEGAMODEL_ROOT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Package</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEGAMODEL_ROOT__PACKAGE = 0;
-
-	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MEGAMODEL_ROOT__ELEMENTS = 1;
+	int MEGAMODEL_ROOT__ELEMENTS = 0;
 
 	/**
 	 * The feature id for the '<em><b>Imports</b></em>' containment reference.
@@ -92,7 +83,16 @@ public interface K3slePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEGAMODEL_ROOT__IMPORTS = 2;
+	int MEGAMODEL_ROOT__IMPORTS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEGAMODEL_ROOT__NAME = 2;
 
 	/**
 	 * The number of structural features of the '<em>Megamodel Root</em>' class.
@@ -113,43 +113,6 @@ public interface K3slePackage extends EPackage {
 	int MEGAMODEL_ROOT_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.PackageDeclImpl <em>Package Decl</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.PackageDeclImpl
-	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getPackageDecl()
-	 * @generated
-	 */
-	int PACKAGE_DECL = 1;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PACKAGE_DECL__NAME = 0;
-
-	/**
-	 * The number of structural features of the '<em>Package Decl</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PACKAGE_DECL_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Package Decl</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PACKAGE_DECL_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.ElementImpl <em>Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -157,7 +120,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 2;
+	int ELEMENT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -194,7 +157,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getMetamodel()
 	 * @generated
 	 */
-	int METAMODEL = 3;
+	int METAMODEL = 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -312,7 +275,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getModelType()
 	 * @generated
 	 */
-	int MODEL_TYPE = 4;
+	int MODEL_TYPE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -385,7 +348,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getTransformation()
 	 * @generated
 	 */
-	int TRANSFORMATION = 5;
+	int TRANSFORMATION = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -458,7 +421,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getEcoreImport()
 	 * @generated
 	 */
-	int ECORE_IMPORT = 6;
+	int ECORE_IMPORT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Uri</b></em>' attribute.
@@ -504,7 +467,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getAspectImport()
 	 * @generated
 	 */
-	int ASPECT_IMPORT = 7;
+	int ASPECT_IMPORT = 6;
 
 	/**
 	 * The feature id for the '<em><b>Aspect Ref</b></em>' containment reference.
@@ -541,7 +504,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getInheritance()
 	 * @generated
 	 */
-	int INHERITANCE = 8;
+	int INHERITANCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Sub Metamodel</b></em>' container reference.
@@ -587,7 +550,7 @@ public interface K3slePackage extends EPackage {
 	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getSubtyping()
 	 * @generated
 	 */
-	int SUBTYPING = 9;
+	int SUBTYPING = 8;
 
 	/**
 	 * The feature id for the '<em><b>Sub Type</b></em>' container reference.
@@ -637,17 +600,6 @@ public interface K3slePackage extends EPackage {
 	EClass getMegamodelRoot();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.MegamodelRoot#getPackage <em>Package</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Package</em>'.
-	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.MegamodelRoot#getPackage()
-	 * @see #getMegamodelRoot()
-	 * @generated
-	 */
-	EReference getMegamodelRoot_Package();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.MegamodelRoot#getElements <em>Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -670,25 +622,15 @@ public interface K3slePackage extends EPackage {
 	EReference getMegamodelRoot_Imports();
 
 	/**
-	 * Returns the meta object for class '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl <em>Package Decl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Package Decl</em>'.
-	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl
-	 * @generated
-	 */
-	EClass getPackageDecl();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.MegamodelRoot#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.PackageDecl#getName()
-	 * @see #getPackageDecl()
+	 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.MegamodelRoot#getName()
+	 * @see #getMegamodelRoot()
 	 * @generated
 	 */
-	EAttribute getPackageDecl_Name();
+	EAttribute getMegamodelRoot_Name();
 
 	/**
 	 * Returns the meta object for class '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.Element <em>Element</em>}'.
@@ -1077,14 +1019,6 @@ public interface K3slePackage extends EPackage {
 		EClass MEGAMODEL_ROOT = eINSTANCE.getMegamodelRoot();
 
 		/**
-		 * The meta object literal for the '<em><b>Package</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MEGAMODEL_ROOT__PACKAGE = eINSTANCE.getMegamodelRoot_Package();
-
-		/**
 		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1101,22 +1035,12 @@ public interface K3slePackage extends EPackage {
 		EReference MEGAMODEL_ROOT__IMPORTS = eINSTANCE.getMegamodelRoot_Imports();
 
 		/**
-		 * The meta object literal for the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.PackageDeclImpl <em>Package Decl</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.PackageDeclImpl
-		 * @see fr.inria.diverse.k3.sle.metamodel.k3sle.impl.K3slePackageImpl#getPackageDecl()
-		 * @generated
-		 */
-		EClass PACKAGE_DECL = eINSTANCE.getPackageDecl();
-
-		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PACKAGE_DECL__NAME = eINSTANCE.getPackageDecl_Name();
+		EAttribute MEGAMODEL_ROOT__NAME = eINSTANCE.getMegamodelRoot_Name();
 
 		/**
 		 * The meta object literal for the '{@link fr.inria.diverse.k3.sle.metamodel.k3sle.impl.ElementImpl <em>Element</em>}' class.
