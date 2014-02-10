@@ -15,6 +15,7 @@
 		<module>../fr.inria.diverse.k3.sle.ui</module>
 		<module>../fr.inria.diverse.k3.sle.tests</module>
 		<module>../fr.inria.diverse.k3.sle.sdk</module>
+		<module>../fr.inria.diverse.k3.sle.p2updatesite</module>
 	</modules>
 
 	<properties>
