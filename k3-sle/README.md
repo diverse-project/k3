@@ -20,4 +20,6 @@ TODO
 * Support metamodels making use of external references
 * ~~Allow import of Ecore for modeltype definition~~
 * Automatically merge different Ecore inherited and/or imported
+* Write static semantic constraints on the abstract syntax
+* Manage annotations on Ecore file to specify which elements need to be exposed by the interface
 
