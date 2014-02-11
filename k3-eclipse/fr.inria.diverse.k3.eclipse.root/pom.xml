@@ -25,6 +25,15 @@
 
 
 	<repositories>
+	
+		
+		<repository>
+			<id>k3sle_continuous_integration</id>
+			<url>https://ci.inria.fr/k3al/job/fr.inria.diverse.k3.sle.root/lastSuccessfulBuild/artifact/k3-sle/fr.inria.diverse.k3.sle.p2updatesite/target/site/</url>
+			<layout>p2</layout>
+		</repository>
+		
+		
 		<repository>
 			<id>kepler</id>
 			<url>${kepler-repo.url}</url>
