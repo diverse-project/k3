@@ -1,6 +1,20 @@
-k3
+K3
 ==
-This project is a DSL on top of XTEND to work "à la" Kermeta. 
+K3 is an environment for executable metamodeling and DSL engineering. It is composed of two main parts: K3AL and K3SLE
+K3AL is a DSL on top of XTEND that works "à la" Kermeta 1.x / Kermeta 2.x. Is is mainly used as an action language for model element manipulation (modeling in the small).
+K3SLE is a set of features dedicated to manipulate models (modeling in the large). It contains a modeltype system.
+
+Git and projet structure
+------------------------
+The git uses 2 main branches: *production_stable* for releases and demo versions, and *master* for development and integration.
+
+Root folders with name *-eclipse contains eclipse based project that can be built directly in eclipse or using maven+tycho.
+Other root folders contains pure maven projects.
+All root folders contains a *.root project that allow to build all the projects of the folder in one maven command.
+
+K3AL
+----
+This project is a DSL on top of XTEND to work "à la" Kermeta. It is general enough to be used in more situation that just model manipulation programs.
 
 Please use the exampleXtendSnapSHot
 
@@ -19,20 +33,23 @@ Among these examples:
 * Example of Aspect that overrides Base method Works when we remain in Xtend (Using ReplaceAspectMethod annotation)
 * Example with GWT
 
-TODO
+### TODO
 * Aspects and Design by contract
 * Pretty printer from k2 to k3
 * Example of Aspect that overrides Base method Works when we leave Xtend (the case of EMF)
 * Documentation to explain _self on aspects (even for static method or static attributes. 
 * Example of an Xtend program  that works on a xtend program
 
-Kown bugs
-...
+
+### Tools provided with K3AL
+* Aspect generator for an ecore metamodel
+* maven archetype
 
 
-Ongoing works
-* Aspect generator for an ecore metamodel (Vincent)
 
-
+K3SLE
+-----
+K3SLE is modeltype system dedicated to manipulate models (modeling in the large). It allows to useconformance of models in order to apply transformation to models that may not be of the same exact metamodel.
+... See the recent papers and Jim Steel's phd thesis.
 
 
