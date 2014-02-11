@@ -5,7 +5,6 @@ import java.util.List
 interface IModelType
 {
 	def List<Object> getContents()
-	def IFactory getFactory()
 }
 
 interface IFactory
