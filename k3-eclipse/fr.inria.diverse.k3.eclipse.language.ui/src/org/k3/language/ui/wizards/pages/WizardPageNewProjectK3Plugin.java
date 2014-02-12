@@ -56,18 +56,23 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected Button 		btnCreateEmfProject;
 	protected Button 		btnCheckLocation;
 	protected Button 		btnCheckEcore;
-	protected Button 		btnStandAlone;
-	protected Button 		btnPlugIn;
-	protected Button 		btnMaven;
+	protected Button 		btnCheckSLE;
+	protected Button 		btnCheckEMF;
+	protected Button 		btnCheckKMF;
+	protected Button 		btnRadioStandAlone;
+	protected Button 		btnRadioPlugIn;
+	protected Button 		btnRadioMaven;
 	protected Combo 		combo;
+	protected Group 		grpGeneral;
 	protected Group 		grpKindOfProject;
-	protected Group 		grpFeatures;
+	protected Group 		grpModelingOptions;
+	protected Group 		grpSLEOptions;
 
 	public WizardPageNewProjectK3Plugin(Context context){
 		super("wizardPage");
 		this.context = context;
-		setTitle("New Kermeta project");
-		setDescription("This wizard creates a new kermeta project");
+		setTitle("New Kermeta 3 project");
+		setDescription("This wizard creates a new kermeta 3 project");
 		this.errorMessage =  new ErrorMessage[2];
 		this.errorMessage[0] = new ErrorMessage("A project with this name already exist.", false);
 		this.errorMessage[1] = new ErrorMessage("There is not ecore file selected.", false);
@@ -79,8 +84,8 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	 */
 	public WizardPageNewProjectK3Plugin(ISelection selection) {
 		super("wizardPage");
-		setTitle("New Kermeta project");
-		setDescription("This wizard creates a new kermeta project");
+		setTitle("New Kermeta 3 project");
+		setDescription("This wizard creates a new kermeta 3 project");
 	}
 
 	@Override
@@ -88,55 +93,22 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
 		
+		
 		//-----------------------------------------------
+		grpGeneral = new Group(container, SWT.NONE);
+		grpGeneral.setText("General");
+		grpGeneral.setLayout(new GridLayout(4, false));
 
-		grpKindOfProject = new Group(container, SWT.NONE);
-		grpKindOfProject.setText("Kinds of project");
-		grpKindOfProject.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		btnStandAlone = new Button(grpKindOfProject, SWT.RADIO);
-		btnStandAlone.setText("Stand alone");
-		btnStandAlone.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.STANDALONE);
-			}
-		});
-		
-		btnPlugIn = new Button(grpKindOfProject, SWT.RADIO);
-		btnPlugIn.setText("Plug-in");
-		btnPlugIn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.PLUGIN);
-			}
-		});
-		
-		btnMaven = new Button(grpKindOfProject, SWT.RADIO);
-		btnMaven.setText("Maven");
-		btnMaven.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.MAVEN);
-			}
-		});
-
-		//-----------------------------------------------
-		
-		grpFeatures = new Group(container, SWT.NONE);
-		grpFeatures.setText("Features");
-		grpFeatures.setLayout(new GridLayout(4, false));
-
-		lblProjectName = new Label(grpFeatures, SWT.NONE);
+		lblProjectName = new Label(grpGeneral, SWT.NONE);
 		lblProjectName.setText("project name ");
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 		
-		txtProjectName = new Text(grpFeatures, SWT.BORDER);
+		txtProjectName = new Text(grpGeneral, SWT.BORDER);
 		txtProjectName.setText(this.context.nameProject);
 		txtProjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 				
 		txtProjectName.addModifyListener(new ModifyListener() {
 			@Override
@@ -153,12 +125,12 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		btnCheckLocation = new Button(grpFeatures, SWT.CHECK);
+		btnCheckLocation = new Button(grpGeneral, SWT.CHECK);
 		btnCheckLocation.setText("use default location");
 		btnCheckLocation.setSelection(true);
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 		
 		btnCheckLocation.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -173,14 +145,11 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 				} 
 			}
 		});
-		
-		//-----------------------------------------------
-
-		txtProjectLocation = new Text(grpFeatures, SWT.BORDER);
+		txtProjectLocation = new Text(grpGeneral, SWT.BORDER);
 		txtProjectLocation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		txtProjectLocation.setText(this.context.locationProject);
 		
-		btnBrowseLocation = new Button(grpFeatures, SWT.NONE);
+		btnBrowseLocation = new Button(grpGeneral, SWT.NONE);
 		btnBrowseLocation.setText("Browse...");
 		
 		btnBrowseLocation.addSelectionListener(new SelectionAdapter() {
@@ -192,11 +161,70 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		
 		//-----------------------------------------------
 
-		btnCheckEcore = new Button(grpFeatures, SWT.CHECK);
+		grpKindOfProject = new Group(container, SWT.NONE);
+		grpKindOfProject.setText("Dependency management / Project kind");
+		grpKindOfProject.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		btnRadioStandAlone = new Button(grpKindOfProject, SWT.RADIO);
+		btnRadioStandAlone.setText("Stand alone");
+		btnRadioStandAlone.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateKindsOfProject(Context.KindsOfProject.STANDALONE);
+			}
+		});
+		
+		btnRadioPlugIn = new Button(grpKindOfProject, SWT.RADIO);
+		btnRadioPlugIn.setText("Plug-in");
+		btnRadioPlugIn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateKindsOfProject(Context.KindsOfProject.PLUGIN);
+			}
+		});
+		
+		btnRadioMaven = new Button(grpKindOfProject, SWT.RADIO);
+		btnRadioMaven.setText("Maven");
+		btnRadioMaven.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateKindsOfProject(Context.KindsOfProject.MAVEN);
+			}
+		});
+
+		
+		
+		//-----------------------------------------------
+		grpModelingOptions = new Group(container, SWT.NONE);
+		grpModelingOptions.setText("Modeling options");
+		grpModelingOptions.setLayout(new GridLayout(4, false));
+		
+		btnCheckEMF = new Button(grpModelingOptions, SWT.CHECK);
+		btnCheckEMF.setText("Use EMF");
+		btnCheckEMF.setSelection(context.useEMF);
+		btnCheckEMF.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateUseEMF(btnCheckEMF.getSelection()); 
+			}
+		});
+		btnCheckKMF = new Button(grpModelingOptions, SWT.CHECK);
+		btnCheckKMF.setText("Use KMF");
+		btnCheckKMF.setSelection(context.useKMF);
+		btnCheckKMF.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateUseKMF(btnCheckKMF.getSelection()); 
+			}
+		});
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		
+		btnCheckEcore = new Button(grpModelingOptions, SWT.CHECK);
 		btnCheckEcore.setText("referencing an existing ecore file");
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
 		
 		btnCheckEcore.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -228,10 +256,10 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		txtPathEcore = new Text(grpFeatures, SWT.READ_ONLY | SWT.BORDER);
+		txtPathEcore = new Text(grpModelingOptions, SWT.READ_ONLY | SWT.BORDER);
 		txtPathEcore.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
-		btnBrowseEcore = new Button(grpFeatures, SWT.NONE);
+		btnBrowseEcore = new Button(grpModelingOptions, SWT.NONE);
 		btnBrowseEcore.setBounds(349, 137, 75, 25);
 		btnBrowseEcore.setText("Browse...");
 		
@@ -244,11 +272,11 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		btnCreateEmfProject = new Button(grpFeatures, SWT.CHECK);
+		btnCreateEmfProject = new Button(grpModelingOptions, SWT.CHECK);
 		btnCreateEmfProject.setText("Create EMF project Linked to selected ecore file");
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
 		
 		btnCreateEmfProject.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -257,16 +285,16 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		lblTemplateEcore = new Label(grpFeatures, SWT.NONE);
+		lblTemplateEcore = new Label(grpModelingOptions, SWT.NONE);
 		lblTemplateEcore.setText("use template on ecore file");
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
 		
-		combo = new Combo(grpFeatures, SWT.NONE);
+		combo = new Combo(grpModelingOptions, SWT.NONE);
 		combo.setItems(new String[] {"None", "Aspect class from ecore file", "Customize"});
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		new Label(grpFeatures, SWT.NONE);
+		new Label(grpModelingOptions, SWT.NONE);
 		combo.select(0);
 		
 		combo.addSelectionListener(new SelectionAdapter() {
@@ -281,6 +309,21 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
+		
+		//-----------------------------------------------
+		grpSLEOptions = new Group(container, SWT.NONE);
+		grpSLEOptions.setText("SLE options");
+		grpSLEOptions.setLayout(new GridLayout(4, false));
+		
+		btnCheckSLE = new Button(grpSLEOptions, SWT.CHECK);
+		btnCheckSLE.setText("Use SLE modeltype system");
+		btnCheckSLE.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateUseSLE(btnCheckSLE.getSelection()); 
+			}
+		});
+		
 		//-----------------------------------------------
 		
 		//initialization of enabled state of controls
@@ -291,7 +334,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		lblTemplateEcore.setEnabled(false);
 		btnCreateEmfProject.setEnabled(false);
 		combo.setEnabled(false);
-		btnStandAlone.setSelection(true);
+		btnRadioStandAlone.setSelection(true);
 		
 		//analysis of the existing of the project name
 		if (existNameProject()) {
@@ -388,6 +431,20 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	
 	protected void updateEcoreProject (boolean bState) {
 		this.context.ecoreProject = bState;
+	}
+	protected void updateUseEMF (boolean bState) {
+		this.context.useEMF = bState;
+		btnCheckEMF.setSelection(bState);
+		btnCheckSLE.setEnabled(bState);
+	}
+	protected void updateUseKMF (boolean bState) {
+		this.context.useKMF = bState;
+		btnCheckKMF.setSelection(bState);
+	}
+	protected void updateUseSLE (boolean bState) {
+		this.context.useSLE = bState;
+		btnCheckSLE.setSelection(bState);
+		//grpSLEOptions.setEnabled(bState);
 	}
 	
 	protected void updateCreateEMFProject(Boolean bVal) {

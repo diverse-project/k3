@@ -73,7 +73,6 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 						createFolder("src/" + getContextNamePackage(), project, monitor);
 						createDefaultKmt(project, monitor);
 					}
-					FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.eclipse.language.ui","zips/resources.zip"));
 					configureProject(project, monitor);
 					//setClassPath(project, monitor);
 					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -87,6 +86,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		}
 		return true;
 	}
+	
 	
 	@Override
 	public boolean isHelpAvailable() {
@@ -126,13 +126,14 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			switch (this.context.kindsOfProject)
 			{
 			case STANDALONE :
+				FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.eclipse.language.ui","zips/resources.zip"));				
 				classpath = new ManageClasspathStandAlone();
 				classpath.setClasspath(project, monitor);
 				break;
 			case PLUGIN :
 				classpath = new ManageClasspathPlugin();
 				addNature(description, "org.eclipse.pde.PluginNature");
-				configurePlugIn(project, monitor);
+				configurePluginProject(project, monitor);
 				classpath.setClasspath(project, monitor);
 				break;
 			case MAVEN :
@@ -148,7 +149,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		}
 	}
 	
-	private void configurePlugIn (IProject project, IProgressMonitor monitor) {
+	private void configurePluginProject (IProject project, IProgressMonitor monitor) {
 		try {
 			createManifestFile(project, monitor);
 			createPlugInFile(project, monitor);
@@ -284,7 +285,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				createFolder("model/", project, monitor);
 				createEcoreFile(project, monitor);
 				new GenerateGenModelCode().createGenModel(this.context.ecoreIFile.getLocation().toString(), this.context.ecoreIFile.getName() +".metamodel");
-				configurePlugIn(project, null);
+				configurePluginProject(project, null);
 				try {
 					createMavenFile(project, monitor, true);
 				} catch (Exception e) {

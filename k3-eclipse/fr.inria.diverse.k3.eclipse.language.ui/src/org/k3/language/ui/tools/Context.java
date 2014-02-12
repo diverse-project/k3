@@ -24,6 +24,9 @@ public class Context {
 	public String 			operationReturnType;
 	public Integer			indexTransfomation;
 	public KindsOfProject 	kindsOfProject;
+	public boolean			useEMF = true;
+	public boolean			useKMF = false;
+	public boolean			useSLE = false;
 	
 	public List<String> listNewClass;
 	public List<String> operationParams; 

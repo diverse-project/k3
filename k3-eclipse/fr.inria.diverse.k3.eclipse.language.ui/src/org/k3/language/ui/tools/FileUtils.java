@@ -180,9 +180,9 @@ public class FileUtils {
 		buffer.append("\t\t\t<version>${xtend.version}</version>\n");
 		buffer.append("\t\t</dependency>\n");
 		buffer.append("\t\t<dependency>\n");
-		buffer.append("\t\t\t<groupId>fr.inria.triskell</groupId>\n");
-		buffer.append("\t\t\t<artifactId>k3</artifactId>\n");
-		buffer.append("\t\t\t<version>3.0-SNAPSHOT</version>\n");
+		buffer.append("\t\t\t<groupId>fr.inria.diverse.k3</groupId>\n");
+		buffer.append("\t\t\t<artifactId>fr.inria.diverse.k3.core</artifactId>\n");
+		buffer.append("\t\t\t<version>3.0.0-SNAPSHOT</version>\n");
 		buffer.append("\t\t</dependency>\n");
 		buffer.append("\t\t<dependency>\n");
 		buffer.append("\t\t\t<groupId>org.eclipse.emf</groupId>\n");

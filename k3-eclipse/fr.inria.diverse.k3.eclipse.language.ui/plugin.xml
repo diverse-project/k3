@@ -33,7 +33,7 @@
             class="org.k3.language.ui.wizards.WizardNewProjectK3Plugin"
             icon="icons/new_kermeta_project.gif"
             id="org.k3.language.ui.wizards.WizardNewProjectK3Plugin"
-            name="K3AL Project"
+            name="K3 Project"
             project="true">
       </wizard>
       <category
