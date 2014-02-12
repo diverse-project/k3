@@ -11,6 +11,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/fr.inria.diverse.k3.core-3.0-SNAPSHOT.jar
+ lib/fr.inria.diverse.k3.core-3.0.0-SNAPSHOT.jar
 Export-Package: fr.inria.triskell.k3,
  org.k3.core.plugin

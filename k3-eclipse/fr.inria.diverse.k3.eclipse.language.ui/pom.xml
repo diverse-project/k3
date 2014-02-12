@@ -33,7 +33,7 @@
 									<version>3.0.0-SNAPSHOT</version>
 									<outputDirectory>lib</outputDirectory>
 								</artifactItem>
-								<artifactItem>
+								<!-- <artifactItem>
 									<groupId>fr.inria.diverse.k3</groupId>
 									<artifactId>fr.inria.diverse.k3.core</artifactId>
 									<version>3.0.0-SNAPSHOT</version>
@@ -50,7 +50,7 @@
 									<artifactId>org.eclipse.xtext.xbase.lib</artifactId>
 									<version>${xtend.version}</version>
 									<outputDirectory>library</outputDirectory>
-								</artifactItem>
+								</artifactItem>-->
 
 							</artifactItems>
 						</configuration>

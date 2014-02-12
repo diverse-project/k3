@@ -18,6 +18,7 @@
 				<version>2.4</version>
 				<executions>
 					<!-- manually copy features -->
+					<!-- be careful to also update the manifest accordingly -->
 					<execution>
 						<id>copy</id>
 						<phase>generate-sources</phase>

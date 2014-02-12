@@ -29,16 +29,16 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
-            category="org.k3.language.ui"
+            category="fr.inria.diverse.k3.category"
             class="org.k3.language.ui.wizards.WizardNewProjectK3Plugin"
             icon="icons/new_kermeta_project.gif"
             id="org.k3.language.ui.wizards.WizardNewProjectK3Plugin"
-            name="Kermeta3 Project"
+            name="K3AL Project"
             project="true">
       </wizard>
       <category
-            id="org.k3.language.ui"
-            name="Kermeta">
+            id="fr.inria.diverse.k3.category"
+            name="Kermeta 3">
       </category>
    </extension>
 
