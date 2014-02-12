@@ -265,20 +265,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 				'''
 			]
 
-			members += mm.toMethod("load", newTypeRef(IModelType)) [
-				^static = true
-
-				parameters += mm.toParameter("uri", newTypeRef(String))
-				parameters += mm.toParameter("type", mm.newTypeRef(Class, paramT))
-
-				body = '''
-					org.eclipse.emf.ecore.resource.ResourceSet resSet = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl() ;
-					org.eclipse.emf.ecore.resource.Resource res = resSet.getResource(org.eclipse.emf.common.util.URI.createURI(uri), true) ;
-
-					return new «mm.fullyQualifiedName.normalize.toString»(res, type) ;
-				'''
-			]
-
 			members += mm.toMethod("getContents", newTypeRef(List, newTypeRef(Object)))[
 				body = '''
 					java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;

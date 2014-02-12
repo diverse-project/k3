@@ -38,18 +38,29 @@ class SimpleParsingTest {
 		root = '''
 		package foo
 
-		metamodel A {
+		import static extension fr.inria.diverse.k3.sle.lib.MetamodelExtensions.*
+
+		metamodel Fsm {
 			ecore "tests-inputs/FSM.ecore" with genmodel "tests-inputs/FSM.genmodel"
 		}
 
-		metamodel B {
+		metamodel TimedFsm {
 			ecore "tests-inputs/TimedFSM.ecore" with genmodel "tests-inputs/TimedFSM.genmodel"
 		}
 
-		modeltype MTA extract A {}
-		modeltype MTB extract B {}
+		modeltype FsmMT extract Fsm {}
+		modeltype TimedFsmMT extract TimedFsm {}
 
-		transformation bar(MTA o) {}
+		transformation bar(FsmMT m) {
+
+		}
+
+		@Main
+		transformation main() {
+			val fsm   =      Fsm.load("Simple.fsm",      FsmMT)
+			val tfsm  = TimedFsm.load("Simple.timedfsm", FsmMT)
+			val tfsm2 = TimedFsm.load("Simple.timedfsm", TimedFsmMT)
+		}
 		'''.parse
 	}
 
@@ -61,64 +72,75 @@ class SimpleParsingTest {
 	@Test
 	def testStructure() {
 		assertEquals(root.name, "foo")
-		assertNull(root.imports)
+		assertNotNull(root.imports)
 
 		assertTrue(root.elements.get(0) instanceof Metamodel)
 		assertTrue(root.elements.get(1) instanceof Metamodel)
 		assertTrue(root.elements.get(2) instanceof ModelType)
 		assertTrue(root.elements.get(3) instanceof ModelType)
 		assertTrue(root.elements.get(4) instanceof Transformation)
+		assertTrue(root.elements.get(5) instanceof Transformation)
 
-		assertEquals(a.name, "A")
-		assertEquals(b.name, "B")
-		assertEquals(mta.name, "MTA")
-		assertEquals(mtb.name, "MTB")
-		assertEquals(bar.name, "bar")
+		assertEquals(fsm.name,    "Fsm")
+		assertEquals(tfsm.name,   "TimedFsm")
+		assertEquals(fsmmt.name,  "FsmMT")
+		assertEquals(tfsmmt.name, "TimedFsmMT")
+		assertEquals(bar.name,    "bar")
+		assertEquals(main.name,   "main")
 	}
 
 	@Test
 	def testRelations() {
 		// No exact type ATM
-		assertEquals(mta.extracted, a)
-		assertEquals(mtb.extracted, b)
+		assertEquals(fsmmt.extracted,  fsm)
+		assertEquals(tfsmmt.extracted, tfsm)
 	}
 
 	@Test
 	def testImplements() {
-		assertEquals(a.^implements.size, 1)
-		assertEquals(b.^implements.size, 2)
+		assertEquals(fsm.^implements.size, 1)
+		assertEquals(tfsm.^implements.size, 2)
 
-		assertTrue(a.^implements.contains(mta))
-		assertTrue(b.^implements.contains(mta))
-		assertTrue(b.^implements.contains(mtb))
+		assertTrue(fsm.^implements.contains(fsmmt))
+		assertTrue(tfsm.^implements.contains(fsmmt))
+		assertTrue(tfsm.^implements.contains(tfsmmt))
 	}
 
 	@Test
 	def testInheritance() {
-		assertNull(a.inheritanceRelation)
-		assertNull(b.inheritanceRelation)
+		assertNull(fsm.inheritanceRelation)
+		assertNull(tfsm.inheritanceRelation)
 	}
 
 	@Test
 	def testSubtyping() {
-		assertEquals(mta.subtypingRelations.size, 0)
-		assertEquals(mtb.subtypingRelations.size, 1)
-		assertEquals(mtb.subtypingRelations.head.subType, mtb)
-		assertEquals(mtb.subtypingRelations.head.superType, mta)
+		assertEquals(fsmmt.subtypingRelations.size, 0)
+		assertEquals(tfsmmt.subtypingRelations.size, 1)
+		assertEquals(tfsmmt.subtypingRelations.head.subType, tfsmmt)
+		assertEquals(tfsmmt.subtypingRelations.head.superType, fsmmt)
 	}
 
 	// Just to show how we can generate code
 	@Test
-	def void testGeneration() {
+	def testGeneration() {
 		val fsa = new InMemoryFileSystemAccess
 		generator.doGenerate(root.eResource, fsa)
 
-		assertEquals(fsa.allFiles.size, 20)
+		assertEquals(fsa.allFiles.size, 21)
+
+		// Debug output
+		fsa.allFiles.forEach[filename, content |
+			println('''
+				Generated «filename»:
+				«content»
+			''')
+		]
 	}
 
-	def getA() { root.elements.get(0) as Metamodel }
-	def getB() { root.elements.get(1) as Metamodel }
-	def getMta() { root.elements.get(2) as ModelType }
-	def getMtb() { root.elements.get(3) as ModelType }
-	def getBar() { root.elements.get(4) as Transformation }
+	def getFsm()    { root.elements.get(0) as Metamodel }
+	def getTfsm()   { root.elements.get(1) as Metamodel }
+	def getFsmmt()  { root.elements.get(2) as ModelType }
+	def getTfsmmt() { root.elements.get(3) as ModelType }
+	def getBar()    { root.elements.get(4) as Transformation }
+	def getMain()   { root.elements.get(5) as Transformation }
 }
