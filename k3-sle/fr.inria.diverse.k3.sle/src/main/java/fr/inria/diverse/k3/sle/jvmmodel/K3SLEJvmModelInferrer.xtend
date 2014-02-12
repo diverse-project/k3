@@ -74,13 +74,9 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 	def void generateAdapters(Metamodel mm, IJvmDeclaredTypeAcceptor acceptor) {
 		val pkg = mm.pkg
 
-		mgmRoot.elements.filter(ModelType)
-		.filter[mt | pkg.subtypeOf(mt.pkg)]
-		.forEach[mt |
+		mm.^implements.forEach[mt |
 			val superType = mt
 			val superPkg  = mt.pkg
-
-			mm.^implements += mt
 
 			superPkg.EClassifiers.filter(EClass).filter[instanceTypeName === null].forEach[cls |
 				val inCls = pkg.EClassifiers.filter(EClass).findFirst[it.name == cls.name]
@@ -490,6 +486,12 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 					subType = mt1
 					superType = mt2
 				]
+			]
+
+			mgmRoot.elements.filter(Metamodel)
+			.filter[mm | mm.pkg.subtypeOf(mt1.pkg)]
+			.forEach[mm |
+				mm.^implements += mt1
 			]
 		]
 	}
