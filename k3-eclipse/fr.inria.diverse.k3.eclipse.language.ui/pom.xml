@@ -27,36 +27,86 @@
 						</goals>
 						<configuration>
 							<artifactItems>
+							<!-- lib is for internally used jar -->
 								<artifactItem>
 									<groupId>fr.inria.diverse.k3.tools</groupId>
 									<artifactId>fr.inria.diverse.k3.tools.aspectGenerator</artifactId>
-									<version>3.0.0-SNAPSHOT</version>
+									<version>${project.version}</version>
 									<outputDirectory>lib</outputDirectory>
 								</artifactItem>
-								<!-- <artifactItem>
+							<!-- libraries is for jar needing to be deployed in standalone projects -->
+								<artifactItem>
 									<groupId>fr.inria.diverse.k3</groupId>
 									<artifactId>fr.inria.diverse.k3.core</artifactId>
-									<version>3.0.0-SNAPSHOT</version>
-									<outputDirectory>library</outputDirectory>
+									<version>${project.version}</version>
+									<outputDirectory>${project.basedir}/target/libraries/k3/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.eclipse.xtend</groupId>
 									<artifactId>org.eclipse.xtend.lib</artifactId>
 									<version>${xtend.version}</version>
-									<outputDirectory>library</outputDirectory>
+									<outputDirectory>${project.basedir}/target/libraries/xtend/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.eclipse.xtext</groupId>
 									<artifactId>org.eclipse.xtext.xbase.lib</artifactId>
 									<version>${xtend.version}</version>
-									<outputDirectory>library</outputDirectory>
-								</artifactItem>-->
-
+									<outputDirectory>${project.basedir}/target/libraries/xtend/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.google.guava</groupId>
+  									<artifactId>guava</artifactId>    
+    								<version>15.0</version>
+									<outputDirectory>${project.basedir}/target/libraries/xtend/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.eclipse.emf</groupId>
+									<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+									<version>2.8.0-v20120911-0500</version>
+									<outputDirectory>${project.basedir}/target/libraries/emf/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.eclipse.emf</groupId>
+									<artifactId>org.eclipse.emf.ecore</artifactId>
+									<version>2.8.0-v20120911-0500</version>
+									<outputDirectory>${project.basedir}/target/libraries/emf/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.eclipse.emf</groupId>
+									<artifactId>org.eclipse.emf.common</artifactId>
+									<version>2.8.0-v20120911-0500</version>
+									<outputDirectory>${project.basedir}/target/libraries/emf/lib</outputDirectory>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<!-- Using an ant task to zip dependencies -->
+								<mkdir dir="${project.basedir}/zips"/>
+						        <zip basedir="${project.basedir}/target/libraries/k3" 
+						             destfile="${project.basedir}/zips/k3.zip"/>
+						        <zip basedir="${project.basedir}/target/libraries/xtend" 
+					               destfile="${project.basedir}/zips/xtend.zip"/>
+						        <zip basedir="${project.basedir}/target/libraries/emf" 
+					               destfile="${project.basedir}/zips/emf.zip"/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -82,6 +132,25 @@
 										</versionRange>
 										<goals>
 											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.3,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
