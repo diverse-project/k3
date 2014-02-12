@@ -361,6 +361,7 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 		acceptor.accept(mt.toInterface(mt.fullyQualifiedName.normalize.toString, []))
 		.initializeLater[
 			superTypes += newTypeRef(IModelType)
+			mt.subtypingRelations.forEach[rel | superTypes += newTypeRef(rel.superType.fullyQualifiedName.normalize.toString)]
 
 			members += mt.toMethod("getContents", newTypeRef(List, newTypeRef(Object)))[
 				abstract = true
