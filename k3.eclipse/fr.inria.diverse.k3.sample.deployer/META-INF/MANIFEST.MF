@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: K3 sample deployer
 Bundle-SymbolicName: fr.inria.diverse.k3.sample.deployer;singleton:=true
 Bundle-Version: 3.0.0.qualifier
-Bundle-Activator: org.kermeta.language.sample.deployer.Activator
+Bundle-Activator: fr.inria.diverse.k3.sample.deployer.Activator
 Bundle-Vendor: IRISA/INRIA
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

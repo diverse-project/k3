@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Project
 Bundle-SymbolicName: fr.inria.diverse.k3.ui;singleton:=true
 Bundle-Version: 3.0.0.qualifier
-Bundle-Activator: org.k3.language.ui.Activator
+Bundle-Activator: fr.inria.diverse.k3.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.codegen.ecore,
- fr.inria.diverse.k3.eclipse.core.plugin
+ fr.inria.diverse.k3.al.annotationprocessor.plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.core.resources,
@@ -21,6 +21,6 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.pde.internal.ui.wizards.tools
 Bundle-ClassPath: .,
  lib/fr.inria.diverse.k3.tools.aspectGenerator-3.0.0-SNAPSHOT.jar
-Export-Package: org.k3.language.ui,
- org.k3.language.ui.wizards,
- org.k3.language.ui.wizards.pages
+Export-Package: fr.inria.diverse.k3.ui,
+ fr.inria.diverse.k3.ui.wizards,
+ fr.inria.diverse.k3.ui.wizards.pages

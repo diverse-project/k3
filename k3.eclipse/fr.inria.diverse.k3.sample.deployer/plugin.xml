@@ -13,7 +13,7 @@
       <wizard
             canFinishEarly="true"
             category="org.eclipse.ui.Examples/org.k3.language.samples.category"
-            class="org.kermeta.language.sample.deployer.wizards.K3ExampleWizard"
+            class="fr.inria.diverse.k3.sample.deployer.wizards.K3ExampleWizard"
             hasPages="false"
             icon="icons/newkermetafile.png"
             id="org.k3.language.samples.wizard"
@@ -26,7 +26,7 @@
       <wizard
             canFinishEarly="true"
             category="org.eclipse.ui.Examples/org.k3.language.samples.category"
-            class="org.kermeta.language.sample.deployer.wizards.K3LogoExampleWizard"
+            class="fr.inria.diverse.k3.sample.deployer.wizards.K3LogoExampleWizard"
             hasPages="false"
             icon="icons/newkermetafile.png"
             id="org.k3.language.samples.wizard.logo"
@@ -39,7 +39,7 @@
       <wizard
             canFinishEarly="true"
             category="org.eclipse.ui.Examples/org.k3.language.samples.category"
-            class="org.kermeta.language.sample.deployer.wizards.K3fsmExampleWizard"
+            class="fr.inria.diverse.k3.sample.deployer.wizards.K3fsmExampleWizard"
             hasPages="false"
             icon="icons/newkermetafile.png"
             id="org.k3.language.samples.wizard.fsm"
