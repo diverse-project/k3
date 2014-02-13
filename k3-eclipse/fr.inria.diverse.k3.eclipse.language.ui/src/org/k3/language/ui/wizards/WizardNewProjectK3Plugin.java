@@ -130,7 +130,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.eclipse.language.ui","zips/xtend.zip"));
 				if(context.useEMF)
 					FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.eclipse.language.ui","zips/emf.zip"));				
-				classpath = new ManageClasspathStandAlone();
+				classpath = new ManageClasspathStandAlone("lib");
 				classpath.setClasspath(project, monitor);
 				break;
 			case PLUGIN :
