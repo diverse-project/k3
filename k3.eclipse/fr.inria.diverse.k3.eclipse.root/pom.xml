@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.inria.diverse.k3.eclipse</groupId>
+	<groupId>fr.inria.diverse.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -10,7 +10,7 @@
 		<module>../fr.inria.diverse.k3.ui</module>
 		<module>../fr.inria.diverse.k3.sample.deployer</module>
 		<module>../fr.inria.diverse.k3.feature</module>
-		<module>../fr.inria.diverse.k3.eclipse.p2updatesite</module>
+		<module>../fr.inria.diverse.k3.p2updatesite</module>
 	</modules>
 
 
@@ -26,13 +26,17 @@
 
 	<repositories>
 	
-		
+		<!-- Repositories for Tycho -->
 		<repository>
-			<id>k3sle_continuous_integration</id>
-			<url>https://ci.inria.fr/k3al/job/fr.inria.diverse.k3.sle.root/lastSuccessfulBuild/artifact/k3-sle/fr.inria.diverse.k3.sle.p2updatesite/target/site/</url>
+			<id>k3-al.eclipse_continuous_integration</id>
+			<url>https://ci.inria.fr/k3al/job/k3-al.eclipse/lastSuccessfulBuild/artifact/k3-al.eclipse/fr.inria.diverse.k3.al.p2updatesite/target/site/</url>
 			<layout>p2</layout>
 		</repository>
-		
+		<repository>
+			<id>k3-sle.eclipse_continuous_integration</id>
+			<url>https://ci.inria.fr/k3al/job/k3-sle.eclipse/lastSuccessfulBuild/artifact/k3-sle.eclipse/fr.inria.diverse.k3.sle.p2updatesite/target/site/</url>
+			<layout>p2</layout>
+		</repository>
 		
 		<repository>
 			<id>kepler</id>
@@ -45,6 +49,17 @@
 			<layout>p2</layout>
 		</repository>
 
+		<!-- repository for pure maven artefacts -->
+		<repository>
+		     <id>mavenInriaSnapshot</id>
+		     <name>http://maven.inria.fr-snapshots</name>
+		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
+		 </repository>
+		<repository>
+		     <id>mavenInriaRelease</id>
+		     <name>http://maven.inria.fr-releases</name>
+		     <url>http://maven.inria.fr/artifactory/public-release</url>
+		 </repository>
 	</repositories>
 
 	<pluginRepositories>

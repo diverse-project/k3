@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: K3 sample deployer
-Bundle-SymbolicName: fr.inria.diverse.k3.eclipse.sample.deployer;singleton:=true
+Bundle-SymbolicName: fr.inria.diverse.k3.sample.deployer;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.kermeta.language.sample.deployer.Activator
 Bundle-Vendor: IRISA/INRIA
