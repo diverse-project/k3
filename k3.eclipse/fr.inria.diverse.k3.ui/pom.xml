@@ -9,7 +9,7 @@
 		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>fr.inria.diverse.k3.eclipse.language.ui</artifactId>
+	<artifactId>fr.inria.diverse.k3.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<build>
 		<plugins>
