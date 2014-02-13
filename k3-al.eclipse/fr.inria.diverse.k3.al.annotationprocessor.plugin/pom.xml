@@ -7,7 +7,7 @@
 		<artifactId>fr.inria.diverse.k3.al.eclipse.root</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-  	<artifactId>fr.inria.diverse.k3.eclipse.core.plugin</artifactId>
+  	<artifactId>fr.inria.diverse.k3.al.annotationprocessor.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
   	
 	<build>
@@ -28,8 +28,8 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>fr.inria.diverse.k3</groupId>
-									<artifactId>fr.inria.diverse.k3.core</artifactId>
+									<groupId>fr.inria.diverse.k3.al</groupId>
+									<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
 									<version>3.0.0-SNAPSHOT</version>
 									<outputDirectory>lib</outputDirectory>
 								</artifactItem>

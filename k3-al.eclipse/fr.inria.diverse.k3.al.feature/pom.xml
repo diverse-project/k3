@@ -4,11 +4,11 @@
 
   <parent>
 		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
-		<groupId>fr.inria.diverse.k3.eclipse</groupId>
-		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
+		<groupId>fr.inria.diverse.k3.al</groupId>
+		<artifactId>fr.inria.diverse.k3.al.eclipse.root</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-  <artifactId>fr.inria.diverse.k3.eclipse.feature</artifactId>
+  <artifactId>fr.inria.diverse.k3.al.feature</artifactId>
   <packaging>eclipse-feature</packaging>
 </project> 
 
