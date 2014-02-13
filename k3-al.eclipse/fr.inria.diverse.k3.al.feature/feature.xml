@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="fr.inria.diverse.k3.eclipse.feature"
+      id="fr.inria.diverse.k3.al.feature"
       label="K3 feature"
       version="3.0.0.qualifier">
 
@@ -17,24 +17,11 @@
    </license>
 
    <plugin
-         id="fr.inria.diverse.k3.eclipse.language.ui"
+         id="fr.inria.diverse.k3.al.annotationprocessor.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="fr.inria.diverse.k3.eclipse.core.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="fr.inria.diverse.k3.eclipse.sample.deployer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

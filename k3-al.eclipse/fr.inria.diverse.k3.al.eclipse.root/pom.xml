@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.inria.diverse.k3.eclipse</groupId>
-	<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
+	<groupId>fr.inria.diverse.k3.al</groupId>
+	<artifactId>fr.inria.diverse.k3.al.eclipse.root</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>../fr.inria.diverse.k3.eclipse.core.plugin</module>
-		<module>../fr.inria.diverse.k3.eclipse.language.ui</module>
-		<module>../fr.inria.diverse.k3.eclipse.sample.deployer</module>
-		<module>../fr.inria.diverse.k3.eclipse.feature</module>
-		<module>../fr.inria.diverse.k3.eclipse.p2updatesite</module>
+		<module>../fr.inria.diverse.k3.al.annotationprocessor.plugin</module>
+		<module>../fr.inria.diverse.k3.al.feature</module>
+		<module>../fr.inria.diverse.k3.al.p2updatesite</module>
 	</modules>
 
 
