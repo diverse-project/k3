@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: K3 Action Language Annotation Processor Plugin
 Bundle-SymbolicName: fr.inria.diverse.k3.al.annotationprocessor.plugin
 Bundle-Version: 3.0.0.qualifier
-Bundle-Activator: org.k3.core.plugin.Activator
+Bundle-Activator: fr.inria.diverse.k3.al.annotationprocessor.plugin.Activator
 Bundle-Vendor: INRIA
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtend.lib;bundle-version="2.4.3";visibility:=reexport,
@@ -12,5 +12,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/fr.inria.diverse.k3.al.annotationprocessor-3.0.0-SNAPSHOT.jar
-Export-Package: fr.inria.triskell.k3,
- org.k3.core.plugin
+Export-Package: fr.inria.diverse.k3.al.annotationprocessor,
+ fr.inria.diverse.k3.al.annotationprocessor.plugin

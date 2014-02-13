@@ -1,4 +1,4 @@
-package org.k3.core.plugin;
+package fr.inria.diverse.k3.al.annotationprocessor.plugin;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

@@ -1,4 +1,4 @@
-package fr.inria.triskell.k3
+package fr.inria.diverse.k3.al.annotationprocessor
 
 import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
