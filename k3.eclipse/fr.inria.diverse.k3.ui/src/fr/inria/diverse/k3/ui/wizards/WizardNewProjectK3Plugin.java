@@ -26,6 +26,7 @@ import fr.inria.diverse.k3.ui.Activator;
 import fr.inria.diverse.k3.ui.tools.Context;
 import fr.inria.diverse.k3.ui.tools.FileUtils;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
+import fr.inria.diverse.k3.ui.tools.IFolderUtils;
 import fr.inria.diverse.k3.ui.tools.ManifestChanger;
 import fr.inria.diverse.k3.ui.tools.ProjectDescriptor;
 import fr.inria.diverse.k3.ui.tools.ToolsString;
@@ -68,13 +69,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 					project.create(monitor);
 					project.open(monitor);
 					addKermetaNatureToProject(project);
-					IFile ecoreFile = context.ecoreIFile;
-					if(ecoreFile != null){
-						createProjectWithEcore(monitor);
-					} else {
-						createFolder("src/" + getContextNamePackage(), project, monitor);
-						createDefaultKmt(project, monitor);
-					}
+					
 					configureProject(project, monitor);
 					//setClassPath(project, monitor);
 					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -125,6 +120,21 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			description = project.getDescription();
 			addNature(description, "org.eclipse.jdt.core.javanature");
 			addNature(description, "org.eclipse.xtext.ui.shared.xtextNature");
+			String sourceFolderName;
+			switch(this.context.kindsOfProject){
+			case MAVEN:
+				sourceFolderName= "src/main/java/";
+				break;
+			default:
+				sourceFolderName= "src/";
+			}
+			
+			if(context.ecoreIFile != null){
+				createProjectWithEcore(monitor, sourceFolderName);
+			} else {
+				IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
+				createDefaultKmt(project, monitor, sourceFolderName);
+			}
 			switch (this.context.kindsOfProject)
 			{
 			case STANDALONE :
@@ -177,17 +187,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		System.arraycopy(natures, 0, newNatures, 0, natures.length);
 		newNatures[natures.length] = nature;
 		description.setNatureIds(newNatures);
-	}
-	
-	private void createFolder(String path, IProject project, IProgressMonitor monitor) throws CoreException {
-		String[] strings = path.split("/");
-		IContainer currentContainer = project;
-		for ( String s : strings ) {
-			IFolder folder = currentContainer.getFolder( new Path(s) );
-			folder.create(true, true, monitor);
-			currentContainer = folder;
-		}
-	}
+	}	
 	
     private void createManifestFile(IProject project, IProgressMonitor monitor) throws Exception {	
 	    IFolder metaInf = project.getFolder("META-INF");
@@ -260,8 +260,8 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		stream.close();
 	}
 		
-	private void createDefaultKmt(IProject project,IProgressMonitor monitor) throws CoreException{
-		String path = "src/" + this.context.namePackage + "/HelloEcore.xtend";
+	private void createDefaultKmt(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
+		String path = sourceFolderName + this.context.namePackage + "/HelloEcore.xtend";
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
@@ -284,7 +284,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		return context;
 	}
 	
-	public boolean createProjectWithEcore(IProgressMonitor monitor) {
+	public boolean createProjectWithEcore(IProgressMonitor monitor, String sourceFolderName) {
 		boolean returnVal = true;
 		if(this.context.bCreateEMFProject) {
 			try {
@@ -293,8 +293,8 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				project.open(monitor);
 				Boolean tabNature[] = {true,false,true,true};
 				addNatureToProject(project, tabNature);
-				createFolder("src/", project, monitor);
-				createFolder("model/", project, monitor);
+				IFolderUtils.createFolder(sourceFolderName, project, monitor);
+				IFolderUtils.createFolder("model/", project, monitor);
 				createEcoreFile(project, monitor);
 				new GenerateGenModelCode().createGenModel(this.context.ecoreIFile.getLocation().toString(), this.context.ecoreIFile.getName() +".metamodel");
 				configurePluginProject(project, null);
