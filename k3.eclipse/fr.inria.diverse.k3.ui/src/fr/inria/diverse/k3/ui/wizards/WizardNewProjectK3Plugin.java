@@ -26,6 +26,7 @@ import fr.inria.diverse.k3.ui.Activator;
 import fr.inria.diverse.k3.ui.tools.Context;
 import fr.inria.diverse.k3.ui.tools.FileUtils;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
+import fr.inria.diverse.k3.ui.tools.ManifestChanger;
 import fr.inria.diverse.k3.ui.tools.ProjectDescriptor;
 import fr.inria.diverse.k3.ui.tools.ToolsString;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspath;
@@ -156,6 +157,13 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	private void configurePluginProject (IProject project, IProgressMonitor monitor) {
 		try {
 			createManifestFile(project, monitor);
+			if(context.useEMF){
+				ManifestChanger manifestChanger = new ManifestChanger(project.getFile("META-INF/MANIFEST.MF"));
+				manifestChanger.addPluginDependency("org.eclipse.emf.ecore.xmi", "2.8.0", true, true);
+				manifestChanger.addPluginDependency("org.eclipse.emf.ecore", "2.8.0", true, true);
+				manifestChanger.addPluginDependency("org.eclipse.emf.common", "2.8.0", true, true);
+				manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
+			}
 			createPlugInFile(project, monitor);
 			createBuildProperties(project, monitor);			
 		} catch (Exception e) {

@@ -72,8 +72,8 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		setTitle("New Kermeta 3 project");
 		setDescription("This wizard creates a new kermeta 3 project");
 		this.errorMessage =  new ErrorMessage[2];
-		this.errorMessage[0] = new ErrorMessage("A project with this name already exist.", false);
-		this.errorMessage[1] = new ErrorMessage("There is not ecore file selected.", false);
+		this.errorMessage[0] = new ErrorMessage("A project with this name already exists.", false);
+		this.errorMessage[1] = new ErrorMessage("Please select an ecore file.", false);
 	}
 	
 	/**
@@ -165,6 +165,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		
 		btnRadioStandAlone = new Button(grpKindOfProject, SWT.RADIO);
 		btnRadioStandAlone.setText("Stand alone");
+		btnRadioStandAlone.setToolTipText("Standard java project. Dependencies jars will be copied and embedded.");
 		btnRadioStandAlone.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -174,6 +175,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		
 		btnRadioPlugIn = new Button(grpKindOfProject, SWT.RADIO);
 		btnRadioPlugIn.setText("Plug-in");
+		btnRadioPlugIn.setToolTipText("Eclipse plugin project, external dependencies will be specified using manifest.mf.");
 		btnRadioPlugIn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -183,6 +185,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		
 		btnRadioMaven = new Button(grpKindOfProject, SWT.RADIO);
 		btnRadioMaven.setText("Maven");
+		btnRadioMaven.setToolTipText("Standard java maven project, external dependencies will be specified using pom.xml.");
 		btnRadioMaven.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -208,6 +211,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		});
 		btnCheckKMF = new Button(grpModelingOptions, SWT.CHECK);
 		btnCheckKMF.setText("Use KMF");
+		btnCheckKMF.setEnabled(false); // not supported yet
 		btnCheckKMF.setSelection(context.useKMF);
 		btnCheckKMF.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -227,30 +231,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnCheckEcore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (btnCheckEcore.getSelection()) {
-					updateEcoreProject(true);
-					btnBrowseEcore.setEnabled(true);
-					txtPathEcore.setEnabled(true);
-					lblTemplateEcore.setEnabled(true);
-					btnCreateEmfProject.setEnabled(true);
-					combo.setEnabled(true);
-					if ( txtPathEcore.getText().isEmpty()) {
-						activErrorMessage(1, true);
-						setPageComplete(false);
-					}
-				}
-				else {
-					updateEcoreProject(false);
-					btnBrowseEcore.setEnabled(false);
-					txtPathEcore.setEnabled(false);
-					lblTemplateEcore.setEnabled(false);
-					btnCreateEmfProject.setEnabled(false);
-					combo.setEnabled(false);
-					combo.select(0);
-					updateNextButton (false);
-					setPageComplete(true);
-					activErrorMessage(1, false);
-				} 
+				updateBtnCheckEcore(); 
 			}
 		});
 		
@@ -434,6 +415,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		this.context.useEMF = bState;
 		btnCheckEMF.setSelection(bState);
 		btnCheckSLE.setEnabled(bState);
+		updateBtnCheckEcore();
 	}
 	protected void updateUseKMF (boolean bState) {
 		this.context.useKMF = bState;
@@ -452,7 +434,32 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected void updateNameProject (String nameProject) {
 		this.context.nameProject = nameProject;
 	}
-	
+	protected void updateBtnCheckEcore () {
+		if (btnCheckEcore.getSelection()) {
+			this.context.ecoreProject = true;
+			btnBrowseEcore.setEnabled(true);
+			txtPathEcore.setEnabled(true);
+			lblTemplateEcore.setEnabled(true);
+			btnCreateEmfProject.setEnabled(true);
+			combo.setEnabled(true);
+			if ( txtPathEcore.getText().isEmpty()) {
+				activErrorMessage(1, true);
+				setPageComplete(false);
+			}
+		}
+		else {
+			this.context.ecoreProject = false;
+			btnBrowseEcore.setEnabled(false);
+			txtPathEcore.setEnabled(false);
+			lblTemplateEcore.setEnabled(false);
+			btnCreateEmfProject.setEnabled(false);
+			combo.setEnabled(false);
+			combo.select(0);
+			updateNextButton (false);
+			setPageComplete(true);
+			activErrorMessage(1, false);
+		} 
+	}
 	protected void updateNextButton (boolean enable) {
 		enableNext = enable;
 		canFlipToNextPage();
