@@ -142,7 +142,7 @@ public class FileUtils {
 		buffer.append("\t<name>"+ nameProject + "</name>\n");
 		buffer.append("\t<properties>\n");
 		buffer.append("\t\t<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n");
-		buffer.append("\t\t<xtend.version>2.4.3-SNAPSHOT</xtend.version>\n");
+		buffer.append("\t\t<xtend.version>2.5.1</xtend.version>\n");
 		buffer.append("\t</properties>\n");
 		buffer.append("\t<build>\n");
 		buffer.append("\t\t<plugins>\n");
@@ -178,8 +178,8 @@ public class FileUtils {
 		buffer.append("\t\t\t<version>${xtend.version}</version>\n");
 		buffer.append("\t\t</dependency>\n");
 		buffer.append("\t\t<dependency>\n");
-		buffer.append("\t\t\t<groupId>fr.inria.diverse.k3</groupId>\n");
-		buffer.append("\t\t\t<artifactId>fr.inria.diverse.k3.core</artifactId>\n");
+		buffer.append("\t\t\t<groupId>fr.inria.diverse.k3.al</groupId>\n");
+		buffer.append("\t\t\t<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>\n");
 		buffer.append("\t\t\t<version>3.0.0-SNAPSHOT</version>\n");
 		buffer.append("\t\t</dependency>\n");
 		buffer.append("\t\t<dependency>\n");
@@ -200,16 +200,16 @@ public class FileUtils {
 		buffer.append("\t</dependencies>\n");
 		buffer.append("\t<repositories>\n");
 		buffer.append("\t\t<repository>\n");
-		buffer.append("\t\t\t<id>xtext.snapshots</id>\n");
-		buffer.append("\t\t\t<url>http://dev.nightlabs.org/maven-repository/repo/</url>\n");
+		buffer.append("\t\t\t<id>mavenInriaSnapshot</id>\n");
+		buffer.append("\t\t\t<name>http://maven.inria.fr-snapshots</name>\n");
+		buffer.append("\t\t\t<url>http://maven.inria.fr/artifactory/public-snapshot</url>\n");
+		buffer.append("\t\t</repository>\n");
+		buffer.append("\t\t<repository>\n");
+		buffer.append("\t\t\t<id>mavenInriaRelease</id>\n");
+		buffer.append("\t\t\t<name>http://maven.inria.fr-releases</name>\n");
+		buffer.append("\t\t\t<url>http://maven.inria.fr/artifactory/public-release</url>\n");
 		buffer.append("\t\t</repository>\n");
 		buffer.append("\t</repositories>\n");
-		buffer.append("\t<pluginRepositories>\n");
-		buffer.append("\t\t<pluginRepository>\n");
-		buffer.append("\t\t\t<id>xtext.oss.snapshots</id>\n");
-		buffer.append("\t\t\t<url>http://dev.nightlabs.org/maven-repository/repo/</url>\n");
-		buffer.append("\t\t</pluginRepository>\n");
-		buffer.append("\t</pluginRepositories>\n");
 		buffer.append("</project>\n");
 		
 		return buffer.toString();
