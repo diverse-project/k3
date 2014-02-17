@@ -1,6 +1,7 @@
 package fr.inria.triskell.k3.sample.logo
 
-import fr.inria.triskell.k3.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
 import java.util.Hashtable
 import kmLogo.ASM.Back
 import kmLogo.ASM.Block
@@ -60,7 +61,6 @@ import static extension fr.inria.triskell.k3.sample.logo.RightAspect.*
 import static extension fr.inria.triskell.k3.sample.logo.WhileAspect.*
 import  static extension fr.inria.triskell.k3.sample.logo.ControlStructureAspect.*
 import  static extension fr.inria.triskell.k3.sample.logo.BinaryExpAspect.*
-import fr.inria.triskell.k3.OverrideAspectMethod
 
 @Aspect(className=typeof(Instruction)) 
 class InstructionAspect {

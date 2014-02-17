@@ -28,31 +28,20 @@
 						<configuration>
 							<tasks>
 								<mkdir dir="${basedir}/zips" />
-								
+								<!-- simple projects -->
 								<zip destfile="${basedir}/zips/k3.sample.plugin.hello_ecore.zip">
 									<fileset dir="${basedir}/../../k3-sample/k3.sample.plugin.hello_ecore/" />
 								</zip>
-								<!--  <zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.model.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.model/" />
+								
+								<!-- samples requiring several projects -->
+								<mkdir dir="${basedir}/zips/logo" />
+								<zip destfile="${basedir}/zips/logo/k3.sample.maven.logo.zip">
+									<fileset dir="${basedir}/../../k3-sample/logo/k3.sample.maven.logo/" />
 								</zip>
-								<zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.model.edit.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.model.edit/" />
+								<zip destfile="${basedir}/zips/logo/k3.sample.maven.logo.model.zip">
+									<fileset dir="${basedir}/../../k3-sample/logo/k3.sample.maven.logo.model/" />
 								</zip>
-								<zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.model.editor.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.model.editor/" />
-								</zip>
-								<zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.k3dsa.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.k3dsa/" />
-								</zip>
-								<zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.ecldse.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.ecldse/" />
-								</zip>
-								<zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.ccslmoc.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.ccslmoc/" />
-								</zip>
-								<zip destfile="${basedir}/zips/org.gemoc.sample.tfsm.design.zip">
-									<fileset dir="${basedir}/../../sample/tfsm_k3/org.gemoc.sample.tfsm.design/" />
-								</zip> -->
+																
 							</tasks>
 						</configuration>
 					</execution>

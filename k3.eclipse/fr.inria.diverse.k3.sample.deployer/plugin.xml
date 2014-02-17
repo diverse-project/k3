@@ -27,22 +27,23 @@
             T⁮his project features a simple model transformation from Class metamodel to database metamodel. This transformation embeds its own version of the metamodels (ie. doesn't rely on an external model projects).
          </description>
       </wizard>
+     --> 
       <wizard
             canFinishEarly="true"
-            category="org.eclipse.ui.Examples/org.k3.language.samples.category"
+            category="org.eclipse.ui.Examples/fr.inria.diverse.k3.example.category"
             class="fr.inria.diverse.k3.sample.deployer.wizards.K3LogoExampleWizard"
             hasPages="false"
             icon="icons/newkermetafile.png"
             id="org.k3.language.samples.wizard.logo"
-            name="Logo sample"
+            name="Logo (k3 maven)"
             preferredPerspectives="org.eclipse.jdt.ui.JavaBrowsingPerspective">
          <description>
-            this example contains 2 projects : 1- the metamodel Logo project / 2- the transformation of Logo Language which display a trace of a logo program
+            This sample contains 2 projects illustrating the use of k3 using maven  : 1- the metamodel Logo project / 2- the Logo simulator which displays a trace of a logo program. 
          </description>
       </wizard>
-      <wizard
+      <!-- <wizard
             canFinishEarly="true"
-            category="org.eclipse.ui.Examples/org.k3.language.samples.category"
+            category="org.eclipse.ui.Examples/fr.inria.diverse.k3.example.category"
             class="fr.inria.diverse.k3.sample.deployer.wizards.K3fsmExampleWizard"
             hasPages="false"
             icon="icons/newkermetafile.png"
