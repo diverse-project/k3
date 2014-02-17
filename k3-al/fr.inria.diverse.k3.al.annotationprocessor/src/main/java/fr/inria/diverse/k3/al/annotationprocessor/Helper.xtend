@@ -10,6 +10,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
+import java.util.HashMap
 
 /**
  * A tool class containing helper operations for k3.
@@ -31,17 +32,23 @@ abstract class Helper {
 		var firstPosModif = -1
 		var stable = false
 		val MutableClassDeclaration[] list = newArrayOfSize(size)
-		val List<MutableClassDeclaration> listTmp = new ArrayList
+		val map = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>
+		var List<MutableClassDeclaration> listTmp
 		var MutableClassDeclaration tmp;
 		classes.toArray(list)
+		
+		classes.forEach[cl |
+			val st = new ArrayList<MutableClassDeclaration>
+			getSuperClasses(cl, st, ctx)
+			map.put(cl, st)
+		]
 		
 		while(!stable) {
 			stable = true
 			val start = Math::max(0, firstPosModif)
 			firstPosModif = -1
 			for(i : start..<size-1){
-				listTmp.clear
-				getSuperClasses(list.get(i+1), listTmp, ctx)
+				listTmp = map.get(list.get(i+1))
 				if(listTmp.contains(list.get(i))) {
 					stable = false
 					tmp = list.get(i)
@@ -50,13 +57,11 @@ abstract class Helper {
 					if(firstPosModif>i-1 || firstPosModif==-1) firstPosModif = Math::max(0, i-1)
 				}
 				else {
-					listTmp.clear
-					getSuperClasses(list.get(i), listTmp, ctx)
+					listTmp = map.get(list.get(i))
 					if(!listTmp.contains(list.get(i+1))) {
 						var sortedOnce = false
 						var j = i-1
-						listTmp.clear
-						getSuperClasses(list.get(i+1), listTmp, ctx)
+						listTmp = map.get(list.get(i+1))
 					
 						while(j>=0 && !sortedOnce)
 							if(listTmp.contains(list.get(j))) {
@@ -73,6 +78,7 @@ abstract class Helper {
 			}
 		}
 		
+		map.clear
 		classes.clear
 		classes.addAll(list.toList)
 	}
