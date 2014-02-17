@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 
 import static extension fr.inria.triskell.k3.sample.logo.LogoProgramAspect.*
 
-class HelloEcore{
+class LogoSimulator{
 
 	public def run() {
 		var fact = new XMIResourceFactoryImpl
@@ -31,8 +31,8 @@ class HelloEcore{
 	}
 
 	def static void main(String[] args) {
-		println('Hello Kermeta on top of Xtend!')
-		new HelloEcore().run()
+		println('Logo simulator in K3!')
+		new LogoSimulator().run()
 	}	
 
 }
