@@ -25,21 +25,14 @@
          version="0.0.0"/>
 
    <plugin
-         id="fr.inria.diverse.k3.eclipse.language.ui"
+         id="fr.inria.diverse.k3.sample.deployer"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="fr.inria.diverse.k3.eclipse.core.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="fr.inria.diverse.k3.eclipse.sample.deployer"
+         id="fr.inria.diverse.k3.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
