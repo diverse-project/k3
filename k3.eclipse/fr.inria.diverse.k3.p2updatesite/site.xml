@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/fr.inria.diverse.k3.eclipse.feature_1.0.0.qualifier.jar" id="fr.inria.diverse.k3.eclipse.feature" version="3.0.0.qualifier">
-      <category name="k3"/>
-   </feature>
-   <feature url="features/fr.inria.diverse.k3.sle.sdk_0.1.0.beta.jar" id="fr.inria.diverse.k3.sle.sdk" version="0.1.0.beta">
+   <feature url="features/fr.inria.diverse.k3.feature_3.0.0.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.0.0.qualifier">
       <category name="k3"/>
    </feature>
    <category-def name="k3" label="Kermeta3"/>
