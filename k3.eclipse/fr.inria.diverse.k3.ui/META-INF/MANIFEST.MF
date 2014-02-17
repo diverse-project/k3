@@ -22,5 +22,7 @@ Import-Package: org.eclipse.core.resources,
 Bundle-ClassPath: .,
  lib/fr.inria.diverse.k3.tools.aspectGenerator-3.0.0-SNAPSHOT.jar
 Export-Package: fr.inria.diverse.k3.ui,
+ fr.inria.diverse.k3.ui.tools,
+ fr.inria.diverse.k3.ui.tools.classpath,
  fr.inria.diverse.k3.ui.wizards,
  fr.inria.diverse.k3.ui.wizards.pages
