@@ -10,7 +10,7 @@
             id="org.k3.language.samples.category"
             name="K3 samples"
             parentCategory="org.eclipse.ui.Examples"/>
-      <wizard
+  <!--    <wizard
             canFinishEarly="true"
             category="org.eclipse.ui.Examples/org.k3.language.samples.category"
             class="fr.inria.diverse.k3.sample.deployer.wizards.K3ExampleWizard"
@@ -49,6 +49,7 @@
             this example contains 2 projects : 1- the metamodel FSM project / 2- the transformation of FSM Language
          </description>
       </wizard>
+      -->
    </extension>
  
 </plugin>
