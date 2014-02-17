@@ -7,19 +7,23 @@
 	<extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="org.k3.language.samples.category"
-            name="K3 samples"
+            id="fr.inria.diverse.k3.example.category"
+            name="K3 examples"
             parentCategory="org.eclipse.ui.Examples"/>
-  <!--    <wizard
+      <wizard
             canFinishEarly="true"
-            category="org.eclipse.ui.Examples/org.k3.language.samples.category"
-            class="fr.inria.diverse.k3.sample.deployer.wizards.K3ExampleWizard"
+            category="org.eclipse.ui.Examples/fr.inria.diverse.k3.example.category"
+            class="fr.inria.diverse.k3.sample.deployer.wizards.K3SamplePluginHelloEcoreExampleWizard"
             hasPages="false"
             icon="icons/newkermetafile.png"
-            id="org.k3.language.samples.wizard"
-            name="k3 sample"
+            id="fr.inria.diverse.k3.sample.deployer.wizards.K3SamplePluginHelloEcoreExampleWizard"
+            name="Hello ecore (k3 plugin)"
             preferredPerspectives="org.eclipse.jdt.ui.JavaBrowsingPerspective">
          <description>
+            T⁮his project features a simple hello world plugin project using ecore.ecore metamodel.
+         </description>
+      </wizard>
+  <!--<description>
             T⁮his project features a simple model transformation from Class metamodel to database metamodel. This transformation embeds its own version of the metamodels (ie. doesn't rely on an external model projects).
          </description>
       </wizard>
