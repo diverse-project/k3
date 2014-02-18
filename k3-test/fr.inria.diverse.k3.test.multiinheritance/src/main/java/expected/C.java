@@ -2,5 +2,5 @@ package expected;
 
 @SuppressWarnings("all")
 public interface C {
-  public abstract String getC();
+	public abstract String getC();
 }
