@@ -234,6 +234,8 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 	 */
 	private def aspectContextMaker(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier) {
 		val holderClass = findClass(clazz.qualifiedName + className + "AspectContext")
+		if(holderClass==null) return;
+		
 		holderClass.visibility = Visibility::PUBLIC
 		holderClass.addConstructor [
 			visibility = Visibility::PRIVATE
@@ -310,12 +312,16 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 		}
 		var selfVar = clazz.declaredFields.findFirst[simpleName == "_self_"]
 		if (selfVar == null) {
-			clazz.addField("_self_",
-				[
-					type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
-					static = true
-					visibility = Visibility::PUBLIC
-				])
+			val clazzProp = findClass(clazz.qualifiedName + className + "AspectProperties")
+			if(clazzProp==null)
+				addError(clazz, "Cannot resolve the class to aspectise.")
+			else
+				clazz.addField("_self_",
+					[
+						type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
+						static = true
+						visibility = Visibility::PUBLIC
+					])
 		}
 
 		//Create getters and setters
