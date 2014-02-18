@@ -172,6 +172,9 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore.xmi", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.common", "2.8.0", true, true);
+				if(context.ecoreIFile != null && !context.bCreateEMFProject){
+					manifestChanger.addPluginDependency(context.ecoreIFile.getProject().getName(),"0.0.0", true, true);
+				}
 				manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
 			}
 			createPlugInFile(project, monitor);
@@ -312,9 +315,9 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			}
 		}
 		else {
-			getGenModel(this.context);
+			updateBasePackageFromGenModel(this.context);
 		}
-		
+				
 		if (this.context.indexTransfomation != 0) {
 			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
 					context.basePackage,
@@ -377,7 +380,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		return this.projectPage;
 	}
 	
-	public void getGenModel(Context context) {
+	public void updateBasePackageFromGenModel(Context context) {
 		 GenerateGenModelCode genmodel = new GenerateGenModelCode();
 		 String basePackage;
 		if(genmodel.existGenModel(context)) {
