@@ -167,10 +167,9 @@ abstract class Helper {
 	
 
 	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. */
-	static def String getAspectedClassName(MutableTypeDeclaration clazz, extension TransformationContext context) {
+	static def String getAspectedClassName(MutableTypeDeclaration clazz) {
 		val type = getAnnotationAspectType(clazz)
-		if(type==null)
-			return ""	
+		if(type==null)return ""	
 		type.name
 	}
 	

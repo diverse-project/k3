@@ -203,9 +203,9 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 //						i=i+1
 //					}
 
-					val ifst = '''«FOR dt : declTypes» if (_self instanceof «Helper::getAspectedClassName(dt,context)»){
+					val ifst = '''«FOR dt : declTypes» if (_self instanceof «Helper::getAspectedClassName(dt)»){
 	«retu» «dt.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
-						"(" + Helper::getAspectedClassName(dt,context) + ")_self")»);
+						"(" + Helper::getAspectedClassName(dt) + ")_self")»);
 	} else«ENDFOR»'''
 					callt = ifst + ''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(_self).toString()); }'''
 				}
