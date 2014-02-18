@@ -189,15 +189,18 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 				if(dispatchmethod.get(m) != null) {
 					val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
 					val declTypes = new ArrayList(listmethod.map[declaringType])
-					val size = declTypes.size
-					var i=1
 
-					for(type : declTypes) {
-						for(pos : i..<size)
-							if(type.isAssignableFrom(declTypes.get(pos)))
-								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
-						i=i+1
-					}
+					// A time-consuming check to be used for debugging only.
+					// Looks for any problem in the order of the classes.
+//					val size = declTypes.size
+//					var i=1
+//
+//					for(type : declTypes) {
+//						for(pos : i..<size)
+//							if(type.isAssignableFrom(declTypes.get(pos)))
+//								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
+//						i=i+1
+//					}
 
 					val ifst = '''«FOR dt : declTypes» if (_self instanceof «Helper::getAspectedClassName(dt,context)»){
 	«retu» «dt.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
