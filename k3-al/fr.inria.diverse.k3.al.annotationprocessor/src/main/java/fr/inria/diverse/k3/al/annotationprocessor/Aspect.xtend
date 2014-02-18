@@ -314,7 +314,7 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 		if (selfVar == null) {
 			val clazzProp = findClass(clazz.qualifiedName + className + "AspectProperties")
 			if(clazzProp==null)
-				addError(clazz, "Cannot resolve the class to aspectise.")
+				addError(clazz, "Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects.")
 			else
 				clazz.addField("_self_",
 					[
