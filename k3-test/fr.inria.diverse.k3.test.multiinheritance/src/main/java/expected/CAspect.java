@@ -4,7 +4,6 @@ import fr.inria.diverse.k3.al.annotationprocessor.Aspect;
 import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod;
 
 @Aspect(className = C.class)
-@SuppressWarnings("all")
 public class CAspect extends VisitorAspect {
 	@OverrideAspectMethod
 	public static StringBuilder visit(final C _self) {
@@ -19,11 +18,8 @@ public class CAspect extends VisitorAspect {
 		_self_ = selfProp.get(_self);
 		if (_self instanceof C) {
 			return CAspect.privvisit((C) _self);
-		} else if (_self instanceof java.lang.Object) {
-			return VisitorAspect.privvisit((java.lang.Object) _self);
-		} else {
-			throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object> asList(_self).toString());
-		}
+		} else
+			return VisitorAspect.privvisit(_self);
 	}
 
 	public static CAspectCAspectProperties _self_;

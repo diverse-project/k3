@@ -1,6 +1,5 @@
 package expected;
 
-@SuppressWarnings("all")
 public class AImpl extends BImpl implements A {
 	private final CImpl _c = new CImpl();
 

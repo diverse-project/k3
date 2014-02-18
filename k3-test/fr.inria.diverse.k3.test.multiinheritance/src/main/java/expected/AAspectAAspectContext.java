@@ -2,7 +2,6 @@ package expected;
 
 import java.util.Map;
 
-@SuppressWarnings("all")
 public class AAspectAAspectContext {
 	public final static AAspectAAspectContext INSTANCE = new AAspectAAspectContext();
 

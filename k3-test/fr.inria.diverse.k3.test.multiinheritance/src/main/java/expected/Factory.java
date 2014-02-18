@@ -1,6 +1,5 @@
 package expected;
 
-@SuppressWarnings("all")
 public class Factory {
 	public static A newA() {
 		return new AImpl();

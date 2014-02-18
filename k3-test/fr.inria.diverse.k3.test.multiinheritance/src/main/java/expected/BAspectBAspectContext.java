@@ -2,7 +2,6 @@ package expected;
 
 import java.util.Map;
 
-@SuppressWarnings("all")
 public class BAspectBAspectContext {
 	public final static BAspectBAspectContext INSTANCE = new BAspectBAspectContext();
 
