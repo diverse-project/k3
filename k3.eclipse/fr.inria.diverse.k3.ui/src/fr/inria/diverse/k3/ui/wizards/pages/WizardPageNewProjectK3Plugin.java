@@ -341,9 +341,13 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		boolean bResult = false;
 		
 		final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		Object selection = ((IStructuredSelection)workbenchWindow.getSelectionService().getSelection()).getFirstElement();
+		Object selection = null;
+		if(workbenchWindow.getSelectionService().getSelection() instanceof IStructuredSelection){
+			selection = ((IStructuredSelection)workbenchWindow.getSelectionService().getSelection()).getFirstElement();	
+		}
+		
 		final IFile selectedEcoreFile = 
-				selection instanceof IFile && FILE_EXTENSIONS.contains(((IFile)selection).getFileExtension()) ? (IFile)selection : null;
+				selection != null && selection instanceof IFile && FILE_EXTENSIONS.contains(((IFile)selection).getFileExtension()) ? (IFile)selection : null;
 		
 		ViewerFilter viewerFilter = new ViewerFilter() {
 			@Override
