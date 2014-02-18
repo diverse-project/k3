@@ -188,10 +188,11 @@ public class AspectProcessor extends AbstractClassProcessor implements CodeGener
 
 				if(dispatchmethod.get(m) != null) {
 					val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
-					val declTypes = new ArrayList(listmethod.map[declaringType])
-
+					val declTypes = listmethod.map[declaringType]
+					
 					// A time-consuming check to be used for debugging only.
 					// Looks for any problem in the order of the classes.
+//					val declTypes = new ArrayList(listmethod.map[declaringType])
 //					val size = declTypes.size
 //					var i=1
 //
