@@ -11,6 +11,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import java.util.HashMap
+import java.util.HashSet
 
 /**
  * A tool class containing helper operations for k3.
@@ -32,13 +33,13 @@ abstract class Helper {
 		var firstPosModif = -1
 		var stable = false
 		val MutableClassDeclaration[] list = newArrayOfSize(size)
-		val map = new HashMap<MutableClassDeclaration, List<MutableClassDeclaration>>
-		var List<MutableClassDeclaration> listTmp
+		val map = new HashMap<MutableClassDeclaration, HashSet<MutableClassDeclaration>>
+		var Set<MutableClassDeclaration> listTmp
 		var MutableClassDeclaration tmp;
 		classes.toArray(list)
 		
 		classes.forEach[cl |
-			val st = new ArrayList<MutableClassDeclaration>
+			val st = new HashSet<MutableClassDeclaration>
 			getSuperClasses(cl, st, ctx)
 			map.put(cl, st)
 		]
@@ -87,7 +88,7 @@ abstract class Helper {
 	/**
 	 * Completes the list 'res' with all the super types of the given class 'clazz'.
 	 */
-	static def void getSuperClasses(MutableClassDeclaration clazz, List<MutableClassDeclaration> res, extension TransformationContext ctx) {
+	static def void getSuperClasses(MutableClassDeclaration clazz, Set<MutableClassDeclaration> res, extension TransformationContext ctx) {
 		if(res.contains(clazz)) return;
 		res.add(clazz)
 		val l = findClass(clazz.extendedClass.name)
@@ -97,18 +98,19 @@ abstract class Helper {
 	}
 	
 	
-	static def List<MutableClassDeclaration> sortByClassInheritance(MutableClassDeclaration clazz, List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		val List<MutableClassDeclaration> listTmp = new ArrayList
-		val List<MutableClassDeclaration> listRes = new ArrayList
-		
+	static def List<MutableClassDeclaration> sortByClassInheritance(MutableClassDeclaration clazz, List<? extends MutableClassDeclaration> classes, 
+								extension TransformationContext context) {
+		val Set<MutableClassDeclaration> listTmp = new HashSet
+		val Set<MutableClassDeclaration> listRes = new HashSet
+
 		getSuperClasses(clazz, listRes, context)
-		
+
 		classes.forEach[c | if (!listRes.contains(c)){ 
 			listTmp.clear
 			getSuperClasses(c, listTmp, context)
 			if (listTmp.contains(clazz))
 				listRes.add(c)
-		} ]
+		}]
 
 		val list = listRes.toList
 		
