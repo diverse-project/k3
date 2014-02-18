@@ -478,21 +478,21 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	
 	public void setEcoreLoaded(IFile ecoreFile) {
 		btnCheckEcore.setSelection(true);
-		btnCheckEcore.setEnabled(true);
+		//btnCheckEcore.setEnabled(true);
 		updateEcoreProject(true);
-		btnBrowseEcore.setEnabled(false);
-		txtPathEcore.setEnabled(false);
+		//btnBrowseEcore.setEnabled(true);
+		txtPathEcore.setEnabled(true);
 		lblTemplateEcore.setEnabled(true);
 		btnCreateEmfProject.setEnabled(true);
 		btnCreateEmfProject.setSelection(false);
 		updateCreateEMFProject(false);
 		combo.setEnabled(true);
 		txtPathEcore.setText(ecoreFile.getFullPath().toOSString());
-		String[] ecoreName = ecoreFile.getName().split(".ecore") ;
+		/*String[] ecoreName = ecoreFile.getName().split(".ecore") ;
 		StringBuffer st = new StringBuffer();
 		for (int i = 0; i < ecoreName.length; i++) {
 			st.append(ecoreName[i]);
-		}
+		}*/
 		//this.txtProjectName.setText(st + ".model");
 		
 		this.context.ecoreIFile = ecoreFile;
@@ -507,20 +507,20 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	public void setProjectKind(Context.KindsOfProject kindsOfProject) {
 		switch(kindsOfProject){
 		case STANDALONE:
-			btnRadioStandAlone.setEnabled(true);
-			btnRadioPlugIn.setEnabled(false);
-			btnRadioMaven.setEnabled(false);
+			btnRadioStandAlone.setSelection(true);
+			btnRadioPlugIn.setSelection(false);
+			btnRadioMaven.setSelection(false);
 			break;
 		case PLUGIN:
-			btnRadioStandAlone.setEnabled(false);
-			btnRadioPlugIn.setEnabled(true);
-			btnRadioMaven.setEnabled(false);
+			btnRadioStandAlone.setSelection(false);
+			btnRadioPlugIn.setSelection(true);
+			btnRadioMaven.setSelection(false);
 			break;
 		case MAVEN:
 		default:
-			btnRadioStandAlone.setEnabled(false);
-			btnRadioPlugIn.setEnabled(false);
-			btnRadioMaven.setEnabled(true);
+			btnRadioStandAlone.setSelection(false);
+			btnRadioPlugIn.setSelection(false);
+			btnRadioMaven.setSelection(true);
 		}
 		updateKindsOfProject(kindsOfProject);
 	}
