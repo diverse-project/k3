@@ -10,7 +10,6 @@ import java.util.Set
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.CodeGenerationContext
-import org.eclipse.xtend.lib.macro.CodeGenerationParticipant
 import org.eclipse.xtend.lib.macro.RegisterGlobalsContext
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
@@ -33,7 +32,7 @@ public annotation NotAspectProperty {}
 public annotation ReplaceAspectMethod {}
 
 
-public class AspectProcessor extends AbstractClassProcessor implements CodeGenerationParticipant<ClassDeclaration>{
+public class AspectProcessor extends AbstractClassProcessor {
 	val Map<MutableClassDeclaration,List<MutableClassDeclaration>> listResMap = new HashMap
 
 
