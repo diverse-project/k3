@@ -38,7 +38,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 	static val CTX_NAME = 'AspectContext'
 	static val PROP_NAME = 'AspectProperties'
 
-
+	/**
+	 * Phase 1
+	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if(type!=null) {
@@ -48,7 +50,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 	}
 
-
+	/**
+	 * Phase 2
+	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
 		//Method name_parameterlengths, 
 		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = new HashMap
@@ -77,7 +81,40 @@ public class AspectProcessor extends AbstractClassProcessor {
 			}
 		}
 	}
+	
+	/** Phase 3
+	 *  use an additional code generator to produce the .k3_aspect_mapping.properties file
+	 */
+	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
+		// clean up previous version
+		if(annotatedSourceElements.size > 0){
+			val filePath = annotatedSourceElements.get(0).compilationUnit.filePath
+			val targetFilePath = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
+			targetFilePath.delete
+		}
+		// add aspectizedClass = aspectClass mapping
+		for (clazz : annotatedSourceElements) {
+			
+			val filePath = clazz.compilationUnit.filePath
+			filePath.projectFolder.lastSegment
+			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
+			val aspectizedclassType = Helper::getAnnotationAspectType(clazz)
 
+			if(aspectizedclassType!=null) {
+				//val aspectizedclassName = aspectizedclassNam.class.getMethod("getQualifiedName").invoke(aspectizedclassNam) as String
+				val aspectizedclassName = aspectizedclassType.name
+				
+					
+				if(file.exists){
+					file.contents = '''«file.contents»
+«aspectizedclassName» = «clazz.qualifiedName»'''
+				}
+				else{
+					file.contents = '''«aspectizedclassName» = «clazz.qualifiedName»'''
+				}
+			}
+		}		
+	}
 
 	private def methods_processing(MutableClassDeclaration clazz, extension TransformationContext context, String identifier, 
 		Map<MutableMethodDeclaration,String> bodies, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, 
@@ -429,41 +466,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	
-	/**
-	 * use an additional code generator to produce the .k3_aspect_mapping.properties file
-	 */
-	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
-		// clean up previous version
-		if(annotatedSourceElements.size > 0){
-			val filePath = annotatedSourceElements.get(0).compilationUnit.filePath
-			filePath.projectFolder.lastSegment
-			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
-			file.delete
-		}
-		// add aspectizedClass = aspectClass mapping
-		for (clazz : annotatedSourceElements) {
-			
-			val filePath = clazz.compilationUnit.filePath
-			filePath.projectFolder.lastSegment
-			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
-			val aspectizedclassNam = Helper::getAnnotationAspectType(clazz)
-
-			if(aspectizedclassNam!=null) {
-				val aspectizedclassName = aspectizedclassNam.class.getMethod("getQualifiedName").invoke(aspectizedclassNam) as String
-					
-				if(file.exists){
-					file.contents = '''«file.contents»
-	«aspectizedclassName» = «clazz.qualifiedName»
-				'''
-				}
-				else{
-				file.contents = '''
-	«aspectizedclassName» = «clazz.qualifiedName»
-				'''
-				}
-			}
-		}
-	}
+	
 }
 
 
