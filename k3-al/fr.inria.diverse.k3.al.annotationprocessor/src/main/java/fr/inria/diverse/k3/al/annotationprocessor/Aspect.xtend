@@ -91,29 +91,28 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val filePath = annotatedSourceElements.get(0).compilationUnit.filePath
 			val targetFilePath = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
 			targetFilePath.delete
-		}
-		// add aspectizedClass = aspectClass mapping
-		for (clazz : annotatedSourceElements) {
-			
-			val filePath = clazz.compilationUnit.filePath
-			filePath.projectFolder.lastSegment
-			val file = filePath.projectFolder.append("/META-INF/xtend-gen/"+filePath.projectFolder.lastSegment + ".k3_aspect_mapping.properties")
-			val aspectizedclassType = Helper::getAnnotationAspectType(clazz)
-
-			if(aspectizedclassType!=null) {
-				//val aspectizedclassName = aspectizedclassNam.class.getMethod("getQualifiedName").invoke(aspectizedclassNam) as String
-				val aspectizedclassName = aspectizedclassType.name
-				
-					
-				if(file.exists){
-					file.contents = '''«file.contents»
-«aspectizedclassName» = «clazz.qualifiedName»'''
-				}
-				else{
-					file.contents = '''# List of the Java classes that have been aspectized and name of the aspect class
-«aspectizedclassName» = «clazz.qualifiedName»'''
+		
+			// add aspectizedClass = aspectClasses mapping separated by ,
+			val Map<String, List<String>> mapping = new HashMap
+			for(annotatedSourceElement : annotatedSourceElements){
+				val aspectizedclassType = Helper::getAnnotationAspectType(annotatedSourceElement)
+				if(aspectizedclassType!=null) {
+					val aspectizedclassName = aspectizedclassType.name
+					var existingListForAspectizedElement = mapping.get(aspectizedclassName)
+					if(existingListForAspectizedElement == null){
+						existingListForAspectizedElement = new ArrayList<String>
+						mapping.put(aspectizedclassName,existingListForAspectizedElement)
+					}
+					existingListForAspectizedElement.add(annotatedSourceElement.qualifiedName)
 				}
 			}
+			var buf = ''''''
+			for(entrySet : mapping.entrySet){
+				buf = '''«buf.toString»
+«entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
+			}
+			targetFilePath.contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
+«buf.toString»''' 
 		}		
 	}
 
