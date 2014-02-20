@@ -37,6 +37,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 	
 	static val CTX_NAME = 'AspectContext'
 	static val PROP_NAME = 'AspectProperties'
+	static val PROP_VAR_NAME = '_self_'
+	static val SELF_VAR_NAME = '_self'
 
 	/**
 	 * Phase 1
@@ -122,13 +124,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 		for (m : clazz.declaredMethods) {
 			//clazz.addError(m.simpleName)
 			//In not visited method, add _self as first parameter and set it static
-			if (m.parameters.size == 0 || (m.parameters.size > 0 && m.parameters.get(0).simpleName != '_self')) {
+			if (m.parameters.size == 0 || (m.parameters.size > 0 && m.parameters.get(0).simpleName != SELF_VAR_NAME)) {
 				val l = new ArrayList<Pair<String, TypeReference>>()
 				for (p1 : m.parameters)
 					l.add(new Pair(p1.simpleName, p1.type))
 				
 				m.parameters.toList.clear				
-				m.addParameter("_self", newTypeReference(identifier))
+				m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 
 				for (param : l)
 					m.addParameter(param.key, param.value)
@@ -242,17 +244,17 @@ public class AspectProcessor extends AbstractClassProcessor {
 //						i=i+1
 //					}
 
-					val ifst = '''«FOR dt : declTypes» if (_self instanceof «Helper::getAspectedClassName(dt)»){
-	«retu» «dt.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst("_self",
-						"(" + Helper::getAspectedClassName(dt) + ")_self")»);
+					val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+	«retu» «dt.newTypeReference.name».priv«m.simpleName»(«s1.replaceFirst(SELF_VAR_NAME,
+						"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»);
 	} else«ENDFOR»'''
-					callt = ifst + ''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(_self).toString()); }'''
+					callt = ifst + ''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }'''
 				}
 				else callt = '''«retu» priv«m.simpleName»(«s1»); ''' //for getters & setters
 
 				val call = callt
 				m.abstract = false
-				m.body = ['''_self_ = «clazz.qualifiedName + className + CTX_NAME».getSelf(_self);
+				m.body = ['''«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 			     «call»''']
 			}// for (m : clazz.declaredMethods)
 	}
@@ -321,7 +323,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		
 		for (f : clazz.declaredFields) {
 			//MOVE non static fields
-			if (/*!f.static &&*/f.simpleName != "_self_") {
+			if (/*!f.static &&*/f.simpleName != PROP_VAR_NAME) {
 				toRemove.add(f)
 				if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null)
 					propertyAspect.add(f)
@@ -336,19 +338,19 @@ public class AspectProcessor extends AbstractClassProcessor {
 					}
 				]
 
-			} else if (!f.static && f.simpleName == "_self_") {
+			} else if (!f.static && f.simpleName == PROP_VAR_NAME) {
 				f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference()
 				f.static = true
 			}
 
 		}
-		var selfVar = clazz.declaredFields.findFirst[simpleName == "_self_"]
+		var selfVar = clazz.declaredFields.findFirst[simpleName == PROP_VAR_NAME]
 		if (selfVar == null) {
 			val clazzProp = findClass(clazz.qualifiedName + className + PROP_NAME)
 			if(clazzProp==null)
 				addError(clazz, "Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects.")
 			else
-				clazz.addField("_self_",
+				clazz.addField(PROP_VAR_NAME,
 					[
 						type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference()
 						static = true
@@ -361,18 +363,18 @@ public class AspectProcessor extends AbstractClassProcessor {
 			var get = clazz.addMethod(f.simpleName,
 				[
 					returnType = f.type
-					addParameter("_self", newTypeReference(identifier))
+					addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 				])
-			bodies.put(get, ''' return «clazz.qualifiedName»._self_.«f.simpleName»; ''')
+			bodies.put(get, ''' return «clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName»; ''')
 
 			if(!f.final) {
 				var set = clazz.addMethod(f.simpleName,
 					[
 						returnType = newTypeReference("void")
-						addParameter("_self", newTypeReference(identifier))
+						addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 						addParameter(f.simpleName, f.type)
 					])
-				bodies.put(set, '''«clazz.qualifiedName»._self_.«f.simpleName» = «f.simpleName»; ''')
+				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; ''')
 			}
 
 		}
