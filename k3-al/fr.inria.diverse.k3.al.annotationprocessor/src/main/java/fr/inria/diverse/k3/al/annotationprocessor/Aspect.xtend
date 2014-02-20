@@ -34,14 +34,17 @@ public annotation ReplaceAspectMethod {}
 
 public class AspectProcessor extends AbstractClassProcessor {
 	val Map<MutableClassDeclaration,List<MutableClassDeclaration>> listResMap = new HashMap
+	
+	static val CTX_NAME = 'AspectContext'
+	static val PROP_NAME = 'AspectProperties'
 
 
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if(type!=null) {
 			val className = type.simpleName
-			context.registerClass(annotatedClass.qualifiedName + className + "AspectProperties")
-			context.registerClass(annotatedClass.qualifiedName + className + "AspectContext")
+			context.registerClass(annotatedClass.qualifiedName + className + PROP_NAME)
+			context.registerClass(annotatedClass.qualifiedName + className + CTX_NAME)
 		}
 	}
 
@@ -213,13 +216,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 				val call = callt
 				m.abstract = false
 				m.body = [
-					'''«clazz.qualifiedName + className»AspectContext _instance = «clazz.qualifiedName +
-						className»AspectContext.getInstance();
-				    java.util.Map<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")»,«clazz.qualifiedName + className»AspectProperties> selfProp = _instance.getMap();
+					'''«clazz.qualifiedName + className + CTX_NAME» _instance = «clazz.qualifiedName +
+						className + CTX_NAME».getInstance();
+				    java.util.Map<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")»,«clazz.qualifiedName + className + PROP_NAME»> selfProp = _instance.getMap();
 					boolean _containsKey = selfProp.containsKey(_self);
 				    boolean _not = (!_containsKey);
 				    if (_not) {
-  						«clazz.qualifiedName + className»AspectProperties prop = new «clazz.qualifiedName + className»AspectProperties();
+  						«clazz.qualifiedName + className + PROP_NAME» prop = new «clazz.qualifiedName + className + PROP_NAME»();
 				   selfProp.put(_self, prop);
 			    }
 			     _self_ = selfProp.get(_self);
@@ -232,7 +235,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Create the class which link classes with their aspects 
 	 */
 	private def aspectContextMaker(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier) {
-		val holderClass = findClass(clazz.qualifiedName + className + "AspectContext")
+		val holderClass = findClass(clazz.qualifiedName + className + CTX_NAME)
 		if(holderClass==null) return;
 		
 		holderClass.visibility = Visibility::PUBLIC
@@ -264,16 +267,16 @@ public class AspectProcessor extends AbstractClassProcessor {
 				visibility = Visibility::PRIVATE
 				static = false
 				type = newTypeReference("java.util.Map", newTypeReference(identifier),
-					newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
+					newTypeReference(clazz.qualifiedName + className + PROP_NAME))
 				initializer = [
-					'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className»AspectProperties>()''']
+					'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()''']
 			])
  
 		holderClass.addMethod('getMap') [
 			visibility = Visibility::PUBLIC
 			static = false
 			returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
-				newTypeReference(clazz.qualifiedName + className + "AspectProperties"))
+				newTypeReference(clazz.qualifiedName + className + PROP_NAME))
 			body = ['''return map;''']
 		]
 	}
@@ -284,7 +287,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	private def fields_processing(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier, Map<MutableMethodDeclaration,String> bodies) {
 		val List<MutableFieldDeclaration> toRemove = new ArrayList
 		val List<MutableFieldDeclaration> propertyAspect = new ArrayList
-		val c = findClass(clazz.qualifiedName + className + "AspectProperties")
+		val c = findClass(clazz.qualifiedName + className + PROP_NAME)
 		
 		for (f : clazz.declaredFields) {
 			//MOVE non static fields
@@ -304,20 +307,20 @@ public class AspectProcessor extends AbstractClassProcessor {
 				]
 
 			} else if (!f.static && f.simpleName == "_self_") {
-				f.type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
+				f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference()
 				f.static = true
 			}
 
 		}
 		var selfVar = clazz.declaredFields.findFirst[simpleName == "_self_"]
 		if (selfVar == null) {
-			val clazzProp = findClass(clazz.qualifiedName + className + "AspectProperties")
+			val clazzProp = findClass(clazz.qualifiedName + className + PROP_NAME)
 			if(clazzProp==null)
 				addError(clazz, "Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects.")
 			else
 				clazz.addField("_self_",
 					[
-						type = findClass(clazz.qualifiedName + className + "AspectProperties").newTypeReference()
+						type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference()
 						static = true
 						visibility = Visibility::PUBLIC
 					])
