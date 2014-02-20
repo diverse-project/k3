@@ -110,7 +110,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 «aspectizedclassName» = «clazz.qualifiedName»'''
 				}
 				else{
-					file.contents = '''«aspectizedclassName» = «clazz.qualifiedName»'''
+					file.contents = '''# List of the Java classes that have been aspectized and name of the aspect class
+«aspectizedclassName» = «clazz.qualifiedName»'''
 				}
 			}
 		}		
