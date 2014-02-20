@@ -9,9 +9,15 @@ public class CAspectCAspectContext {
 		return INSTANCE;
 	}
 
-	private Map<C, CAspectCAspectProperties> map = new java.util.HashMap<C, CAspectCAspectProperties>();
+	private Map<C, CAspectCAspectProperties> map = new java.util.HashMap<>();
 
 	public Map<C, CAspectCAspectProperties> getMap() {
 		return map;
+	}
+	
+	public static CAspectCAspectProperties getSelf(C _self) {
+		if (!INSTANCE.map.containsKey(_self))
+			INSTANCE.map.put(_self, new CAspectCAspectProperties());
+		return INSTANCE.map.get(_self);
 	}
 }

@@ -9,9 +9,16 @@ public class VisitorAspectObjectAspectContext {
 		return INSTANCE;
 	}
 
-	private Map<Object, VisitorAspectObjectAspectProperties> map = new java.util.HashMap<java.lang.Object, VisitorAspectObjectAspectProperties>();
+	private Map<Object, VisitorAspectVisitorAspectProperties> map = new java.util.HashMap<>();
 
-	public Map<Object, VisitorAspectObjectAspectProperties> getMap() {
+	public Map<Object, VisitorAspectVisitorAspectProperties> getMap() {
 		return map;
+	}
+	
+	
+	public static VisitorAspectVisitorAspectProperties getSelf(Object _self) {
+		if (!INSTANCE.map.containsKey(_self))
+			INSTANCE.map.put(_self, new VisitorAspectVisitorAspectProperties());
+		return INSTANCE.map.get(_self);
 	}
 }
