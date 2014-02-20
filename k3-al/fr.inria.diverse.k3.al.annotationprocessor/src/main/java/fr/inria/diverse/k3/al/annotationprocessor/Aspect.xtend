@@ -252,20 +252,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 				val call = callt
 				m.abstract = false
-				m.body = [
-					'''«clazz.qualifiedName + className + CTX_NAME» _instance = «clazz.qualifiedName +
-						className + CTX_NAME».getInstance();
-				    java.util.Map<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")»,«clazz.qualifiedName + className + PROP_NAME»> selfProp = _instance.getMap();
-					boolean _containsKey = selfProp.containsKey(_self);
-				    boolean _not = (!_containsKey);
-				    if (_not) {
-  						«clazz.qualifiedName + className + PROP_NAME» prop = new «clazz.qualifiedName + className + PROP_NAME»();
-				   selfProp.put(_self, prop);
-			    }
-			     _self_ = selfProp.get(_self);
-			     «call»
-			    ''']
-				}
+				m.body = ['''_self_ = «clazz.qualifiedName + className + CTX_NAME».getSelf(_self);
+			     «call»''']
+			}// for (m : clazz.declaredMethods)
 	}
 
 	/**
@@ -276,44 +265,48 @@ public class AspectProcessor extends AbstractClassProcessor {
 		if(holderClass==null) return;
 		
 		holderClass.visibility = Visibility::PUBLIC
-		holderClass.addConstructor [
-			visibility = Visibility::PRIVATE
-		]
+		holderClass.addConstructor [visibility = Visibility::PRIVATE]
 
 		holderClass.addField('INSTANCE') [
 			visibility = Visibility::PUBLIC
 			static = true
 			final = true
 			type = holderClass.newTypeReference
-			initializer = [
-				'''new «holderClass.simpleName»()'''
-			]
+			initializer = ['''new «holderClass.simpleName»()''']
 		]
 
 		holderClass.addMethod('getInstance') [
 			visibility = Visibility::PUBLIC
 			static = true
 			returnType = holderClass.newTypeReference
+			body = ['''return INSTANCE;''']
+		]
+		
+		holderClass.addMethod('getSelf') [
+			visibility = Visibility::PUBLIC
+			static = true
+			addParameter("_self", newTypeReference(identifier))
+			returnType = newTypeReference(clazz.qualifiedName + className + PROP_NAME)
 			body = [
-				'''return INSTANCE;'''
+				'''		if (!INSTANCE.map.containsKey(_self))
+			INSTANCE.map.put(_self, new «clazz.qualifiedName + className + PROP_NAME»());
+		return INSTANCE.map.get(_self);'''
 			]
 		]
 
-		holderClass.addField('map',
-			[
-				visibility = Visibility::PRIVATE
-				static = false
-				type = newTypeReference("java.util.Map", newTypeReference(identifier),
-					newTypeReference(clazz.qualifiedName + className + PROP_NAME))
-				initializer = [
-					'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()''']
-			])
+		holderClass.addField('map', [
+			visibility = Visibility::PRIVATE
+			static = false
+			type = newTypeReference("java.util.Map", newTypeReference(identifier),
+				newTypeReference(clazz.qualifiedName + className + PROP_NAME))
+			initializer = [
+				'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()''']
+		])
  
 		holderClass.addMethod('getMap') [
 			visibility = Visibility::PUBLIC
 			static = false
-			returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
-				newTypeReference(clazz.qualifiedName + className + PROP_NAME))
+			returnType = newTypeReference("java.util.Map", newTypeReference(identifier), newTypeReference(clazz.qualifiedName + className + PROP_NAME))
 			body = ['''return map;''']
 		]
 	}
