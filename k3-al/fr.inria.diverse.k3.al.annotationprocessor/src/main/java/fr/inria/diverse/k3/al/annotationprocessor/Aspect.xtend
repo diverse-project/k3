@@ -263,13 +263,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 			initializer = ['''new «holderClass.simpleName»()''']
 		]
 
-		holderClass.addMethod('getInstance') [
-			visibility = Visibility::PUBLIC
-			static = true
-			returnType = holderClass.newTypeReference
-			body = ['''return INSTANCE;''']
-		]
-		
 		holderClass.addMethod('getSelf') [
 			visibility = Visibility::PUBLIC
 			static = true
