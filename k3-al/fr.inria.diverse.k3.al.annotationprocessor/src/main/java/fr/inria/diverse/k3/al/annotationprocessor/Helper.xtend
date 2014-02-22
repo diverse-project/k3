@@ -215,8 +215,8 @@ abstract class Helper {
 	 */
 	static def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz,
 		MutableMethodDeclaration methodName, extension TransformationContext context) {
-		//FIXME: take care about number of parameters ? 
-		var m = clazz.declaredMethods.findFirst[m2|m2.simpleName == methodName.simpleName]
+		//FIXME take care about number of parameters and their type
+		var m = clazz.declaredMethods.findFirst[simpleName == methodName.simpleName]
 		if (m == null) {
 			if (clazz.extendedClass == null)
 				return null
