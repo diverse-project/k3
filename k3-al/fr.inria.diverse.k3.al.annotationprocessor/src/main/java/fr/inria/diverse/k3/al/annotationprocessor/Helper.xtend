@@ -136,23 +136,21 @@ abstract class Helper {
 	
 		/** Computes the names of the classes provided by the parameter 'with' of the annotation 'aspect'. */
 	static def List<String> getWithClassNames(MutableTypeDeclaration clazz, extension TransformationContext context) {
-		val types = getAnnotationWithType(clazz)
-		if(types==null)
-			return Collections.emptyList	
-		types.map[name]
+		getAnnotationWithType(clazz).map[name]
 	}
 	
 	
 	/**
-	 * Getting the classes identified by the parameter 'with'
+	 * Getting the classes identified by the parameter 'with'.
+	 * The returned list is never null but can be empty.
 	 */
 	static def List<TypeReference> getAnnotationWithType(TypeDeclaration cl) {
-		if(cl==null || cl.annotations==null) return null;
+		if(cl==null || cl.annotations==null) return Collections.emptyList
 		try{
 			val annot = cl.annotations.findFirst[getClassArrayValue(annotationWith) != null]
-			if(annot==null) return null
+			if(annot==null) return Collections.emptyList
 			new ArrayList(annot.getClassArrayValue(annotationWith))
-		}catch(NullPointerException ex){ return null }
+		}catch(NullPointerException ex){ return Collections.emptyList }
 	}
 	
 	
