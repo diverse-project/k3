@@ -39,6 +39,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	public static val PROP_NAME = 'AspectProperties'
 	public static val PROP_VAR_NAME = '_self_'
 	public static val SELF_VAR_NAME = '_self'
+	public static val PRIV_PREFIX = '_privk3_'
 
 	/**
 	 * Phase 1
@@ -154,7 +155,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 						if (m3 == null)
 							m.addError("No super method found")
 						//TODO find super method
-						body = [''' «IF (m3.returnType.name != "void")»return «ENDIF» «m3.declaringType.newTypeReference.name».priv«m.simpleName»(«s»);  ''']
+						body = [''' «IF (m3.returnType.name != "void")»return «ENDIF» «m3.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s»);  ''']
 					}
 			])
 		}
@@ -176,8 +177,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	private def methodProcessingAddPriv(MutableMethodDeclaration m, MutableClassDeclaration clazz, Map<MutableMethodDeclaration,String> bodies,
 										extension TransformationContext cxt) {
-		//Make "priv"+methodName as a copy of the method
-		clazz.addMethod("priv" + m.simpleName, [
+		//Make PRIV_PREFIX+methodName as a copy of the method
+		clazz.addMethod(PRIV_PREFIX + m.simpleName, [
 				visibility = Visibility::PROTECTED
 				static = true
 				abstract = false
@@ -196,7 +197,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	private def methodProcessingChangeBody(MutableMethodDeclaration m, MutableClassDeclaration clazz, extension TransformationContext cxt, 
 									Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, List<String> inheritList, String className) {
-		//Change the body of the method to call the closest method "priv"+methodName in the aspect hierarchy
+		//Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
 		val ret = if(m.returnType != newTypeReference("void")) "return" else ""
 		val call = new StringBuilder
@@ -219,12 +220,12 @@ public class AspectProcessor extends AbstractClassProcessor {
 //					}
 
 			val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
-«ret» «dt.newTypeReference.name».priv«m.simpleName»(«s.replaceFirst(SELF_VAR_NAME,
+«ret» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s.replaceFirst(SELF_VAR_NAME,
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»);
 } else«ENDFOR»'''
 			call.append(ifst).append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		}
-		else call.append('''«ret» priv«m.simpleName»(«s»); ''') //for getters & setters
+		else call.append('''«ret» «PRIV_PREFIX+m.simpleName»(«s»); ''') //for getters & setters
 
 		m.abstract = false
 		m.body = ['''«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
