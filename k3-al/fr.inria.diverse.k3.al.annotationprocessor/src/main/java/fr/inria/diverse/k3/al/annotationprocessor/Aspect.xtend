@@ -244,7 +244,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 		
 		scs.forEach[sc |
 			// Only non-private methods which does not already exist in the aspect class are considered.
-			sc.declaredMethods.filter[dm | dm.visibility!=Visibility::PRIVATE && !clazz.declaredMethods.exists[dm2| Helper::isSamePrototype(dm, dm2, true)]].forEach[dm |
+			sc.declaredMethods.filter[dm | dm.visibility!=Visibility::PRIVATE && !dm.simpleName.startsWith(PRIV_PREFIX) &&
+				!clazz.declaredMethods.exists[dm2| Helper::isSamePrototype(dm, dm2, true)]].forEach[dm |
 				// Adding a new proxy method in the aspect class.
 				val me = clazz.addMethod(dm.simpleName) [
 					visibility = dm.visibility
