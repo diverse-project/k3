@@ -280,6 +280,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
 	}
 
+
 	/**
 	 * Create the class which link classes with their aspects 
 	 */
@@ -327,19 +328,16 @@ public class AspectProcessor extends AbstractClassProcessor {
 		]
 	}
 
-	/**
-	 * Move fields of the aspect to the AspectProperties class
-	 */
-	private def fieldsProcessing(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier, Map<MutableMethodDeclaration,String> bodies) {
-		val List<MutableFieldDeclaration> toRemove = new ArrayList
-		val List<MutableFieldDeclaration> propertyAspect = new ArrayList
+
+	/** Move non static fields */
+	private def fieldProcessingMoveField(MutableClassDeclaration clazz, List<MutableFieldDeclaration> toRemove, List<MutableFieldDeclaration> propertyAspect,
+										String className, extension TransformationContext context) {
 		val c = findClass(clazz.qualifiedName + className + PROP_NAME)
-		
-		for (f : clazz.declaredFields) {
-			//MOVE non static fields
-			if (/*!f.static &&*/f.simpleName != PROP_VAR_NAME) {
+
+		for(f : clazz.declaredFields) {
+			if(f.simpleName != PROP_VAR_NAME) {
 				toRemove.add(f)
-				if (f.annotations.findFirst[a|a.annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null)
+				if(f.annotations.findFirst[annotationTypeDeclaration.simpleName == "NotAspectProperty"] == null)
 					propertyAspect.add(f)
 
 				c.addField(f.simpleName) [
@@ -347,59 +345,68 @@ public class AspectProcessor extends AbstractClassProcessor {
 					static = f.static
 					final = f.final
 					type = f.type
-					if (f.initializer != null) {
-						initializer = f.initializer
-					}
+					if(f.initializer != null) initializer = f.initializer
 				]
-
 			} else if (!f.static && f.simpleName == PROP_VAR_NAME) {
-				f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference()
+				f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
 				f.static = true
 			}
-
 		}
-		var selfVar = clazz.declaredFields.findFirst[simpleName == PROP_VAR_NAME]
-		if (selfVar == null) {
+	}
+	
+	
+	private def fieldProcessingAddField(MutableClassDeclaration clazz, String className, extension TransformationContext context) {
+		if(clazz.declaredFields.findFirst[simpleName == PROP_VAR_NAME] == null) {
 			val clazzProp = findClass(clazz.qualifiedName + className + PROP_NAME)
 			if(clazzProp==null)
 				addError(clazz, "Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects.")
 			else
-				clazz.addField(PROP_VAR_NAME,
-					[
-						type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference()
-						static = true
-						visibility = Visibility::PUBLIC
-					])
+				clazz.addField(PROP_VAR_NAME,[
+					type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
+					static = true
+					visibility = Visibility::PUBLIC
+				])
 		}
+	}
 
-		//Create getters and setters
+
+	private def fieldProcessingAddGetterSetter(MutableClassDeclaration clazz, List<MutableFieldDeclaration> propertyAspect, String identifier,
+		Map<MutableMethodDeclaration,String> bodies, extension TransformationContext context) {
 		for (f : propertyAspect) {
-			var get = clazz.addMethod(f.simpleName,
-				[
+			var get = clazz.addMethod(f.simpleName,[
 					returnType = f.type
 					addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 				])
 			bodies.put(get, ''' return «clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName»; ''')
 
 			if(!f.final) {
-				var set = clazz.addMethod(f.simpleName,
-					[
+				var set = clazz.addMethod(f.simpleName,[
 						returnType = newTypeReference("void")
 						addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 						addParameter(f.simpleName, f.type)
 					])
 				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; ''')
 			}
-
 		}
-		for (f : toRemove)
-			f.remove
 	}
+	
+
+	/**
+	 * Move fields of the aspect to the AspectProperties class
+	 */
+	private def fieldsProcessing(extension TransformationContext context, MutableClassDeclaration clazz, String className, String identifier, Map<MutableMethodDeclaration,String> bodies) {
+		val List<MutableFieldDeclaration> toRemove = newArrayList
+		val List<MutableFieldDeclaration> propertyAspect = newArrayList
+		fieldProcessingMoveField(clazz, toRemove, propertyAspect, className, context)
+		fieldProcessingAddField(clazz, className, context)
+		fieldProcessingAddGetterSetter(clazz, propertyAspect, identifier, bodies, context)
+		for(f : toRemove) f.remove
+	}
+
 
 	/**
 	 * Each aspect method is associatated with the lists of all methods with the
 	 * same signature (name + number of args) of parents classes and children classes.
-	 * 
 	 * @superclass All aspects associated with their superclasses
 	 * @dispatchmethod Associations computed
 	 * @context
@@ -411,7 +418,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val clazzes = new ArrayList<MutableClassDeclaration>()
 			clazzes.add(cl)
 			clazzes.addAll(superclass.get(cl))
-			val Map<String, Set<MutableMethodDeclaration>> dispatchs = new HashMap
+			val Map<String, Set<MutableMethodDeclaration>> dispatchs = newHashMap
 			for (clazz : clazzes) {
 				for (m : clazz.declaredMethods) {
 					val mname = m.simpleName + "__" + m.parameters.size
@@ -451,7 +458,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * For each annotated class store his super classes hierarchy.
 	 * An annotated class which is a parent of an other annotated
 	 * class is not in the final result.
-	 * 
 	 * @annotedClasses All aspects
 	 * @superclass Mapping computed between class and list of his super classes
 	 * @context
@@ -473,9 +479,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 		for (p : allparent)
 			superclass.remove(p)
 	}
-
-	
-	
 }
 
 
