@@ -3,9 +3,10 @@ package test
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
 import org.junit.Test
-import static org.junit.Assert.*
-import static extension test.RootAspect.*
 
+import static org.junit.Assert.*
+
+import static extension test.RootAspect.*
 
 class TestDynamicBinding {
 	@Test def void testX1_as_XExpression() {

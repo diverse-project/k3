@@ -7,7 +7,7 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension test.AspectC.*;
+import static extension test.AspectA.*
 
 class TestAspect {
 	/*@org.junit.Test

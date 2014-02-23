@@ -3,7 +3,7 @@ package test
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
 
-import static extension test.FooAspect.*
+import static extension test.FooAbsClass.*
 
 class TestDoesNotWork {
 	
