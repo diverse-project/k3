@@ -255,7 +255,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				methodProcessingAddSelfStatic(me, identifier, cxt)
 				// The proxy consists of calling the corresponding operation in the targeted aspect class.
 				val params = me.parameters.map[simpleName].join(',')
-				me.body = ['''«sc.simpleName».«dm.simpleName»(«params»);''']
+				me.body = ['''«IF me.returnType==null || me.returnType.simpleName=='void'»«ELSE»return «ENDIF»«sc.simpleName».«dm.simpleName»(«params»);''']
 			]
 		]
 	}
