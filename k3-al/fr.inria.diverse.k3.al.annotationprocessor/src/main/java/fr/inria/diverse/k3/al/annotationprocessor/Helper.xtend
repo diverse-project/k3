@@ -234,11 +234,16 @@ abstract class Helper {
 	 */
 	static def boolean isSamePrototype(MutableMethodDeclaration m1, MutableMethodDeclaration m2, boolean alsoCheckFirstArgSelf) {
 		val nameOk = m1!=null && m2!=null && m1.simpleName==m2.simpleName
-		val ok = nameOk && m1.parameters.size==m2.parameters.size
+		val ok = nameOk && m1.parameters.size==m2.parameters.size && isSameType(m1.returnType, m2.returnType)
 		//TODO parameters and return type
 		if(nameOk && !ok && alsoCheckFirstArgSelf)
 			return (m1.parameters.size==m2.parameters.size+1 && m1.parameters.head.simpleName==AspectProcessor::SELF_VAR_NAME) ||
 					(m1.parameters.size+1==m2.parameters.size && m2.parameters.head.simpleName==AspectProcessor::SELF_VAR_NAME)
 		return ok 
+	}
+	
+	
+	static def boolean isSameType(TypeReference tr1, TypeReference tr2) {
+		tr1==tr2 || (tr1!=null && tr2!=null && tr1.simpleName==tr2.simpleName)
 	}
 }

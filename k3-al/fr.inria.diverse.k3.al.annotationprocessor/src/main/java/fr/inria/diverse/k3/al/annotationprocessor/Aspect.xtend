@@ -262,6 +262,25 @@ public class AspectProcessor extends AbstractClassProcessor {
 				val params = me.parameters.map[simpleName].join(',')
 				me.body = ['''«IF me.returnType==null || me.returnType.simpleName=='void'»«ELSE»return «ENDIF»«sc.simpleName».«dm.simpleName»(«params»);''']
 			]
+
+			sc.declaredFields.filter[simpleName!=PROP_VAR_NAME].forEach[fi |
+				val clName = fi.declaringType.simpleName
+				clazz.addMethod(fi.simpleName,[
+					static = true
+					returnType = fi.type
+					addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
+					body = ['''return «clName».«fi.simpleName»(«SELF_VAR_NAME»);''']
+				])
+				
+				if(!fi.final)
+					clazz.addMethod(fi.simpleName,[
+						static = true
+						returnType = cxt.newTypeReference("void")
+						addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
+						addParameter(fi.simpleName, fi.type)
+						body = ['''«clName».«fi.simpleName»(«SELF_VAR_NAME», «fi.simpleName»);''']
+					])
+			]
 		]
 	}
 
