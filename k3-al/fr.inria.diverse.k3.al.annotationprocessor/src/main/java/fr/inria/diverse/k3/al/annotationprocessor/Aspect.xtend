@@ -238,8 +238,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 */
 	private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz, String identifier, TransformationContext cxt) {
 		val superClasses = Helper::getAnnotationWithType(clazz).filter[cl | cl!=clazz.extendedClass].map[cl | cxt.findClass(cl.name)].filterNull
+		val Set<MutableClassDeclaration> scs = newHashSet()
+	 	superClasses.forEach[sc | Helper::getSuperClasses(sc, scs, cxt)]
 		
-		superClasses.forEach[sc |
+		scs.forEach[sc |
 			// Only non-private methods which does not already exist in the aspect class are considered.
 			sc.declaredMethods.filter[dm | dm.visibility!=Visibility::PRIVATE && !clazz.declaredMethods.exists[dm2| Helper::isSamePrototype(dm, dm2, true)]].forEach[dm |
 				// Adding a new proxy method in the aspect class.
