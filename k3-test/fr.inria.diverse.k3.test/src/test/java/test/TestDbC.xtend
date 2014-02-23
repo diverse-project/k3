@@ -1,11 +1,11 @@
 package test
 
-import fr.inria.triskell.k3.Contracted
-import fr.inria.triskell.k3.Inv
-import fr.inria.triskell.k3.Post
-import fr.inria.triskell.k3.PostConditionViolationException
-import fr.inria.triskell.k3.Pre
-import fr.inria.triskell.k3.PreConditionViolationException
+import fr.inria.diverse.k3.al.annotationprocessor.Contracted
+import fr.inria.diverse.k3.al.annotationprocessor.Inv
+import fr.inria.diverse.k3.al.annotationprocessor.Post
+import fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException
+import fr.inria.diverse.k3.al.annotationprocessor.Pre
+import fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException
 import org.junit.Test
 
 import static org.junit.Assert.*

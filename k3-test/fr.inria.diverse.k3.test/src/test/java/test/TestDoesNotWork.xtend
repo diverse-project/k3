@@ -1,9 +1,7 @@
 package test
 
-import fr.inria.triskell.k3.Aspect
-import fr.inria.triskell.k3.OverrideAspectMethod
-
-import static extension test.FooAbsClass.*
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
 
 class TestDoesNotWork {
 	

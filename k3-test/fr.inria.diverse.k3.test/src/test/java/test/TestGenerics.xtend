@@ -1,6 +1,6 @@
 package test
 
-import fr.inria.triskell.k3.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 import static extension test.FooGenericsAspect.*
 
 public class TestGenerics{

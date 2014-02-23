@@ -1,6 +1,6 @@
 package test
 
-import fr.inria.triskell.k3.Opposite
+import fr.inria.diverse.k3.al.annotationprocessor.Opposite
 import java.util.List
 import org.junit.Before
 import org.junit.Test

@@ -1,9 +1,9 @@
 package test
 
-import fr.inria.triskell.k3.Opposite
-
-import org.junit.Test
+import fr.inria.diverse.k3.al.annotationprocessor.Opposite
 import org.junit.Before
+import org.junit.Test
+
 import static org.junit.Assert.*
 
 /*

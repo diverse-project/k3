@@ -1,6 +1,6 @@
 package test
 
-import fr.inria.triskell.k3.Composition
+import fr.inria.diverse.k3.al.annotationprocessor.Composition
 import java.util.List
 import org.junit.Test
 

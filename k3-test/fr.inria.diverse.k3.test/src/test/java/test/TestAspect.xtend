@@ -1,13 +1,13 @@
 package test
 
-import fr.inria.triskell.k3.Aspect
-import fr.inria.triskell.k3.OverrideAspectMethod
-import fr.inria.triskell.k3.ReplaceAspectMethod
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
+import fr.inria.diverse.k3.al.annotationprocessor.ReplaceAspectMethod
 import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension test.AspectA.*
+//import static extension test.AspectB.*
 
 class TestAspect {
 	/*@org.junit.Test
