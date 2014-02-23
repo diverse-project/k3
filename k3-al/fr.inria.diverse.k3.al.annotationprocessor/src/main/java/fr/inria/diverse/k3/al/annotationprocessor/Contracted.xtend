@@ -124,7 +124,6 @@ class ContractedProcessor extends AbstractClassProcessor {
 				annotatedMethod.addError("Postcondition must be have the name postX where X is an existing method")
 				return;
 			}
-
 		}
 
 		if (invs.size > 0) {
@@ -203,7 +202,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 					if («invt1»)
 					    «retu» prepriv«m.simpleName»(«s1»);					    
 					else
-						throw new  fr.inria.triskell.k3.PreConditionViolationException();
+						throw new  fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException();
 					 '''
 				m.body = [bodyt]
 				bodies.put(m, bodyt)
@@ -270,7 +269,6 @@ class ContractedProcessor extends AbstractClassProcessor {
 				for (in : invs)
 					invt = invt + "&& " + in.simpleName + "() "
 				val invt2 = invt
-
 				val retu2 = retu
 				val retu3 = ret1
 				val s2 = s
@@ -278,10 +276,9 @@ class ContractedProcessor extends AbstractClassProcessor {
 					'''						
 						«retu2»postpriv«m.simpleName»(«s2»);
 						if (!(«invt2»))
-							throw new  fr.inria.triskell.k3.PostConditionViolationException();
+							throw new  fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException();
 						«retu3»	
 					  ''']
-
 			}
 		} else {
 			for (annotatedMethod : pre) {
@@ -316,15 +313,13 @@ class ContractedProcessor extends AbstractClassProcessor {
 					if (pre«m.simpleName»())
 					    «retu» prepriv«m.simpleName»(«s1»);					    
 					else
-						throw new  fr.inria.triskell.k3.PreConditionViolationException();
+						throw new  fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException();
 					 '''
 				m.body = [bodyt]
 				bodies.put(m, bodyt)
-
 			}
 
 			for (annotatedMethod : post) {
-
 				val m = annotatedMethod.declaringType.declaredMethods.filter[m|
 					m.simpleName == annotatedMethod.simpleName.substring(4)].get(0)
 
@@ -362,12 +357,10 @@ class ContractedProcessor extends AbstractClassProcessor {
 					'''						
 						«retu»postpriv«m.simpleName»(«s1»);
 						if (!post«m.simpleName»())
-							throw new  fr.inria.triskell.k3.PostConditionViolationException();
+							throw new  fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException();
 						«retu1»	
 					  ''']
-
 			}
-
 		}
 	}
 }
