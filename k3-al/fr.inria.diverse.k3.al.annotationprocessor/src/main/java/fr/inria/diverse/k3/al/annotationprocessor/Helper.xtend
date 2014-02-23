@@ -225,4 +225,20 @@ abstract class Helper {
 		} else
 			return m
 	}
+
+
+	/**
+	 * Compare the prototype of the two given methods.
+	 * @param alsoCheckFirstArgSelf If true, it checks that m2 equals m1 (respec. m1 equals m2) after being transformed for k3. More precisely, it checks
+	 * whether the first argument of m2 (respec. m1) is _self to then compare the two prototypes.
+	 */
+	static def boolean isSamePrototype(MutableMethodDeclaration m1, MutableMethodDeclaration m2, boolean alsoCheckFirstArgSelf) {
+		val nameOk = m1!=null && m2!=null && m1.simpleName==m2.simpleName
+		val ok = nameOk && m1.parameters.size==m2.parameters.size
+		//TODO parameters and return type
+		if(nameOk && !ok && alsoCheckFirstArgSelf)
+			return (m1.parameters.size==m2.parameters.size+1 && m1.parameters.head.simpleName==AspectProcessor::SELF_VAR_NAME) ||
+					(m1.parameters.size+1==m2.parameters.size && m2.parameters.head.simpleName==AspectProcessor::SELF_VAR_NAME)
+		return ok 
+	}
 }

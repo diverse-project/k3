@@ -35,10 +35,10 @@ public annotation ReplaceAspectMethod {}
 public class AspectProcessor extends AbstractClassProcessor {
 	val Map<MutableClassDeclaration,List<MutableClassDeclaration>> listResMap = new HashMap
 	
-	static val CTX_NAME = 'AspectContext'
-	static val PROP_NAME = 'AspectProperties'
-	static val PROP_VAR_NAME = '_self_'
-	static val SELF_VAR_NAME = '_self'
+	public static val CTX_NAME = 'AspectContext'
+	public static val PROP_NAME = 'AspectProperties'
+	public static val PROP_VAR_NAME = '_self_'
+	public static val SELF_VAR_NAME = '_self'
 
 	/**
 	 * Phase 1
@@ -230,7 +230,36 @@ public class AspectProcessor extends AbstractClassProcessor {
 		m.body = ['''«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 	     «call.toString»''']
 	}
+
+
+	/**
+	 * In the case of multi-inheritance, operations of the aspects that cannot be classically extended must be added
+	 * to the class.
+	 */
+	private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz, String identifier, TransformationContext cxt) {
+		val superClasses = Helper::getAnnotationWithType(clazz).filter[cl | cl!=clazz.extendedClass].map[cl | cxt.findClass(cl.name)].filterNull
 		
+		superClasses.forEach[sc |
+			// Only non-private methods which does not already exist in the aspect class are considered.
+			sc.declaredMethods.filter[dm | dm.visibility!=Visibility::PRIVATE && !clazz.declaredMethods.exists[dm2| Helper::isSamePrototype(dm, dm2, true)]].forEach[dm |
+				// Adding a new proxy method in the aspect class.
+				val me = clazz.addMethod(dm.simpleName) [
+					visibility = dm.visibility
+					static = true
+					final = false
+					abstract = false
+					returnType = dm.returnType
+					dm.parameters.forEach[par | addParameter(par.simpleName, par.type)]
+				]
+				// This new method must be transformed like the other ones.
+				methodProcessingAddSelfStatic(me, identifier, cxt)
+				// The proxy consists of calling the corresponding operation in the targeted aspect class.
+				val params = me.parameters.map[simpleName].join(',')
+				me.body = ['''«sc.simpleName».«dm.simpleName»(«params»);''']
+			]
+		]
+	}
+
 
 	private def methodsProcessing(MutableClassDeclaration clazz, extension TransformationContext cxt, String identifier, 
 		Map<MutableMethodDeclaration,String> bodies, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, 
@@ -243,6 +272,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 			methodProcessingAddPriv(m, clazz, bodies, cxt)
 			methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, className)
 		}
+		
+		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
 	}
 
 	/**
