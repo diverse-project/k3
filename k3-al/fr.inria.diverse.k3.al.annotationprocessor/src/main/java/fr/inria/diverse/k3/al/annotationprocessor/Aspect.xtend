@@ -136,29 +136,30 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 
 	private def methodProcessingAddSuper(MutableMethodDeclaration m, MutableClassDeclaration clazz, extension TransformationContext cxt) {
+		if(m.annotations.findFirst[annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] == null) return;
 		//Add a method "super_methodName" which call first method in the
 		//super class hierarchy with the same name.
-		if (clazz.extendedClass != null && m.annotations.findFirst[annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] != null) {
-			clazz.addMethod("super_" + m.simpleName, [
-					visibility = Visibility::PRIVATE
-					static = true
-					returnType = m.returnType
-					for (p : m.parameters)
-						addParameter(p.simpleName, p.type)
-					val s = m.parameters.map[simpleName].join(',')
-					val superClass = findClass(clazz.extendedClass.name)
-					if (superClass == null)
-						clazz.addError("class " + clazz.simpleName + " has no super class")
-					else
-					{
-						val m3 = Helper::findMethod(superClass, m, cxt)
-						if (m3 == null)
-							m.addError("No super method found")
-						//TODO find super method
-						body = [''' «IF (m3.returnType.name != "void")»return «ENDIF» «m3.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s»);  ''']
-					}
+		val superClasses = Helper::getAnnotationWithType(clazz).map[cl | findClass(cl.name)].filterNull.toSet
+		val superCl = if(clazz.extendedClass==null) null else findClass(clazz.extendedClass.name)
+		if(superCl!=null) superClasses.add(superCl)
+	 	if(superClasses.empty) return;
+
+		// TODO findMethod does not support the annotation 'with' yet.
+		val superMeths = superClasses.map[sc| Helper::findMethod(sc, m, cxt)].filterNull
+		val multiSuper = superMeths.size>1
+
+		superMeths.forEach[sm |
+			val superNamePrefix = if(multiSuper) "super_"+Helper::getAspectedClassName(sm.declaringType).split("\\.").last+"_" else "super_"
+			clazz.addMethod(superNamePrefix + m.simpleName, [
+				visibility = Visibility::PRIVATE
+				static = true
+				returnType = m.returnType
+				for(p : m.parameters) addParameter(p.simpleName, p.type)
+				val s = m.parameters.map[simpleName].join(',')
+				//TODO find super method
+				body = ['''«IF (sm.returnType.name != "void")»return «ENDIF» «sm.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s»);''']
 			])
-		}
+		]
 	}
 	
 	
