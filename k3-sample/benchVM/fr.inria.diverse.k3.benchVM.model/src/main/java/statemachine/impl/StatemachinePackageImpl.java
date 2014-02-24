@@ -372,8 +372,8 @@ public class StatemachinePackageImpl extends EPackageImpl implements Statemachin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTransition__Start() {
-		return transitionEClass.getEOperations().get(0);
+	public EReference getTransition_Start() {
+		return (EReference)transitionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -381,8 +381,8 @@ public class StatemachinePackageImpl extends EPackageImpl implements Statemachin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTransition__Label() {
-		return transitionEClass.getEOperations().get(1);
+	public EReference getTransition_End() {
+		return (EReference)transitionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -390,8 +390,8 @@ public class StatemachinePackageImpl extends EPackageImpl implements Statemachin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTransition__End() {
-		return transitionEClass.getEOperations().get(2);
+	public EAttribute getTransition_Label() {
+		return (EAttribute)transitionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -461,9 +461,9 @@ public class StatemachinePackageImpl extends EPackageImpl implements Statemachin
 		createEOperation(stateMachineEClass, STATE_MACHINE___DELTA_MINUS_ONE__STATE);
 
 		transitionEClass = createEClass(TRANSITION);
-		createEOperation(transitionEClass, TRANSITION___START);
-		createEOperation(transitionEClass, TRANSITION___LABEL);
-		createEOperation(transitionEClass, TRANSITION___END);
+		createEReference(transitionEClass, TRANSITION__START);
+		createEReference(transitionEClass, TRANSITION__END);
+		createEAttribute(transitionEClass, TRANSITION__LABEL);
 
 		setEClass = createEClass(SET);
 	}
@@ -659,12 +659,9 @@ public class StatemachinePackageImpl extends EPackageImpl implements Statemachin
 		initEOperation(op, g1);
 
 		initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getTransition__Start(), this.getState(), "start", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTransition__Label(), ecorePackage.getEJavaObject(), "label", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTransition__End(), this.getState(), "end", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEReference(getTransition_Start(), this.getState(), null, "start", null, 1, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransition_End(), this.getState(), null, "end", null, 1, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTransition_Label(), ecorePackage.getEJavaObject(), "label", null, 1, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(setEClass, Set.class, "Set", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 

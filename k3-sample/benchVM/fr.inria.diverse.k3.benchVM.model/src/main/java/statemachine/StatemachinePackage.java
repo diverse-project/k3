@@ -349,40 +349,40 @@ public interface StatemachinePackage extends EPackage {
 	int TRANSITION = 2;
 
 	/**
+	 * The feature id for the '<em><b>Start</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSITION__START = 0;
+
+	/**
+	 * The feature id for the '<em><b>End</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSITION__END = 1;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSITION__LABEL = 2;
+
+	/**
 	 * The number of structural features of the '<em>Transition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSITION_FEATURE_COUNT = 0;
-
-	/**
-	 * The operation id for the '<em>Start</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSITION___START = 0;
-
-	/**
-	 * The operation id for the '<em>Label</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSITION___LABEL = 1;
-
-	/**
-	 * The operation id for the '<em>End</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRANSITION___END = 2;
+	int TRANSITION_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Transition</em>' class.
@@ -391,7 +391,7 @@ public interface StatemachinePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TRANSITION_OPERATION_COUNT = 3;
+	int TRANSITION_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link java.util.Set <em>Set</em>}' class.
@@ -707,34 +707,37 @@ public interface StatemachinePackage extends EPackage {
 	EClass getTransition();
 
 	/**
-	 * Returns the meta object for the '{@link statemachine.Transition#start() <em>Start</em>}' operation.
+	 * Returns the meta object for the reference '{@link statemachine.Transition#getStart <em>Start</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Start</em>' operation.
-	 * @see statemachine.Transition#start()
+	 * @return the meta object for the reference '<em>Start</em>'.
+	 * @see statemachine.Transition#getStart()
+	 * @see #getTransition()
 	 * @generated
 	 */
-	EOperation getTransition__Start();
+	EReference getTransition_Start();
 
 	/**
-	 * Returns the meta object for the '{@link statemachine.Transition#label() <em>Label</em>}' operation.
+	 * Returns the meta object for the reference '{@link statemachine.Transition#getEnd <em>End</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Label</em>' operation.
-	 * @see statemachine.Transition#label()
+	 * @return the meta object for the reference '<em>End</em>'.
+	 * @see statemachine.Transition#getEnd()
+	 * @see #getTransition()
 	 * @generated
 	 */
-	EOperation getTransition__Label();
+	EReference getTransition_End();
 
 	/**
-	 * Returns the meta object for the '{@link statemachine.Transition#end() <em>End</em>}' operation.
+	 * Returns the meta object for the attribute '{@link statemachine.Transition#getLabel <em>Label</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>End</em>' operation.
-	 * @see statemachine.Transition#end()
+	 * @return the meta object for the attribute '<em>Label</em>'.
+	 * @see statemachine.Transition#getLabel()
+	 * @see #getTransition()
 	 * @generated
 	 */
-	EOperation getTransition__End();
+	EAttribute getTransition_Label();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Set <em>Set</em>}'.
@@ -1001,28 +1004,28 @@ public interface StatemachinePackage extends EPackage {
 		EClass TRANSITION = eINSTANCE.getTransition();
 
 		/**
-		 * The meta object literal for the '<em><b>Start</b></em>' operation.
+		 * The meta object literal for the '<em><b>Start</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TRANSITION___START = eINSTANCE.getTransition__Start();
+		EReference TRANSITION__START = eINSTANCE.getTransition_Start();
 
 		/**
-		 * The meta object literal for the '<em><b>Label</b></em>' operation.
+		 * The meta object literal for the '<em><b>End</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TRANSITION___LABEL = eINSTANCE.getTransition__Label();
+		EReference TRANSITION__END = eINSTANCE.getTransition_End();
 
 		/**
-		 * The meta object literal for the '<em><b>End</b></em>' operation.
+		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TRANSITION___END = eINSTANCE.getTransition__End();
+		EAttribute TRANSITION__LABEL = eINSTANCE.getTransition_Label();
 
 		/**
 		 * The meta object literal for the '{@link java.util.Set <em>Set</em>}' class.
