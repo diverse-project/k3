@@ -86,7 +86,7 @@ public interface Transition extends EObject {
 	 * @return the value of the '<em>Label</em>' attribute.
 	 * @see #setLabel(Object)
 	 * @see statemachine.StatemachinePackage#getTransition_Label()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
 	Object getLabel();
