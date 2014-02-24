@@ -221,9 +221,9 @@ public interface StateMachine extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model type="statemachine.Set<statemachine.State>"
+	 * @model type="statemachine.Set<statemachine.Transition>"
 	 * @generated
 	 */
-	Set<State> deltaMinusOne(State st);
+	Set<Transition> deltaMinusOne(State st);
 
 } // StateMachine

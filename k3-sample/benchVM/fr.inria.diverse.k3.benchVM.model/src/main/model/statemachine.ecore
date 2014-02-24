@@ -140,7 +140,7 @@
     </eOperations>
     <eOperations name="deltaMinusOne">
       <eGenericType eClassifier="#//Set">
-        <eTypeArguments eClassifier="#//State"/>
+        <eTypeArguments eClassifier="#//Transition"/>
       </eGenericType>
       <eParameters name="st" eType="#//State"/>
     </eOperations>
