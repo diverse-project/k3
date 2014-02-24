@@ -3,24 +3,20 @@
 package statemachine.impl;
 
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import statemachine.State;
 import statemachine.StateMachine;
+import statemachine.StatemachineFactory;
 import statemachine.StatemachinePackage;
 import statemachine.Transition;
 
@@ -105,12 +101,12 @@ public class StateMachineImpl extends MinimalEObjectImpl.Container implements St
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public State addState(boolean initial, boolean terminal) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		State s = StatemachineFactory.eINSTANCE.createState();
+		s.setInitial(initial);
+		s.setTerminal(terminal);
+		return s;
 	}
 
 	/**

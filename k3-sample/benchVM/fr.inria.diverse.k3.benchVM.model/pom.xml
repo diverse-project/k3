@@ -8,7 +8,6 @@
   <name>Model of a statemachine for a benchmarking purpose</name>
  
    <build>
-    <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
