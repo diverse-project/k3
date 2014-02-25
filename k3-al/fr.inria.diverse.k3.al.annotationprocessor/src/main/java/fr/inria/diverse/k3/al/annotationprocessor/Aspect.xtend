@@ -1,5 +1,6 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
+import java.lang.annotation.Target
 import java.util.ArrayList
 import java.util.Comparator
 import java.util.HashMap
@@ -18,6 +19,9 @@ import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
 
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
@@ -30,6 +34,14 @@ public annotation OverrideAspectMethod {}
 public annotation NotAspectProperty {}
 
 public annotation ReplaceAspectMethod {}
+
+/**
+ * Used to tag a k3 operation as abstract as initially defined.
+ * Used when generating super operations: must not generate super for abstract operations.
+ */
+@Target(#[ElementType::METHOD])
+@Retention(RetentionPolicy::SOURCE)
+annotation Abstract {}
 
 
 public class AspectProcessor extends AbstractClassProcessor {
@@ -125,7 +137,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 		if (m.parameters.empty || m.parameters.get(0).simpleName != SELF_VAR_NAME) {
 			val l = new ArrayList<Pair<String, TypeReference>>
 			for(p1 : m.parameters) l.add(new Pair(p1.simpleName, p1.type))
-			
+
+			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
+			if(m.abstract)
+				m.addAnnotation(typeof(Abstract).findTypeGlobally)			
 			m.parameters.toList.clear				
 			m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 
@@ -145,7 +160,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 	if(superClasses.empty) return;
 
 		// TODO findMethod does not support the annotation 'with' yet.
-		val superMeths = superClasses.map[sc| Helper::findMethod(sc, m, cxt)].filterNull
+		val superMeths = superClasses.map[sc| Helper::findMethod(sc, m, cxt)].
+					// The super operations must not be abstract.
+					filterNull.filter[annotations.findFirst[annotationTypeDeclaration.simpleName=='Abstract']==null]
 		val multiSuper = superMeths.size>1
 
 		superMeths.forEach[sm |
