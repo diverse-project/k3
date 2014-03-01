@@ -187,14 +187,14 @@ abstract class Helper {
 		if (c.extendedClass != null) {
 			val l = findClass(c.extendedClass.name)
 			if(l==c) {
-				context.addError(c, "Its super class is itself?!")
+				context.addError(c, "Its super class is itself?! " + c.extendedClass.name)
 				return;
 			}
 			if(l!=null) {
 				s.add(l)
 				getSuperClass(s, l, context)
 			}
-		} 
+		}
 	}
 	
 	
