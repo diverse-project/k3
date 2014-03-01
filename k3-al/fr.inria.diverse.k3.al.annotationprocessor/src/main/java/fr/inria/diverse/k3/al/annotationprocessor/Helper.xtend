@@ -91,10 +91,12 @@ abstract class Helper {
 	static def void getSuperClasses(MutableClassDeclaration clazz, Set<MutableClassDeclaration> res, extension TransformationContext ctx) {
 		if(res.contains(clazz)) return;
 		res.add(clazz)
-		val l = findClass(clazz.extendedClass.name)
-		if(l!=null)
-			getSuperClasses(l,res,ctx)
-		getWithClassNames(clazz, ctx).map[n | findClass(n)].forEach[cl| if(cl!=null) getSuperClasses(cl, res, ctx)]
+		if(clazz.extendedClass!=null) {
+			val l = findClass(clazz.extendedClass.name)
+			if(l!=null)
+				getSuperClasses(l,res,ctx)
+			getWithClassNames(clazz, ctx).map[n | findClass(n)].forEach[cl| if(cl!=null) getSuperClasses(cl, res, ctx)]
+		}
 	}
 	
 	
@@ -184,7 +186,11 @@ abstract class Helper {
 	static def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c, extension TransformationContext context) {
 		if (c.extendedClass != null) {
 			val l = findClass(c.extendedClass.name)
-			if (l != null) {
+			if(l==c) {
+				context.addError(c, "Its super class is itself?!")
+				return;
+			}
+			if(l!=null) {
 				s.add(l)
 				getSuperClass(s, l, context)
 			}
