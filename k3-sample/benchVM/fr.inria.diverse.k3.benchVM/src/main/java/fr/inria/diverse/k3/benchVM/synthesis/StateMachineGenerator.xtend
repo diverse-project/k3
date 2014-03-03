@@ -69,6 +69,7 @@ class StateMachineGenerator {
 			t.setStart(listStates.get(instate))
 			t.setEnd(listStates.get(outstate))
 			t.setLabel("t" + rand.nextInt(100000))
+			f.delta.add(t)
 		}
 
 		return f;

@@ -297,6 +297,7 @@ public class StateMachineImpl extends MinimalEObjectImpl.Container implements St
 	 */
 	public Set<String> alphabet() {
 		Set<String> alpha = new HashSet<>();
+		
 		for(Transition t : delta) if(t.getLabel() instanceof String) alpha.add((String)t.getLabel());
 		return alpha;
 	}
