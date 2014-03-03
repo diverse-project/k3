@@ -48,6 +48,11 @@
 			<artifactId>org.eclipse.xtend.lib</artifactId>
 			<version>2.5.2</version>
 		</dependency>
+			<dependency>
+	<groupId>org.eclipse.emf</groupId>
+	<artifactId>edit</artifactId>
+	<version>2.3.0-v200706262000</version>
+</dependency>
     <dependency>
       <groupId>fr.inria.diverse.k3.al</groupId>
       <artifactId>fr.inria.diverse.k3.benchVM.model</artifactId>
