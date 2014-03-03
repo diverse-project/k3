@@ -1,5 +1,6 @@
 package fr.inria.diverse.k3.benchVM
 
+import fr.inria.diverse.k3.benchVM.synthesis.StateMachineGenerator
 import java.util.Collections
 import java.util.List
 import org.eclipse.emf.common.util.URI
@@ -13,8 +14,19 @@ import statemachine.impl.StatemachineFactoryImpl
 
 class Main {
 	def static void main(String[] args) {
+		var gen = new StateMachineGenerator(100000, 5,1,1)
+		
+		
+		
+		
+		var fsm = gen.createStateMachine()
+		gen.checkStateMachine(fsm)
+		
+		
 		
 	}
+	
+	
 	
 	static def List<StateMachine> getSlicerModel(String uriModel) {
 		EcoreFactoryImpl.eINSTANCE.eClass
@@ -26,5 +38,7 @@ class Main {
 		val res = new ResourceSetImpl().getResource(URI.createURI(uriModel), true)
 		res.load(Collections.emptyMap)
 		res.contents.filter(StateMachine).toList
+		
+		
 	}
 }
