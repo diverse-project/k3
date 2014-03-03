@@ -83,6 +83,20 @@ abstract class Helper {
 		classes.clear
 		classes.addAll(list.toList)
 	}
+
+
+	/**
+	 * Completes the list 'res' with all the super types of the given class 'clazz'.
+	 */
+	static def Set<MutableClassDeclaration> getDirectSuperClasses(MutableClassDeclaration clazz, TransformationContext ctx) {
+		val Set<MutableClassDeclaration> res = newHashSet
+		if(clazz.extendedClass!=null) {
+			val l = ctx.findClass(clazz.extendedClass.name)
+			if(l!=null) res.add(l)
+		}
+		res.addAll(getWithClassNames(clazz, ctx).map[n | ctx.findClass(n)].filterNull)
+		res
+	}
 	
 	
 	/**

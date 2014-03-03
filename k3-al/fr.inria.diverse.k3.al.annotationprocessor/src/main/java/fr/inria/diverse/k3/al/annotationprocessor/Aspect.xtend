@@ -49,6 +49,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	
 	public static val CTX_NAME = 'AspectContext'
 	public static val PROP_NAME = 'AspectProperties'
+	public static val OVERRIDE_METHOD = OverrideAspectMethod.simpleName
 	public static val PROP_VAR_NAME = '_self_'
 	public static val SELF_VAR_NAME = '_self'
 	public static val PRIV_PREFIX = '_privk3_'
@@ -151,7 +152,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 
 	private def methodProcessingAddSuper(MutableMethodDeclaration m, MutableClassDeclaration clazz, extension TransformationContext cxt) {
-		if(m.annotations.findFirst[annotationTypeDeclaration.simpleName == "OverrideAspectMethod"] == null) return;
+		if(m.annotations.findFirst[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD] == null) return;
 		//Add a method "super_methodName" which call first method in the
 		//super class hierarchy with the same name.
 		val superClasses = Helper::getAnnotationWithType(clazz).map[cl | findClass(cl.name)].filterNull.toSet
@@ -302,19 +303,33 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 
-	private def methodsProcessing(MutableClassDeclaration clazz, extension TransformationContext cxt, String identifier, 
+	private def methodsProcessing(MutableClassDeclaration clazz, TransformationContext cxt, String identifier, 
 		Map<MutableMethodDeclaration,String> bodies, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, 
 		List<String> inheritList, String className) {
 
 		for(m : clazz.declaredMethods) {
-			methodProcessingAddSelfStatic(m, identifier, cxt)
-			methodProcessingAddSuper(m, clazz, cxt)
-			methodProcessingAddHidden(m, identifier, cxt)
-			methodProcessingAddPriv(m, clazz, bodies, cxt)
-			methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, className)
+			if(checkAnnotationprocessorCorrect(m, clazz, cxt)) {
+				methodProcessingAddSelfStatic(m, identifier, cxt)
+				methodProcessingAddSuper(m, clazz, cxt)
+				methodProcessingAddHidden(m, identifier, cxt)
+				methodProcessingAddPriv(m, clazz, bodies, cxt)
+				methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, className)
+			}
+			else cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 		}
 		
 		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
+	}
+
+
+	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
+	 * checks that a super method exists in its hierarchy. */
+	private def boolean checkAnnotationprocessorCorrect(MutableMethodDeclaration m, MutableClassDeclaration clazz, TransformationContext cxt) {
+		val annot = m.annotations.findFirst[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]
+		if(annot==null) return true
+		val supers = Helper::getDirectSuperClasses(clazz, cxt)
+		if(supers.empty) return false
+		return supers.findFirst[superCl| Helper::findMethod(superCl, m, cxt)!=null]!=null
 	}
 
 
