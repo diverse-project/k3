@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="expArithm" nsURI="http://expArithm" nsPrefix="expArithm">
+  <eClassifiers xsi:type="ecore:EClass" name="ExpressionArithm">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="racine" eType="#//EltExp"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EltExp" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OperateurBinaire" abstract="true" eSuperTypes="#//EltExp">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EltGauche" lowerBound="1"
+        eType="#//EltExp" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eltDroit" lowerBound="1"
+        eType="#//EltExp" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Valeur" eSuperTypes="#//EltExp">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valeur" lowerBound="1"
+        eType="#//double"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="double" instanceClassName="java.lang.Double"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Plus" eSuperTypes="#//OperateurBinaire"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Moins" eSuperTypes="#//OperateurBinaire"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Mult" eSuperTypes="#//OperateurBinaire"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Division" eSuperTypes="#//OperateurBinaire"/>
+</ecore:EPackage>

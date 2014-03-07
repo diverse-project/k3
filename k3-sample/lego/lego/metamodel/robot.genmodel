@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/lego/src" modelPluginID="lego" modelName="Robot"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="7.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>robot.ecore</foreignModel>
+  <genPackages prefix="Robot" disposableProviderFactory="true" ecorePackage="robot.ecore#/">
+    <genDataTypes ecoreDataType="robot.ecore#//Double"/>
+    <genDataTypes ecoreDataType="robot.ecore#//Bool"/>
+    <genDataTypes ecoreDataType="robot.ecore#//Int"/>
+    <genDataTypes ecoreDataType="robot.ecore#//String"/>
+    <nestedGenPackages prefix="Robot" basePackage="robot" disposableProviderFactory="true"
+        ecorePackage="robot.ecore#//robot">
+      <genClasses image="false" ecoreClass="robot.ecore#//robot/Command"/>
+      <genClasses ecoreClass="robot.ecore#//robot/MoveCmd">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/MoveCmd/power"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/ObstacleCmd">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/ObstacleCmd/distance"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/Bip">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/Bip/duration"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/Bip/power"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/Bip/repet"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/SetTurnAngleCmd">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/SetTurnAngleCmd/angle"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/HasTurnedCmd">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/HasTurnedCmd/angle"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/TurnCmd">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/TurnCmd/power"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/TurnCmd/angle"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/StopEngineCmd"/>
+      <genClasses ecoreClass="robot.ecore#//robot/StopProgramCmd"/>
+      <genClasses ecoreClass="robot.ecore#//robot/PrintCmd">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/PrintCmd/msg"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/PrintCmd/duration"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/PrintCmd/line"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute robot.ecore#//robot/PrintCmd/col"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//robot/ProgramUnit">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//robot/ProgramUnit/block"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="FlotCtrl" basePackage="robot" disposableProviderFactory="true"
+        generateModelWizard="false" ecorePackage="robot.ecore#//FlotCtrl">
+      <genClasses image="false" ecoreClass="robot.ecore#//FlotCtrl/Expression"/>
+      <genClasses ecoreClass="robot.ecore#//FlotCtrl/WhileLoop">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/WhileLoop/loopCond"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/WhileLoop/block"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//FlotCtrl/NegExp">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/NegExp/exp"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="robot.ecore#//FlotCtrl/BoolExp"/>
+      <genClasses ecoreClass="robot.ecore#//FlotCtrl/AndExp">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/AndExp/leftExp"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/AndExp/rightExp"/>
+      </genClasses>
+      <genClasses ecoreClass="robot.ecore#//FlotCtrl/IfBlock">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/IfBlock/condition"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/IfBlock/thenBlock"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference robot.ecore#//FlotCtrl/IfBlock/elseBlock"/>
+      </genClasses>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.inria.diverse.k3.sle</groupId>
+	<artifactId>fr.inria.diverse.k3.sle.root</artifactId>
+	<version>0.1.0.beta</version>
+	<packaging>pom</packaging>
+
+        <name>K3SLE Root Build Manager</name>
+	
+	<modules>
+		<module>../fr.inria.diverse.k3.sle.lib</module>
+		<module>../fr.inria.diverse.k3.sle.metamodel</module>
+		<module>../fr.inria.diverse.k3.sle</module>
+		<module>../fr.inria.diverse.k3.sle.ui</module>
+		<module>../fr.inria.diverse.k3.sle.tests</module>
+		<module>../fr.inria.diverse.k3.sle.sdk</module>
+		<module>../fr.inria.diverse.k3.sle.p2updatesite</module>
+	</modules>
+
+	<properties>
+                <kermeta.version>3.0.0-SNAPSHOT</kermeta.version>
+		<emf.version>2.9.1-v20130827-0309</emf.version>
+		<tycho.version>0.19.0</tycho.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<xtext.version>2.5.3</xtext.version>
+	</properties>
+
+	<repositories>
+                <repository>
+                        <id>K3</id>
+                        <layout>p2</layout>
+                        <url>https://ci.inria.fr/k3al/job/k3-al.eclipse/lastSuccessfulBuild/artifact/k3-al.eclipse/fr.inria.diverse.k3.al.p2updatesite/target/site/</url>
+		</repository>
+                <repository>
+                        <id>Kepler</id>
+                        <layout>p2</layout>
+                        <url>http://download.eclipse.org/releases/kepler</url>
+                </repository>
+		<repository>
+			<id>Xtext Update Site</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
+		</repository>
+        </repositories>
+
+	<build>
+        <sourceDirectory>src/main/java/src-gen/</sourceDirectory>
+		<pluginManagement>
+			<plugins>
+				<!-- xtend-maven-plugin is in pluginManagement instead of in plugins
+					 so that it doesn't run before the exec-maven-plugin's *.mwe2 gen;
+					 this way we can list it after. 
+				  -->
+				  
+				<plugin>
+					<groupId>org.eclipse.xtend</groupId>
+					<artifactId>xtend-maven-plugin</artifactId>
+					<version>${xtext.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<goal>xtend-install-debug-info</goal>
+								<goal>testCompile</goal>
+								<goal>xtend-test-install-debug-info</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+                                                <outputDirectory>src/main/xtend-gen</outputDirectory>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+                        <plugin>
+                                <groupId>org.eclipse.xtend</groupId>
+                                <artifactId>xtend-maven-plugin</artifactId>
+                        </plugin>
+		</plugins>
+	</build>
+</project>

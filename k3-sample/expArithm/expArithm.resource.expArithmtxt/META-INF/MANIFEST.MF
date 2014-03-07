@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ExpArithm textual editor
+Bundle-SymbolicName: expArithm.resource.expArithmtxt;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
+  org.eclipse.emf.ecore,
+  org.eclipse.emf.ecore.change,
+  org.eclipse.emf.validation;resolution:=optional,
+  org.emftext.access;resolution:=optional,
+  org.eclipse.debug.core;resolution:=optional,
+  org.emftext.commons.antlr3_4_0,
+  insa.expArithm
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: expArithm.resource.expArithmtxt,
+  expArithm.resource.expArithmtxt.analysis,
+  expArithm.resource.expArithmtxt.mopp,
+  expArithm.resource.expArithmtxt.debug,
+  expArithm.resource.expArithmtxt.launch,
+  expArithm.resource.expArithmtxt.grammar,
+  expArithm.resource.expArithmtxt.util
+Bundle-Activator: expArithm.resource.expArithmtxt.mopp.ExpArithmtxtPlugin

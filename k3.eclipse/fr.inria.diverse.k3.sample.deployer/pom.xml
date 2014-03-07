@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+  <parent>
+		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
+		<groupId>fr.inria.diverse.k3</groupId>
+		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+  <artifactId>fr.inria.diverse.k3.sample.deployer</artifactId>
+  <packaging>eclipse-plugin</packaging>
+  <build>
+		<plugins>
+			<!-- Zip the samples projects in a suitable form for deployment -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<mkdir dir="${basedir}/zips" />
+								<!-- simple projects -->
+								<zip destfile="${basedir}/zips/k3.sample.plugin.hello_ecore.zip">
+									<fileset dir="${basedir}/../../k3-sample/k3.sample.plugin.hello_ecore/" />
+								</zip>
+								
+								<!-- samples requiring several projects -->
+								<mkdir dir="${basedir}/zips/logo" />
+								<zip destfile="${basedir}/zips/logo/k3.sample.maven.logo.zip">
+									<fileset dir="${basedir}/../../k3-sample/logo/k3.sample.maven.logo/" />
+								</zip>
+								<zip destfile="${basedir}/zips/logo/k3.sample.maven.logo.model.zip">
+									<fileset dir="${basedir}/../../k3-sample/logo/k3.sample.maven.logo.model/" />
+								</zip>
+																
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project> 
+

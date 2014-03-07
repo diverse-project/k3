@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="fr.inria.diverse.k3.feature"
+      label="K3 feature"
+      version="3.0.0.qualifier">
+
+   <description url="https://github.com/barais/k3/">
+      k3 Project
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="fr.inria.diverse.k3.sle.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="fr.inria.diverse.k3.al.feature"
+         version="0.0.0"/>
+
+   <plugin
+         id="fr.inria.diverse.k3.sample.deployer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="fr.inria.diverse.k3.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

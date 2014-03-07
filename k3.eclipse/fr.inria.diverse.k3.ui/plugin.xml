@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="fr.inria.diverse.k3.category"
+            class="fr.inria.diverse.k3.ui.wizards.WizardNewProjectK3Plugin"
+            icon="icons/new_kermeta_project.gif"
+            id="fr.inria.diverse.k3.ui.wizards.WizardNewProjectK3Plugin"
+            name="K3 Project"
+            project="true">
+      </wizard>
+      <category
+            id="fr.inria.diverse.k3.category"
+            name="Kermeta 3">
+      </category>
+   </extension>
+
+</plugin>

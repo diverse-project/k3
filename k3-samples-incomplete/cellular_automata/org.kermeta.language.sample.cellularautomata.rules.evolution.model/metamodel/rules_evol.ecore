@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="evol" nsURI="http://rules/evol/1.0" nsPrefix="evol">
+  <eClassifiers xsi:type="ecore:EClass" name="NeighborsExpression" abstract="true"
+      eSuperTypes="../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.ecore#//IntegerExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="neighborsFilter" eType="#//PopulationRange"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Size" eSuperTypes="#//NeighborsExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Sum" eSuperTypes="#//NeighborsExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Max" eSuperTypes="#//NeighborsExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Min" eSuperTypes="#//NeighborsExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PopulationRange" eSuperTypes="../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.ecore#//Filter">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
+        defaultValueLiteral="-2147483648"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperRange" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
+        defaultValueLiteral="2147483647"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CellularAutomata">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
+        eType="ecore:EClass ../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.ecore#//Rule"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CurrentCellPopulation" eSuperTypes="../../org.kermeta.language.sample.cellularautomata.rules.core.model/metamodel/rules_core.ecore#//IntegerExpression"/>
+</ecore:EPackage>

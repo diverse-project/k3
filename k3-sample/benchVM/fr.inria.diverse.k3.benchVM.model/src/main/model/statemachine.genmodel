@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/fr.inria.diverse.k3.benchVM.model/src/main/java"
+    modelPluginID="fr.inria.diverse.k3.benchVM.model" modelName="Statemachine" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>statemachine.ecore</foreignModel>
+  <genPackages prefix="Statemachine" disposableProviderFactory="true" ecorePackage="statemachine.ecore#/">
+    <genClasses ecoreClass="statemachine.ecore#//State">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//State/initial"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//State/terminal"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//StateMachine">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//StateMachine/states"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//StateMachine/delta.3"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/addState">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/addState/initial"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/addState/terminal"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/terminals"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/accessibleStates"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/accessibleStates.1">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/accessibleStates.1/states"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/coAccessibleStates">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/coAccessibleStates/states"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/coAccessibleStates.1"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/accessibleAndCoAccessibleStates"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/deltaFrom">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/deltaFrom/from"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/deltaFrom/to"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/deltaMinusOne">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/deltaMinusOne/state"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/deltaMinusOne/label"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/addTransition">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/addTransition/transition"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/accessibleStates.2">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/accessibleStates.2/st"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/accept">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/accept/word"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/alphabet"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/delta">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/delta/state"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/delta/label"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/delta.1">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/delta.1/state"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/delta.2">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/delta.2/s"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/steps">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/steps/s"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/steps/word"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/steps.1">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/steps.1/st"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/steps.1/word"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/step">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/step/s"/>
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/step/o"/>
+      </genOperations>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/initials"/>
+      <genOperations ecoreOperation="statemachine.ecore#//StateMachine/deltaMinusOne.1">
+        <genParameters ecoreParameter="statemachine.ecore#//StateMachine/deltaMinusOne.1/st"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//Transition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/start"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/end"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//Transition/label"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="statemachine.ecore#//Set">
+      <genTypeParameters ecoreTypeParameter="statemachine.ecore#//Set/T"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

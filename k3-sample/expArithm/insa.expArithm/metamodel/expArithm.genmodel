@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/insa.expArithm/src" modelPluginID="insa.expArithm"
+    modelName="ExpArithm" importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0"
+    copyrightFields="false">
+  <foreignModel>expArithm.ecore</foreignModel>
+  <genPackages prefix="ExpArithm" disposableProviderFactory="true" ecorePackage="expArithm.ecore#/">
+    <genDataTypes ecoreDataType="expArithm.ecore#//double"/>
+    <genClasses ecoreClass="expArithm.ecore#//ExpressionArithm">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expArithm.ecore#//ExpressionArithm/racine"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="expArithm.ecore#//EltExp"/>
+    <genClasses image="false" ecoreClass="expArithm.ecore#//OperateurBinaire">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expArithm.ecore#//OperateurBinaire/EltGauche"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expArithm.ecore#//OperateurBinaire/eltDroit"/>
+    </genClasses>
+    <genClasses ecoreClass="expArithm.ecore#//Valeur">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expArithm.ecore#//Valeur/valeur"/>
+    </genClasses>
+    <genClasses ecoreClass="expArithm.ecore#//Plus"/>
+    <genClasses ecoreClass="expArithm.ecore#//Moins"/>
+    <genClasses ecoreClass="expArithm.ecore#//Mult"/>
+    <genClasses ecoreClass="expArithm.ecore#//Division"/>
+  </genPackages>
+</genmodel:GenModel>
