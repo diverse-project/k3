@@ -1,36 +1,8 @@
 {
     "platform": [
-        "http://download.eclipse.org/eclipse/updates/4.3-M-builds/M-4.3.2RC1-201401170910/",
-        "http://download.eclipse.org/modeling/emf/emf/updates/2.9.x/",
-        "http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/",
-        "http://download.eclipse.org/mpc/nightly",
         "http://download.eclipse.org/releases/kepler"
-        ],
-    "modeling-base": [
-        "http://download.eclipse.org/modeling/mdt/ocl/updates/maintenance/4.1.2/M201401201522",
-        "http://download.eclipse.org/modeling/gmp/gmf-runtime/updates/milestones",
-        "http://download.eclipse.org/modeling/gmp/gmf-notation/updates/milestones",
-        "http://download.eclipse.org/tools/gef/updates/milestones",
-		"http://download.eclipse.org/modeling/emf/validation/updates/milestones",
-		"http://download.eclipse.org/modeling/emf/transaction/updates/milestones",
-        "http://download.eclipse.org/modeling/emf/query/updates/milestones",
-        "http://download.eclipse.org/modeling/emf/compare/updates/milestones/2.1/S201401220957",
-        "http://download.eclipse.org/mmt/qvto/updates/releases/3.3.0"
-        ],
-    "papyrus": [
-        "http://download.eclipse.org/modeling/mdt/papyrus/updates/milestones/0.10/SR2_RC1/main"
-	],
-    "acceleo": [
-        "http://download.eclipse.org/modeling/m2t/acceleo/updates/releases/3.4/R201309031307"
-        ],
-    "ecoretools": [
-        "http://download.eclipse.org/modeling/emft/ecoretools/updates/milestones/2.0.0M4/luna"
         ],
      "xtext": [
          "http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"
-         ],
-    "devtools": [
-        "http://community.polarion.com/projects/subversive/download/eclipse/3.0/kepler-site/",
-        "http://download.eclipse.org/egit/updates"
-        ]
+         ]
 }
