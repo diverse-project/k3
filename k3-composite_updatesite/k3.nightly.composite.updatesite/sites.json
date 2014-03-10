@@ -1,0 +1,9 @@
+{
+    "k3-sle": [
+        "https://ci.inria.fr/k3al/view/maven_tycho_eclipse/job/k3-sle.eclipse/lastSuccessfulBuild/artifact/k3-sle.eclipse/fr.inria.diverse.k3.sle.p2updatesite/target/site/"
+        ],
+    "k3-al": [
+        "https://ci.inria.fr/k3al/view/maven_tycho_eclipse/job/k3-al.eclipse/lastSuccessfulBuild/artifact/k3-al.eclipse/fr.inria.diverse.k3.al.p2updatesite/target/site/"
+        ]
+
+}

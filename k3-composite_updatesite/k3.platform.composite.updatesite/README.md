@@ -1,0 +1,1 @@
+This is the composite update site that references all the thirdparty update sites that are added to the studio (this includes eclipse platform itself)
