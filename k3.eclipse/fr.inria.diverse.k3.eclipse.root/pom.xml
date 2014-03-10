@@ -30,26 +30,18 @@
 	<repositories>
 	
 		<!-- Repositories for Tycho -->
+		<!-- Update site  general repo for K3 except the currently build one (ie. k3-eclipse) -->	
 		<repository>
-			<id>k3-al.eclipse_continuous_integration</id>
-			<url>https://ci.inria.fr/k3al/job/k3-al.eclipse/lastSuccessfulBuild/artifact/k3-al.eclipse/fr.inria.diverse.k3.al.p2updatesite/target/site/</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>k3-sle.eclipse_continuous_integration</id>
-			<url>https://ci.inria.fr/k3al/job/k3-sle.eclipse/lastSuccessfulBuild/artifact/k3-sle.eclipse/fr.inria.diverse.k3.sle.p2updatesite/target/site/</url>
-			<layout>p2</layout>
+                <id>K3-except-k3-eclipse</id>
+                <layout>p2</layout>
+                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3.nightly.composite.updatesite/update/all-except-k3-sle/</url>
 		</repository>
 		
-		<repository>
-			<id>kepler</id>
-			<url>${kepler-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>xtend</id>
-			<url>${xtend-repo.url}</url>
-			<layout>p2</layout>
+		<!-- Update site Repo for thirdparty Dependencies -->
+        <repository>
+                <id>platform</id>
+                <layout>p2</layout>
+                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3.platform.composite.updatesite/update/</url>
 		</repository>
 
 		<!-- repository for pure maven artefacts -->

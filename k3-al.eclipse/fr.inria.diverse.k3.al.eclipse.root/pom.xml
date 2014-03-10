@@ -25,15 +25,19 @@
 	<repositories>
 	
 		<!-- Repositories for tycho -->		
-		<repository>
-			<id>kepler</id>
-			<url>${kepler-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>xtend</id>
-			<url>${xtend-repo.url}</url>
-			<layout>p2</layout>
+		<!-- Update site  general repo for K3 except the currently build one (ie. k3-al) -->			
+		<!-- commented out for now since it doesn't depend on other k3 updatesite -->
+		<!-- <repository>
+                <id>K3-except-k3al</id>
+                <layout>p2</layout>
+                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3.nightly.composite.updatesite/update/all-except-k3-al/</url>
+		</repository> -->
+		
+		<!-- Update site Repo for thirdparty Dependencies -->
+        <repository>
+                <id>platform</id>
+                <layout>p2</layout>
+                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3.platform.composite.updatesite/update/</url>
 		</repository>
 
 		<!-- repository for pure maven artefacts -->

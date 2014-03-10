@@ -4,6 +4,9 @@
         ],
     "k3-al": [
         "http://www.kermeta.org/k3/k3-al/update"
+        ],
+    "k3": [
+        "http://www.kermeta.org/k3/update"
         ]
 
 }
