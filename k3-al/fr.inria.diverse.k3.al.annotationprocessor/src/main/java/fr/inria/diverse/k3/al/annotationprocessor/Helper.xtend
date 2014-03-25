@@ -266,4 +266,14 @@ abstract class Helper {
 	static def boolean isSameType(TypeReference tr1, TypeReference tr2) {
 		tr1==tr2 || (tr1!=null && tr2!=null && tr1.simpleName==tr2.simpleName)
 	}
+	
+	/**
+	 * Returns the adapter standing between a metaclass in a sub-metamodel
+	 * and its corresponding metaclass in a super-metamodel
+	 */
+	static def getAdapterClassName(MutableTypeDeclaration cls, extension TransformationContext ctx) {
+		val ann = cls.annotations.findFirst[getValue("adapter") !== null]
+		
+		return if (ann !== null) ann.getValue("adapter") as String else ""
+	}
 }
