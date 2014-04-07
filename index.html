@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="K3 : " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>K3</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/diverse-project/k3">View on GitHub</a>
+
+          <h1 id="project_title">K3</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/diverse-project/k3/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/diverse-project/k3/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="k3" class="anchor" href="#k3"><span class="octicon octicon-link"></span></a>K3</h1>
+
+<p>K3 is an environment for executable metamodeling and DSL engineering. It is composed of two main parts: K3AL and K3SLE
+K3AL is a DSL on top of XTEND that works "à la" Kermeta 1.x / Kermeta 2.x. Is is mainly used as an action language for model element manipulation (modeling in the small).
+K3SLE is a set of features dedicated to manipulate models (modeling in the large). It contains a modeltype system.</p>
+
+<h2>
+<a name="git-and-projet-structure" class="anchor" href="#git-and-projet-structure"><span class="octicon octicon-link"></span></a>Git and projet structure</h2>
+
+<p>The git uses 2 main branches: <em>production_stable</em> for releases and demo versions, and <em>master</em> for development and integration.</p>
+
+<p>Root folders with name *-eclipse contains eclipse based project that can be built directly in eclipse or using maven+tycho.
+Other root folders contains pure maven projects.
+All root folders contains a *.root project that allow to build all the projects of the folder in one maven command.</p>
+
+<h2>
+<a name="k3al" class="anchor" href="#k3al"><span class="octicon octicon-link"></span></a>K3AL</h2>
+
+<p>This project is a DSL on top of XTEND to work "à la" Kermeta. It is general enough to be used in more situation that just model manipulation programs.</p>
+
+<p>Please use the exampleXtendSnapSHot</p>
+
+<p>It provides examples to use this DSL. </p>
+
+<p>Among these examples:</p>
+
+<ul>
+<li>An archetype that generates an example of ecore model loading that contains aspects</li>
+<li>an example of FSM Operational Semantics</li>
+<li>an example of integration with Spoon</li>
+<li>an integration to generate Kevoree components. </li>
+<li>Example with multiples aspects on the same metaclasses</li>
+<li>Example with aspect inheritance</li>
+<li>AspectProperty Active Annotation</li>
+<li>Example with design by contracts</li>
+<li>Inheritance and Design by contract</li>
+<li>Example of Aspect that overrides Base method Works when we remain in Xtend (Using ReplaceAspectMethod annotation)</li>
+<li>Example with GWT</li>
+</ul><h3>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h3>
+
+<ul>
+<li>Aspects and Design by contract</li>
+<li>Pretty printer from k2 to k3</li>
+<li>Example of Aspect that overrides Base method Works when we leave Xtend (the case of EMF)</li>
+<li>Documentation to explain _self on aspects (even for static method or static attributes. </li>
+<li>Example of an Xtend program  that works on a xtend program</li>
+</ul><h3>
+<a name="tools-provided-with-k3al" class="anchor" href="#tools-provided-with-k3al"><span class="octicon octicon-link"></span></a>Tools provided with K3AL</h3>
+
+<ul>
+<li>Aspect generator for an ecore metamodel</li>
+<li>maven archetype</li>
+</ul><h2>
+<a name="k3sle" class="anchor" href="#k3sle"><span class="octicon octicon-link"></span></a>K3SLE</h2>
+
+<p>K3SLE is modeltype system dedicated to manipulate models (modeling in the large). It allows to useconformance of models in order to apply transformation to models that may not be of the same exact metamodel.
+... See the recent papers and Jim Steel's phd thesis.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">K3 maintained by <a href="https://github.com/diverse-project">diverse-project</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
