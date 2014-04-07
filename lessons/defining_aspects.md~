@@ -1,0 +1,97 @@
+---
+layout: page
+title: "Defining Aspects"
+description: ""
+---
+{% include JB/setup %}
+
+# Creating an aspect on a class
+
+1. Add the annotation **Aspect** on the class corresponding to the aspect
+2. Specify the class to augment using the annotation parameter **className**
+3. Update the imported packages using **ctrl+shift+o**
+
+
+```xtend
+package mypackage
+
+import fr.inria.triskell.k3.Aspect
+
+import mypackage.OtherClass
+
+@Aspect(className=typeof(OtherClass))
+class OtherClassAspect {
+    def void display (){
+         prinln("I am OtherClassAspect")
+    }
+}
+```
+
+In an aspect you can use the attributes and operations of both the augmented class and the aspect itself.<br/>
+In aspects **the keyword this must not be used**.
+Instead, the keyword **_self** must be used.
+
+```xtend
+@Aspect(className=typeof(OtherClass))
+class OtherClassAspect {
+   var int foo = 1
+
+    def void display (){
+         // The keyword _self must be used to refer to attributes and operations of the class and aspect.
+         _self.foo = 2
+         _self.callingOnOperationOfOtherClass()
+    }
+}
+```
+
+# Extending an aspect
+
+Extending an aspect can be performed as in Xtend.<br/>
+However, an aspect can inherit from another aspect only!<br/>
+To use the operations and attributes added in a class, you have to import the aspect:
+_import static extension myPkg.AspectName.*_
+
+```xtend
+package mypackage
+
+import fr.inria.triskell.k3.Aspect
+import fr.inria.triskell.k3.OverrideAspectMethod
+
+import mypackage.OtherClass
+import mypackage.MyClass
+
+import static extension mypackage.OtherClassAspect.*
+
+@Aspect(className=typeof(OtherClass))
+class OtherClassAspect {
+    def void display(){
+      prinln("I am OtherClassAspect")
+    }
+}
+
+@Aspect(className=typeof(MyClass))
+class MyClassAspect extends OtherClassAspect {
+    // Annotation to tag the operation as an operation 
+    // overloading a super operation
+    @OverrideAspectMethod
+    def void display(){
+      println("I am MyClassAspect")
+    }
+}
+```
+
+# Calling a super operation
+
+A call to a super operation can be done by writing **super_** followed by the name of the operation. Do not forget to use **_self** to handle elements of the class or aspect.
+
+```xtend
+@Aspect(className=typeof(MyClass))
+class MyClassAspect extends OtherClassAspect {
+    @OverrideAspectMethod
+    def void display(){
+       _self.super_display()
+       prinln("I am MyClassAspect")
+    }
+}
+```
+
