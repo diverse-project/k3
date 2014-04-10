@@ -23,3 +23,4 @@
 * [Functions](functions/README.md)
     * [Declare](functions/declare.md)
     * [Higher order](functions/higher_order.md)
+    * [Test Higher order](functions/higher_order.md)
