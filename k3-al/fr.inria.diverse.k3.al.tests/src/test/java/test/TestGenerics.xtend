@@ -39,9 +39,9 @@ class FooGenericsAspect {
 	}
 }
 
-@Aspect(className=typeof(Object))
+/*@Aspect(className=typeof(Object))
 abstract class EcoreSlicerVisitor<T> {
 	protected var T attr = null
-}
+}*/
 
 

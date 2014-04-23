@@ -7,7 +7,7 @@ class TestDoesNotWork {
 	
 	def static void main(String[] args) {
 		val l = new FooImpl 
-		l.fooOp1  
+		//l.fooOp1  
 	} 
 	 
 	
