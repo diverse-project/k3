@@ -38,66 +38,66 @@ import static org.junit.Assert.*
  * 
  */
  
-class A
+class OpA
 {
 	@Opposite("a")
-	B b
+	OpB b
 	
 	@Opposite("aa")
-	B bb
+	OpB bb
 	
 	@Opposite("a")
-	C c
+	OpC c
 }
 
-class B
+class OpB
 {
 	@Opposite("b")
-	A a
+	OpA a
 	
 	@Opposite("bb")
-	A aa
+	OpA aa
 }
 
-class C
+class OpC
 {
 	@Opposite("c")
-	A a
+	OpA a
 }
 
-class D extends A
+class OpD extends OpA
 {
 	@Opposite("d2")
-	D d1
+	OpD d1
 	
 	@Opposite("d1")
-	D d2
+	OpD d2
 }
 
-class E extends B
+class OpE extends OpB
 {}
 
 class TestOpposite {
-	A a1
-	A a2
-	B b1
-	B b2
-	C c1
-	D d1
-	D d2
-	E e1
+	OpA a1
+	OpA a2
+	OpB b1
+	OpB b2
+	OpC c1
+	OpD d1
+	OpD d2
+	OpE e1
 	
 	@Before
 	def void setUp()
 	{
-		a1 = new A
-		a2 = new A
-		b1 = new B
-		b2 = new B
-		c1 = new C
-		d1 = new D
-		d2 = new D
-		e1 = new E
+		a1 = new OpA
+		a2 = new OpA
+		b1 = new OpB
+		b2 = new OpB
+		c1 = new OpC
+		d1 = new OpD
+		d2 = new OpD
+		e1 = new OpE
 	}
 	
 	@Test
