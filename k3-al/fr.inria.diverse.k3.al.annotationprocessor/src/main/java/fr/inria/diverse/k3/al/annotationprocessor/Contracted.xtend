@@ -36,9 +36,9 @@ class ContractedProcessor extends AbstractClassProcessor {
 	private def void getAllInvs(MutableClassDeclaration cl, List<MutableMethodDeclaration> invs,
 		extension TransformationContext context) {
 		invs.addAll(cl.declaredMethods.filter[annotations.exists[annotationTypeDeclaration == Inv.newTypeReference.type]])
-		if (cl.extendedClass != null) {
+		if (cl.extendedClass !== null) {
 			val parent = findClass(cl.extendedClass.name)
-			if (parent != null)
+			if (parent !== null)
 				getAllInvs(parent, invs, context)
 		}
 	}
@@ -46,9 +46,9 @@ class ContractedProcessor extends AbstractClassProcessor {
 	private def void getAllPre(MutableClassDeclaration cl, List<MutableMethodDeclaration> pres, String MsimpleName,
 		extension TransformationContext context) {
 		pres.addAll(cl.declaredMethods.filter[m1|m1.simpleName == "pre" + MsimpleName])
-		if (cl.extendedClass != null) {
+		if (cl.extendedClass !== null) {
 			val parent = findClass(cl.extendedClass.name)
-			if (parent != null)
+			if (parent !== null)
 				getAllPre(parent, pres, MsimpleName, context)
 		}
 	}
@@ -56,9 +56,9 @@ class ContractedProcessor extends AbstractClassProcessor {
 	private def void getAllPost(MutableClassDeclaration cl, List<MutableMethodDeclaration> posts, String simpleName,
 		extension TransformationContext context) {
 		posts.addAll(cl.declaredMethods.filter[m1|m1.simpleName == "post" + simpleName])
-		if (cl.extendedClass != null) {
+		if (cl.extendedClass !== null) {
 			val parent = findClass(cl.extendedClass.name)
-			if (parent != null)
+			if (parent !== null)
 				getAllPost(parent, posts, simpleName, context)
 		}
 	}
@@ -137,7 +137,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 						static = m.static
 						final = m.final
 						returnType = m.returnType
-						if (m.body == null)
+						if (m.body === null)
 							body = [bodies.get(m)]
 						else
 							body = m.body
@@ -213,7 +213,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 						static = m.static
 						final = m.final
 						returnType = m.returnType
-						if (m.body == null)
+						if (m.body === null)
 							body = [bodies.get(m)]
 						else
 							body = m.body
@@ -290,7 +290,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 						static = m.static
 						final = m.final
 						returnType = m.returnType
-						if (m.body == null)
+						if (m.body === null)
 							body = [bodies.get(m)]
 						else
 							body = m.body
@@ -330,7 +330,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 						static = m.static
 						final = m.final
 						returnType = m.returnType
-						if (m.body == null)
+						if (m.body === null)
 							body = [bodies.get(m)]
 						else
 							body = m.body
