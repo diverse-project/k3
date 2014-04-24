@@ -62,7 +62,7 @@ class ContractedProcessor extends AbstractClassProcessor
 				]
 			]
 			.forEach[m |
-				annotatedCls.addMethod(PREPRIV_PREFIX + m.simpleName)[
+				annotatedCls.addMethod(PREPRIV_PREFIX + m.simpleName.toFirstUpper)[
 					visibility = Visibility::PRIVATE
 					static     = m.static
 					final      = m.final
@@ -78,7 +78,7 @@ class ContractedProcessor extends AbstractClassProcessor
 				
 				val isVoid = m.returnType.simpleName == "void"
 				val preConditionsMethods = new ArrayList<MutableMethodDeclaration>
-				getAllPre(annotatedCls, preConditionsMethods, m.simpleName) // Piocher dans var. d'état
+				getAllPre(annotatedCls, preConditionsMethods, m.simpleName)
 				
 				preConditionsMethods
 				.filter[preConditionMethod |
@@ -114,7 +114,7 @@ class ContractedProcessor extends AbstractClassProcessor
 				
 				val wrappedBody = '''
 					if («preConditionsExpr» && «invariantsExpr»)
-					    «IF !isVoid»return «ENDIF»«PREPRIV_PREFIX»«m.simpleName»(«m.parameters.map[simpleName].join(", ")»);					    
+					    «IF !isVoid»return «ENDIF»«PREPRIV_PREFIX»«m.simpleName.toFirstUpper»(«m.parameters.map[simpleName].join(", ")»);					    
 					else
 						throw new fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException();
 					 '''
@@ -122,7 +122,7 @@ class ContractedProcessor extends AbstractClassProcessor
 				m.body = [wrappedBody]
 				bodies.put(m, wrappedBody)
 
-				annotatedCls.addMethod(POSTPRIV_PREFIX + m.simpleName)[
+				annotatedCls.addMethod(POSTPRIV_PREFIX + m.simpleName.toFirstUpper)[
 					visibility = Visibility::PRIVATE
 					^static = m.static
 					^final = m.final
@@ -137,7 +137,7 @@ class ContractedProcessor extends AbstractClassProcessor
 				]
 				
 				val postConditionsMethods = new ArrayList<MutableMethodDeclaration>
-				getAllPost(annotatedCls, postConditionsMethods, m.simpleName) // Piocher dans var. d'état
+				getAllPost(annotatedCls, postConditionsMethods, m.simpleName)
 				
 				postConditionsMethods
 				.filter[postConditionMethod |
@@ -169,7 +169,7 @@ class ContractedProcessor extends AbstractClassProcessor
 					else postConditionsMethods.map[simpleName + "()"].join(" && ")
 				
 				m.body = '''						
-					«IF !isVoid»«m.returnType.name» __ret = «ENDIF»«POSTPRIV_PREFIX»«m.simpleName»(«m.parameters.map[simpleName].join(", ")»);
+					«IF !isVoid»«m.returnType.name» __ret = «ENDIF»«POSTPRIV_PREFIX»«m.simpleName.toFirstUpper»(«m.parameters.map[simpleName].join(", ")»);
 					if (!(«postConditionsExpr» && «invariantsExpr»))
 						throw new fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException();
 					«IF !isVoid»return __ret;«ENDIF»	
@@ -177,9 +177,9 @@ class ContractedProcessor extends AbstractClassProcessor
 			]
 		} else {
 			preConditions.forEach[annotatedMethod |
-				val m = annotatedMethod.declaringType.declaredMethods.findFirst[simpleName == annotatedMethod.simpleName.substring(3)]
+				val m = annotatedMethod.declaringType.declaredMethods.findFirst[simpleName == annotatedMethod.simpleName.substring(3).toFirstLower]
 				
-				annotatedMethod.declaringType.addMethod(PREPRIV_PREFIX + m.simpleName)[
+				annotatedMethod.declaringType.addMethod(PREPRIV_PREFIX + m.simpleName.toFirstUpper)[
 					visibility = Visibility::PRIVATE
 					^static = m.static
 					^final = m.final
@@ -196,8 +196,8 @@ class ContractedProcessor extends AbstractClassProcessor
 				val isVoid = m.returnType.simpleName == "void"
 				
 				val wrappedBody = '''
-					if («PRE_PREFIX»«m.simpleName»())
-						«IF !isVoid»return «ENDIF»«PREPRIV_PREFIX»«m.simpleName»(«m.parameters.map[simpleName].join(", ")»);
+					if («PRE_PREFIX»«m.simpleName.toFirstUpper»())
+						«IF !isVoid»return «ENDIF»«PREPRIV_PREFIX»«m.simpleName.toFirstUpper»(«m.parameters.map[simpleName].join(", ")»);
 					else
 						throw new fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException();
 				'''
@@ -207,9 +207,9 @@ class ContractedProcessor extends AbstractClassProcessor
 			]
 			
 			postConditions.forEach[annotatedMethod |
-				val m = annotatedMethod.declaringType.declaredMethods.findFirst[simpleName == annotatedMethod.simpleName.substring(4)]
+				val m = annotatedMethod.declaringType.declaredMethods.findFirst[simpleName == annotatedMethod.simpleName.substring(4).toFirstLower]
 				
-				annotatedMethod.declaringType.addMethod(POSTPRIV_PREFIX + m.simpleName)[
+				annotatedMethod.declaringType.addMethod(POSTPRIV_PREFIX + m.simpleName.toFirstUpper)[
 					visibility = Visibility::PRIVATE
 					^static = m.static
 					^final = m.final
@@ -226,8 +226,8 @@ class ContractedProcessor extends AbstractClassProcessor
 				val isVoid = m.returnType.simpleName == "void"
 				
 				m.body = '''
-					«IF !isVoid»«m.returnType.name» __ret = «ENDIF»«POSTPRIV_PREFIX»«m.simpleName»(«m.parameters.map[simpleName].join(", ")»);
-					if (!«POST_PREFIX»«m.simpleName»())
+					«IF !isVoid»«m.returnType.name» __ret = «ENDIF»«POSTPRIV_PREFIX»«m.simpleName.toFirstUpper»(«m.parameters.map[simpleName].join(", ")»);
+					if (!«POST_PREFIX»«m.simpleName.toFirstUpper»())
 						throw new fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException();
 					«IF !isVoid»return __ret;«ENDIF»
 				'''
@@ -263,18 +263,19 @@ class ContractedProcessor extends AbstractClassProcessor
 				return false
 			}
 			
-			if (!annotatedMethod.simpleName.startsWith(PRE_PREFIX)) {
+			if (!annotatedMethod.simpleName.startsWith(PRE_PREFIX) || !Character.isUpperCase(annotatedMethod.simpleName.charAt(3))) {
 				annotatedMethod.addError("Precondition methods must be prefixed with " + PRE_PREFIX)
 				return false
 			}
 			
 			if (!annotatedMethod.declaringType.declaredMethods.exists[
-				simpleName == annotatedMethod.simpleName.substring(3)
+				simpleName == annotatedMethod.simpleName.substring(3).toFirstLower
 			]) {
-				annotatedMethod.addError('''Cannot find referenced contracted method «annotatedMethod.simpleName.substring(3)»''')
+				annotatedMethod.addError('''Cannot find referenced contracted method «annotatedMethod.simpleName.substring(3).toFirstLower»''')
 				return false	
 			}
 		}
+		
 
 		for (annotatedMethod : postConditions) {
 			if (annotatedMethod.parameters.size > 0) {
@@ -287,15 +288,15 @@ class ContractedProcessor extends AbstractClassProcessor
 				return false
 			}
 			
-			if (!annotatedMethod.simpleName.startsWith(POST_PREFIX)) {
+			if (!annotatedMethod.simpleName.startsWith(POST_PREFIX) || !Character.isUpperCase(annotatedMethod.simpleName.charAt(4))) {
 				annotatedMethod.addError("Postcondition methods must be prefixed with " + POST_PREFIX)
 				return false
 			}
 			
 			if (!annotatedMethod.declaringType.declaredMethods.exists[
-				simpleName == annotatedMethod.simpleName.substring(4)
+				simpleName == annotatedMethod.simpleName.substring(4).toFirstLower
 			]) {
-				annotatedMethod.addError('''Cannot find referenced contracted method «annotatedMethod.simpleName.substring(4)»''')
+				annotatedMethod.addError('''Cannot find referenced contracted method «annotatedMethod.simpleName.substring(4).toFirstLower»''')
 				return false	
 			}
 		}
@@ -315,7 +316,7 @@ class ContractedProcessor extends AbstractClassProcessor
 	}
 
 	private def void getAllPre(MutableClassDeclaration cls, List<MutableMethodDeclaration> pres, String methodName) {
-		pres.addAll(cls.declaredMethods.filter[simpleName == "pre" + methodName])
+		pres.addAll(cls.declaredMethods.filter[simpleName == PRE_PREFIX + methodName.toFirstUpper])
 		
 		if (cls.extendedClass !== null) {
 			val parent = findClass(cls.extendedClass.name)
@@ -326,7 +327,7 @@ class ContractedProcessor extends AbstractClassProcessor
 	}
 
 	private def void getAllPost(MutableClassDeclaration cls, List<MutableMethodDeclaration> posts, String methodName) {
-		posts.addAll(cls.declaredMethods.filter[simpleName == "post" + methodName])
+		posts.addAll(cls.declaredMethods.filter[simpleName == POST_PREFIX + methodName.toFirstUpper])
 		
 		if (cls.extendedClass !== null) {
 			val parent = findClass(cls.extendedClass.name)
