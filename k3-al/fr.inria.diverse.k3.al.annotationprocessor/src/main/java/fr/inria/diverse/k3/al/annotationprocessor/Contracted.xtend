@@ -32,6 +32,10 @@ annotation Inv {
 }
 
 class ContractedProcessor extends AbstractClassProcessor {
+	private List<MutableMethodDeclaration> invariants = newArrayList
+	private List<MutableMethodDeclaration> preConditions = newArrayList
+	private List<MutableMethodDeclaration> postConditions = newArrayList
+	extension TransformationContext context
 
 	private def void getAllInvs(MutableClassDeclaration cl, List<MutableMethodDeclaration> invs,
 		extension TransformationContext context) {
@@ -63,70 +67,25 @@ class ContractedProcessor extends AbstractClassProcessor {
 		}
 	}
 
-	override doTransform(MutableClassDeclaration annotateClass, extension TransformationContext context) {
-
+	override doTransform(MutableClassDeclaration annotateClass, extension TransformationContext ctx) {
+		context = ctx
 		val Map<MutableMethodDeclaration, String> bodies = new HashMap<MutableMethodDeclaration, String>()
-		val invs = new ArrayList<MutableMethodDeclaration>();
-		getAllInvs(annotateClass, invs, context)
+		
+		getAllInvs(annotateClass, invariants, context)
 
-		var pre = annotateClass.declaredMethods.filter[
-			annotations.exists[annotationTypeDeclaration == Pre.newTypeReference.type]]
+		preConditions.addAll(annotateClass.declaredMethods.filter[
+			annotations.exists[annotationTypeDeclaration == Pre.newTypeReference.type]])
 
-		var post = annotateClass.declaredMethods.filter[
-			annotations.exists[annotationTypeDeclaration == Post.newTypeReference.type]]
-
-		for (annotatedMethod : invs) {
-			if (annotatedMethod.parameters.size > 0) {
-				annotatedMethod.addError("Invariants must not have a parameter")
-				return;
-			}
-			if (annotatedMethod.returnType != newTypeReference("boolean")) {
-				annotatedMethod.addError("Invariants must return a boolean")
-				return;
-			}
+		postConditions.addAll(annotateClass.declaredMethods.filter[
+			annotations.exists[annotationTypeDeclaration == Post.newTypeReference.type]])
+		
+		if (!check()) {
+			
 		}
 
-		for (annotatedMethod : pre) {
-			if (annotatedMethod.parameters.size > 0) {
-				annotatedMethod.addError("Precondition must not have a parameter")
-				return;
-			}
-			if (annotatedMethod.returnType != newTypeReference("boolean")) {
-				annotatedMethod.addError("Precondition must return a boolean")
-				return;
-			}
-			if (!annotatedMethod.simpleName.startsWith("pre")) {
-				annotatedMethod.addError("Precondition must be nammed pre... (convention)")
-				return;
-			}
-			if (annotatedMethod.declaringType.declaredMethods.filter[m|
-				m.simpleName == annotatedMethod.simpleName.substring(3)].size == 0) {
-				annotatedMethod.addError("Precondition must be have the name preX where X is an existing method")
-				return;
-			}
-		}
+		
 
-		for (annotatedMethod : post) {
-			if (annotatedMethod.parameters.size > 0) {
-				annotatedMethod.addError("Postcondition must not have a parameter")
-				return;
-			}
-			if (annotatedMethod.returnType != newTypeReference("boolean")) {
-				annotatedMethod.addError("Postcondition must return a boolean")
-				return;
-			}
-			if (!annotatedMethod.simpleName.startsWith("post")) {
-				annotatedMethod.addError("Postcondition must be nammed post... (convention)")
-				return;
-			}
-			if (annotatedMethod.declaringType.declaredMethods.filter[m|
-				m.simpleName == annotatedMethod.simpleName.substring(4)].size == 0) {
-				annotatedMethod.addError("Postcondition must be have the name postX where X is an existing method")
-				return;
-			}
-		}
-
-		if (invs.size > 0) {
+		if (invariants.size > 0) {
 			for (m : annotateClass.declaredMethods.filter[m|
 				! (m.annotations.exists[a|
 					a.annotationTypeDeclaration == Pre.newTypeReference.type || a.annotationTypeDeclaration == Post.newTypeReference.type ||
@@ -195,7 +154,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 					}
 					invt = invt.substring(0, invt.length - 2) + ")"
 				}
-				for (in : invs)
+				for (in : invariants)
 					invt = invt + "&& " + in.simpleName + "() "
 				val invt1 = invt
 				val bodyt = '''
@@ -266,7 +225,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 					invt = invt.substring(0, invt.length - 2) + ")"
 				}
 
-				for (in : invs)
+				for (in : invariants)
 					invt = invt + "&& " + in.simpleName + "() "
 				val invt2 = invt
 				val retu2 = retu
@@ -281,7 +240,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 					  ''']
 			}
 		} else {
-			for (annotatedMethod : pre) {
+			for (annotatedMethod : preConditions) {
 				val m = annotatedMethod.declaringType.declaredMethods.filter[m|
 					m.simpleName == annotatedMethod.simpleName.substring(3)].get(0)
 				annotatedMethod.declaringType.addMethod("prepriv" + m.simpleName,
@@ -319,7 +278,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 				bodies.put(m, bodyt)
 			}
 
-			for (annotatedMethod : post) {
+			for (annotatedMethod : postConditions) {
 				val m = annotatedMethod.declaringType.declaredMethods.filter[m|
 					m.simpleName == annotatedMethod.simpleName.substring(4)].get(0)
 
@@ -362,5 +321,71 @@ class ContractedProcessor extends AbstractClassProcessor {
 					  ''']
 			}
 		}
+		
+		invariants.clear
+		preConditions.clear
+		postConditions.clear
+	}
+	
+	def boolean check() {
+		for (annotatedMethod : invariants) {
+			if (annotatedMethod.parameters.size > 0) {
+				annotatedMethod.addError("Invariants must not have a parameter")
+				return false
+			}
+			
+			if (annotatedMethod.returnType != newTypeReference("boolean")) {
+				annotatedMethod.addError("Invariants must return a boolean")
+				return false
+			}
+		}
+
+		for (annotatedMethod : preConditions) {
+			if (annotatedMethod.parameters.size > 0) {
+				annotatedMethod.addError("Precondition must not have a parameter")
+				return false
+			}
+			
+			if (annotatedMethod.returnType != newTypeReference("boolean")) {
+				annotatedMethod.addError("Precondition must return a boolean")
+				return false
+			}
+			
+			if (!annotatedMethod.simpleName.startsWith("pre")) {
+				annotatedMethod.addError("Precondition must be nammed pre... (convention)")
+				return false
+			}
+			
+			if (annotatedMethod.declaringType.declaredMethods.filter[m|
+				m.simpleName == annotatedMethod.simpleName.substring(3)].size == 0) {
+				annotatedMethod.addError("Precondition must be have the name preX where X is an existing method")
+				return false
+			}
+		}
+
+		for (annotatedMethod : postConditions) {
+			if (annotatedMethod.parameters.size > 0) {
+				annotatedMethod.addError("Postcondition must not have a parameter")
+				return false
+			}
+			
+			if (annotatedMethod.returnType != newTypeReference("boolean")) {
+				annotatedMethod.addError("Postcondition must return a boolean")
+				return false
+			}
+			
+			if (!annotatedMethod.simpleName.startsWith("post")) {
+				annotatedMethod.addError("Postcondition must be nammed post... (convention)")
+				return false
+			}
+			
+			if (annotatedMethod.declaringType.declaredMethods.filter[m|
+				m.simpleName == annotatedMethod.simpleName.substring(4)].size == 0) {
+				annotatedMethod.addError("Postcondition must be have the name postX where X is an existing method")
+				return false
+			}
+		}
+		
+		return true
 	}
 }
