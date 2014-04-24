@@ -35,7 +35,7 @@ class ContractedProcessor extends AbstractClassProcessor {
 
 	private def void getAllInvs(MutableClassDeclaration cl, List<MutableMethodDeclaration> invs,
 		extension TransformationContext context) {
-		invs.addAll(cl.declaredMethods.filter[annotations.exists[annotationTypeDeclaration.simpleName == "Inv"]])
+		invs.addAll(cl.declaredMethods.filter[annotations.exists[annotationTypeDeclaration == Inv.newTypeReference.type]])
 		if (cl.extendedClass != null) {
 			val parent = findClass(cl.extendedClass.name)
 			if (parent != null)
@@ -70,10 +70,10 @@ class ContractedProcessor extends AbstractClassProcessor {
 		getAllInvs(annotateClass, invs, context)
 
 		var pre = annotateClass.declaredMethods.filter[
-			annotations.exists[annotationTypeDeclaration.simpleName == "Pre"]]
+			annotations.exists[annotationTypeDeclaration == Pre.newTypeReference.type]]
 
 		var post = annotateClass.declaredMethods.filter[
-			annotations.exists[annotationTypeDeclaration.simpleName == "Post"]]
+			annotations.exists[annotationTypeDeclaration == Post.newTypeReference.type]]
 
 		for (annotatedMethod : invs) {
 			if (annotatedMethod.parameters.size > 0) {
@@ -129,8 +129,8 @@ class ContractedProcessor extends AbstractClassProcessor {
 		if (invs.size > 0) {
 			for (m : annotateClass.declaredMethods.filter[m|
 				! (m.annotations.exists[a|
-					a.annotationTypeDeclaration.simpleName == "Pre" || a.annotationTypeDeclaration.simpleName == "Post" ||
-						a.annotationTypeDeclaration.simpleName == "Inv"] || m.static)]) {
+					a.annotationTypeDeclaration == Pre.newTypeReference.type || a.annotationTypeDeclaration == Post.newTypeReference.type ||
+						a.annotationTypeDeclaration == Inv.newTypeReference.type] || m.static)]) {
 				annotateClass.addMethod("prepriv" + m.simpleName,
 					[
 						visibility = Visibility::PRIVATE
