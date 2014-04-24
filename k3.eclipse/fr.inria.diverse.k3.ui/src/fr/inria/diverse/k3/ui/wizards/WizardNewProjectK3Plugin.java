@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -63,10 +64,15 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {	
 		try {
+			IWorkspace workspace = ResourcesPlugin.getWorkspace(); 
+			final IProjectDescription description = workspace.newProjectDescription(this.context.nameProject);
+			if (!this.context.locationProject.equals(workspace.getRoot().getLocation().toOSString()))
+				description.setLocation(new Path(this.context.locationProject));
+			
 			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.nameProject);
 			IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
-					project.create(monitor);
+					project.create(description, monitor);
 					project.open(monitor);
 					addKermetaNatureToProject(project);
 					
