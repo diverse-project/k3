@@ -1,283 +1,174 @@
 package test
 
 import fr.inria.diverse.k3.al.annotationprocessor.Contracted
+
 import fr.inria.diverse.k3.al.annotationprocessor.Inv
-import fr.inria.diverse.k3.al.annotationprocessor.Post
-import fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException
 import fr.inria.diverse.k3.al.annotationprocessor.Pre
+import fr.inria.diverse.k3.al.annotationprocessor.Post
+
+import fr.inria.diverse.k3.al.annotationprocessor.ContractViolationException
 import fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException
+import fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException
+
 import org.junit.Test
 
 import static org.junit.Assert.*
 
-class TestCase{ 
-	@Test 
-	def void testPre(){
-		val l = new TestDbC()
-		try{
-			l.foo					
-		}catch(PreConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
-	}
-  
+class TestDbC
+{
 	@Test
-	def void testInv(){ 
-		val l = new TestDbC1()
-		try{
-			l.foo					
-		}catch(PreConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
-	}
- 
-	@Test
-	def void testPost(){
-		val l = new TestDbC2()
-		try{
-			l.foo					
-		}catch(PostConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
-	}
-	@Test
-	def void testPreInheritance(){
-		val l = new BDbc()
-		try{
-			l.foo					
-		}catch(PreConditionViolationException e) {
+	def testOkInv() {
+		try {
+			new SimpleOKInv().foo
+		} catch (ContractViolationException e) {
 			fail("Should not occur")
 		}
 	}
-	@Test
-	def void testPreInheritance1(){
-		val l = new BDbc()
-		try{
-			l.bar					
-		}catch(PreConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
-	}
-
-
-	@Test
-	def void testInvInheritance(){
-		val l = new BDbc1()
-		try{
-			l.foo					
-		}catch(PreConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
-	}
-
-	@Test
-	def void testPostInheritance(){
-		val l = new BDbc2()
-		try{
-			l.bar					
-		}catch(PostConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
-	}
-	@Test
-	def void testPostInheritance1(){
-		val l = new BDbc2()
-		try{
-			l.bar					
-		}catch(PostConditionViolationException e) {
-			return 
-		}
-		fail("Should not occur")
+	
+	// Should actually throw an InvariantViolationException, see issue #18
+	@Test(expected = PreConditionViolationException)
+	def testNOKInv() {
+		new SimpleNOKInv().foo
 	}
 	
-}
-
-
-@Contracted
-class TestDbC {
-
- 
-	def void foo() {
-		println("ok")
-	} 
-
-	//TODO does not work together.
-	//It must be managed by the same processor
-	@Pre
-	def boolean prefoo() {
-		return false
-	}
-
-
-}
-
-@Contracted
-class TestDbC1 {
-
-	@Inv
-	def boolean inv1() {
-		return false 
-	}
- 
-	def void foo() {
-		println("ok")
-	} 
-
-}
-
-
-@Contracted
-class TestDbC2 {
-
- 
-	def void foo() {
-		println("ok")
-	} 
-
-
-	@Post
-	def boolean postfoo() {
-		return false
-	}
-
-}
-
-
-@Contracted
-abstract class ADbc {
-	String name
-
-	@Pre
-	def boolean prefoo() {
-		return false;
-	}
-
-	abstract def void foo() ;
-
-	@Pre
-	def boolean prebar() {
-		return true;
-	}
-
-	abstract def void bar() ;
-
-}
-
-@Contracted
-class BDbc extends ADbc {
-	String name
-
-
-	override def void foo() {
-	}
-
-
-	@Pre
-	override def boolean prefoo() {
-		return true;
+	@Test
+	def testOKPrePost() {
+		try {
+			new SimpleOKPrePost().foo
+		} catch (ContractViolationException e) {
+			fail("Should not occur")
+		}
 	}
 	
-		@Pre
-	override def boolean prebar() {
-		return false;
+	@Test
+	def testOKAll() {
+		try {
+			new SimpleOKAll().foo
+		} catch (ContractViolationException e) {
+			fail("Should not occur")
+		}
 	}
-
-	override  def void bar() {}
 	
-
- 
+	@Test(expected = PreConditionViolationException)
+	def testNOKPreCond() {
+		new SimpleNOKPreCond().foo
+	}
+	
+	@Test(expected = PostConditionViolationException)
+	def testNOKPostCondition() {
+		new SimpleNOKPostCond().foo
+	}
+	
+	@Test(expected = PreConditionViolationException)
+	def testOKInvNOKPre () {
+		new SimpleOKInvNOKPre().foo
+	}
+	
+	@Test(expected = PostConditionViolationException)
+	def testOKInvNOKPost () {
+		new SimpleOKInvNOKPost().foo
+	}
+	
+	// Should actually throw an InvariantViolationException, see issue #18
+	@Test(expected = PreConditionViolationException)
+	def testNOKInvOKPre() {
+		new SimpleNOKInvOKPre().foo
+	}
+	
+	// Should actually throw an InvariantViolationException, see issue #18
+	@Test(expected = PreConditionViolationException)
+	def testNOKInvOKPost() {
+		new SimpleNOKInvOKPost().foo
+	}
+	
+	// Should actually throw an InvariantViolationException, see issue #18
+	@Test(expected = PostConditionViolationException)
+	def testInvBrokenByFoo() {
+		new SimpleInvBrokenByFoo().foo
+	}
 }
 
 @Contracted
-abstract class ADbc1 {
-	String name
-
-	@Inv
-	def boolean inv1() {
-		return true
-	}
-
-
-	abstract def void foo() ;
-
+class SimpleOKInv {
+	@Inv def boolean inv() { true }
+	
+	def void foo() {}
 }
 
 @Contracted
-class BDbc1 extends ADbc1 {
-	String name
-
-	@Inv
-	def boolean inv2() {
-		return false
-	}
-
-
-	override def void foo() {
-	}
- 
+class SimpleNOKInv {
+	@Inv def boolean inv() { false }
+	
+	def void foo() {}
 }
 
 @Contracted
-abstract class ADbc2 {
-	String name
-
-
-
-	def void bar() {
-		println("ok")
-	}
-
-	@Post
-	def boolean postbar() {
-		return true;
-	}
-
-
-	def void foo() {
-		println("ok")
-	}
-
-	@Post
-	def boolean postfoo() {
-		return false;
-	}
-
+class SimpleOKPrePost {
+	@Pre  def boolean preFoo() { true }
+	@Post def boolean postFoo() { true }
+	
+	def void foo() {}
 }
 
 @Contracted
-class BDbc2 extends ADbc2 {
-	String name
-
-
-	override def void bar() {
-		println("ok")
-	}
-
-
-	@Post
-	override def boolean postbar() {
-		return false;
-	}
-
-	override def void foo() {
-		println("ok")
-	}
-
-	@Post
-	override def boolean postfoo() {
-		return false;
-	}
-
- 
+class SimpleOKAll {
+	@Inv def boolean inv() { true }
+	@Pre  def boolean preFoo() { true}
+	@Post def boolean postFoo() { true }
+	
+	def void foo() {}
 }
 
+@Contracted
+class SimpleNOKPreCond {
+	@Pre def boolean preFoo() { false }
+	
+	def void foo() {}
+}
 
+@Contracted
+class SimpleNOKPostCond {
+	@Post def boolean postFoo() { false }
+	
+	def void foo() {}
+}
 
+@Contracted
+class SimpleOKInvNOKPre {
+	@Inv def boolean inv() { true }
+	@Pre def boolean preFoo() { false }
+	
+	def void foo() {}
+}
 
+@Contracted
+class SimpleOKInvNOKPost {
+	@Inv def boolean inv() { true }
+	@Post def boolean postFoo() { false }
+	
+	def void foo() {}
+}
 
+@Contracted
+class SimpleNOKInvOKPre {
+	@Inv def boolean inv() { false }
+	@Pre def boolean preFoo() { true }
+	
+	def void foo() {}
+}
+
+@Contracted
+class SimpleNOKInvOKPost {
+	@Inv def boolean inv() { false }
+	@Post def boolean postFoo() { true }
+	
+	def void foo() {}
+}
+
+@Contracted
+class SimpleInvBrokenByFoo {
+	public int i = 0
+	@Inv def boolean inv() { i == 0 }
+	
+	def void foo() { i = 1 }
+}
