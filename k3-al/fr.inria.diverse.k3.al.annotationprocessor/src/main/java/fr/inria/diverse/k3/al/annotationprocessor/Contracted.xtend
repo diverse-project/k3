@@ -1,18 +1,20 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
-import java.lang.annotation.ElementType
-import java.lang.annotation.Target
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.List
-import java.util.Map
-import java.util.Random
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
+
+import java.lang.annotation.ElementType
+import java.lang.annotation.Target
+
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.List
+import java.util.Map
+import java.util.Random
 
 @Target(ElementType::TYPE)
 @Active(typeof(ContractedProcessor))
@@ -27,11 +29,12 @@ annotation Post {}
 @Target(ElementType::METHOD)
 annotation Inv {}
 
-class ContractedProcessor extends AbstractClassProcessor {
-	private List<MutableMethodDeclaration> invariants = newArrayList
-	private List<MutableMethodDeclaration> preConditions = newArrayList
+class ContractedProcessor extends AbstractClassProcessor
+{
+	private List<MutableMethodDeclaration> invariants     = newArrayList
+	private List<MutableMethodDeclaration> preConditions  = newArrayList
 	private List<MutableMethodDeclaration> postConditions = newArrayList
-	extension TransformationContext context
+	private extension TransformationContext context
 
 	override doTransform(MutableClassDeclaration annotatedCls, extension TransformationContext ctx) {
 		context = ctx
@@ -239,59 +242,61 @@ class ContractedProcessor extends AbstractClassProcessor {
 	def boolean check() {
 		for (annotatedMethod : invariants) {
 			if (annotatedMethod.parameters.size > 0) {
-				annotatedMethod.addError("Invariants must not have a parameter")
+				annotatedMethod.addError("Invariant methods cannot declare any parameter")
 				return false
 			}
 			
-			if (annotatedMethod.returnType != newTypeReference("boolean")) {
-				annotatedMethod.addError("Invariants must return a boolean")
+			if (annotatedMethod.returnType.simpleName != "boolean") {
+				annotatedMethod.addError("Invariant methods must return a boolean value")
 				return false
 			}
 		}
 
 		for (annotatedMethod : preConditions) {
 			if (annotatedMethod.parameters.size > 0) {
-				annotatedMethod.addError("Precondition must not have a parameter")
+				annotatedMethod.addError("Precondition methods cannot declare any parameter")
 				return false
 			}
 			
 			if (annotatedMethod.returnType != newTypeReference("boolean")) {
-				annotatedMethod.addError("Precondition must return a boolean")
+				annotatedMethod.addError("Precondition methods must return a boolean value")
 				return false
 			}
 			
-			if (!annotatedMethod.simpleName.startsWith("pre")) {
-				annotatedMethod.addError("Precondition must be nammed pre... (convention)")
+			if (!annotatedMethod.simpleName.startsWith(PRE_PREFIX)) {
+				annotatedMethod.addError("Precondition methods must be prefixed with " + PRE_PREFIX)
 				return false
 			}
 			
-			if (annotatedMethod.declaringType.declaredMethods.filter[m|
-				m.simpleName == annotatedMethod.simpleName.substring(3)].size == 0) {
-				annotatedMethod.addError("Precondition must be have the name preX where X is an existing method")
-				return false
+			if (!annotatedMethod.declaringType.declaredMethods.exists[
+				simpleName == annotatedMethod.simpleName.substring(3)
+			]) {
+				annotatedMethod.addError('''Cannot find referenced contracted method «annotatedMethod.simpleName.substring(3)»''')
+				return false	
 			}
 		}
 
 		for (annotatedMethod : postConditions) {
 			if (annotatedMethod.parameters.size > 0) {
-				annotatedMethod.addError("Postcondition must not have a parameter")
+				annotatedMethod.addError("Postcondition methods cannot declare any parameter")
 				return false
 			}
 			
 			if (annotatedMethod.returnType != newTypeReference("boolean")) {
-				annotatedMethod.addError("Postcondition must return a boolean")
+				annotatedMethod.addError("Postcondition methods must return a boolean value")
 				return false
 			}
 			
-			if (!annotatedMethod.simpleName.startsWith("post")) {
-				annotatedMethod.addError("Postcondition must be nammed post... (convention)")
+			if (!annotatedMethod.simpleName.startsWith(POST_PREFIX)) {
+				annotatedMethod.addError("Postcondition methods must be prefixed with " + POST_PREFIX)
 				return false
 			}
 			
-			if (annotatedMethod.declaringType.declaredMethods.filter[m|
-				m.simpleName == annotatedMethod.simpleName.substring(4)].size == 0) {
-				annotatedMethod.addError("Postcondition must be have the name postX where X is an existing method")
-				return false
+			if (!annotatedMethod.declaringType.declaredMethods.exists[
+				simpleName == annotatedMethod.simpleName.substring(4)
+			]) {
+				annotatedMethod.addError('''Cannot find referenced contracted method «annotatedMethod.simpleName.substring(4)»''')
+				return false	
 			}
 		}
 		
@@ -331,8 +336,8 @@ class ContractedProcessor extends AbstractClassProcessor {
 		}
 	}
 	
-	private static final String PRE_PREFIX = "pre"
-	private static final String POST_PREFIX = "post"
+	private static final String PRE_PREFIX      = "pre"
+	private static final String POST_PREFIX     = "post"
 	private static final String PREPRIV_PREFIX  = "prepriv"
 	private static final String POSTPRIV_PREFIX = "postpriv"
 }
