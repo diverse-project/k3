@@ -389,8 +389,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 							]
 
 							if (featureName === null) {
-								val retCls = mm.findClass(op.returnType.simpleName)
-
 								members += mm.toMethod(op.simpleName, retType)[
 									op.parameters.drop(1).forEach[p |
 										val pCls = superType.findClassifier(p.parameterType.simpleName)
@@ -511,15 +509,19 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 			.initializeLater[
 				superTypes += mm.newTypeRef(superType.factoryName)
 
-				members += mm.toField("adaptee", mm.newTypeRef(mm.getFactoryFqn))[
-					initializer = '''«mm.getFactoryFqn».eINSTANCE'''
+				mm.pkgs.forEach[pkg |
+					members += mm.toField(pkg.nsPrefix + "Adaptee", mm.newTypeRef(mm.getFactoryFqnFor(pkg)))[
+						initializer = '''«mm.getFactoryFqnFor(pkg)».eINSTANCE'''
+					]
 				]
 
 				superType.allClasses.filter[instantiable].forEach[cls |
 					members += mm.toMethod("create" + cls.name, mm.newTypeRef(superType.interfaceNameFor(cls)))[
+						val associatedPkg = mm.pkgs.findFirst[EClassifiers.exists[name == cls.name]]
+
 						body = '''
 							«mm.adapterNameFor(superType, cls)» adap = new «mm.adapterNameFor(superType, cls)»() ;
-							adap.setAdaptee(adaptee.create«cls.name»()) ;
+							adap.setAdaptee(«associatedPkg.nsPrefix»Adaptee.create«cls.name»()) ;
 							return adap ;
 						'''
 					]
@@ -540,14 +542,14 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 						java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;
 
 						for (org.eclipse.emf.ecore.EObject o : adaptee.getContents()) {
-						«FOR r : mm.allClasses.filter[mm.hasAdapterFor(superType, it) && instantiable && abstractable].sortByClassInheritance»
+						«FOR r : mm.allClasses.filter[name != "EObject" && mm.hasAdapterFor(superType, it) && instantiable && abstractable].sortByClassInheritance»
 							if (o instanceof «mm.getFqnFor(r)») {
 								«mm.getFqnFor(r)» wrap = («mm.getFqnFor(r)») o ;
 								«mm.adapterNameFor(superType, r)» adap = new «mm.adapterNameFor(superType, r)»() ;
 								adap.setAdaptee(wrap) ;
 								ret.add(adap) ;
 							} else
-						«ENDFOR» {}
+						«ENDFOR» ret.add(o) ;
 						}
 
 						return ret ;
@@ -564,7 +566,6 @@ class K3SLEJvmModelInferrer extends AbstractModelInferrer
 
 		if (mm.hasSuperMetamodel) {
 			val superMM = mm.inheritanceRelation.superMetamodel
-			val superPkg = superMM.pkgs.head
 
 			superMM.allClasses.forEach[cls |
 				val inCls = mm.allClasses.findFirst[name == cls.name]
