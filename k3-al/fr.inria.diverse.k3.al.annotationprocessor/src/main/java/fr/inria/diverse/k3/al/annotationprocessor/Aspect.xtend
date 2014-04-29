@@ -27,7 +27,6 @@ import java.lang.annotation.RetentionPolicy
 public annotation Aspect {
 	Class<?> className;
 	Class<?>[] with = #[];
-	String adapter = "";
 }
 
 public annotation OverrideAspectMethod {}
@@ -171,26 +170,15 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val superNamePrefix = if(multiSuper) "super_"+Helper::getAspectedClassName(sm.declaringType).split("\\.").last+"_" else "super_"
 			clazz.addMethod(superNamePrefix + m.simpleName, [
 				val paramsList = new StringBuilder
-				val adapter = Helper::getAdapterClassName(clazz, cxt)
 				visibility = Visibility::PRIVATE
 				static = true
 				returnType = m.returnType
 				for(p : m.parameters) addParameter(p.simpleName, p.type)
-				if (!adapter.empty) {
-					paramsList.append("_k3_adap")
-					if (m.parameters.size > 1)
-						paramsList.append("," + m.parameters.drop(1).map[simpleName].join(','))
-				} else {
-					paramsList.append(m.parameters.map[simpleName].join(','))
-				}
+				paramsList.append(m.parameters.map[simpleName].join(','))
 				//TODO find super method
 				
 				
 				body = ['''
-					«IF !adapter.empty»
-					«adapter» _k3_adap = new «adapter»() ;
-					_k3_adap.setAdaptee(«SELF_VAR_NAME») ;
-					«ENDIF»
 					«IF (sm.returnType.name != "void")»return «ENDIF» «sm.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«paramsList»);
 				''']
 			])
@@ -258,10 +246,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 «ret» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s.replaceFirst(SELF_VAR_NAME,
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»);
-} else «IF !Helper::getAdapterClassName(dt, cxt).empty»if («SELF_VAR_NAME» instanceof «Helper::getAdapterClassName(dt, cxt)»){
-«ret» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s.replaceFirst(SELF_VAR_NAME,
-				"((" + Helper::getAdapterClassName(dt, cxt) + ")"+SELF_VAR_NAME+").getAdaptee()")»);
-} else «ENDIF»«ENDFOR»'''
+} else «ENDFOR»'''
 			call.append(ifst).append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		}
 		else call.append('''«ret» «PRIV_PREFIX+m.simpleName»(«s»); ''') //for getters & setters
