@@ -62,6 +62,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
 		val type = Helper::getAnnotationAspectType(annotatedClass)
+		
 
 		if (type !== null) {
 			val className = type.simpleName
@@ -168,8 +169,8 @@ public class AspectProcessor extends AbstractClassProcessor
 
 		// Add a method "super_methodName" which call first method in the
 		// super class hierarchy with the same name.
-		val superClasses = Helper::getAnnotationWithType(clazz).map[cl | findClass(cl.name)].filterNull.toSet
-		val superCl = if (clazz.extendedClass === null) null else findClass(clazz.extendedClass.name)
+		val superClasses = Helper::getAnnotationWithType(clazz).map[cl | findTypeGlobally(cl.name) as ClassDeclaration].filterNull.toSet
+		val superCl = if (clazz.extendedClass === null) null else findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration
 
 		if (superCl !== null)
 			superClasses.add(superCl)
@@ -349,13 +350,15 @@ public class AspectProcessor extends AbstractClassProcessor
 	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
 	 * checks that a super method exists in its hierarchy. */
 	private def boolean checkAnnotationprocessorCorrect(MutableMethodDeclaration m, MutableClassDeclaration clazz, TransformationContext cxt) {
-		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD])
+		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]){
 			return true
-
+		}
 		val supers = Helper::getDirectSuperClasses(clazz, cxt)
-		if (supers.empty)
+		if (supers.empty){
+			cxt.addError(clazz,"pass par la")			
 			return false
-
+		}
+		
 		return supers.exists[superCl | Helper::findMethod(superCl, m, cxt) !== null]
 	}
 
