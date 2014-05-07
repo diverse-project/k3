@@ -2,16 +2,18 @@ package fr.inria.diverse.k3.al.annotationprocessor
 
 import java.util.ArrayList
 import java.util.Collections
+import java.util.HashMap
+import java.util.HashSet
 import java.util.List
 import java.util.Set
 import org.eclipse.xtend.lib.macro.TransformationContext
+import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
+import org.eclipse.xtend.lib.macro.declaration.MethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
-import java.util.HashMap
-import java.util.HashSet
 
 /**
  * A tool class containing helper operations for k3.
@@ -88,14 +90,19 @@ abstract class Helper {
 	/**
 	 * Completes the list 'res' with all the super types of the given class 'clazz'.
 	 */
-	static def Set<MutableClassDeclaration> getDirectSuperClasses(MutableClassDeclaration clazz, TransformationContext ctx) {
-		val Set<MutableClassDeclaration> res = newHashSet
+	static def Set<ClassDeclaration> getDirectSuperClasses(ClassDeclaration clazz, TransformationContext ctx) {
+		val Set<ClassDeclaration> res = newHashSet
 		if(clazz.extendedClass!=null) {
-			val l = ctx.findClass(clazz.extendedClass.name)
+			val l = ctx.findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration
+			
+			//var JvmClassDeclarationImpl a=null;
+			
+			//ctx.addError(clazz,(ctx.findTypeGlobally(clazz.extendedClass.name).toString) + l)
+			
 			if(l!=null) res.add(l)
 		}
-		res.addAll(getWithClassNames(clazz, ctx).map[n | ctx.findClass(n)].filterNull)
-		res
+		res.addAll(getWithClassNames(clazz, ctx).map[n | ctx.findTypeGlobally(n) as ClassDeclaration].filterNull)
+		res 
 	}
 	
 	
@@ -151,7 +158,7 @@ abstract class Helper {
 	
 	
 		/** Computes the names of the classes provided by the parameter 'with' of the annotation 'aspect'. */
-	static def List<String> getWithClassNames(MutableTypeDeclaration clazz, extension TransformationContext context) {
+	static def List<String> getWithClassNames(TypeDeclaration clazz, extension TransformationContext context) {
 		getAnnotationWithType(clazz).map[name]
 	}
 	
@@ -181,7 +188,7 @@ abstract class Helper {
 	
 
 	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. */
-	static def String getAspectedClassName(MutableTypeDeclaration clazz) {
+	static def String getAspectedClassName(TypeDeclaration clazz) {
 		val type = getAnnotationAspectType(clazz)
 		if(type==null)return ""	
 		type.name
@@ -231,9 +238,10 @@ abstract class Helper {
 	 * @clazz This class and super classes are the search area
 	 * @methodName Method to find
 	 */
-	static def MutableMethodDeclaration findMethod(MutableClassDeclaration clazz,
+	static def MethodDeclaration findMethod(ClassDeclaration clazz,
 		MutableMethodDeclaration methodName, extension TransformationContext context) {
 		//FIXME take care about number of parameters and their type
+		//context.addError(clazz, clazz.toString)	
 		var m = clazz.declaredMethods.findFirst[simpleName == methodName.simpleName]
 		if (m == null) {
 			if (clazz.extendedClass == null)
@@ -241,9 +249,10 @@ abstract class Helper {
 			else if (findClass(clazz.extendedClass.name) == null)
 				return null
 			else
-				return findMethod(findClass(clazz.extendedClass.name), methodName, context)
+				return findMethod(context.findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration, methodName, context)
 		} else
 			return m
+//			return null
 	}
 
 
