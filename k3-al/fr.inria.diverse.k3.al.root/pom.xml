@@ -20,7 +20,7 @@
 
 	<modules>
 		<module>../fr.inria.diverse.k3.al.annotationprocessor</module>
-	
+	        <module>../fr.inria.diverse.k3.al.tests</module>
 	</modules>
 	
 	<repositories>

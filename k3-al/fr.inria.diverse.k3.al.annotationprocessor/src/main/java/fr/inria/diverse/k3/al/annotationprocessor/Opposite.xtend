@@ -267,6 +267,7 @@ class OppositeProcessor extends AbstractFieldProcessor
 			]
 		) {
 			field.addError("The opposite attribute must be marked as opposite of this attribute")
+			return false
 		}
 		
 		// TODO
