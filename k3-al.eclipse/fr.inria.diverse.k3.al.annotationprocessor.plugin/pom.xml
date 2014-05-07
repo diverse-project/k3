@@ -32,6 +32,8 @@
 									<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
 									<version>3.0.0-SNAPSHOT</version>
 									<outputDirectory>lib</outputDirectory>
+									<destFileName>fr.inria.diverse.k3.al.annotationprocessor.jar</destFileName>
+									<overWrite>true</overWrite>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
