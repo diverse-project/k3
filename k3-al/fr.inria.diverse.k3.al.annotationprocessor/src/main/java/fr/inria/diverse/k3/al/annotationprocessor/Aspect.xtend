@@ -252,7 +252,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			//cxt.addError(m, ""+ dispatchmethod.size)
 		if (dispatchmethod.get(m) !== null) {
 			val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
-			cxt.addError(m, ""+listmethod.size)
+			//cxt.addError(m, ""+listmethod.size)
 			val declTypes = listmethod.map[declaringType]
 			
 			// A time-consuming check to be used for debugging only.
