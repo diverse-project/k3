@@ -277,27 +277,13 @@ public class AspectProcessor extends AbstractClassProcessor
 		else call.append('''«ret» «PRIV_PREFIX+m.simpleName»(«s»); ''') //for getters & setters
 
 		m.abstract = false
-		val gemochack = '''try {
-
-			for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
-				if (m.getName().equals("set" + "«m.simpleName.substring(0,1).toUpperCase() + m.simpleName.substring(1)»")
-						&& m.getParameterTypes().length == 1) {
-					m.invoke(_self, «m.parameters.last.simpleName »); 
-
-				}
-			}
-		} catch (Exception e) {
-			// Chut !
-		}'''
-		
+				
 			
 	     
 		
 		m.body = ['''«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 	    
 	     «call.toString»
-	    «		if (((m.returnType == newTypeReference("void")) && m.parameters.size==2 ) 	 ) 	  
-				    gemochack.toString »
 	    	     ''']
 	}
 
@@ -493,6 +479,20 @@ public class AspectProcessor extends AbstractClassProcessor
 
 			bodies.put(get, ''' return «clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName»; ''')
 
+val gemochack = '''try {
+
+			for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+				if (m.getName().equals("set" + "«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
+						&& m.getParameterTypes().length == 1) {
+					m.invoke(_self, «f.simpleName »); 
+
+				}
+			}
+		} catch (Exception e) {
+			// Chut !
+		}'''
+
+
 			if (!f.final) {
 				var set = clazz.addMethod(f.simpleName)[
 						returnType = newTypeReference("void")
@@ -500,7 +500,8 @@ public class AspectProcessor extends AbstractClassProcessor
 						addParameter(f.simpleName, f.type)
 					]
 
-				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; ''')
+
+				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemochack.toString» ''')
 			}
 		}
 	}
