@@ -18,11 +18,11 @@
 
    <includes
          id="fr.inria.diverse.k3.sle.sdk"
-         version="0.0.0"/>
+         version="3.0.0"/>
 
    <includes
          id="fr.inria.diverse.k3.al.feature"
-         version="0.0.0"/>
+         version="3.0.0"/>
 
    <plugin
          id="fr.inria.diverse.k3.sample.deployer"
