@@ -35,7 +35,7 @@
 		<repository>
                 <id>K3-except-k3-eclipse</id>
                 <layout>p2</layout>
-                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3${nightly.modifier}.composite.updatesite/update/all-except-k3-sle/</url>
+                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3${nightly.modifier}.composite.updatesite/update/all-except-k3/</url>
 		</repository>
 		
 		<!-- Update site Repo for thirdparty Dependencies -->
