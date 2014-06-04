@@ -195,7 +195,7 @@ abstract class Helper {
 	}
 	
 	
-	static def List<MutableMethodDeclaration> sortByMethodInheritance(Set<MutableMethodDeclaration> methods, List<String> inheritOrder) {
+	static def List<MethodDeclaration> sortByMethodInheritance(Set<MethodDeclaration> methods, List<String> inheritOrder) {
 		inheritOrder.map[classe | methods.filter[declaringType.simpleName == classe]].flatten.toList
 	}
 	
@@ -204,9 +204,11 @@ abstract class Helper {
 	 * Fill s with super classes of c, ordered by hierarchy
 	 * (the first element is the direct super type of c)
 	 */
-	static def void getSuperClass(List<MutableClassDeclaration> s, MutableClassDeclaration c, extension TransformationContext context) {
+	static def void getSuperClass(List<ClassDeclaration> s, ClassDeclaration c, extension TransformationContext context) {
 		if (c.extendedClass != null) {
-			val l = findClass(c.extendedClass.name)
+			
+			
+			val l = findTypeGlobally(c.extendedClass.name) as ClassDeclaration
 			if(l==c) {
 				context.addError(c, "Its super class is itself?! " + c.extendedClass.name)
 				return;

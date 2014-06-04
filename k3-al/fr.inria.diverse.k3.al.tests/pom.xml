@@ -9,6 +9,7 @@
         <groupId>fr.inria.diverse.k3.al</groupId>
         <artifactId>fr.inria.diverse.k3.al.root</artifactId>
         <version>3.0.0-SNAPSHOT</version>
+	<relativePath>../fr.inria.diverse.k3.al.root/pom.xml</relativePath>
     </parent>
 
  	<build>

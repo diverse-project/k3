@@ -1,28 +1,27 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 import java.util.ArrayList
 import java.util.Comparator
 import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
 import java.util.Set
-
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.RegisterGlobalsContext
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
+import org.eclipse.xtend.lib.macro.declaration.MethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
-
-import java.lang.annotation.ElementType
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-import java.lang.annotation.Target
 
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
@@ -69,14 +68,21 @@ public class AspectProcessor extends AbstractClassProcessor
 			context.registerClass(annotatedClass.qualifiedName + className + CTX_NAME)
 		}
 	}
+	List<? extends MutableClassDeclaration> mclasses=null
+
 
 	/**
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		val Map<MutableClassDeclaration, List<MutableClassDeclaration>> superclass = newHashMap
-		val Map<MutableMethodDeclaration, Set<MutableMethodDeclaration>> dispatchmethod = newHashMap
+		val Map<MutableClassDeclaration, List<ClassDeclaration>> superclass = newHashMap
+		val Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod = newHashMap
 
+		mclasses=classes
+		
+		//context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
+		
+		
 		initSuperclass(classes, context, superclass)
 		initDispatchmethod(superclass, dispatchmethod, context)
 
@@ -237,14 +243,16 @@ public class AspectProcessor extends AbstractClassProcessor
 
 
 	private def methodProcessingChangeBody(MutableMethodDeclaration m, MutableClassDeclaration clazz, extension TransformationContext cxt, 
-									Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, List<String> inheritList, String className) {
+									Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod, List<String> inheritList, String className) {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
 		val ret = if (m.returnType != newTypeReference("void")) "return" else ""
 		val call = new StringBuilder
 
+			//cxt.addError(m, ""+ dispatchmethod.size)
 		if (dispatchmethod.get(m) !== null) {
 			val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
+			//cxt.addError(m, ""+listmethod.size)
 			val declTypes = listmethod.map[declaringType]
 			
 			// A time-consuming check to be used for debugging only.
@@ -269,8 +277,14 @@ public class AspectProcessor extends AbstractClassProcessor
 		else call.append('''«ret» «PRIV_PREFIX+m.simpleName»(«s»); ''') //for getters & setters
 
 		m.abstract = false
+				
+			
+	     
+		
 		m.body = ['''«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-	     «call.toString»''']
+	    
+	     «call.toString»
+	    	     ''']
 	}
 
 
@@ -328,7 +342,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 
 	private def methodsProcessing(MutableClassDeclaration clazz, TransformationContext cxt, String identifier, 
-		Map<MutableMethodDeclaration,String> bodies, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, 
+		Map<MutableMethodDeclaration,String> bodies, Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod, 
 		List<String> inheritList, String className) {
 
 		for (m : clazz.declaredMethods) {
@@ -465,6 +479,20 @@ public class AspectProcessor extends AbstractClassProcessor
 
 			bodies.put(get, ''' return «clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName»; ''')
 
+val gemochack = '''try {
+
+			for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+				if (m.getName().equals("set" + "«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
+						&& m.getParameterTypes().length == 1) {
+					m.invoke(_self, «f.simpleName »); 
+
+				}
+			}
+		} catch (Exception e) {
+			// Chut !
+		}'''
+
+
 			if (!f.final) {
 				var set = clazz.addMethod(f.simpleName)[
 						returnType = newTypeReference("void")
@@ -472,7 +500,8 @@ public class AspectProcessor extends AbstractClassProcessor
 						addParameter(f.simpleName, f.type)
 					]
 
-				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; ''')
+
+				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemochack.toString» ''')
 			}
 		}
 	}
@@ -500,22 +529,21 @@ public class AspectProcessor extends AbstractClassProcessor
 	 * @dispatchmethod Associations computed
 	 * @context
 	 */
-	private def initDispatchmethod(Map<MutableClassDeclaration,List<MutableClassDeclaration>> superclass, Map<MutableMethodDeclaration,Set<MutableMethodDeclaration>> dispatchmethod, TransformationContext context) {
+	private def initDispatchmethod(Map<MutableClassDeclaration,List<ClassDeclaration>> superclass, Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod, TransformationContext context) {
 		var i = 0
-
 		for (cl : superclass.keySet) {
 			// Regroup methods of the class hierarchy by name+number of parameters
-			val clazzes = new ArrayList<MutableClassDeclaration>
+			val clazzes = new ArrayList<ClassDeclaration>
 			clazzes.add(cl)
 			clazzes.addAll(superclass.get(cl))
 
-			val Map<String, Set<MutableMethodDeclaration>> dispatchs = newHashMap
+			val Map<String, Set<MethodDeclaration>> dispatchs = newHashMap
 			for (clazz : clazzes) {
 				for (m : clazz.declaredMethods) {
 					val mname = m.simpleName + "__" + m.parameters.size
 					var v = dispatchs.get(mname)
 					if (v === null) {
-						v = new LinkedHashSet<MutableMethodDeclaration>()
+						v = new LinkedHashSet<MethodDeclaration>()
 						dispatchs.put(mname, v)
 					}
 					v.add(m)
@@ -534,14 +562,15 @@ public class AspectProcessor extends AbstractClassProcessor
 					}
 				}
 			}
+			
 		}
-
+ 
 		//Sort Dispatchmethod entries values by hierarchy of their containing classes
 		for (m : dispatchmethod.keySet) {
 			val l = dispatchmethod.get(m).sort(new SortMethod(context))
 			dispatchmethod.get(m).clear
 			dispatchmethod.get(m).addAll(l)
-			//m.addError(dispatchmethod.get(m).size.toString)
+			context.addWarning(mclasses.get(0),dispatchmethod.get(m).size.toString + " "+ mclasses.size)
 		}
 	}
 	
@@ -553,29 +582,33 @@ public class AspectProcessor extends AbstractClassProcessor
 	 * @superclass Mapping computed between class and list of his super classes
 	 * @context
 	 */
-	private def initSuperclass(List<? extends MutableClassDeclaration> annotedClasses, TransformationContext context, Map<MutableClassDeclaration,List<MutableClassDeclaration>> superclass) {
+	private def initSuperclass(List<? extends MutableClassDeclaration> annotedClasses, TransformationContext context, Map<MutableClassDeclaration,List<ClassDeclaration>> superclass) {
 		//Add super classes for all annotated classes
+		
 		for (clazz : annotedClasses) {
-			val ext = new ArrayList<MutableClassDeclaration>
+
+			val ext = new ArrayList<ClassDeclaration>
 			Helper::getSuperClass(ext, clazz, context)
+//			context.addError(clazz,""+ext.size)
 			if (ext.size > 0)
 				superclass.put(clazz, ext)
 		}
 
 		//Get all super classes
-		val allparent = new LinkedHashSet<MutableClassDeclaration>
+		val allparent = new LinkedHashSet<ClassDeclaration>
 		for (child : superclass.keySet) {
 			allparent.addAll(superclass.get(child))
 		}
 
 		//Remove super classes which are annotated
-		for (p : allparent)
-			superclass.remove(p)
+		for (p : allparent){
+			superclass.remove(p)			
+			}
 	}
 }
 
 
-class SortMethod implements Comparator<MutableMethodDeclaration>
+class SortMethod implements Comparator<MethodDeclaration>
 {
 	TransformationContext context
 
@@ -583,12 +616,12 @@ class SortMethod implements Comparator<MutableMethodDeclaration>
 		this.context = context
 	}
 
-	def override int compare(MutableMethodDeclaration arg0, MutableMethodDeclaration arg2) {
-		val ext = new ArrayList<MutableClassDeclaration>
-		val ext1 = new ArrayList<MutableClassDeclaration>
+	def override int compare(MethodDeclaration arg0, MethodDeclaration arg2) {
+		val ext = new ArrayList<ClassDeclaration>
+		val ext1 = new ArrayList<ClassDeclaration>
 
-		Helper::getSuperClass(ext1, arg2.declaringType as MutableClassDeclaration, context)
-		Helper::getSuperClass(ext, arg0.declaringType as MutableClassDeclaration, context)
+		Helper::getSuperClass(ext1, arg2.declaringType as ClassDeclaration, context)
+		Helper::getSuperClass(ext, arg0.declaringType as ClassDeclaration, context)
 
 		if (ext.contains(arg2.declaringType)) {
 			//context.addError(arg0.declaringType,arg0.declaringType.simpleName + " > " + arg2.declaringType.simpleName+" " +ext.size)
