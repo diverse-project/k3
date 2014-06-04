@@ -570,7 +570,7 @@ val gemochack = '''try {
 			val l = dispatchmethod.get(m).sort(new SortMethod(context))
 			dispatchmethod.get(m).clear
 			dispatchmethod.get(m).addAll(l)
-			context.addWarning(mclasses.get(0),dispatchmethod.get(m).size.toString + " "+ mclasses.size)
+			//context.addWarning(mclasses.get(0),dispatchmethod.get(m).size.toString + " "+ mclasses.size)
 		}
 	}
 	
