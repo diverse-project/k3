@@ -6,8 +6,8 @@ Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: fr.inria.diverse.k3.al.annotationprocessor.plugin.Activator
 Bundle-Vendor: INRIA
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.xtend.lib;bundle-version="[2.4.3,2.5.99)";visibility:=reexport,
- org.eclipse.emf.ecore;bundle-version="2.7.0"
+ org.eclipse.xtend.lib;bundle-version="2.6.0";visibility:=reexport,
+ org.eclipse.emf.ecore;bundle-version="2.9.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

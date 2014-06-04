@@ -101,7 +101,7 @@ class ContractedProcessor extends AbstractClassProcessor
 							return this.«mNameWithIndex»() ;
 						'''
 						
-						addAnnotation(Pre.newTypeReference.type)
+						addAnnotation(newAnnotationReference(Pre.newTypeReference.type))
 					]
 				]
 
@@ -160,7 +160,7 @@ class ContractedProcessor extends AbstractClassProcessor
 							return this.«mNameWithIndex»() ;
 						'''
 						
-						addAnnotation(Post.newTypeReference.type)
+						addAnnotation(newAnnotationReference(Post.newTypeReference.type))
 					]
 				]
 

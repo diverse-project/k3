@@ -2,7 +2,6 @@ package fr.inria.diverse.k3.al.annotationprocessor
 
 import java.util.ArrayList
 import java.util.Comparator
-import java.util.HashMap
 import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
@@ -152,7 +151,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
 			if (m.abstract)
-				m.addAnnotation(typeof(Abstract).findTypeGlobally)			
+				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))			
 
 			m.parameters.toList.clear				
 			m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
