@@ -1,55 +1,22 @@
 K3
 ==
-K3 is an environment for executable metamodeling and DSL engineering. It is composed of two main parts: K3AL and K3SLE
-K3AL is a DSL on top of XTEND that works "à la" Kermeta 1.x / Kermeta 2.x. Is is mainly used as an action language for model element manipulation (modeling in the small).
-K3SLE is a set of features dedicated to manipulate models (modeling in the large). It contains a modeltype system.
 
-Git and projet structure
-------------------------
-The git uses 2 main branches: *production_stable* for releases and demo versions, and *master* for development and integration.
-
-Root folders with name *-eclipse contains eclipse based project that can be built directly in eclipse or using maven+tycho.
-Other root folders contains pure maven projects.
-All root folders contains a *.root project that allow to build all the projects of the folder in one maven command.
+K3 is both a language and an environment for executable metamodeling and software language engineering. It is mainly integrated within the Eclipse platform and interoperates with most of the tooling developed around the Eclipse Modeling Framework (e.g. Ecore, Xtext, Sirius). Its two main components are K3AL for aspect-oriented metamodeling and executability weaving, and K3SLE for software language engineering.
 
 K3AL
 ----
-This project is a DSL on top of XTEND to work "à la" Kermeta. It is general enough to be used in more situation that just model manipulation programs.
-
-Please use the exampleXtendSnapSHot
-
-It provides examples to use this DSL. 
-
-Among these examples:
-* An archetype that generates an example of ecore model loading that contains aspects
-* an example of FSM Operational Semantics
-* an example of integration with Spoon
-* an integration to generate Kevoree components. 
-* Example with multiples aspects on the same metaclasses
-* Example with aspect inheritance
-* AspectProperty Active Annotation
-* Example with design by contracts
-* Inheritance and Design by contract
-* Example of Aspect that overrides Base method Works when we remain in Xtend (Using ReplaceAspectMethod annotation)
-* Example with GWT
-
-### TODO
-* Aspects and Design by contract
-* Pretty printer from k2 to k3
-* Example of Aspect that overrides Base method Works when we leave Xtend (the case of EMF)
-* Documentation to explain _self on aspects (even for static method or static attributes. 
-* Example of an Xtend program  that works on a xtend program
-
-
-### Tools provided with K3AL
-* Aspect generator for an ecore metamodel
-* maven archetype
-
-
+K3AL is a DSL built on top of the Xtend programming language that allows to "re-open" classes from an Ecore metamodel to weave new features or operations. It consists in a set of annotations that can be used in plain Xtend files to express e.g. aspects, pre/post conditions or invariants, and uses Xbase as the expression language for operations bodies.
 
 K3SLE
 -----
-K3SLE is modeltype system dedicated to manipulate models (modeling in the large). It allows to useconformance of models in order to apply transformation to models that may not be of the same exact metamodel.
-... See the recent papers and Jim Steel's phd thesis.
+K3SLE  is a meta-language for specifying software languages. It allows the mashup of different language components, such as abstract syntax and semantics, and automatically extract interfaces that expose specific concerns. It comes with Eclipse-integrated editors and compiles to Java code that is fully interoperable with legacy EMF code.
 
+K3SLE comes with a model-oriented typing system that statically and structurally types the different constructs of its meta-language. Model types are one type of interfaces that serve as a typing layer on top of metamodels, along with subtyping relations that enables model polymorphism.
 
+Contributing
+------------------------
+The git uses 2 main branches: *production_stable* for releases, and *master* for development and integration.
+
+Folders named *-eclipse contains Eclipse-based projects that can be built directly in eclipse or using maven/tycho.
+Other folders contain pure maven projects.
+All root folders contains a *.root project that allows to build all the project in one maven command.
