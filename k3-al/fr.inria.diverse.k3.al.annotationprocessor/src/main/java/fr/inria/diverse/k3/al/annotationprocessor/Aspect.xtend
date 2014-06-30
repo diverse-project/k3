@@ -113,39 +113,11 @@ public class AspectProcessor extends AbstractClassProcessor
 	 * Phase 3: use an additional code generator to produce the .k3_aspect_mapping.properties file
 	 */
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
-		// clean up previous version
-		if (annotatedSourceElements.size > 0) {
-			val filePath = annotatedSourceElements.head.compilationUnit.filePath
-			val targetFilePath = filePath.projectFolder.append('''/META-INF/xtend-gen/«filePath.projectFolder.lastSegment».k3_aspect_mapping.properties''')
-			targetFilePath.delete
-		
-			// add aspectizedClass = aspectClasses mapping separated by ,
-			val Map<String, List<String>> mapping = newHashMap
-			for (annotatedSourceElement : annotatedSourceElements) {
-				val aspectizedClassType = Helper::getAnnotationAspectType(annotatedSourceElement)
-
-				if (aspectizedClassType !== null) {
-					val aspectizedClassName = aspectizedClassType.name
-					var existingListForAspectizedElement = mapping.get(aspectizedClassName)
-
-					if (existingListForAspectizedElement === null) {
-						existingListForAspectizedElement = newArrayList
-						mapping.put(aspectizedClassName, existingListForAspectizedElement)
-					}
-
-					existingListForAspectizedElement.add(annotatedSourceElement.qualifiedName)
-				}
-			}
-
-			var buf = ''''''
-			for (entrySet : mapping.entrySet) {
-				buf = '''«buf.toString»
-«entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
-			}
-
-			targetFilePath.contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
-«buf.toString»''' 
-		}		
+		val aspectMappingBuilder = new AspectMappingBuilder(annotatedSourceElements, context)
+		aspectMappingBuilder.readCurrentMapping
+		aspectMappingBuilder.cleanUnusedMapping
+		aspectMappingBuilder.addMappingForAnnotatedSourceElements
+		aspectMappingBuilder.writePropertyFile		
 	}
 
 
