@@ -8,7 +8,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.codegen.ecore,
- fr.inria.diverse.k3.al.annotationprocessor.plugin
+ fr.inria.diverse.k3.al.annotationprocessor.plugin,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.core.resources,

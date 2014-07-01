@@ -17,5 +17,121 @@
             name="Kermeta 3">
       </category>
    </extension>
+   <extension
+         id="k3Builder"
+         name="K3 Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="fr.inria.diverse.k3.ui.builder.K3Builder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="k3Nature"
+         name="K3 Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="fr.inria.diverse.k3.ui.builder.K3Nature">
+         </run>
+      </runtime>
+      <builder
+            id="fr.inria.diverse.k3.ui.k3Builder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="fr.inria.diverse.k3.ui.k3Nature.category"
+            name="K3 Project Nature commands">
+      </category>
+      <command
+            categoryId="fr.inria.diverse.k3.ui.k3Nature.category"
+            defaultHandler="fr.inria.diverse.k3.ui.builder.AddRemoveK3NatureHandler"
+            id="fr.inria.diverse.k3.ui.addRemoveK3Nature"
+            name="Add/RemoveK3 Project Nature">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="fr.inria.diverse.k3.ui.addRemoveK3Nature"
+               icon="icons/kermeta_logo.gif"
+               label="Disable K3 builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <and>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="fr.inria.diverse.k3.ui.k3Nature">
+                        </test>
+                     </and>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="fr.inria.diverse.k3.ui.addRemoveK3Nature"
+               icon="icons/kermeta_logo.gif"
+               label="Enable K3 builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <and>
+                        <instanceof
+                              value="org.eclipse.core.resources.IProject">
+                        </instanceof>
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="fr.inria.diverse.k3.ui.k3Nature">
+                           </test>
+                        </not>
+                     </and>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         id="k3Problem"
+         name="K3 Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/kermetaproject_hover.gif"
+            id="fr.inria.diverse.k3.ui.k3ProjectNatureImage"
+            natureId="fr.inria.diverse.k3.ui.k3Nature">
+      </image>
+   </extension>
 
 </plugin>
