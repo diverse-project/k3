@@ -48,6 +48,10 @@ public class AspectProcessor extends AbstractClassProcessor
 {
 	Map<MutableClassDeclaration, List<MutableClassDeclaration>> listResMap = newHashMap
 	
+	// builder for mapping.properties file
+	val aspectMappingBuilder = new AspectMappingBuilder() 
+	
+	
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
 	public static final String OVERRIDE_METHOD = OverrideAspectMethod.simpleName
@@ -107,18 +111,23 @@ public class AspectProcessor extends AbstractClassProcessor
 				aspectContextMaker(context, clazz, className, identifier)
 			}
 		}
+		
+		// prepare an AspectMApping properties file 
+		// it is partly done in this context and partly done in the generate code context 
+		// (allows to get writting abilities and notification to Eclipse)
+		aspectMappingBuilder.readCurrentMapping(classes, context)
+		aspectMappingBuilder.cleanUnusedMapping(context)
+		
+		aspectMappingBuilder.addMappingForAnnotatedSourceElements()	
 	}
 	
 	/**
 	 * Phase 3: use an additional code generator to produce the .k3_aspect_mapping.properties file
 	 */
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
-		val aspectMappingBuilder = new AspectMappingBuilder(annotatedSourceElements, context)
-		aspectMappingBuilder.readCurrentMapping
-		aspectMappingBuilder.cleanUnusedMapping
-		aspectMappingBuilder.addMappingForAnnotatedSourceElements
-		aspectMappingBuilder.writePropertyFile		
-	}
+		
+		aspectMappingBuilder.writePropertyFile(context)		
+	} 
 
 
 	private def methodProcessingAddSelfStatic(MutableMethodDeclaration m, String identifier, extension TransformationContext cxt) {

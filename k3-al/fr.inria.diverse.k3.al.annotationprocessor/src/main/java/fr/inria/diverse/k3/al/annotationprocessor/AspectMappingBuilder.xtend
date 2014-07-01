@@ -1,11 +1,12 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
 import org.eclipse.xtend.lib.macro.CodeGenerationContext
-import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
 import java.util.List
 import java.util.Map
 import org.eclipse.xtend.lib.macro.file.Path
 import java.util.Properties
+import org.eclipse.xtend.lib.macro.TransformationContext
+import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -14,28 +15,26 @@ import java.util.Properties
  */
 class AspectMappingBuilder {
 	
-	val List<? extends ClassDeclaration> annotatedSourceElements
 	
-	val extension CodeGenerationContext context
+	// list of annoted classes
+	var List<? extends MutableClassDeclaration> classes;
 	
+	// destination properties file
 	var Path targetFilePath
 	
 	/** internal map */
 	private val Map<String, List<String>> mapping = newHashMap
 	
-	new(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
-		this.annotatedSourceElements = annotatedSourceElements
-		this.context = context
-		if (annotatedSourceElements.size > 0) {
-			val filePath = annotatedSourceElements.head.compilationUnit.filePath
-			targetFilePath = filePath.projectFolder.append('''/META-INF/xtend-gen/«filePath.projectFolder.lastSegment».k3_aspect_mapping.properties''')
-		}	
-			
-	}
 	
 	/** Rebuild mapping from existing property file*/
-	public def void readCurrentMapping(){
-		if (annotatedSourceElements.size > 0) {
+	public def void readCurrentMapping(List<? extends MutableClassDeclaration> classes, extension TransformationContext context){
+		this.classes = classes
+		//this.context = context
+		if (classes.size > 0) {
+			val filePath = classes.head.compilationUnit.filePath
+			targetFilePath = filePath.projectFolder.append('''/META-INF/xtend-gen/«filePath.projectFolder.lastSegment».k3_aspect_mapping.properties''')
+		}
+		if (classes.size > 0) {
 			val Properties properties = new Properties();
 			if(targetFilePath.exists){
 				properties.load(targetFilePath.contentsAsStream)
@@ -48,14 +47,22 @@ class AspectMappingBuilder {
 	}
 	
 	/** try to clean unused mappings */
-	public def void cleanUnusedMapping(){
-		if (annotatedSourceElements.size > 0) {
+	public def void cleanUnusedMapping(extension TransformationContext context){
+		if (classes.size > 0) {
 			
+			mapping.forEach[key, valueList|
+				// recompute a value list that contains only types that are found in the classpath
+				val List<String> newValueList = valueList.filter[value | findTypeGlobally(value)!=null].toList
+				mapping.put(key, newValueList)				 	
+				if(newValueList.size == 0){
+					mapping.remove(key)
+				}			
+			]
 		}
 	}
 	
 	public def void addMappingForAnnotatedSourceElements(){
-		for (annotatedSourceElement : annotatedSourceElements) {
+		for (annotatedSourceElement : classes) {
 			val aspectizedClassType = Helper::getAnnotationAspectType(annotatedSourceElement)
 
 			if (aspectizedClassType !== null) {
@@ -65,8 +72,8 @@ class AspectMappingBuilder {
 		
 	}
 	
-	public def void writePropertyFile(){
-		if (annotatedSourceElements.size > 0) {
+	public def void writePropertyFile(extension CodeGenerationContext context){
+		if (classes.size > 0) {
 			var buf = ''''''
 			for (entrySet : mapping.entrySet) {
 				buf = '''«buf.toString»
