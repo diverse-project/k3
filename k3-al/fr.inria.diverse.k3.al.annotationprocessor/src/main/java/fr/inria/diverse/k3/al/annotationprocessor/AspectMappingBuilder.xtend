@@ -7,6 +7,7 @@ import org.eclipse.xtend.lib.macro.file.Path
 import java.util.Properties
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
+import java.util.ArrayList
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -50,14 +51,16 @@ class AspectMappingBuilder {
 	public def void cleanUnusedMapping(extension TransformationContext context){
 		if (classes.size > 0) {
 			
+			val List<String> keytoRemove = new ArrayList<String>
 			mapping.forEach[key, valueList|
 				// recompute a value list that contains only types that are found in the classpath
 				val List<String> newValueList = valueList.filter[value | findTypeGlobally(value)!=null].toList
 				mapping.put(key, newValueList)				 	
 				if(newValueList.size == 0){
-					mapping.remove(key)
+					keytoRemove.add(key)
 				}			
 			]
+			keytoRemove.forEach[key | mapping.remove(key)]
 		}
 	}
 	
