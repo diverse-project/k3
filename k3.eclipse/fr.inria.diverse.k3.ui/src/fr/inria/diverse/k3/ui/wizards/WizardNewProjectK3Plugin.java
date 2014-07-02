@@ -100,7 +100,10 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IProjectDescription description;
 		try {
 			
-			description = project.getDescription();				
+			description = project.getDescription();	
+			if (!description.hasNature("fr.inria.diverse.k3.ui.k3Nature")){
+				addNature(description, "fr.inria.diverse.k3.ui.k3Nature");
+			}
 			if (!description.hasNature("org.eclipse.jdt.core.javanature")){
 				addNature(description, "org.eclipse.jdt.core.javanature");
 			}
@@ -124,6 +127,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			ManageClasspath classpath;
 			IProjectDescription description;
 			description = project.getDescription();
+			addNature(description, "fr.inria.diverse.k3.ui.k3Nature");
 			addNature(description, "org.eclipse.jdt.core.javanature");
 			addNature(description, "org.eclipse.xtext.ui.shared.xtextNature");
 			String sourceFolderName;
@@ -300,7 +304,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.ecoreIFile.getName() +".metamodel");
 				project.create(monitor);
 				project.open(monitor);
-				Boolean tabNature[] = {true,false,true,true};
+				Boolean tabNature[] = {true, true,false,true,true};
 				addNatureToProject(project, tabNature);
 				IFolderUtils.createFolder(sourceFolderName, project, monitor);
 				IFolderUtils.createFolder("model/", project, monitor);
@@ -343,16 +347,19 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		try {
 			
 			description = project.getDescription();
-			if (!tabNature[0] && !description.hasNature("org.eclipse.jdt.core.javanature")){
+			if (!tabNature[0] && !description.hasNature("fr.inria.diverse.k3.ui.k3Nature")){
+				addNature(description, "fr.inria.diverse.k3.ui.k3Nature");
+			}
+			if (!tabNature[1] && !description.hasNature("org.eclipse.jdt.core.javanature")){
 				addNature(description, "org.eclipse.jdt.core.javanature");
 			}
-			if(!tabNature[1] && !description.hasNature("org.eclipse.xtext.ui.shared.xtextNature")){
+			if(!tabNature[2] && !description.hasNature("org.eclipse.xtext.ui.shared.xtextNature")){
 				addNature(description, "org.eclipse.xtext.ui.shared.xtextNature");				
 			}
-			if(!tabNature[2] && (!description.hasNature("org.eclipse.pde.PluginNature"))){
+			if(!tabNature[3] && (!description.hasNature("org.eclipse.pde.PluginNature"))){
 				addNature(description, "org.eclipse.pde.PluginNature");				
 			}
-			if(!tabNature[3] && (!description.hasNature("org.eclipse.m2e.core.maven2Nature"))){
+			if(!tabNature[4] && (!description.hasNature("org.eclipse.m2e.core.maven2Nature"))){
 				addNature(description, "org.eclipse.m2e.core.maven2Nature");			
 			}
 			project.setDescription(description, null);

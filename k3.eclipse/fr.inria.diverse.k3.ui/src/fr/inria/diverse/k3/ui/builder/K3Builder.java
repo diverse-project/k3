@@ -51,7 +51,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 			case IResourceDelta.CHANGED:
 				// handle changed resource
 				//checkXML(resource);
-				checkK3AspectMappingPropertiesForGeneratedJava(resource);
+				new AspectMappingPropertiesChecker(K3Builder.this).checkK3AspectMappingPropertiesForGeneratedJava(resource);
 				break;
 			}
 			//return true to continue visiting children.
@@ -61,7 +61,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 
 	class K3BuilderResourceVisitor implements IResourceVisitor {
 		public boolean visit(IResource resource) {
-			checkK3AspectMappingPropertiesForGeneratedJava(resource);
+			new AspectMappingPropertiesChecker(K3Builder.this).checkK3AspectMappingPropertiesForGeneratedJava(resource);
 			//return true to continue visiting children.
 			return true;
 		}
@@ -99,7 +99,15 @@ public class K3Builder extends IncrementalProjectBuilder {
 
 //	private SAXParserFactory parserFactory;
 
-	private void addMarker(IFile file, String message, int lineNumber,
+	
+	/**
+	 * convenient method for marking file associated with this builder
+	 * @param file
+	 * @param message
+	 * @param lineNumber
+	 * @param severity
+	 */
+	public void addMarker(IFile file, String message, int lineNumber,
 			int severity) {
 		try {
 			IMarker marker = file.createMarker(MARKER_TYPE);
@@ -145,64 +153,15 @@ public class K3Builder extends IncrementalProjectBuilder {
 		}
 		
 	}
-
-	class JavaAspectFinderResourceVisitor implements IResourceVisitor {
-		protected String searchedJavaFile;
-		protected boolean result = false;
-		public JavaAspectFinderResourceVisitor(String searchedJavaFile){
-			this.searchedJavaFile = searchedJavaFile;
-		}
-		public boolean visit(IResource resource) {
-			if(resource instanceof IFile && resource.getName().endsWith(".java")){
-				if(resource.getProjectRelativePath().toString().contains(searchedJavaFile)){
-					result = true;
-					return false;
-				}
-			}
-			//return true to continue visiting children.
-			// continue only if not found
-			return !result;
-		}
-		public boolean getSearchResult(){return result;}
-	}
 	
-	void checkK3AspectMappingPropertiesForGeneratedJava(IResource resource) {
-		
-		// triggered when 
-		if (resource instanceof IFile && resource.getName().endsWith(getProject().getName()+".k3_aspect_mapping.properties")) {
-			IFile file = (IFile) resource;
-			deleteMarkers(file);
-			Properties properties = new Properties();
-			try {
-				// check that a java file exist for each of the mapping aspects
-				properties.load(file.getContents());
-				int mostProbableLine = 1;
-				for (Entry<Object, Object> entrySet : properties.entrySet()) {
-					mostProbableLine++;
-					String[] values = entrySet.getValue().toString().split(", ");
-					for (String value : values) {
-						// search for a java class with that name in the project
-						String searchedJavaFile = value.replaceAll("\\.", "/");
-						JavaAspectFinderResourceVisitor finder = new JavaAspectFinderResourceVisitor(searchedJavaFile+".java");
-						resource.getProject().accept(finder);
-						
-						if(!finder.getSearchResult()){
-							addMarker(file, "Aspect "+value+" not found, clean project recommanded", mostProbableLine, IMarker.SEVERITY_WARNING);
-						}
-						
-					}
-				}
-				
-			} catch (IOException e) {
-				
-			} catch (CoreException e) {
-				
-			}
-			
-		}
-	}
-
-	private void deleteMarkers(IFile file) {
+	/**
+	 * convenient method for removing marks associated with this builder
+	 * @param file
+	 * @param message
+	 * @param lineNumber
+	 * @param severity
+	 */
+	public void deleteMarkers(IFile file) {
 		try {
 			file.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_ZERO);
 		} catch (CoreException ce) {
