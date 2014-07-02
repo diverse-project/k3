@@ -183,7 +183,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 					for (String value : values) {
 						// search for a java class with that name in the project
 						String searchedJavaFile = value.replaceAll("\\.", "/");
-						JavaAspectFinderResourceVisitor finder = new JavaAspectFinderResourceVisitor(searchedJavaFile);
+						JavaAspectFinderResourceVisitor finder = new JavaAspectFinderResourceVisitor(searchedJavaFile+".java");
 						resource.getProject().accept(finder);
 						
 						if(!finder.getSearchResult()){
