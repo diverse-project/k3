@@ -295,7 +295,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		grpSLEOptions.setLayout(new GridLayout(4, false));
 		
 		btnCheckSLE = new Button(grpSLEOptions, SWT.CHECK);
-		btnCheckSLE.setText("Use SLE modeltype system");
+		btnCheckSLE.setText("Configure project with SLE Nature");
 		btnCheckSLE.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

@@ -138,7 +138,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			default:
 				sourceFolderName= "src/";
 			}
-			
+
 			if(context.ecoreIFile != null){
 				createProjectWithEcore(monitor, sourceFolderName);
 			} else {
@@ -156,10 +156,15 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				classpath.setClasspath(project, monitor);
 				break;
 			case PLUGIN :
-				classpath = new ManageClasspathPlugin();
+				classpath = new ManageClasspathPlugin(this.context.useSLE);
 				addNature(description, "org.eclipse.pde.PluginNature");
 				configurePluginProject(project, monitor);
 				classpath.setClasspath(project, monitor);
+
+				if (context.useSLE) {
+					classpath.setClasspath(project,  monitor);
+				}
+
 				break;
 			case MAVEN :
 				classpath = new ManageClasspathMaven();
@@ -182,8 +187,14 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore.xmi", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.common", "2.8.0", true, true);
+				manifestChanger.addPluginDependency("org.eclipse.xtend.lib", "2.6.0", false, true);
+				manifestChanger.addPluginDependency("org.eclipse.xtext.xbase.lib", "2.6.0", false, true);
+				manifestChanger.addPluginDependency("com.google.guava", "15.0.0", false, true);
 				if(context.ecoreIFile != null && !context.bCreateEMFProject){
 					manifestChanger.addPluginDependency(context.ecoreIFile.getProject().getName(),"0.0.0", true, true);
+				}
+				if(context.useSLE) {
+					manifestChanger.addPluginDependency("fr.inria.diverse.k3.sle.lib", "3.0.0", true, true);
 				}
 				manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
 			}
@@ -292,6 +303,28 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			Activator.logErrorMessage(e.getMessage(), e);
 		}
 	}
+
+	private void createK3SLEStub(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
+		String mmName = this.context.ecoreIFile.getName().substring(0, this.context.ecoreIFile.getName().indexOf("."));
+		String ecorePlatformPath = this.context.ecoreIFile.toString().replaceFirst("L", "platform:/resource");
+		String path = sourceFolderName + this.context.namePackage + "/" + mmName + ".k3sle";
+		IContainer currentContainer = project;
+		IFile file = currentContainer.getFile(new Path(path));
+
+		String contents = FileUtils.getK3SLEStub(this.context.namePackage, ecorePlatformPath, mmName);
+
+		try {
+			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
+			if (file.exists()) {
+				file.setContents(stream, true, true, monitor);
+			} else {
+				file.create(stream, true, monitor);
+			}
+			stream.close();
+		} catch (IOException e) {
+			Activator.logErrorMessage(e.getMessage(), e);
+		}
+	}
 	
 	public Context getContext() {
 		return context;
@@ -338,7 +371,18 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 					this.context.listNewClass, 
 					this.context.operationParams);			
 		}
-		
+
+		if (this.context.useSLE){
+			try {
+				final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.nameProject);
+				IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
+				createK3SLEStub(project, monitor, sourceFolderName);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		return returnVal;
 	}
 

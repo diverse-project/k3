@@ -12,9 +12,11 @@ import org.eclipse.jdt.core.JavaCore;
 import fr.inria.diverse.k3.ui.Activator;
 
 public class ManageClasspathPlugin extends ManageClasspath {
+	private boolean useSLE;
 
-	public ManageClasspathPlugin() {
+	public ManageClasspathPlugin(boolean useSLE) {
 		super();
+		this.useSLE = useSLE;
 	}
 
 	@Override
@@ -28,15 +30,16 @@ public class ManageClasspathPlugin extends ManageClasspath {
 			try {
 				sourceFolder.create(true, true, monitor);
 			} catch (Exception ex) {}
-			IClasspathEntry[] newClassPath = new IClasspathEntry[3];
+			IClasspathEntry[] newClassPath = new IClasspathEntry[4];
 			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
 
 			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
 			newClassPath[1] = JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER"));
 			newClassPath[2] = JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins"));
-			
+			if (useSLE)
+				newClassPath[3] = JavaCore.newSourceEntry(javaProject.getPackageFragmentRoot(project.getFolder("src-gen")).getPath());
+
 			javaProject.setRawClasspath(newClassPath, monitor);
-			
 		} catch (Exception e) {
 			Activator.logErrorMessage(e.getMessage(), e);	
 		}

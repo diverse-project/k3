@@ -56,6 +56,24 @@ public class FileUtils {
 		return buffer.toString();
 	}
 	
+	public static String getK3SLEStub(String pkgName, String ecoreUri, String mmName) {
+		StringBuffer buffer = new StringBuffer() ;
+
+		buffer.append("package " + pkgName + "\n") ;
+		buffer.append("\n") ;
+		buffer.append("metamodel " + mmName + " {\n") ;
+		buffer.append("\tecore \"" + ecoreUri + "\"\n") ;
+		buffer.append("\texactType " + mmName + "MT\n") ;
+		buffer.append("}\n") ;
+		buffer.append("\n") ;
+		buffer.append("@Main\n") ;
+		buffer.append("transformation main() {\n") ;
+		buffer.append("\tprintln(\"Hello, SLE!\")\n") ;
+		buffer.append("}\n") ;
+
+		return buffer.toString() ;
+	}
+
 	public static String manifestMFPlugin (String projectName, List<String> requiredBundles, List<String> exportedPackages) {
 
 		StringBuffer buffer= new StringBuffer();
