@@ -61,7 +61,7 @@
          <command
                commandId="fr.inria.diverse.k3.ui.addRemoveK3Nature"
                icon="icons/kermeta_logo.gif"
-               label="Disable K3 builder"
+               label="Disable K3 Nature"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -87,7 +87,7 @@
          <command
                commandId="fr.inria.diverse.k3.ui.addRemoveK3Nature"
                icon="icons/kermeta_logo.gif"
-               label="Enable K3 builder"
+               label="Enable K3 Nature"
                style="push">
             <visibleWhen
                   checkEnabled="false">
