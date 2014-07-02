@@ -62,7 +62,7 @@ import static extension fr.inria.triskell.k3.sample.logo.WhileAspect.*
 import  static extension fr.inria.triskell.k3.sample.logo.ControlStructureAspect.*
 import  static extension fr.inria.triskell.k3.sample.logo.BinaryExpAspect.*
 
-@Aspect(className=typeof(Instruction)) 
+@Aspect(className=Instruction) 
 class InstructionAspect {
 
 	def public int eval (Context context ) {
@@ -71,7 +71,7 @@ class InstructionAspect {
 
 }
 
-@Aspect(className=typeof(Primitive)) 
+@Aspect(className=Primitive) 
 public class PrimitiveAspect extends InstructionAspect{  
 
 	@OverrideAspectMethod
@@ -81,7 +81,7 @@ public class PrimitiveAspect extends InstructionAspect{
 
 } 
 
-@Aspect(className=typeof(Back))
+@Aspect(className=Back)
 public class BackAspect extends PrimitiveAspect{
 
 	@OverrideAspectMethod
@@ -94,7 +94,7 @@ public class BackAspect extends PrimitiveAspect{
 
 }
 
-@Aspect(className=typeof(Forward))
+@Aspect(className=Forward)
 public class ForwardAspect extends PrimitiveAspect{
 
 	@OverrideAspectMethod
@@ -107,7 +107,7 @@ public class ForwardAspect extends PrimitiveAspect{
 
 }
  
-@Aspect(className=typeof(Left))
+@Aspect(className=Left)
 public class LeftAspect extends PrimitiveAspect{
 
 	@OverrideAspectMethod
@@ -120,7 +120,7 @@ public class LeftAspect extends PrimitiveAspect{
 
 }
 
-@Aspect(className=typeof(Right))
+@Aspect(className=Right)
 public class RightAspect extends PrimitiveAspect{
 
 	@OverrideAspectMethod
@@ -133,7 +133,7 @@ public class RightAspect extends PrimitiveAspect{
 
 }
 
-@Aspect(className=typeof(PenDown))
+@Aspect(className=PenDown)
 public class PenDownAspect extends PrimitiveAspect{
 
 	@OverrideAspectMethod
@@ -145,7 +145,7 @@ public class PenDownAspect extends PrimitiveAspect{
 
 }
 
-@Aspect(className=typeof(PenUp))
+@Aspect(className=PenUp)
 public class PenUpAspect extends PrimitiveAspect{
 
 	@OverrideAspectMethod
@@ -157,7 +157,7 @@ public class PenUpAspect extends PrimitiveAspect{
 
 }
 
-@Aspect(className=typeof(Clear))
+@Aspect(className=Clear)
 public class ClearAspect extends PrimitiveAspect{
 	
 	@OverrideAspectMethod
@@ -169,7 +169,7 @@ public class ClearAspect extends PrimitiveAspect{
 
 }
 
-@Aspect(className=typeof(Expression))
+@Aspect(className=Expression)
 public class ExpressionAspect extends InstructionAspect{
 
 	@OverrideAspectMethod
@@ -179,7 +179,7 @@ public class ExpressionAspect extends InstructionAspect{
 
 }
 
-@Aspect(className=typeof(Constant))
+@Aspect(className=Constant)
 public class ConstantAspect extends ExpressionAspect{
 
 	@OverrideAspectMethod
@@ -189,7 +189,7 @@ public class ConstantAspect extends ExpressionAspect{
 
 }
 
-@Aspect(className=typeof(ProcCall))
+@Aspect(className=ProcCall)
 public class ProcCallAspect extends ExpressionAspect{
 
 	@OverrideAspectMethod
@@ -216,7 +216,7 @@ public class ProcCallAspect extends ExpressionAspect{
 	 int res = 0
 }
 
-@Aspect(className=typeof(Block))
+@Aspect(className=Block)
 public class BlockAspect extends ExpressionAspect{
 
 	int res = 0
@@ -228,7 +228,7 @@ public class BlockAspect extends ExpressionAspect{
 	
 }
 
-@Aspect(className=typeof(ControlStructure))
+@Aspect(className=ControlStructure)
 public class ControlStructureAspect extends InstructionAspect{
 	@OverrideAspectMethod
 	def int eval (Context context) {
@@ -236,7 +236,7 @@ public class ControlStructureAspect extends InstructionAspect{
 	}
 }
 
-@Aspect(className=typeof(If))
+@Aspect(className=If)
 public class IfAspect extends ControlStructureAspect{
 
 	@OverrideAspectMethod
@@ -251,7 +251,7 @@ public class IfAspect extends ControlStructureAspect{
 
 }
 
-@Aspect(className=typeof(Repeat))
+@Aspect(className=Repeat)
 public class RepeatAspect extends ControlStructureAspect{
 
 	@OverrideAspectMethod
@@ -266,7 +266,7 @@ public class RepeatAspect extends ControlStructureAspect{
 
 }
 
-@Aspect(className=typeof(While))
+@Aspect(className=While)
 public class WhileAspect extends ControlStructureAspect{
 
 	@OverrideAspectMethod
@@ -279,7 +279,7 @@ public class WhileAspect extends ControlStructureAspect{
 
 }
 
-@Aspect(className=typeof(Parameter))
+@Aspect(className=Parameter)
 public class ParameterAspect {
 
 	def int eval (Context context) {
@@ -288,7 +288,7 @@ public class ParameterAspect {
 
 }
 
-@Aspect(className=typeof(ParameterCall))
+@Aspect(className=ParameterCall)
 public class ParameterCallAspect extends ExpressionAspect{
 
 	@OverrideAspectMethod
@@ -298,14 +298,14 @@ public class ParameterCallAspect extends ExpressionAspect{
 
 }
 
-@Aspect(className=typeof(BinaryExp))
+@Aspect(className=BinaryExp)
 public class BinaryExpAspect extends ExpressionAspect{
 	def int eval (Context context) {
 		return 0
 	}
 }
 
-@Aspect(className=typeof(Plus))
+@Aspect(className=Plus)
 public class PlusAspect extends BinaryExpAspect{
 
 	@OverrideAspectMethod
@@ -315,7 +315,7 @@ public class PlusAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(Minus))
+@Aspect(className=Minus)
 public class MinusAspect extends BinaryExpAspect{
 
 	@OverrideAspectMethod
@@ -325,7 +325,7 @@ public class MinusAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(Mult))
+@Aspect(className=Mult)
 public class MultAspect extends BinaryExpAspect{
 
 	@OverrideAspectMethod
@@ -335,7 +335,7 @@ public class MultAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(Div))
+@Aspect(className=Div)
 public class DivAspect extends BinaryExpAspect{
 
 	@OverrideAspectMethod
@@ -350,7 +350,7 @@ public class DivAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(Equals))
+@Aspect(className=Equals)
 public class EqualsAspect extends BinaryExpAspect{
 
 	@OverrideAspectMethod
@@ -365,7 +365,7 @@ public class EqualsAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(Greater))
+@Aspect(className=Greater)
 public class GreaterAspect extends BinaryExpAspect{
 
 	@OverrideAspectMethod
@@ -380,7 +380,7 @@ public class GreaterAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(Lower))
+@Aspect(className=Lower)
 public class LowerAspect extends BinaryExpAspect{
 
 	def int eval (Context context) {
@@ -394,7 +394,7 @@ public class LowerAspect extends BinaryExpAspect{
 
 }
 
-@Aspect(className=typeof(LogoProgram))
+@Aspect(className=LogoProgram)
 public class LogoProgramAspect {
 
 	def int eval (Context context) {
