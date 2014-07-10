@@ -1,6 +1,7 @@
 {
     "platform": [
-        "http://download.eclipse.org/releases/kepler"
+        "http://download.eclipse.org/releases/kepler",
+        "http://download.eclipse.org/modeling/emf/emf/updates/releases/"
         ],
      "xtext": [
          "http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"
