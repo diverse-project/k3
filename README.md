@@ -3,6 +3,8 @@ K3
 
 K3 is both a language and an environment for executable metamodeling and software language engineering. It is mainly integrated within the Eclipse platform and interoperates with most of the tooling developed around the Eclipse Modeling Framework (e.g. Ecore, Xtext, Sirius). Its two main components are K3AL for aspect-oriented metamodeling and executability weaving, and K3SLE for software language engineering.
 
+Please have a look to the [wiki](https://github.com/diverse-project/k3/wiki) for more details and tutorials.
+
 K3AL
 ----
 K3AL is a DSL built on top of the Xtend programming language that allows to "re-open" classes from an Ecore metamodel to weave new features or operations. It consists in a set of annotations that can be used in plain Xtend files to express e.g. aspects, pre/post conditions or invariants, and uses Xbase as the expression language for operations bodies.
