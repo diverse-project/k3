@@ -28,6 +28,7 @@ import fr.inria.diverse.k3.ui.tools.Context;
 import fr.inria.diverse.k3.ui.tools.FileUtils;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
 import fr.inria.diverse.k3.ui.tools.IFolderUtils;
+import fr.inria.diverse.k3.ui.tools.K3FileTemplates;
 import fr.inria.diverse.k3.ui.tools.ManifestChanger;
 import fr.inria.diverse.k3.ui.tools.ProjectDescriptor;
 import fr.inria.diverse.k3.ui.tools.ToolsString;
@@ -221,7 +222,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = FileUtils.manifestMFPlugin(this.context.nameProject, new ArrayList<String>(), new ArrayList<String>());
+		String contents = K3FileTemplates.manifestMFPlugin(this.context.nameProject, new ArrayList<String>(), new ArrayList<String>());
 		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
 		if (file.exists()) {
 			file.setContents(stream, true, true, monitor);
@@ -236,7 +237,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = FileUtils.buildProperties();
+		String contents = K3FileTemplates.buildProperties();
 		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
 		if (file.exists()) {
 			file.setContents(stream, true, true, monitor);
@@ -251,7 +252,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = FileUtils.pluginbasisXML();
+		String contents = K3FileTemplates.pluginbasisXML();
 		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
 		if (file.exists()) {
 			file.setContents(stream, true, true, monitor);
@@ -268,12 +269,12 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		String contents = "";
 		if(!bEcoreProject) {
 			if(this.context.ecoreProject) {
-				contents = FileUtils.pomXmlK3Ecore(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
+				contents = K3FileTemplates.pomXmlK3Ecore(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 			}else {
-				contents = FileUtils.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
+				contents = K3FileTemplates.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
 			}
 		} else {
-			contents = FileUtils.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
+			contents = K3FileTemplates.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 		}
 		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
 		if (file.exists()) {
@@ -289,7 +290,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = FileUtils.getFileTypeK3(this.context.namePackage, "HelloEcore");
+		String contents = K3FileTemplates.getFileTypeK3(this.context.namePackage, "HelloEcore");
 		
 		try {
 			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
@@ -311,7 +312,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 
-		String contents = FileUtils.getK3SLEStub(this.context.namePackage, ecorePlatformPath, mmName);
+		String contents = K3FileTemplates.getK3SLEStub(this.context.namePackage, ecorePlatformPath, mmName);
 
 		try {
 			InputStream stream =  new ByteArrayInputStream(contents.getBytes());

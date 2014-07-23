@@ -38,7 +38,7 @@ public class Context {
 		this.basePackage			= new ArrayList<String>();
 		this.typeProject			= "None";
 		this.nameProject 			= "NewKermetaProject";
-		this.namePackage 			= "newPackage";
+		this.namePackage 			= "sample";
 		this.locationProject 		= ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 		this.ecoreIFile				= null;
 		this.ecoreProjectPath		= "";
