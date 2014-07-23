@@ -35,6 +35,7 @@ public class K3FileTemplates {
 		buffer.append("Require-Bundle: ");
 		buffer.append("fr.inria.diverse.k3.al.annotationprocessor.plugin;bundle-version=\"3.0.0\""+ lineSeparator);
 	    buffer.append("Bundle-ClassPath: ." + lineSeparator);
+	    buffer.append("Bundle-RequiredExecutionEnvironment: JavaSE-1.7"+lineSeparator);
 	    
 	    return buffer.toString();
     }
@@ -79,22 +80,6 @@ public class K3FileTemplates {
 		
 		return buffer.toString();
 		
-	}
-	
-	public static String buildProperties () {
-		
-		StringBuffer buffer= new StringBuffer();
-		
-		buffer.append("source.. = src/"+lineSeparator);
-		buffer.append("output.. = bin/"+lineSeparator);
-		buffer.append("bin.includes = plugin.xml,\\"+lineSeparator);
-		buffer.append("\t\t\t\tMETA-INF/,\\"+lineSeparator);
-		buffer.append("\t\t\t\t.,\\"+lineSeparator);
-		buffer.append("\t\t\t\tlibrary/k3-3.0-SNAPSHOT.jar,\\"+lineSeparator);
-		buffer.append("\t\t\t\tlibrary/org.eclipse.xtend.lib-2.4.3-SNAPSHOT.jar,\\"+lineSeparator);
-		buffer.append("\t\t\t\tlibrary/org.eclipse.xtext.xbase.lib-2.4.3-SNAPSHOT.jar"+lineSeparator);
-		
-		return buffer.toString();
 	}
 	
 	public static String pomXmlK3(String nameProject, String groupID, String artifactID, String version) {

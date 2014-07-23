@@ -142,7 +142,12 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				createProjectWithEcore(monitor, sourceFolderName);
 			} else {
 				IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
-				createDefaultKmt(project, monitor, sourceFolderName);
+				if(context.useEMF){
+					createDefaultKmt(project, monitor, sourceFolderName);
+				}
+				else{
+					createMiniAspectSampleXtend(project, monitor, sourceFolderName);
+				}
 			}
 			switch (this.context.kindsOfProject)
 			{
@@ -181,22 +186,23 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	private void configurePluginProject (IProject project, IProgressMonitor monitor) {
 		try {
 			createManifestFile(project, monitor);
+			ManifestChanger manifestChanger = new ManifestChanger(project.getFile("META-INF/MANIFEST.MF"));
+
+			manifestChanger.addPluginDependency("org.eclipse.xtend.lib", "2.6.0", false, true);
+			manifestChanger.addPluginDependency("org.eclipse.xtext.xbase.lib", "2.6.0", false, true);
+			manifestChanger.addPluginDependency("com.google.guava", "0.0.0", false, true);
 			if(context.useEMF){
-				ManifestChanger manifestChanger = new ManifestChanger(project.getFile("META-INF/MANIFEST.MF"));
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore.xmi", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.common", "2.8.0", true, true);
-				manifestChanger.addPluginDependency("org.eclipse.xtend.lib", "2.6.0", false, true);
-				manifestChanger.addPluginDependency("org.eclipse.xtext.xbase.lib", "2.6.0", false, true);
-				manifestChanger.addPluginDependency("com.google.guava", "15.0.0", false, true);
 				if(context.ecoreIFile != null && !context.bCreateEMFProject){
 					manifestChanger.addPluginDependency(context.ecoreIFile.getProject().getName(),"0.0.0", true, true);
 				}
 				if(context.useSLE) {
 					manifestChanger.addPluginDependency("fr.inria.diverse.k3.sle.lib", "3.0.0", true, true);
 				}
-				manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
 			}
+			manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
 			createPlugInFile(project, monitor);
 			createBuildProperties(project, monitor);			
 		} catch (Exception e) {
@@ -229,7 +235,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = K3FileTemplates.buildProperties();
+		String contents = K3SampleFilesTemplates.buildProperties();
 		FileUtils.writeInFile(file, contents, monitor);   
     }
     
@@ -267,6 +273,21 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		String contents = K3SampleFilesTemplates.getFileTypeK3(this.context.namePackage, "HelloEcore");
 		
 		FileUtils.writeInFile(file, contents, monitor);		
+	}
+	
+	private void createMiniAspectSampleXtend(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
+		IContainer currentContainer = project;
+		IFile file = currentContainer.getFile(new Path(sourceFolderName + this.context.namePackage + "/SampleMain.xtend"));
+		
+		String contents = K3SampleFilesTemplates.get_MiniAspectSample_SampleMain_xtend(this.context.namePackage);		
+		FileUtils.writeInFile(file, contents, monitor);		
+		
+		// second file of the sample
+		file = currentContainer.getFile(new Path(sourceFolderName + this.context.namePackage + "/SampleXMLFileAspect.xtend"));
+		
+		contents = K3SampleFilesTemplates.get_MiniAspectSample_SampleXMLFileAspect_xtend(this.context.namePackage);		
+		FileUtils.writeInFile(file, contents, monitor);
+		
 	}
 
 	private void createK3SLEStub(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{

@@ -33,7 +33,7 @@ class K3SampleFilesTemplates {
 		def static void main(String[] args) {
 			println('Hello Kermeta on top of Xtend!')
 			new «nameClass»().run(\"model\")
-			val String s = \'\'\'  \'\'\'
+			val String s = '''+"'''"+'''  '''+"'''"+'''
 	}
 }
 '''
@@ -87,16 +87,26 @@ class SampleXMLFileAspect {
 	public def void writeXML(){		
 		var PrintWriter writer = new PrintWriter(_self, "UTF-8");
 		// compute content String by using template
-		val content = \'\'\' <xml>
+		val content = '''+"'''"+''' <xml>
 	<'''+"«_self.contentType»"+'''s>	
 		'''+"«FOR contentItem : _self.contentArrayList »<color>«contentItem»</color> «ENDFOR»"+'''
 	</'''+"«_self.contentType»"+'''s>
-</xml>\'\'\'
+</xml>'''+"'''"+'''
 		writer.println(content);
 		writer.close();
 	}
 	
 }
+'''
+	}
+	
+	def public static String buildProperties () {
+		return '''source.. = src/,\
+           xtend-gen/
+output.. = bin/
+bin.includes = plugin.xml,\
+           META-INF/,\
+           .
 '''
 	}
 	

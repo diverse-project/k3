@@ -1,5 +1,7 @@
 package fr.inria.diverse.k3.ui.tools.classpath;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,16 +32,20 @@ public class ManageClasspathPlugin extends ManageClasspath {
 			try {
 				sourceFolder.create(true, true, monitor);
 			} catch (Exception ex) {}
-			IClasspathEntry[] newClassPath = new IClasspathEntry[4];
+			
+			ArrayList<IClasspathEntry> newClassPathArrayList = new ArrayList<IClasspathEntry>();
+			
 			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
 
-			newClassPath[0] = JavaCore.newSourceEntry(root.getPath());
-			newClassPath[1] = JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER"));
-			newClassPath[2] = JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins"));
+			newClassPathArrayList.add( JavaCore.newSourceEntry(root.getPath()));
+			newClassPathArrayList.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER")));
+			newClassPathArrayList.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")));
 			if (useSLE)
-				newClassPath[3] = JavaCore.newSourceEntry(javaProject.getPackageFragmentRoot(project.getFolder("src-gen")).getPath());
+				newClassPathArrayList.add(JavaCore.newSourceEntry(javaProject.getPackageFragmentRoot(project.getFolder("src-gen")).getPath()));
 
-			javaProject.setRawClasspath(newClassPath, monitor);
+			// convert the array to the appropriate table
+			IClasspathEntry[] newClassPath = new IClasspathEntry[newClassPathArrayList.size()];
+			javaProject.setRawClasspath(newClassPathArrayList.toArray(newClassPath), monitor);
 		} catch (Exception e) {
 			Activator.logErrorMessage(e.getMessage(), e);	
 		}

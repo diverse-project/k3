@@ -106,6 +106,36 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+			  <groupId>org.eclipse.xtend</groupId>
+			  <artifactId>xtend-maven-plugin</artifactId>
+			  <version>2.4.3</version>
+			  <configuration>
+			    <!-- need to prefix by basedir to generate to currently built module -->
+			    <outputDirectory>${basedir}/xtend-gen</outputDirectory>
+			  </configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src-gen</directory>
+							<includes>
+								<include>**</include>
+			
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>xtend-gen</directory>
+							<includes>
+			
+								<include>**</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
 			</plugin>			
 		</plugins>
 		<pluginManagement>
