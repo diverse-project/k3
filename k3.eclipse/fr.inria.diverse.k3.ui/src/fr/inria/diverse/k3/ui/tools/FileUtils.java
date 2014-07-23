@@ -2,12 +2,14 @@ package fr.inria.diverse.k3.ui.tools;
 
 import java.io.*;
 import java.net.URL;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 
@@ -18,6 +20,20 @@ public class FileUtils {
 	static String lineSeparator = System.getProperty("line.separator");
 	
 		
+	public static void writeInFile(IFile file, String contents, IProgressMonitor monitor) throws CoreException{
+		try {
+			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
+			if (file.exists()) {
+				file.setContents(stream, true, true, monitor);
+			} else {
+				file.create(stream, true, monitor);
+			}
+			stream.close();
+		} catch (IOException e) {
+			Activator.logErrorMessage(e.getMessage(), e);
+		}
+	}
+	
 	public static void copy(final InputStream inStream, final OutputStream outStream, final int bufferSize) throws IOException {
 		final byte[] buffer = new byte[bufferSize];
 		int nbRead;

@@ -1,9 +1,6 @@
 package fr.inria.diverse.k3.ui.wizards;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
@@ -224,13 +221,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3FileTemplates.manifestMFPlugin(this.context.nameProject, new ArrayList<String>(), new ArrayList<String>());
-		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-		if (file.exists()) {
-			file.setContents(stream, true, true, monitor);
-		} else {
-			file.create(stream, true, monitor);
-		}
-		stream.close();    
+		FileUtils.writeInFile(file, contents, monitor);    
     }
 	
     private void createBuildProperties(IProject project, IProgressMonitor monitor) throws Exception {	    
@@ -239,13 +230,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3FileTemplates.buildProperties();
-		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-		if (file.exists()) {
-			file.setContents(stream, true, true, monitor);
-		} else {
-			file.create(stream, true, monitor);
-		}
-		stream.close();   
+		FileUtils.writeInFile(file, contents, monitor);   
     }
     
 	private void createPlugInFile(IProject project,IProgressMonitor monitor) throws Exception {
@@ -254,13 +239,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3FileTemplates.pluginbasisXML();
-		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-		if (file.exists()) {
-			file.setContents(stream, true, true, monitor);
-		} else {
-			file.create(stream, true, monitor);
-		}
-		stream.close();
+		FileUtils.writeInFile(file, contents, monitor);
 	}
 	
 	private void createMavenFile(IProject project,IProgressMonitor monitor, Boolean bEcoreProject) throws Exception {
@@ -277,13 +256,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		} else {
 			contents = K3FileTemplates.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 		}
-		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-		if (file.exists()) {
-			file.setContents(stream, true, true, monitor);
-		} else {
-			file.create(stream, true, monitor);
-		}
-		stream.close();
+		FileUtils.writeInFile(file, contents, monitor);
 	}
 		
 	private void createDefaultKmt(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
@@ -293,17 +266,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		
 		String contents = K3SampleFilesTemplates.getFileTypeK3(this.context.namePackage, "HelloEcore");
 		
-		try {
-			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-			if (file.exists()) {
-				file.setContents(stream, true, true, monitor);
-			} else {
-				file.create(stream, true, monitor);
-			}
-			stream.close();
-		} catch (IOException e) {
-			Activator.logErrorMessage(e.getMessage(), e);
-		}
+		FileUtils.writeInFile(file, contents, monitor);		
 	}
 
 	private void createK3SLEStub(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
@@ -315,17 +278,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 
 		String contents = K3FileTemplates.getK3SLEStub(this.context.namePackage, ecorePlatformPath, mmName);
 
-		try {
-			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-			if (file.exists()) {
-				file.setContents(stream, true, true, monitor);
-			} else {
-				file.create(stream, true, monitor);
-			}
-			stream.close();
-		} catch (IOException e) {
-			Activator.logErrorMessage(e.getMessage(), e);
-		}
+		FileUtils.writeInFile(file, contents, monitor);
 	}
 	
 	public Context getContext() {
@@ -421,13 +374,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		
 		String contents = "";
 		
-		InputStream stream =  new ByteArrayInputStream(contents.getBytes());
-		if (file.exists()) {
-			file.setContents(stream, true, true, monitor);
-		} else {
-			file.create(stream, true, monitor);
-		}
-		stream.close();
+		FileUtils.writeInFile(file, contents, monitor);
 		FileUtils.copyFile (new File(this.context.ecoreIFile.getLocationURI()), new File(file.getLocationURI()));
 	}
 	
