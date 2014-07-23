@@ -29,6 +29,7 @@ import fr.inria.diverse.k3.ui.tools.FileUtils;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
 import fr.inria.diverse.k3.ui.tools.IFolderUtils;
 import fr.inria.diverse.k3.ui.tools.K3FileTemplates;
+import fr.inria.diverse.k3.ui.tools.K3SampleFilesTemplates;
 import fr.inria.diverse.k3.ui.tools.ManifestChanger;
 import fr.inria.diverse.k3.ui.tools.ProjectDescriptor;
 import fr.inria.diverse.k3.ui.tools.ToolsString;
@@ -290,7 +291,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = K3FileTemplates.getFileTypeK3(this.context.namePackage, "HelloEcore");
+		String contents = K3SampleFilesTemplates.getFileTypeK3(this.context.namePackage, "HelloEcore");
 		
 		try {
 			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
