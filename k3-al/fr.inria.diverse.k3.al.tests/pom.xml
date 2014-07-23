@@ -3,7 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>fr.inria.diverse.k3.test</artifactId>
   <packaging>jar</packaging>
-  <name>fr.inria.triskell.k3.test</name>
 
     <parent>
         <groupId>fr.inria.diverse.k3.al</groupId>
