@@ -143,7 +143,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			} else {
 				IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
 				if(context.useEMF){
-					createDefaultKmt(project, monitor, sourceFolderName);
+					createMiniEcoreAspectSampleXtend(project, monitor, sourceFolderName);
 				}
 				else{
 					createMiniAspectSampleXtend(project, monitor, sourceFolderName);
@@ -273,6 +273,21 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		String contents = K3SampleFilesTemplates.getFileTypeK3(this.context.namePackage, "HelloEcore");
 		
 		FileUtils.writeInFile(file, contents, monitor);		
+	}
+	
+	private void createMiniEcoreAspectSampleXtend(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
+		IContainer currentContainer = project;
+		IFile file = currentContainer.getFile(new Path(sourceFolderName + this.context.namePackage + "/SampleEcoreMain.xtend"));
+		
+		String contents = K3SampleFilesTemplates.get_MiniAspectSample_SampleEcoreMain_xtend(this.context.namePackage);		
+		FileUtils.writeInFile(file, contents, monitor);		
+		
+		// second file of the sample
+		file = currentContainer.getFile(new Path(sourceFolderName + this.context.namePackage + "/SampleXMLFileAspect.xtend"));
+		
+		contents = K3SampleFilesTemplates.get_MiniAspectSample_SampleAnnotateEcoreAspect_xtend(this.context.namePackage);		
+		FileUtils.writeInFile(file, contents, monitor);
+		
 	}
 	
 	private void createMiniAspectSampleXtend(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{

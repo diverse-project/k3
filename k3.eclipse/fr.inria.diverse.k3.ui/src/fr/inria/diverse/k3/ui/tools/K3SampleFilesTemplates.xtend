@@ -99,6 +99,137 @@ class SampleXMLFileAspect {
 }
 '''
 	}
+
+	
+	def public static String get_MiniAspectSample_SampleEcoreMain_xtend(String namePackage) {
+		return '''package  «namePackage»
+
+import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
+import org.eclipse.emf.ecore.EcorePackage
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.common.util.URI
+
+import static extension sample.EPackageAspect.*
+import java.util.HashMap
+
+class SampleEcoreMain{ 
+
+	public def run(String modelPath, String resultModelPath) {
+		//Load Ecore Model
+		var fact = new EcoreResourceFactoryImpl
+		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {
+			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
+		}
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", fact);
+		var rs = new ResourceSetImpl()
+		var uri = URI.createURI(modelPath);
+		var res = rs.getResource(uri, true);
+
+		// apply transformation
+		res.contents.filter(EPackage).forEach[ pack | pack.annotate]
+		
+		// save the modified model in a new file
+		val resSet2 = new  ResourceSetImpl()
+		val res2 = resSet2.createResource(URI.createURI(resultModelPath))
+		// move content to new resource
+		res2.contents.addAll(res.contents)
+		res2.save(new HashMap()) 
+	}
+
+	def static void main(String[] args) {
+		println('Hello Kermeta on top of Xtend! (please create a My.ecore file to test this sample program)')
+		new SampleEcoreMain().run("My.ecore", "My_annotated.ecore")
+		println('file written (please refresh project to see it)')
+	}
+	
+}
+
+'''
+	}
+	
+	def public static String get_MiniAspectSample_SampleAnnotateEcoreAspect_xtend(String namePackage) {
+		return '''package  «namePackage»
+
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
+
+import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EClassifier
+import org.eclipse.emf.ecore.EModelElement
+import org.eclipse.emf.ecore.EAnnotation
+import org.eclipse.emf.ecore.EcoreFactory
+
+import static extension sample.EPackageAspect.*
+import static extension sample.EClassAspect.*
+import static extension sample.EClassifierAspect.*
+import static extension sample.EModelElementAspect.*
+
+/*
+ * 
+ * Simple Ecore extension allowing to annotate all classes of an ecore model by adding 
+ * an annotation containing the list of all super classes (flat)  
+ */
+ 
+ 
+@Aspect(className=EPackage)
+class EPackageAspect extends EModelElementAspect{
+	
+	public def void annotate(){
+		// traverse the model to annotate all classes
+		_self.ESubpackages.forEach[subPackage | subPackage.annotate]
+		_self.EClassifiers.forEach[EClassifier classifier | classifier.annotate ] 
+	}
+}
+
+@Aspect(className=EClassifier)
+class EClassifierAspect extends EModelElementAspect{
+	public def void annotate(){
+		// do nothing in the general case
+	}
+}
+
+@Aspect(className=EClass)
+class EClassAspect extends EClassifierAspect{
+	
+	@OverrideAspectMethod
+	public def void annotate(){
+		// compute the string for the annotation and add it to the class
+		_self.addAnnotation("http://www.eclipse.org/emf/2002/GenModel", "documentation", _self.flat(""))
+	}
+	
+	public def String flat(String tabStr){
+		val StringBuilder returnedString = new StringBuilder
+		returnedString.append(tabStr + _self.name + " :")
+		
+		_self.ESuperTypes.forEach[eSuperClass | 
+			returnedString.append("\n" + eSuperClass.flat( tabStr + "\t"))
+		]
+		
+		return returnedString.toString
+	}	
+}
+
+
+@Aspect(className=EModelElement)
+class EModelElementAspect{
+	public def EAnnotation addAnnotation(String source, String detailKey, String detailValue) {
+    	// create annotation on the model element only if not already there
+		var EAnnotation theAnnotation =	_self.EAnnotations.findFirst[annot | annot.source.equals(source)]
+		if (theAnnotation == null){
+			theAnnotation = EcoreFactory.eINSTANCE.createEAnnotation
+			theAnnotation.source = source
+			_self.EAnnotations.add(theAnnotation)
+		}
+		
+		theAnnotation.details.put(detailKey, detailValue)
+		return theAnnotation
+    }
+}
+'''
+	}
 	
 	def public static String buildProperties () {
 		return '''source.. = src/,\
@@ -109,6 +240,7 @@ bin.includes = plugin.xml,\
            .
 '''
 	}
+
 	
 	def public static String getK3SLEStub(String pkgName, String ecoreUri, String mmName) {
 		return '''package «pkgName»
