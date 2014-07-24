@@ -110,4 +110,203 @@ bin.includes = plugin.xml,\
 '''
 	}
 	
+	def public static String getK3SLEStub(String pkgName, String ecoreUri, String mmName) {
+		return '''package «pkgName»
+		
+metamodel «mmName» {
+	ecore «ecoreUri»
+	exactType «mmName»MT
+}
+
+@Main
+transformation main() {
+	println("Hello, SLE!")
+}
+'''
+	}
+	
+	def public static String pomXmlMetamodel(String nameProject, String groupID, String artifactID, String version) {
+		return '''<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>«groupID»</groupId>
+	<artifactId>«artifactID»</artifactId>
+	<version>«version»</version>
+	<name>«nameProject»</name>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source/>
+					<target/>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>org.eclipse.core.runtime</artifactId>
+			<version>3.6.0.v20100505</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>2.8.0-v20120911-0500</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.common</artifactId>
+			<version>2.8.0-v20120911-0500</version>
+		</dependency>
+	</dependencies>
+</project>'''
+	}
+	
+	
+	def public static String pomXmlK3Ecore(String nameProject, String groupID, String artifactID, String version, String eGroupID, String eArtifactID, String eVersion) {
+		return '''<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>«groupID»</groupId>
+	<artifactId>«artifactID»</artifactId>
+	<version>«version»</version>
+	<name>«nameProject»</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<version>${xtend.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.inria.diverse</groupId>
+			<artifactId>fr.inria.diverse.k3.core</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>«eGroupID»</groupId>
+			<artifactId>«eArtifactID»</artifactId>
+			<version>«eVersion»</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<sourceDirectory>xtend-gen</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>xtend-gen</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>'''
+	}
+	
+	def	public static String pomXmlK3(String nameProject, String groupID, String artifactID, String version) {
+		return '''<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>«groupID»</groupId>
+	<artifactId>«artifactID»</artifactId>
+	<version>«version»</version>
+	<name>«nameProject»</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<xtend.version>2.6.0</xtend.version>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+				<version>${xtend.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+							<goal>xtend-install-debug-info</goal>
+							<goal>xtend-test-install-debug-info</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<version>${xtend.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.inria.diverse.k3.al</groupId>
+			<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+			<version>2.8.0-v20120911-0500</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>2.8.0-v20120911-0500</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.common</artifactId>
+			<version>2.8.0-v20120911-0500</version>
+		</dependency>
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>mavenInriaSnapshot</id>
+			<name>http://maven.inria.fr-snapshots</name>
+			<url>http://maven.inria.fr/artifactory/public-snapshot</url>
+		</repository>
+		<repository>
+			<id>mavenInriaRelease</id>
+			<name>http://maven.inria.fr-releases</name>
+			<url>http://maven.inria.fr/artifactory/public-release</url>
+		</repository>
+	</repositories>
+</project>'''
+	}
+	
+	
 }

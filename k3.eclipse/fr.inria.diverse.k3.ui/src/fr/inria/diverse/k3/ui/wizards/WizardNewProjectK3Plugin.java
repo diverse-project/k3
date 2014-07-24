@@ -255,12 +255,12 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		String contents = "";
 		if(!bEcoreProject) {
 			if(this.context.ecoreProject) {
-				contents = K3FileTemplates.pomXmlK3Ecore(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
+				contents = K3SampleFilesTemplates.pomXmlK3Ecore(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 			}else {
-				contents = K3FileTemplates.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
+				contents = K3SampleFilesTemplates.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
 			}
 		} else {
-			contents = K3FileTemplates.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
+			contents = K3SampleFilesTemplates.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 		}
 		FileUtils.writeInFile(file, contents, monitor);
 	}
@@ -297,7 +297,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 
-		String contents = K3FileTemplates.getK3SLEStub(this.context.namePackage, ecorePlatformPath, mmName);
+		String contents = K3SampleFilesTemplates.getK3SLEStub(this.context.namePackage, ecorePlatformPath, mmName);
 
 		FileUtils.writeInFile(file, contents, monitor);
 	}
