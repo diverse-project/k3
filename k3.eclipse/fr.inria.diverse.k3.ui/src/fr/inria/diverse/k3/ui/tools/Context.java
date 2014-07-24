@@ -37,7 +37,7 @@ public class Context {
 		this.genModelFile			= null;
 		this.basePackage			= new ArrayList<String>();
 		this.typeProject			= "None";
-		this.nameProject 			= "NewKermetaProject";
+		this.nameProject 			= "org.sample.k3project";
 		this.namePackage 			= "sample";
 		this.locationProject 		= ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 		this.ecoreIFile				= null;
@@ -47,6 +47,6 @@ public class Context {
 		this.operationParams 		= new ArrayList<String>();
 		this.listNewClass 			= new ArrayList<String>();
 		this.indexTransfomation		= 0;
-		this.kindsOfProject			= KindsOfProject.STANDALONE;
+		this.kindsOfProject			= KindsOfProject.PLUGIN;
 	}
 }
