@@ -283,7 +283,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		FileUtils.writeInFile(file, contents, monitor);		
 		
 		// second file of the sample
-		file = currentContainer.getFile(new Path(sourceFolderName + this.context.namePackage + "/SampleXMLFileAspect.xtend"));
+		file = currentContainer.getFile(new Path(sourceFolderName + this.context.namePackage + "/SampleEcoreAspect.xtend"));
 		
 		contents = K3SampleFilesTemplates.get_MiniAspectSample_SampleAnnotateEcoreAspect_xtend(this.context.namePackage);		
 		FileUtils.writeInFile(file, contents, monitor);
