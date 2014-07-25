@@ -239,7 +239,7 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 									}
 								}
 								// not found, raise a warning
-								return new Status(IStatus.WARNING, JavaPlugin.getPluginId(), IStatus.ERROR, "Not an EMF EObject", null);
+								return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, "Not an EMF EObject", null);
 							} catch (JavaModelException e) {
 								Activator.getDefault().logErrorMessage(e.getMessage(), e);
 								return Status.OK_STATUS;
