@@ -5,12 +5,15 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.bidi.StructuredTextTypeHandlerFactory;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
@@ -20,6 +23,7 @@ import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.internal.corext.refactoring.StubTypeContext;
 import org.eclipse.jdt.internal.corext.refactoring.TypeContextChecker;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.jdt.internal.ui.dialogs.TextFieldNavigationHandler;
@@ -35,6 +39,7 @@ import org.eclipse.jdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
+import org.eclipse.jdt.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.util.BidiUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -42,8 +47,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.xtend.ide.wizards.AbstractNewXtendElementWizardPage;
 import org.eclipse.xtend.ide.wizards.XtendTypeCreatorUtil;
+
+import fr.inria.diverse.k3.ui.Activator;
 
 /**
  * @author Didier Vojtisek - Initial contribution and API
@@ -213,8 +221,38 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 		IJavaElement[] elements= new IJavaElement[] { project };
 		IJavaSearchScope scope= SearchEngine.createJavaSearchScope(elements);
 
+		
+		TypeSelectionExtension selectionExtention = new TypeSelectionExtension(){
+			public ISelectionStatusValidator getSelectionValidator() {
+				return new ISelectionStatusValidator(){
+
+					@Override
+					public IStatus validate(Object[] selection) {
+						// if must restrict to EMF EObject
+						if(selection[0] instanceof IType){
+							IType iType = (IType)selection[0];
+							try {
+								ITypeHierarchy iTypeHierarchy = iType.newSupertypeHierarchy(null);
+								for(IType interfac : iTypeHierarchy.getAllInterfaces()){
+									if(interfac.getFullyQualifiedName().equals("org.eclipse.emf.ecore.EObject")){
+										return Status.OK_STATUS;
+									}
+								}
+								// not found, raise a warning
+								return new Status(IStatus.WARNING, JavaPlugin.getPluginId(), IStatus.ERROR, "Not an EMF EObject", null);
+							} catch (JavaModelException e) {
+								Activator.getDefault().logErrorMessage(e.getMessage(), e);
+								return Status.OK_STATUS;
+							}
+						}
+						return Status.OK_STATUS;
+					}
+				};
+			}
+		};
+		
 		FilteredTypesSelectionDialog dialog= new FilteredTypesSelectionDialog(getShell(), false,
-			getWizard().getContainer(), scope, IJavaSearchConstants.CLASS_AND_INTERFACE);
+			getWizard().getContainer(), scope, IJavaSearchConstants.CLASS_AND_INTERFACE, selectionExtention);
 		dialog.setTitle(Messages.NewTypeWizardPage_AspectClassDialog_title);
 		dialog.setMessage(Messages.NewTypeWizardPage_AspectClassDialog_message);
 		dialog.setInitialPattern(getAspectizedClassName());
