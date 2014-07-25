@@ -1,6 +1,8 @@
 package fr.inria.diverse.k3.ui.wizards;
 
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.xtend.ide.wizards.AbstractNewXtendElementWizard;
 import org.eclipse.xtext.ui.IImageHelper.IImageDescriptorHelper;
 
@@ -22,4 +24,6 @@ public class NewXtendClassK3AspectWizard extends AbstractNewXtendElementWizard {
 		ImageDescriptor image = Activator.getImageDescriptor("icons/xtend_k3_aspect_wizard_big.png");
 		setDefaultPageImageDescriptor(image);
 	}
+	
+	
 }

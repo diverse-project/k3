@@ -22,6 +22,8 @@ public class Messages extends NLS {
 	public static String TYPE_EXISTS_1;
 	public static String ASPECT_DIALOG_LABEL;
 	public static String ASPECT_DIALOG_BUTTON_LABEL;
+	public static String NewTypeWizardPage_AspectClassDialog_title;
+	public static String NewTypeWizardPage_AspectClassDialog_message;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
