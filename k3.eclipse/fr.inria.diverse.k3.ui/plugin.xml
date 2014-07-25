@@ -4,7 +4,12 @@
    
    <extension
          point="org.eclipse.ui.newWizards">
+      <category
+            id="fr.inria.diverse.k3.category"
+            name="Kermeta 3">
+      </category>
       <wizard
+            canFinishEarly="true"
             category="fr.inria.diverse.k3.category"
             class="fr.inria.diverse.k3.ui.wizards.WizardNewProjectK3Plugin"
             icon="icons/new_kermeta_project.gif"
@@ -12,10 +17,19 @@
             name="K3 Project"
             project="true">
       </wizard>
-      <category
-            id="fr.inria.diverse.k3.category"
-            name="Kermeta 3">
-      </category>
+      <wizard
+            category="fr.inria.diverse.k3.category"
+            icon="icons/newkermetafile.png"
+            id="org.eclipse.xtend.ide.wizards.NewXtendClassWizard"
+            name="K3 Aspect">
+            <class class="fr.inria.diverse.k3.ui.xtend.ide.support.K3XtendExecutableExtensionFactory">
+				<parameter name="javatype" value="true" />
+				<parameter name="guicekey" value="fr.inria.diverse.k3.ui.wizards.NewXtendClassK3AspectWizard" />
+			</class>
+			<description>
+            	Create a new Kermeta aspect as an Xtend class.
+         	</description>
+      </wizard>
    </extension>
    <extension
          id="k3Builder"
