@@ -200,16 +200,14 @@ class EClassAspect extends EClassifierAspect{
 		_self.addAnnotation("http://www.eclipse.org/emf/2002/GenModel", "documentation", _self.flat(""))
 	}
 	
+/** Build a String with all superclasses of this class */
 	public def String flat(String tabStr){
-		val StringBuilder returnedString = new StringBuilder
-		returnedString.append(tabStr + _self.name + " :")
-		
-		_self.ESuperTypes.forEach[eSuperClass | 
-			returnedString.append("\n" + eSuperClass.flat( tabStr + "\t"))
-		]
+		// use a template String
+		val returnedString = '''+"'''«tabStr»class «_self.name» : «FOR eSuperClass : _self.ESuperTypes»"+
+ "«eSuperClass.flat( tabStr + \"\t\")»«ENDFOR»'''"+'''
 		
 		return returnedString.toString
-	}	
+	}
 }
 
 
