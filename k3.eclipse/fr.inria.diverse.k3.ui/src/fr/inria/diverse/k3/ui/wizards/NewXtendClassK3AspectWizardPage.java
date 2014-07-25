@@ -214,7 +214,7 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 		IJavaSearchScope scope= SearchEngine.createJavaSearchScope(elements);
 
 		FilteredTypesSelectionDialog dialog= new FilteredTypesSelectionDialog(getShell(), false,
-			getWizard().getContainer(), scope, IJavaSearchConstants.CLASS);
+			getWizard().getContainer(), scope, IJavaSearchConstants.CLASS_AND_INTERFACE);
 		dialog.setTitle(Messages.NewTypeWizardPage_AspectClassDialog_title);
 		dialog.setMessage(Messages.NewTypeWizardPage_AspectClassDialog_message);
 		dialog.setInitialPattern(getAspectizedClassName());
