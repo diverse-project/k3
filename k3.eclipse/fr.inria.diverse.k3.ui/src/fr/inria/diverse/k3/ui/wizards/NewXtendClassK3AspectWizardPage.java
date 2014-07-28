@@ -38,13 +38,17 @@ import org.eclipse.jdt.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField;
+import org.eclipse.jdt.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.jdt.ui.dialogs.TypeSelectionExtension;
 import org.eclipse.jface.util.BidiUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -77,10 +81,14 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 	
 
 	private StubTypeContext fAspectClassStubTypeContext;
+
+	protected Button 		btnCheckBoxLimitToEMF;
 	
 	
 	public void createControl(Composite parent) {
 		Composite composite = createCommonControls(parent);
+
+		createOptionControls(composite, COLS);
 		createAspectClassControls(composite, COLS);
 		createSuperClassControls(composite, COLS);
 		createSuperInterfacesControls(composite, COLS);
@@ -95,6 +103,9 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 	 * @param nColumns number of columns to span
 	 */
 	protected void createAspectClassControls(Composite composite, int nColumns) {
+
+		
+		
 		fAspectClassDialogField.doFillIntoGrid(composite, nColumns);
 		Text text= fAspectClassDialogField.getTextControl(null);
 		LayoutUtil.setWidthHint(text, getMaxFieldWidth());
@@ -110,6 +121,16 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 
 		ControlContentAssistHelper.createTextContentAssistant(text, aspectClassCompletionProcessor);
 		TextFieldNavigationHandler.install(text);
+	}
+	
+	protected void createOptionControls(Composite composite, int nColumns){
+		btnCheckBoxLimitToEMF = new Button(composite, SWT.CHECK);
+		btnCheckBoxLimitToEMF.setText("Limit Aspectized classes to EMF Interfaces");
+		btnCheckBoxLimitToEMF.setSelection(true);
+		GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gd.horizontalSpan= nColumns;
+		btnCheckBoxLimitToEMF.setLayoutData(gd);
+		
 	}
 	
 	protected void init(IStructuredSelection selection) {
@@ -228,21 +249,23 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 
 					@Override
 					public IStatus validate(Object[] selection) {
-						// if must restrict to EMF EObject
-						if(selection[0] instanceof IType){
-							IType iType = (IType)selection[0];
-							try {
-								ITypeHierarchy iTypeHierarchy = iType.newSupertypeHierarchy(null);
-								for(IType interfac : iTypeHierarchy.getAllInterfaces()){
-									if(interfac.getFullyQualifiedName().equals("org.eclipse.emf.ecore.EObject")){
-										return Status.OK_STATUS;
+						// if must restrict to EMF EObject Interfaces
+						if(btnCheckBoxLimitToEMF.getSelection()){
+							if(selection[0] instanceof IType){
+								IType iType = (IType)selection[0];
+								try {
+									ITypeHierarchy iTypeHierarchy = iType.newSupertypeHierarchy(null);
+									for(IType interfac : iTypeHierarchy.getAllInterfaces()){
+										if(interfac.getFullyQualifiedName().equals("org.eclipse.emf.ecore.EObject")){
+											return Status.OK_STATUS;
+										}
 									}
+									// not found, raise a warning
+									return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Not an EMF EObject", null);
+								} catch (JavaModelException e) {
+									Activator.logErrorMessage(e.getMessage(), e);
+									return Status.OK_STATUS;
 								}
-								// not found, raise a warning
-								return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, "Not an EMF EObject", null);
-							} catch (JavaModelException e) {
-								Activator.getDefault().logErrorMessage(e.getMessage(), e);
-								return Status.OK_STATUS;
 							}
 						}
 						return Status.OK_STATUS;
@@ -250,9 +273,16 @@ public class NewXtendClassK3AspectWizardPage extends AbstractNewXtendElementWiza
 				};
 			}
 		};
-		
-		FilteredTypesSelectionDialog dialog= new FilteredTypesSelectionDialog(getShell(), false,
-			getWizard().getContainer(), scope, IJavaSearchConstants.CLASS_AND_INTERFACE, selectionExtention);
+		FilteredTypesSelectionDialog dialog;
+		// if must restrict to EMF EObject Interfaces
+		if(btnCheckBoxLimitToEMF.getSelection()){
+			dialog= new FilteredTypesSelectionDialog(getShell(), false,
+					getWizard().getContainer(), scope, IJavaSearchConstants.INTERFACE, selectionExtention);
+		}
+		else{
+			dialog= new FilteredTypesSelectionDialog(getShell(), false,
+					getWizard().getContainer(), scope, IJavaSearchConstants.CLASS_AND_INTERFACE, selectionExtention);
+		}
 		dialog.setTitle(Messages.NewTypeWizardPage_AspectClassDialog_title);
 		dialog.setMessage(Messages.NewTypeWizardPage_AspectClassDialog_message);
 		dialog.setInitialPattern(getAspectizedClassName());
