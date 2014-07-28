@@ -5,5 +5,8 @@
         ],
      "xtext": [
          "http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"
-         ]
+         ],
+     "diverse-commons": [
+         "https://ci.inria.fr/diverse-commons/job/diverse-commons.eclipse.root/lastSuccessfulBuild/artifact/commons-eclipse/fr.inria.diverse.commons.eclipse.root/p2updatesite/target/repository/"
+         ],
 }
