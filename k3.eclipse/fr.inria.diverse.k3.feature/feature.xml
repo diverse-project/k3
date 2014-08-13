@@ -4,8 +4,9 @@
       label="K3 feature"
       version="3.0.0.qualifier">
 
-   <description url="https://github.com/barais/k3/">
-      k3 Project
+   <description url="http://www.kermeta.org/k3/update/">
+      K3 Project
+This feature offers various tools for developping projects with Kermeta 3
    </description>
 
    <copyright url="http://www.example.com/copyright">
