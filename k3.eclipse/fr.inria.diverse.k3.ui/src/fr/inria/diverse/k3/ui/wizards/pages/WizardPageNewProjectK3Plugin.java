@@ -65,6 +65,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected Group 		grpKindOfProject;
 	protected Group 		grpModelingOptions;
 	protected Group 		grpSLEOptions;
+	protected Group 		grpTemplateOptions;
 
 	public WizardPageNewProjectK3Plugin(Context context){
 		super("wizardPage");
@@ -223,7 +224,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		new Label(grpModelingOptions, SWT.NONE);
 		
 		btnCheckEcore = new Button(grpModelingOptions, SWT.CHECK);
-		btnCheckEcore.setText("referencing an existing ecore file");
+		btnCheckEcore.setText("reference an existing ecore file");
 		new Label(grpModelingOptions, SWT.NONE);
 		new Label(grpModelingOptions, SWT.NONE);
 		new Label(grpModelingOptions, SWT.NONE);
@@ -251,29 +252,35 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-//		btnCreateEmfProject = new Button(grpModelingOptions, SWT.CHECK);
-//		btnCreateEmfProject.setText("Create EMF project Linked to selected ecore file");
-//		new Label(grpModelingOptions, SWT.NONE);
-//		new Label(grpModelingOptions, SWT.NONE);
-//		new Label(grpModelingOptions, SWT.NONE);
-//		
-//		btnCreateEmfProject.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				updateCreateEMFProject(btnCreateEmfProject.getSelection());
-//			}
-//		});
 		
-		lblTemplateEcore = new Label(grpModelingOptions, SWT.NONE);
-		lblTemplateEcore.setText("use template on ecore file");
-		new Label(grpModelingOptions, SWT.NONE);
-		new Label(grpModelingOptions, SWT.NONE);
-		new Label(grpModelingOptions, SWT.NONE);
+		//-----------------------------------------------
+		grpSLEOptions = new Group(container, SWT.NONE);
+		grpSLEOptions.setText("Language engineering options");
+		grpSLEOptions.setLayout(new GridLayout(4, false));
 		
-		combo = new Combo(grpModelingOptions, SWT.NONE);
+		btnCheckSLE = new Button(grpSLEOptions, SWT.CHECK);
+		btnCheckSLE.setText("Enable \"Modeling in the large\" features");
+		btnCheckSLE.setToolTipText("SLE offers model manipulation features");
+		btnCheckSLE.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateUseSLE(btnCheckSLE.getSelection()); 
+			}
+		});
+		
+		grpTemplateOptions = new Group(container, SWT.NONE);
+		grpTemplateOptions.setText("Template options");
+		grpTemplateOptions.setLayout(new GridLayout(4, false));
+		lblTemplateEcore = new Label(grpTemplateOptions, SWT.NONE);
+		lblTemplateEcore.setText("use a template based on ecore file");
+		new Label(grpTemplateOptions, SWT.NONE);
+		new Label(grpTemplateOptions, SWT.NONE);
+		new Label(grpTemplateOptions, SWT.NONE);
+		
+		combo = new Combo(grpTemplateOptions, SWT.NONE);
 		combo.setItems(new String[] {"None", "Aspect class from ecore file", "Customize"});
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		new Label(grpModelingOptions, SWT.NONE);
+		new Label(grpTemplateOptions, SWT.NONE);
 		combo.select(0);
 		
 		combo.addSelectionListener(new SelectionAdapter() {
@@ -288,21 +295,6 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		
-		//-----------------------------------------------
-		grpSLEOptions = new Group(container, SWT.NONE);
-		grpSLEOptions.setText("SLE options");
-		grpSLEOptions.setLayout(new GridLayout(4, false));
-		
-		btnCheckSLE = new Button(grpSLEOptions, SWT.CHECK);
-		btnCheckSLE.setText("Configure project with SLE Nature");
-		btnCheckSLE.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateUseSLE(btnCheckSLE.getSelection()); 
-			}
-		});
-		
 		//-----------------------------------------------
 		
 		//initialization of enabled state of controls
@@ -314,6 +306,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		//btnCreateEmfProject.setEnabled(false);
 		combo.setEnabled(false);
 		btnRadioPlugIn.setSelection(true);
+		btnCheckSLE.setEnabled(true);
 		
 		//analysis of the existing of the project name
 		if (existNameProject()) {

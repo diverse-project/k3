@@ -11,7 +11,6 @@ public class Context {
 	public enum KindsOfProject { STANDALONE, PLUGIN, MAVEN }
 	
 	public boolean 			ecoreProject;
-	//public boolean 			bCreateEMFProject;
 	public String 			genModelFile;
 	public List<String>		basePackage;
 	public String 			typeProject;
@@ -33,7 +32,6 @@ public class Context {
 	
 	public Context () {
 		this.ecoreProject 			= false;
-		//this.bCreateEMFProject		= false;
 		this.genModelFile			= null;
 		this.basePackage			= new ArrayList<String>();
 		this.typeProject			= "None";
