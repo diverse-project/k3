@@ -22,10 +22,12 @@ public class FileUtils {
 		
 	public static void writeInFile(IFile file, String contents, IProgressMonitor monitor) throws CoreException{
 		try {
-			InputStream stream =  new ByteArrayInputStream(contents.getBytes());
+			InputStream stream =  new ByteArrayInputStream(contents.getBytes(("UTF-8")));
 			if (file.exists()) {
+				file.setCharset("UTF-8", null);
 				file.setContents(stream, true, true, monitor);
 			} else {
+				file.setCharset("UTF-8", null);
 				file.create(stream, true, monitor);
 			}
 			stream.close();

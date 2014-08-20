@@ -2,7 +2,7 @@ package fr.inria.diverse.k3.ui.tools
 
 class K3SampleFilesTemplates {
 	def public static String getFileTypeK3(String namePackage, String nameClass) {
-		return '''package  «namePackage» 
+		return '''package  Â«namePackageÂ» 
 	
 	import org.eclipse.emf.ecore.EPackage
 	import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
@@ -11,7 +11,7 @@ class K3SampleFilesTemplates {
 	import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 	import org.eclipse.emf.common.util.URI
 	
-	class «nameClass»{ 
+	class Â«nameClassÂ»{ 
 	
 	
 		public def run(String modelPath) {
@@ -32,7 +32,7 @@ class K3SampleFilesTemplates {
 		
 		def static void main(String[] args) {
 			println('Hello Kermeta on top of Xtend!')
-			new «nameClass»().run(\"model\")
+			new Â«nameClassÂ»().run(\"model\")
 			val String s = '''+"'''"+'''  '''+"'''"+'''
 	}
 }
@@ -40,11 +40,11 @@ class K3SampleFilesTemplates {
 	}
 	
 	def public static String get_MiniAspectSample_SampleMain_xtend(String namePackage) {
-		return '''package  «namePackage»
+		return '''package  Â«namePackageÂ»
 
 import java.io.File
 
-import static extension «namePackage».SampleXMLFileAspect.*
+import static extension Â«namePackageÂ».SampleXMLFileAspect.*
 
 class SampleMain{ 
 
@@ -68,7 +68,7 @@ class SampleMain{
 	}
 	
 	def public static String get_MiniAspectSample_SampleXMLFileAspect_xtend(String namePackage) {
-		return '''package  «namePackage»
+		return '''package  Â«namePackageÂ»
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 import java.io.PrintWriter
@@ -88,9 +88,9 @@ class SampleXMLFileAspect {
 		var PrintWriter writer = new PrintWriter(_self, "UTF-8");
 		// compute content String by using template
 		val content = '''+"'''"+''' <xml>
-	<'''+"«_self.contentType»"+'''s>	
-		'''+"«FOR contentItem : _self.contentArrayList »<color>«contentItem»</color> «ENDFOR»"+'''
-	</'''+"«_self.contentType»"+'''s>
+	<'''+"Â«_self.contentTypeÂ»"+'''s>	
+		'''+"Â«FOR contentItem : _self.contentArrayList Â»<color>Â«contentItemÂ»</color> Â«ENDFORÂ»"+'''
+	</'''+"Â«_self.contentTypeÂ»"+'''s>
 </xml>'''+"'''"+'''
 		writer.println(content);
 		writer.close();
@@ -102,7 +102,7 @@ class SampleXMLFileAspect {
 
 	
 	def public static String get_MiniAspectSample_SampleEcoreMain_xtend(String namePackage) {
-		return '''package  «namePackage»
+		return '''package  Â«namePackageÂ»
 
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl
@@ -150,7 +150,7 @@ class SampleEcoreMain{
 	}
 	
 	def public static String get_MiniAspectSample_SampleAnnotateEcoreAspect_xtend(String namePackage) {
-		return '''package  «namePackage»
+		return '''package  Â«namePackageÂ»
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
@@ -203,8 +203,8 @@ class EClassAspect extends EClassifierAspect{
 /** Build a String with all superclasses of this class */
 	public def String flat(String tabStr){
 		// use a template String
-		val returnedString = '''+"'''«tabStr»class «_self.name» : «FOR eSuperClass : _self.ESuperTypes»"+
- "«eSuperClass.flat( tabStr + \"\t\")»«ENDFOR»'''"+'''
+		val returnedString = '''+"'''Â«tabStrÂ»class Â«_self.nameÂ» : Â«FOR eSuperClass : _self.ESuperTypesÂ»"+
+ "Â«eSuperClass.flat( tabStr + \"\t\")Â»Â«ENDFORÂ»'''"+'''
 		
 		return returnedString.toString
 	}
@@ -241,11 +241,11 @@ bin.includes = plugin.xml,\
 
 	
 	def public static String getK3SLEStub(String pkgName, String ecoreUri, String mmName) {
-		return '''package «pkgName»
+		return '''package Â«pkgNameÂ»
 		
-metamodel «mmName» {
-	ecore «ecoreUri»
-	exactType «mmName»MT
+metamodel Â«mmNameÂ» {
+	ecore Â«ecoreUriÂ»
+	exactType Â«mmNameÂ»MT
 }
 
 @Main
@@ -258,10 +258,10 @@ transformation main() {
 	def public static String pomXmlMetamodel(String nameProject, String groupID, String artifactID, String version) {
 		return '''<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>«groupID»</groupId>
-	<artifactId>«artifactID»</artifactId>
-	<version>«version»</version>
-	<name>«nameProject»</name>
+	<groupId>Â«groupIDÂ»</groupId>
+	<artifactId>Â«artifactIDÂ»</artifactId>
+	<version>Â«versionÂ»</version>
+	<name>Â«nameProjectÂ»</name>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -301,10 +301,10 @@ transformation main() {
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>«groupID»</groupId>
-	<artifactId>«artifactID»</artifactId>
-	<version>«version»</version>
-	<name>«nameProject»</name>
+	<groupId>Â«groupIDÂ»</groupId>
+	<artifactId>Â«artifactIDÂ»</artifactId>
+	<version>Â«versionÂ»</version>
+	<name>Â«nameProjectÂ»</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
@@ -321,9 +321,9 @@ transformation main() {
 			<version>3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>«eGroupID»</groupId>
-			<artifactId>«eArtifactID»</artifactId>
-			<version>«eVersion»</version>
+			<groupId>Â«eGroupIDÂ»</groupId>
+			<artifactId>Â«eArtifactIDÂ»</artifactId>
+			<version>Â«eVersionÂ»</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -361,10 +361,10 @@ transformation main() {
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>«groupID»</groupId>
-	<artifactId>«artifactID»</artifactId>
-	<version>«version»</version>
-	<name>«nameProject»</name>
+	<groupId>Â«groupIDÂ»</groupId>
+	<artifactId>Â«artifactIDÂ»</artifactId>
+	<version>Â«versionÂ»</version>
+	<name>Â«nameProjectÂ»</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xtend.version>2.6.0</xtend.version>
