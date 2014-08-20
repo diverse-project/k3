@@ -137,7 +137,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			default:
 				sourceFolderName= "src/";
 			}
-
+			createSettingsResourcePrefs(project, monitor);
 			if(context.ecoreIFile != null){
 				createProjectWithEcore(monitor, sourceFolderName);
 			} else {
@@ -236,6 +236,18 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3SampleFilesTemplates.buildProperties();
+		FileUtils.writeInFile(file, contents, monitor);   
+    }
+    
+    private void createSettingsResourcePrefs(IProject project, IProgressMonitor monitor) throws Exception {	    
+    	IFolder settings = project.getFolder(".settings");
+    	settings.create(false, true, monitor);
+	    
+	    String path = ".settings/org.eclipse.core.resurces.prefs";
+		IContainer currentContainer = project;
+		IFile file = currentContainer.getFile(new Path(path));
+		
+		String contents = K3SampleFilesTemplates.eclipseResourcePrefs();
 		FileUtils.writeInFile(file, contents, monitor);   
     }
     
