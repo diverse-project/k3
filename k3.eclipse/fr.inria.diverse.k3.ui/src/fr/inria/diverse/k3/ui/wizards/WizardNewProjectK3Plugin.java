@@ -195,7 +195,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore.xmi", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.ecore", "2.8.0", true, true);
 				manifestChanger.addPluginDependency("org.eclipse.emf.common", "2.8.0", true, true);
-				if(context.ecoreIFile != null && !context.bCreateEMFProject){
+				if(context.ecoreIFile != null ){
 					manifestChanger.addPluginDependency(context.ecoreIFile.getProject().getName(),"0.0.0", true, true);
 				}
 				if(context.useSLE) {
@@ -335,34 +335,9 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	
 	public boolean createProjectWithEcore(IProgressMonitor monitor, String sourceFolderName) {
 		boolean returnVal = true;
-		if(this.context.bCreateEMFProject) {
-			try {
-				final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.ecoreIFile.getName() +".metamodel");
-				project.create(monitor);
-				project.open(monitor);
-				Boolean tabNature[] = {true, true,false,true,true};
-				addNatureToProject(project, tabNature);
-				IFolderUtils.createFolder(sourceFolderName, project, monitor);
-				IFolderUtils.createFolder("model/", project, monitor);
-				createEcoreFile(project, monitor);
-				new GenerateGenModelCode().createGenModel(this.context.ecoreIFile.getLocation().toString(), this.context.ecoreIFile.getName() +".metamodel");
-				configurePluginProject(project, null);
-				try {
-					createMavenFile(project, monitor, true);
-				} catch (Exception e) {
-					Activator.logErrorMessage(e.getMessage(), e);
-				}
-				//setClassPath(project, monitor);
-				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-				
-			} catch (Exception exception) {
-				Activator.logErrorMessage(exception.getMessage(), exception);
-				returnVal = false;
-			}
-		}
-		else {
-			updateBasePackageFromGenModel(this.context);
-		}
+
+		updateBasePackageFromGenModel(this.context);
+
 				
 		if (this.context.indexTransfomation != 0) {
 			k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
@@ -415,16 +390,6 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		}
 	}
 	
-	private void createEcoreFile(IProject project,IProgressMonitor monitor) throws Exception {
-		String path = "model/"+ this.context.ecoreIFile.getName();
-		IContainer currentContainer = project;
-		IFile file = currentContainer.getFile(new Path(path));
-		
-		String contents = "";
-		
-		FileUtils.writeInFile(file, contents, monitor);
-		FileUtils.copyFile (new File(this.context.ecoreIFile.getLocationURI()), new File(file.getLocationURI()));
-	}
 	
 	private String getContextNamePackage() {
 		return this.context.namePackage;

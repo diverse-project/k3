@@ -51,7 +51,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected Text 			txtPathEcore;
 	protected Button		btnBrowseLocation;
 	protected Button 		btnBrowseEcore;
-	protected Button 		btnCreateEmfProject;
+	//protected Button 		btnCreateEmfProject;
 	protected Button 		btnCheckLocation;
 	protected Button 		btnCheckEcore;
 	protected Button 		btnCheckSLE;
@@ -251,18 +251,18 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			}
 		});
 		
-		btnCreateEmfProject = new Button(grpModelingOptions, SWT.CHECK);
-		btnCreateEmfProject.setText("Create EMF project Linked to selected ecore file");
-		new Label(grpModelingOptions, SWT.NONE);
-		new Label(grpModelingOptions, SWT.NONE);
-		new Label(grpModelingOptions, SWT.NONE);
-		
-		btnCreateEmfProject.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateCreateEMFProject(btnCreateEmfProject.getSelection());
-			}
-		});
+//		btnCreateEmfProject = new Button(grpModelingOptions, SWT.CHECK);
+//		btnCreateEmfProject.setText("Create EMF project Linked to selected ecore file");
+//		new Label(grpModelingOptions, SWT.NONE);
+//		new Label(grpModelingOptions, SWT.NONE);
+//		new Label(grpModelingOptions, SWT.NONE);
+//		
+//		btnCreateEmfProject.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				updateCreateEMFProject(btnCreateEmfProject.getSelection());
+//			}
+//		});
 		
 		lblTemplateEcore = new Label(grpModelingOptions, SWT.NONE);
 		lblTemplateEcore.setText("use template on ecore file");
@@ -311,7 +311,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnBrowseEcore.setEnabled(false);
 		txtPathEcore.setEnabled(false);
 		lblTemplateEcore.setEnabled(false);
-		btnCreateEmfProject.setEnabled(false);
+		//btnCreateEmfProject.setEnabled(false);
 		combo.setEnabled(false);
 		btnRadioPlugIn.setSelection(true);
 		
@@ -431,9 +431,9 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		//grpSLEOptions.setEnabled(bState);
 	}
 	
-	protected void updateCreateEMFProject(Boolean bVal) {
-		this.context.bCreateEMFProject = bVal;
-	}
+//	protected void updateCreateEMFProject(Boolean bVal) {
+//		this.context.bCreateEMFProject = bVal;
+//	}
 	
 	protected void updateNameProject (String nameProject) {
 		this.context.nameProject = nameProject;
@@ -444,7 +444,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			btnBrowseEcore.setEnabled(true);
 			txtPathEcore.setEnabled(true);
 			lblTemplateEcore.setEnabled(true);
-			btnCreateEmfProject.setEnabled(true);
+			//btnCreateEmfProject.setEnabled(true);
 			combo.setEnabled(true);
 			if ( txtPathEcore.getText().isEmpty()) {
 				activErrorMessage(1, true);
@@ -456,7 +456,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			btnBrowseEcore.setEnabled(false);
 			txtPathEcore.setEnabled(false);
 			lblTemplateEcore.setEnabled(false);
-			btnCreateEmfProject.setEnabled(false);
+			//btnCreateEmfProject.setEnabled(false);
 			combo.setEnabled(false);
 			combo.select(0);
 			updateNextButton (false);
@@ -487,9 +487,9 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		//btnBrowseEcore.setEnabled(true);
 		txtPathEcore.setEnabled(true);
 		lblTemplateEcore.setEnabled(true);
-		btnCreateEmfProject.setEnabled(true);
-		btnCreateEmfProject.setSelection(false);
-		updateCreateEMFProject(false);
+		//btnCreateEmfProject.setEnabled(true);
+		//btnCreateEmfProject.setSelection(false);
+		//updateCreateEMFProject(false);
 		combo.setEnabled(true);
 		txtPathEcore.setText(ecoreFile.getFullPath().toOSString());
 		/*String[] ecoreName = ecoreFile.getName().split(".ecore") ;
