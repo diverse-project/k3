@@ -163,16 +163,6 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		grpKindOfProject.setText("Dependency management / Project kind");
 		grpKindOfProject.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		btnRadioStandAlone = new Button(grpKindOfProject, SWT.RADIO);
-		btnRadioStandAlone.setText("Stand alone");
-		btnRadioStandAlone.setToolTipText("Standard java project. Dependencies jars will be copied and embedded.");
-		btnRadioStandAlone.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.STANDALONE);
-			}
-		});
-		
 		btnRadioPlugIn = new Button(grpKindOfProject, SWT.RADIO);
 		btnRadioPlugIn.setText("Plug-in");
 		btnRadioPlugIn.setToolTipText("Eclipse plugin project, external dependencies will be specified using manifest.mf.");
@@ -180,6 +170,16 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateKindsOfProject(Context.KindsOfProject.PLUGIN);
+			}
+		});
+		
+		btnRadioStandAlone = new Button(grpKindOfProject, SWT.RADIO);
+		btnRadioStandAlone.setText("Stand alone");
+		btnRadioStandAlone.setToolTipText("Standard java project. Dependencies jars will be copied and embedded.");
+		btnRadioStandAlone.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateKindsOfProject(Context.KindsOfProject.STANDALONE);
 			}
 		});
 		
@@ -313,7 +313,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		lblTemplateEcore.setEnabled(false);
 		btnCreateEmfProject.setEnabled(false);
 		combo.setEnabled(false);
-		btnRadioStandAlone.setSelection(true);
+		btnRadioPlugIn.setSelection(true);
 		
 		//analysis of the existing of the project name
 		if (existNameProject()) {

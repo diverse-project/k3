@@ -438,5 +438,9 @@ transformation main() {
 </project>'''
 	}
 	
+	def	public static String eclipseResourcePrefs() {
+		return '''eclipse.preferences.version=1
+encoding/<project>=UTF-8'''
+	}
 	
 }

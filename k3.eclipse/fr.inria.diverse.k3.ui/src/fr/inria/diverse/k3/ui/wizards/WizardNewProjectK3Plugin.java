@@ -243,7 +243,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
     	IFolder settings = project.getFolder(".settings");
     	settings.create(false, true, monitor);
 	    
-	    String path = ".settings/org.eclipse.core.resurces.prefs";
+	    String path = ".settings/org.eclipse.core.resources.prefs";
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
