@@ -20,17 +20,17 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
  */
 abstract class Helper {
 	/** The name of the parameter 'with' of the annotation aspect. */
-	public static val annotationWith = "with"
+	public static val String annotationWith = "with"
 	
 	/** The name of the parameter 'className' of the annotation aspect. */
-	public static val annotationName = "className"
+	public static val String annotationName = "className"
 	
 	/**
 	 * Sorts the given classes following the inheritance order. Top classes are sorted at the end and
 	 * down classes are sorted the beginning.
 	 */
 	static def void sortClasses(List<MutableClassDeclaration> classes, TransformationContext ctx) {
-		if(classes==null || classes.size<2) return;
+		if(classes===null || classes.size<2) return;
 		val size = classes.size
 		var firstPosModif = -1
 		var stable = false
@@ -92,17 +92,17 @@ abstract class Helper {
 	 */
 	static def Set<ClassDeclaration> getDirectSuperClasses(ClassDeclaration clazz, TransformationContext ctx) {
 		val Set<ClassDeclaration> res = newHashSet
-		if(clazz.extendedClass!=null) {
+		if(clazz.extendedClass!==null) {
 			val l = ctx.findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration
 			
 			//var JvmClassDeclarationImpl a=null;
 			
 			//ctx.addError(clazz,(ctx.findTypeGlobally(clazz.extendedClass.name).toString) + l)
 			
-			if(l!=null) res.add(l)
+			if(l!==null) res.add(l)
 		}
 		res.addAll(getWithClassNames(clazz, ctx).map[n | ctx.findTypeGlobally(n) as ClassDeclaration].filterNull)
-		res 
+		return res 
 	}
 	
 	
@@ -112,11 +112,11 @@ abstract class Helper {
 	static def void getSuperClasses(MutableClassDeclaration clazz, Set<MutableClassDeclaration> res, extension TransformationContext ctx) {
 		if(res.contains(clazz)) return;
 		res.add(clazz)
-		if(clazz.extendedClass!=null) {
+		if(clazz.extendedClass!==null) {
 			val l = findClass(clazz.extendedClass.name)
-			if(l!=null)
+			if(l!==null)
 				getSuperClasses(l,res,ctx)
-			getWithClassNames(clazz, ctx).map[n | findClass(n)].forEach[cl| if(cl!=null) getSuperClasses(cl, res, ctx)]
+			getWithClassNames(clazz, ctx).map[n | findClass(n)].forEach[cl| if(cl!==null) getSuperClasses(cl, res, ctx)]
 		}
 	}
 	
@@ -159,7 +159,7 @@ abstract class Helper {
 	
 		/** Computes the names of the classes provided by the parameter 'with' of the annotation 'aspect'. */
 	static def List<String> getWithClassNames(TypeDeclaration clazz, extension TransformationContext context) {
-		getAnnotationWithType(clazz).map[name]
+		return getAnnotationWithType(clazz).map[name]
 	}
 	
 	
@@ -168,21 +168,21 @@ abstract class Helper {
 	 * The returned list is never null but can be empty.
 	 */
 	static def List<TypeReference> getAnnotationWithType(TypeDeclaration cl) {
-		if(cl==null || cl.annotations==null) return Collections.emptyList
+		if(cl===null || cl.annotations===null) return Collections.emptyList
 		try{
-			val annot = cl.annotations.findFirst[getClassArrayValue(annotationWith) != null]
-			if(annot==null) return Collections.emptyList
-			new ArrayList(annot.getClassArrayValue(annotationWith))
+			val annot = cl.annotations.findFirst[getClassArrayValue(annotationWith) !== null]
+			if(annot===null) return Collections.emptyList
+			return new ArrayList(annot.getClassArrayValue(annotationWith))
 		}catch(NullPointerException ex){ return Collections.emptyList }
 	}
 	
 	
 	static def TypeReference getAnnotationAspectType(TypeDeclaration cl) {
-		if(cl==null || cl.annotations==null) return null;
+		if(cl===null || cl.annotations===null) return null;
 		try{
-			val annot = cl.annotations.findFirst[getClassValue(annotationName) != null]
-			if(annot==null) return null
-			annot.getClassValue(annotationName)
+			val annot = cl.annotations.findFirst[getClassValue(annotationName) !== null]
+			if(annot===null) return null
+			return annot.getClassValue(annotationName)
 		}catch(NullPointerException ex){ return null }
 	}
 	
@@ -190,13 +190,13 @@ abstract class Helper {
 	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. */
 	static def String getAspectedClassName(TypeDeclaration clazz) {
 		val type = getAnnotationAspectType(clazz)
-		if(type==null)return ""	
-		type.name
+		if(type===null)return ""	
+		return type.name
 	}
 	
 	
 	static def List<MethodDeclaration> sortByMethodInheritance(Set<MethodDeclaration> methods, List<String> inheritOrder) {
-		inheritOrder.map[classe | methods.filter[declaringType.simpleName == classe]].flatten.toList
+		return inheritOrder.map[classe | methods.filter[declaringType.simpleName == classe]].flatten.toList
 	}
 	
 	
@@ -205,7 +205,7 @@ abstract class Helper {
 	 * (the first element is the direct super type of c)
 	 */
 	static def void getSuperClass(List<ClassDeclaration> s, ClassDeclaration c, extension TransformationContext context) {
-		if (c.extendedClass != null) {
+		if (c.extendedClass !== null) {
 			
 			
 			val l = findTypeGlobally(c.extendedClass.name) as ClassDeclaration
@@ -213,7 +213,7 @@ abstract class Helper {
 				context.addError(c, "Its super class is itself?! " + c.extendedClass.name)
 				return;
 			}
-			if(l!=null) {
+			if(l!==null) {
 				s.add(l)
 				getSuperClass(s, l, context)
 			}
@@ -225,11 +225,11 @@ abstract class Helper {
 		if (list.size==0)
 			return ""
 		val s = new StringBuffer
-		if (before!= null)
+		if (before!== null)
 			s.append(before)
 		list.forEach[e| s.append(delimiter+"?") ]
 		
-		if (after != null)
+		if (after !== null)
 			s.append(after)
 		return s.toString().replace(before+delimiter, before)
 	}
@@ -245,10 +245,10 @@ abstract class Helper {
 		//FIXME take care about number of parameters and their type
 		//context.addError(clazz, clazz.toString)	
 		var m = clazz.declaredMethods.findFirst[simpleName == methodName.simpleName]
-		if (m == null) {
-			if (clazz.extendedClass == null)
+		if (m === null) {
+			if (clazz.extendedClass === null)
 				return null
-			else if (findClass(clazz.extendedClass.name) == null)
+			else if (findClass(clazz.extendedClass.name) === null)
 				return null
 			else
 				return findMethod(context.findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration, methodName, context)
@@ -264,7 +264,7 @@ abstract class Helper {
 	 * whether the first argument of m2 (respec. m1) is _self to then compare the two prototypes.
 	 */
 	static def boolean isSamePrototype(MutableMethodDeclaration m1, MutableMethodDeclaration m2, boolean alsoCheckFirstArgSelf) {
-		val nameOk = m1!=null && m2!=null && m1.simpleName==m2.simpleName
+		val nameOk = m1!==null && m2!==null && m1.simpleName==m2.simpleName
 		val ok = nameOk && m1.parameters.size==m2.parameters.size && isSameType(m1.returnType, m2.returnType)
 		//TODO parameters and return type
 		if(nameOk && !ok && alsoCheckFirstArgSelf)
@@ -275,14 +275,14 @@ abstract class Helper {
 	
 	
 	static def boolean isSameType(TypeReference tr1, TypeReference tr2) {
-		tr1==tr2 || (tr1!=null && tr2!=null && tr1.simpleName==tr2.simpleName)
+		return tr1==tr2 || (tr1!==null && tr2!==null && tr1.simpleName==tr2.simpleName)
 	}
 	
 	/**
 	 * Returns the adapter standing between a metaclass in a sub-metamodel
 	 * and its corresponding metaclass in a super-metamodel
 	 */
-	static def getAdapterClassName(MutableTypeDeclaration cls, extension TransformationContext ctx) {
+	static def String getAdapterClassName(MutableTypeDeclaration cls, extension TransformationContext ctx) {
 		val ann = cls.annotations.findFirst[getValue("adapter") !== null]
 		
 		return if (ann !== null) ann.getValue("adapter") as String else ""

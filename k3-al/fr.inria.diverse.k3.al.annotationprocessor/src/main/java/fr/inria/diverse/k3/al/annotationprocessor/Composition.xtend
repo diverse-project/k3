@@ -53,7 +53,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 		//TODO check wildcard
 		val type = field.type
 		
-		if(ctx!=null)
+		if(ctx!==null)
 			if(type.isAssignableFrom(ctx.newTypeReference(Collection))) {
 				ctx.addError(field, "Collections not supported yet.")
 				return null
@@ -75,7 +75,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 	override void doRegisterGlobals(FieldDeclaration field, RegisterGlobalsContext ctx) {
 		val type = getFieldType(field, null)
 		// Have to check that the interface of the corresponding type has not been generated yet.
-		if(type!=null && !interfaceObsGenerated.contains(type)) {
+		if(type!==null && !interfaceObsGenerated.contains(type)) {
 			// Generating the interface used by the contained object to remove it from its container.
 			try {
 				ctx.registerInterface(getObservabilityInterfaceName(type))
@@ -89,11 +89,11 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 	override void doTransform(MutableFieldDeclaration field, TransformationContext ctx) {
 		val fieldType = getFieldType(field, ctx)
 		
-		if(fieldType==null) return;
+		if(fieldType===null) return;
 		
     	val clazzTypeField = ctx.findClass(fieldType.name)
     	
-	    if(clazzTypeField==null) {
+	    if(clazzTypeField===null) {
       		ctx.addError(field, "Cannot find the class " + field.type.name)
       		return
   		}

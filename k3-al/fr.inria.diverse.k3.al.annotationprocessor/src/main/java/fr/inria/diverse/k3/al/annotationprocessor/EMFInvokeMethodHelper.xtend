@@ -1,27 +1,24 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
-import java.lang.reflect.Method
+import java.lang.reflect.InvocationTargetException
 
-class EMFInvokeMethodHelper {
-	
-	public val static instance = new EMFInvokeMethodHelper()
-	
-	def <T> invokeMethod(Object o, String methodname, String aspectQualifiedName,T res, Object ... params ){
-			val a = Thread.currentThread().getContextClassLoader().loadClass(aspectQualifiedName);
-			val ms = a.getMethods();
-			var Method m = null;
-			
-			for(Method m1 : ms){
-				if (methodname.equals(m1.getName()) && m1.parameterTypes.size == params.size)
-						m = m1;
-				
-			}
-			
-			return m.invoke(null,o,params) as T;
-		
-		
-		
+class EMFInvokeMethodHelper
+{
+	public static val EMFInvokeMethodHelper instance = new EMFInvokeMethodHelper
+
+	def <T> T invokeMethod(Object o, String methodname, String aspectQualifiedName,T res, Object... params ) {
+		try {
+			val a = Thread.currentThread.contextClassLoader.loadClass(aspectQualifiedName)
+			val ms = a.methods
+			var m = ms.findFirst[methodname == name && parameterTypes.size == params.size]
+
+			return m.invoke(null, o, params) as T
+		} catch (IllegalAccessException exc) {
+			// ...
+		} catch (InvocationTargetException exc) {
+			// ...
+		} catch (ClassNotFoundException exc) {
+			// ...
+		}
 	}
-	
-	
 }

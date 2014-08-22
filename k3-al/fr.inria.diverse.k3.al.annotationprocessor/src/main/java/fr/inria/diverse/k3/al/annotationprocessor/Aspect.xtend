@@ -203,7 +203,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	}
 
 
-	private def methodProcessingAddPriv(MutableMethodDeclaration m, MutableClassDeclaration clazz, Map<MutableMethodDeclaration,String> bodies,
+	private def void methodProcessingAddPriv(MutableMethodDeclaration m, MutableClassDeclaration clazz, Map<MutableMethodDeclaration,String> bodies,
 										extension TransformationContext cxt) {
 		// Make PRIV_PREFIX+methodName as a copy of the method
 		clazz.addMethod(PRIV_PREFIX + m.simpleName, [
@@ -434,7 +434,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	}
 	
 	
-	private def fieldProcessingAddField(MutableClassDeclaration clazz, String className, extension TransformationContext context) {
+	private def void fieldProcessingAddField(MutableClassDeclaration clazz, String className, extension TransformationContext context) {
 		if (!clazz.declaredFields.exists[simpleName == PROP_VAR_NAME]) {
 			val clazzProp = findClass(clazz.qualifiedName + className + PROP_NAME)
 

@@ -33,7 +33,7 @@ class SingletonProcessor extends AbstractClassProcessor {
 		if (constructor.parameters.size > 0)
 			constructor.addError("Constructor has arguments")
 
-		if (constructor.body == null) {
+		if (constructor.body === null) {
 
 			// no constructor defined in the annotated class
 			constructor.visibility = Visibility::PRIVATE

@@ -228,7 +228,7 @@ class OppositeProcessor extends AbstractFieldProcessor
 	 * Checks whether the opposite references
 	 * are properly defined
 	 */
-	protected def check() {
+	protected def boolean check() {
 		// No primitive types
 		if (field.type.primitive || field.type.wrapper) {
 			field.addError("Can't declare a primitive type " + field.type.simpleName + " as opposite")
@@ -236,7 +236,7 @@ class OppositeProcessor extends AbstractFieldProcessor
 		}
 		
 		// Opposite field exists
-		if (oppositeField == null) {
+		if (oppositeField === null) {
 			field.addError("Referenced opposite attribute doesn't exist")
 			return false
 		}
@@ -283,8 +283,8 @@ class OppositeProcessor extends AbstractFieldProcessor
 	 * Checks whether the specified TypeReference refers
 	 * to a collection
 	 */
-	protected def isCollection(TypeReference type)
+	protected def boolean isCollection(TypeReference type)
 	{
-		Collection.newTypeReference(newWildcardTypeReference).isAssignableFrom(type)
+		return Collection.newTypeReference(newWildcardTypeReference).isAssignableFrom(type)
 	}
 }

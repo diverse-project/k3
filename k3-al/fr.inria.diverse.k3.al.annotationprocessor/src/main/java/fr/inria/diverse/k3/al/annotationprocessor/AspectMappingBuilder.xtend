@@ -8,6 +8,7 @@ import java.util.Properties
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import java.util.ArrayList
+import java.io.IOException
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -38,11 +39,15 @@ class AspectMappingBuilder {
 		if (classes.size > 0) {
 			val Properties properties = new Properties();
 			if(targetFilePath.exists){
-				properties.load(targetFilePath.contentsAsStream)
-				properties.forEach[propKey, commaSeparatedPropvalues|
-					val propValues = (commaSeparatedPropvalues as String).split(",").map[s | s.trim]
-					propValues.forEach[propValue | addMapping(propKey as String, propValue)]
-				]			
+				try {
+					properties.load(targetFilePath.contentsAsStream)
+					properties.forEach[propKey, commaSeparatedPropvalues|
+						val propValues = (commaSeparatedPropvalues as String).split(",").map[s | s.trim]
+						propValues.forEach[propValue | addMapping(propKey as String, propValue)]
+					]
+				} catch (IOException e) {
+					// ...
+				}
 			}
 		}
 	}
@@ -54,7 +59,7 @@ class AspectMappingBuilder {
 			val List<String> keytoRemove = new ArrayList<String>
 			mapping.forEach[key, valueList|
 				// recompute a value list that contains only types that are found in the classpath
-				val List<String> newValueList = valueList.filter[value | findTypeGlobally(value)!=null].toList
+				val List<String> newValueList = valueList.filter[value | findTypeGlobally(value)!==null].toList
 				mapping.put(key, newValueList)				 	
 				if(newValueList.size == 0){
 					keytoRemove.add(key)
