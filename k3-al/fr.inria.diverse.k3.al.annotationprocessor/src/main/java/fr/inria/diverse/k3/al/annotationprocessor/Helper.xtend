@@ -170,7 +170,7 @@ abstract class Helper {
 	static def List<TypeReference> getAnnotationWithType(TypeDeclaration cl) {
 		if(cl===null || cl.annotations===null) return Collections.emptyList
 		try{
-			val annot = cl.annotations.findFirst[getClassArrayValue(annotationWith) !== null]
+			val annot = cl.annotations.findFirst[getClassArrayValue(annotationWith) != null]
 			if(annot===null) return Collections.emptyList
 			return new ArrayList(annot.getClassArrayValue(annotationWith))
 		}catch(NullPointerException ex){ return Collections.emptyList }
