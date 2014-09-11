@@ -50,7 +50,7 @@ class MetamodelInferrer
 				members += mm.toMethod("to" + mt.name, mm.newTypeRef(mt.fullyQualifiedName.toString))[
 					body = '''
 						«adapName» adaptee = new «adapName»() ;
-						adaptee.setAdaptee(resource) ;
+						adaptee.setAdaptee(this) ;
 						return adaptee ;
 					'''
 				]

@@ -73,18 +73,18 @@ class MetamodelAdapterInferrer
 
 		acceptor.accept(mm.toClass(mm.adapterNameFor(superType)))
 		.initializeLater[
-			superTypes += mm.newTypeRef(GenericAdapter, mm.newTypeRef(Resource))
+			superTypes += mm.newTypeRef(GenericAdapter, mm.newTypeRef(mm.fullyQualifiedName.toString))
 			superTypes += mm.newTypeRef(superType.fullyQualifiedName.toString)
 
-			members += mm.toField("adaptee",  mm.newTypeRef(Resource))
-			members += mm.toGetter("adaptee", mm.newTypeRef(Resource))
-			members += mm.toSetter("adaptee", mm.newTypeRef(Resource))
+			members += mm.toField("adaptee",  mm.newTypeRef(mm.fullyQualifiedName.toString))
+			members += mm.toGetter("adaptee", mm.newTypeRef(mm.fullyQualifiedName.toString))
+			members += mm.toSetter("adaptee", mm.newTypeRef(mm.fullyQualifiedName.toString))
 
 			members += mm.toMethod("getContents", mm.newTypeRef(List, mm.newTypeRef(Object)))[
 				body = '''
 						java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;
 
-						for (org.eclipse.emf.ecore.EObject o : adaptee.getContents()) {
+						for (org.eclipse.emf.ecore.EObject o : adaptee.getResource().getContents()) {
 						«FOR r : mm.allClasses.filter[name != "EObject" && mm.hasAdapterFor(superType, it) && instantiable && abstractable].sortByClassInheritance»
 							if (o instanceof «mm.getFqnFor(r)») {
 								«mm.getFqnFor(r)» wrap = («mm.getFqnFor(r)») o ;
@@ -109,8 +109,8 @@ class MetamodelAdapterInferrer
 				parameters += mm.toParameter("uri", mm.newTypeRef(String))
 
 				body = '''
-					this.adaptee.setURI(org.eclipse.emf.common.util.URI.createURI(uri));
-					this.adaptee.save(null);
+					this.adaptee.getResource().setURI(org.eclipse.emf.common.util.URI.createURI(uri));
+					this.adaptee.getResource().save(null);
 				'''
 
 				exceptions += mm.newTypeRef(java.io.IOException)

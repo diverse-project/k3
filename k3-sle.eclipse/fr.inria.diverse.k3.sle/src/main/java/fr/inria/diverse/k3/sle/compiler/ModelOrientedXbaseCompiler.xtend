@@ -26,33 +26,45 @@ class ModelOrientedXbaseCompiler extends XbaseCompiler
 	 * let's see if we have an adapter for that purpose
 	 */
 	override internalToConvertedExpression(XExpression expr, ITreeAppendable appendable) {
-		super.internalToConvertedExpression(expr, appendable)
 		val expected = getLightweightExpectedType(expr)
 		val returned = getLightweightReturnType(expr)
 
-		if (
+		val wrap =
 			   expected !== null && returned !== null
 			&& expected.identifier != returned.identifier
 			&& expected.isSubtypeOf(IModelType)
-		) {
-			if (returned.isSubtypeOf(IMetamodel)) { // implements
-				val match =
-					typesRegistry.getImplementations(returned.identifier)
-					.findFirst[fullyQualifiedName.toString == expected.identifier]
 
-				if (match !== null) {
-					appendable.append('''.to«match.name»()''')
-				}
-			}
-			else if (returned.isSubtypeOf(IModelType)) { // subtypeOf
-				val match =
-					typesRegistry.getSubtypings(returned.identifier)
-					.findFirst[fullyQualifiedName.toString == expected.identifier]
+		val isImplements =
+			   wrap
+			&& returned.isSubtypeOf(IMetamodel)
+			&& typesRegistry.getImplementations(returned.identifier)
+			   .exists[fullyQualifiedName.toString == expected.identifier]
 
-				if (match !== null) {
-					appendable.append('''.toWhateverWeNeed()''')
-				}
-			}
+		val isSubtype =
+			   wrap
+			&& returned.isSubtypeOf(IModelType)
+			&& typesRegistry.getSubtypings(returned.identifier)
+			   .exists[fullyQualifiedName.toString == expected.identifier]
+		
+		if (isSubtype) {
+			appendable.append('''((fr.inria.diverse.k3.sle.lib.GenericAdapter<XXX>) ''') // FIXME
+		}
+		
+		super.internalToConvertedExpression(expr, appendable)
+
+		if (isImplements) {
+			val match =
+				typesRegistry.getImplementations(returned.identifier)
+				.findFirst[fullyQualifiedName.toString == expected.identifier]
+
+			appendable.append('''.to«match.name»()''')
+		}
+		else if (isSubtype) {
+			val match =
+				typesRegistry.getSubtypings(returned.identifier)
+				.findFirst[fullyQualifiedName.toString == expected.identifier]
+
+			appendable.append(''').getAdaptee().to«match.name»()''')
 		}
 	}
 
@@ -78,10 +90,10 @@ class ModelOrientedXbaseCompiler extends XbaseCompiler
 			&& type.isSubtypeOf(IModelType)
 			&& typesRegistry.getSubtypings(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
 		) { // subtypeOf
-				val match = typesRegistry.getSubtypings(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
-
+				val match = typesRegistry.getSubtypings(type.identifier).findFirst[fullyQualifiedName.toString == expectedType.identifier]
+				b.append('''((fr.inria.diverse.k3.sle.lib.GenericAdapter<XXX>) ''') // FIXME
 				internalToConvertedExpression(expr.target, b, expectedType)
-				b.append('''.doSomeObscurStuffHere()''')
+				b.append(''').getAdaptee().to«match.name»()''')
 		}
 		else {
 			super._toJavaExpression(expr, b)
