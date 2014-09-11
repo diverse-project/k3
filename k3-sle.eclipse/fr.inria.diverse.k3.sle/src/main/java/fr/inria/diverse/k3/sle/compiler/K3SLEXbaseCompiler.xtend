@@ -16,74 +16,74 @@ import org.eclipse.xtext.xbase.compiler.XbaseCompiler
 
 import org.eclipse.xtext.xbase.compiler.output.ITreeAppendable
 
-/**
- * // TODO: All casts, instanceof, etc.
- */
 class K3SLEXbaseCompiler extends XbaseCompiler
 {
 	@Inject extension IQualifiedNameProvider
 	@Inject K3SLETypesRegistry typesRegistry
-	
-	override appendArgument(XExpression argument, ITreeAppendable b, boolean doLineWrappingIfSourceWasWrapped) {
-		val referenceName = getReferenceName(argument, b)
-		val type = getLightweightType(argument)
-		val expectedType = getLightweightExpectedType(argument)
 
-		val needsNewLine = doLineWrappingIfSourceWasWrapped && referenceName === null && isDeclaredInNewLine(argument)
-		if (needsNewLine) {
-			b.increaseIndentation()
-			b.newLine()
-		}
-		if (referenceName === null && isVariableDeclarationRequired(argument, b)) {
-			compileAsJavaExpression(argument, b, getLightweightExpectedType(argument) ?: getLightweightType(argument))
-		} else {
-			internalToJavaExpression(argument, b)
-		}
-		
-		if (expectedType.isSubtypeOf(IModelType)) {
-			if (type.isSubtypeOf(IMetamodel)) { // implements
-				val find = typesRegistry.getImplementations(type.identifier).findFirst[fullyQualifiedName.toString == expectedType.identifier]
+	/**
+	 * Whenever we can't find a match between expected and returned modeltypes,
+	 * let's see if we have an adapter for that purpose
+	 */
+	override internalToConvertedExpression(XExpression expr, ITreeAppendable appendable) {
+		super.internalToConvertedExpression(expr, appendable)
+		val expected = getLightweightExpectedType(expr)
+		val returned = getLightweightReturnType(expr)
 
-				if (find !== null) {
-					b.append('''.to«find.name»()''')
+		if (
+			   expected !== null && returned !== null
+			&& expected.identifier != returned.identifier
+			&& expected.isSubtypeOf(IModelType)
+		) {
+			if (returned.isSubtypeOf(IMetamodel)) { // implements
+				val match =
+					typesRegistry.getImplementations(returned.identifier)
+					.findFirst[fullyQualifiedName.toString == expected.identifier]
+
+				if (match !== null) {
+					appendable.append('''.to«match.name»()''')
 				}
 			}
-			else if (type.isSubtypeOf(IModelType)) { // subtypeOf
-				val find = typesRegistry.getImplementations(type.identifier).findFirst[fullyQualifiedName.toString == expectedType.identifier]
+			else if (returned.isSubtypeOf(IModelType)) { // subtypeOf
+				val match =
+					typesRegistry.getSubtypings(returned.identifier)
+					.findFirst[fullyQualifiedName.toString == expected.identifier]
 
-				if (find !== null) {
-					b.append('''.doSomeObscurStuffHere()''')
+				if (match !== null) {
+					appendable.append('''.toWhateverWeNeed()''')
 				}
 			}
-		}
-		
-		if (needsNewLine) {
-			b.decreaseIndentation()
 		}
 	}
-	
+
+	/**
+	 * If the cast operation involves metamodels and modeltypes,
+	 * let's use the appropriate adapters
+	 */
 	override _toJavaExpression(XCastedExpression expr, ITreeAppendable b) {
 		val type = getLightweightType(expr.target)
 		val expectedType = getLightweightType(expr)
 
-		if (expectedType.isSubtypeOf(IModelType)) {
-			if (type.isSubtypeOf(IMetamodel)) { // implements
-				val find = typesRegistry.getImplementations(type.identifier).findFirst[fullyQualifiedName == expectedType.identifier]
-				
-				if (find !== null) {
-					internalToConvertedExpression(expr.target, b, expectedType)
-					b.append('''.to«find.name»()''')
-				}
-			}
-			else if (type.isSubtypeOf(IModelType)) { // subtypeOf
-				val find = typesRegistry.getImplementations(type.identifier).findFirst[fullyQualifiedName == expectedType.identifier]
-				
-				if (find !== null) {
-					internalToConvertedExpression(expr.target, b, expectedType)
-					b.append('''.doSomeObscurStuffHere()''')
-				}
-			}
-		} else {
+		if (
+			   expectedType.isSubtypeOf(IModelType)
+			&& type.isSubtypeOf(IMetamodel)
+			&& typesRegistry.getImplementations(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
+		) { // implements
+			val match = typesRegistry.getImplementations(type.identifier).findFirst[fullyQualifiedName.toString == expectedType.identifier]
+			internalToConvertedExpression(expr.target, b, expectedType)
+			b.append('''.to«match.name»()''')
+		}
+		else if (
+			   expectedType.isSubtypeOf(IModelType)
+			&& type.isSubtypeOf(IModelType)
+			&& typesRegistry.getSubtypings(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
+		) { // subtypeOf
+				val match = typesRegistry.getSubtypings(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
+
+				internalToConvertedExpression(expr.target, b, expectedType)
+				b.append('''.doSomeObscurStuffHere()''')
+		}
+		else {
 			super._toJavaExpression(expr, b)
 		}
 	}
