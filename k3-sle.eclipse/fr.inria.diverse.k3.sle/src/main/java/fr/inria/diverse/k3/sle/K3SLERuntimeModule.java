@@ -1,7 +1,9 @@
 package fr.inria.diverse.k3.sle ;
 
 import org.eclipse.xtext.resource.IDerivedStateComputer;
+
 import org.eclipse.xtext.xbase.compiler.XbaseCompiler;
+
 import org.eclipse.xtext.xbase.typesystem.computation.SynonymTypesProvider;
 
 public class K3SLERuntimeModule extends fr.inria.diverse.k3.sle.AbstractK3SLERuntimeModule
@@ -16,6 +18,6 @@ public class K3SLERuntimeModule extends fr.inria.diverse.k3.sle.AbstractK3SLERun
 	}
 
 	public Class<? extends XbaseCompiler> bindXbaseCompiler() {
-		return fr.inria.diverse.k3.sle.compiler.K3SLEXbaseCompiler.class ;
+		return fr.inria.diverse.k3.sle.compiler.ModelOrientedXbaseCompiler.class ;
 	}
 }

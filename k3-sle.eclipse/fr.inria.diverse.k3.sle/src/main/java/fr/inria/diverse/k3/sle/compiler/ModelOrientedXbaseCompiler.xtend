@@ -16,7 +16,7 @@ import org.eclipse.xtext.xbase.compiler.XbaseCompiler
 
 import org.eclipse.xtext.xbase.compiler.output.ITreeAppendable
 
-class K3SLEXbaseCompiler extends XbaseCompiler
+class ModelOrientedXbaseCompiler extends XbaseCompiler
 {
 	@Inject extension IQualifiedNameProvider
 	@Inject K3SLETypesRegistry typesRegistry
