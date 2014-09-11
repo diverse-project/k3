@@ -13,6 +13,7 @@ import org.apache.log4j.Logger
 
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
+import fr.inria.diverse.k3.sle.typesystem.K3SLETypesRegistry
 
 class K3SLEJvmModelInferrer extends AbstractModelInferrer
 {

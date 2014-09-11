@@ -20,6 +20,8 @@ import fr.inria.diverse.k3.sle.metamodel.k3sle.ModelTypingSpace
 import fr.inria.diverse.k3.sle.metamodel.k3sle.ResourceType
 import fr.inria.diverse.k3.sle.metamodel.k3sle.XbaseTransformation
 
+import fr.inria.diverse.k3.sle.typesystem.K3SLETypesRegistry
+
 import fr.inria.diverse.k3.sle.utils.AspectToEcore
 
 import org.eclipse.emf.ecore.EClass
@@ -27,10 +29,13 @@ import org.eclipse.emf.ecore.EcoreFactory
 
 import org.eclipse.xtext.common.types.JvmDeclaredType
 
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+
 import org.eclipse.xtext.util.internal.Stopwatches
 
 class ASTCompleter
 {
+	@Inject extension IQualifiedNameProvider
 	@Inject extension ASTHelper
 	@Inject extension MetamodelExtensions
 	@Inject extension ModelTypeExtensions
@@ -38,6 +43,7 @@ class ASTCompleter
 	@Inject extension AspectToEcore
 	@Inject ModelUtils modelUtils
 	@Inject ModelTypeAlgebra algebra
+	@Inject K3SLETypesRegistry typesRegistry
 
 	def void inferTypingRelations(ModelTypingSpace root) {
 		val task = Stopwatches.forTask("K3SLETyping.inferTypingRelations")
@@ -52,12 +58,16 @@ class ASTCompleter
 					subType = mt1
 					superType = mt2
 				]
+
+				typesRegistry.registerSubtyping(mt1.fullyQualifiedName.toString, mt2)
 			]
 
 			root.metamodels
 			.filter[mm | !mm.^implements.exists[name == mt1.name] && mm.isTypedBy(mt1)]
 			.forEach[mm |
 				mm.^implements += mt1
+
+				typesRegistry.registerImplementation(mm.fullyQualifiedName.toString, mt1)
 			]
 		]
 

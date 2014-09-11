@@ -9,8 +9,6 @@ import fr.inria.diverse.k3.sle.metamodel.k3sle.ModelTypingSpace
 import fr.inria.diverse.k3.sle.metamodel.k3sle.ResourceType
 import fr.inria.diverse.k3.sle.metamodel.k3sle.XbaseTransformation
 
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-
 import org.eclipse.xtext.util.internal.Stopwatches
 
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
@@ -19,7 +17,6 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 class TransformationInferrer
 {
 	@Inject extension JvmTypesBuilder
-	@Inject extension IQualifiedNameProvider
 	@Inject extension ASTHelper
 	@Inject extension NamingHelper
 
@@ -64,14 +61,6 @@ class TransformationInferrer
 									«ENDFOR»
 								«ENDFOR»
 							«ENDIF»
-
-							«FOR mt : mm.^implements»
-								fr.inria.diverse.k3.sle.lib.AdaptersRegistry.getInstance().registerAdapter(
-									"«mm.fullyQualifiedName»",
-									"«mt.fullyQualifiedName»",
-									«mm.adapterNameFor(mt)».class
-								) ;
-							«ENDFOR»
 						«ENDFOR»
 
 						org.eclipse.emf.ecore.resource.Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(

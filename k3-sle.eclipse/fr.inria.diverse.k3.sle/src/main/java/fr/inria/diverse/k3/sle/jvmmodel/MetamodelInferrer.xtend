@@ -7,6 +7,7 @@ import fr.inria.diverse.k3.sle.ast.ModelTypeExtensions
 import fr.inria.diverse.k3.sle.ast.NamingHelper
 
 import fr.inria.diverse.k3.sle.lib.EcoreExtensions
+import fr.inria.diverse.k3.sle.lib.IMetamodel
 
 import fr.inria.diverse.k3.sle.metamodel.k3sle.Metamodel
 
@@ -37,6 +38,8 @@ class MetamodelInferrer
 
 		acceptor.accept(mm.toClass(mm.fullyQualifiedName.normalize.toString))
 		.initializeLater[
+			superTypes += mm.newTypeRef(IMetamodel)
+
 			members += mm.toField("resource",  mm.newTypeRef(Resource))
 			members += mm.toGetter("resource", mm.newTypeRef(Resource))
 			members += mm.toSetter("resource", mm.newTypeRef(Resource))
@@ -49,19 +52,6 @@ class MetamodelInferrer
 						«adapName» adaptee = new «adapName»() ;
 						adaptee.setAdaptee(resource) ;
 						return adaptee ;
-					'''
-				]
-
-				members += mm.toMethod("load", mm.newTypeRef(mm.fullyQualifiedName.normalize.toString))[
-					^static = true
-					parameters += mm.toParameter("uri", mm.newTypeRef(String))
-
-					body = '''
-						org.eclipse.emf.ecore.resource.ResourceSet rs = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl() ;
-						Resource res = rs.getResource(org.eclipse.emf.common.util.URI.createURI(uri), true) ;
-						«mm.name» mm = new «mm.name»() ;
-						mm.setResource(res) ;
-						return mm ;
 					'''
 				]
 			]
