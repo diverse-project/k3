@@ -31,12 +31,10 @@ class K3SLESynonymTypesProvider extends SynonymTypesProvider
 
 	override collectCustomSynonymTypes(LightweightTypeReference type, Acceptor acceptor) {
 		typesRegistry.getImplementations(type.identifier).forEach[mt |
-			println("annouceModelType("+type.simpleName+", "+mt.name+")")
 			announceModelType(type.owner, mt.fullyQualifiedName.toString, acceptor)
 		]
 
 		typesRegistry.getSubtypings(type.identifier).forEach[mt |
-			println("annouceModelType("+type.simpleName+", "+mt.name+")")
 			announceModelType(type.owner, mt.fullyQualifiedName.toString, acceptor)
 		]
 
