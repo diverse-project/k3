@@ -33,7 +33,7 @@ public class ValeurImpl extends EltExpImpl implements Valeur {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Double VALEUR_EDEFAULT = null;
+	protected static final double VALEUR_EDEFAULT = 0.0;
 
 	/**
 	 * The cached value of the '{@link #getValeur() <em>Valeur</em>}' attribute.
@@ -43,7 +43,7 @@ public class ValeurImpl extends EltExpImpl implements Valeur {
 	 * @generated
 	 * @ordered
 	 */
-	protected Double valeur = VALEUR_EDEFAULT;
+	protected double valeur = VALEUR_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -69,7 +69,7 @@ public class ValeurImpl extends EltExpImpl implements Valeur {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Double getValeur() {
+	public double getValeur() {
 		return valeur;
 	}
 
@@ -78,8 +78,8 @@ public class ValeurImpl extends EltExpImpl implements Valeur {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setValeur(Double newValeur) {
-		Double oldValeur = valeur;
+	public void setValeur(double newValeur) {
+		double oldValeur = valeur;
 		valeur = newValeur;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ExpArithmPackage.VALEUR__VALEUR, oldValeur, valeur));
@@ -138,7 +138,7 @@ public class ValeurImpl extends EltExpImpl implements Valeur {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ExpArithmPackage.VALEUR__VALEUR:
-				return VALEUR_EDEFAULT == null ? valeur != null : !VALEUR_EDEFAULT.equals(valeur);
+				return valeur != VALEUR_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

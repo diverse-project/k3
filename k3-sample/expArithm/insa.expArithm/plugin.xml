@@ -8,7 +8,7 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://expArithm"
+            uri="http://insa.expArithm"
             class="expArithm.ExpArithmPackage"
             genModel="metamodel/expArithm.genmodel"/>
    </extension>

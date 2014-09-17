@@ -5,7 +5,6 @@
     copyrightFields="false">
   <foreignModel>expArithm.ecore</foreignModel>
   <genPackages prefix="ExpArithm" disposableProviderFactory="true" ecorePackage="expArithm.ecore#/">
-    <genDataTypes ecoreDataType="expArithm.ecore#//double"/>
     <genClasses ecoreClass="expArithm.ecore#//ExpressionArithm">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expArithm.ecore#//ExpressionArithm/racine"/>
     </genClasses>

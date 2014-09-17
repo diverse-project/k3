@@ -38,7 +38,7 @@ public interface ExpArithmPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://expArithm";
+	String eNS_URI = "http://insa.expArithm";
 
 	/**
 	 * The package namespace name.
@@ -317,17 +317,6 @@ public interface ExpArithmPackage extends EPackage {
 	int DIVISION_FEATURE_COUNT = OPERATEUR_BINAIRE_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '<em>double</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.lang.Double
-	 * @see expArithm.impl.ExpArithmPackageImpl#getdouble()
-	 * @generated
-	 */
-	int DOUBLE = 8;
-
-
-	/**
 	 * Returns the meta object for class '{@link expArithm.ExpressionArithm <em>Expression Arithm</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -450,17 +439,6 @@ public interface ExpArithmPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getDivision();
-
-	/**
-	 * Returns the meta object for data type '{@link java.lang.Double <em>double</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>double</em>'.
-	 * @see java.lang.Double
-	 * @model instanceClass="java.lang.Double"
-	 * @generated
-	 */
-	EDataType getdouble();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -595,16 +573,6 @@ public interface ExpArithmPackage extends EPackage {
 		 * @generated
 		 */
 		EClass DIVISION = eINSTANCE.getDivision();
-
-		/**
-		 * The meta object literal for the '<em>double</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.lang.Double
-		 * @see expArithm.impl.ExpArithmPackageImpl#getdouble()
-		 * @generated
-		 */
-		EDataType DOUBLE = eINSTANCE.getdouble();
 
 	}
 

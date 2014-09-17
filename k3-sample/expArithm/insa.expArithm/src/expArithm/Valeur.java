@@ -29,12 +29,12 @@ public interface Valeur extends EltExp {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Valeur</em>' attribute.
-	 * @see #setValeur(Double)
+	 * @see #setValeur(double)
 	 * @see expArithm.ExpArithmPackage#getValeur_Valeur()
-	 * @model dataType="expArithm.double" required="true"
+	 * @model required="true"
 	 * @generated
 	 */
-	Double getValeur();
+	double getValeur();
 
 	/**
 	 * Sets the value of the '{@link expArithm.Valeur#getValeur <em>Valeur</em>}' attribute.
@@ -44,6 +44,6 @@ public interface Valeur extends EltExp {
 	 * @see #getValeur()
 	 * @generated
 	 */
-	void setValeur(Double value);
+	void setValeur(double value);
 
 } // Valeur
