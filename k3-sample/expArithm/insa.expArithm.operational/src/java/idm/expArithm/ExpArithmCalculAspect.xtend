@@ -8,8 +8,8 @@ import expArithm.Mult
 import expArithm.OperateurBinaire
 import expArithm.Plus
 import expArithm.Valeur
-import fr.inria.triskell.k3.Aspect
-import fr.inria.triskell.k3.OverrideAspectMethod
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
 import java.util.ArrayDeque
 
 // Defines the concept of computable
