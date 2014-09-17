@@ -1,18 +1,18 @@
 package lego
 
-import fr.inria.triskell.k3.Aspect
-import fr.inria.triskell.k3.OverrideAspectMethod
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
 import robot.FlotCtrl.AndExp
 import robot.FlotCtrl.Expression
 import robot.FlotCtrl.IfBlock
 import robot.FlotCtrl.NegExp
-import robot.robot.ProgramUnit
 import robot.FlotCtrl.WhileLoop
 import robot.robot.Bip
 import robot.robot.HasTurnedCmd
 import robot.robot.MoveCmd
 import robot.robot.ObstacleCmd
 import robot.robot.PrintCmd
+import robot.robot.ProgramUnit
 import robot.robot.SetTurnAngleCmd
 import robot.robot.StopEngineCmd
 import robot.robot.StopProgramCmd

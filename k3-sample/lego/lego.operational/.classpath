@@ -7,9 +7,9 @@
 	<classpathentry kind="con" path="org.eclipse.xtend.XTEND_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lego"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/fr.inria.diverse.k3.core"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore_2.9.1.v20130827-0309.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi_2.9.1.v20130827-0309.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.emf.common_2.9.1.v20130827-0309.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/fr.inria.diverse.k3.al.annotationprocessor"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
