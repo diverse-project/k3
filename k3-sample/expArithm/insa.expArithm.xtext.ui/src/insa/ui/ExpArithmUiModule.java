@@ -4,6 +4,8 @@
 package insa.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -11,5 +13,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 public class ExpArithmUiModule extends insa.ui.AbstractExpArithmUiModule {
 	public ExpArithmUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
+	}
+	
+	public Class<? extends IHighlightingConfiguration> bindIHighlightingConfiguration () {
+		return ExpHighlightingConfiguration.class;
+	}
+	 
+	public Class<? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator(){
+		return ExpHighlightingCalculator.class;
 	}
 }

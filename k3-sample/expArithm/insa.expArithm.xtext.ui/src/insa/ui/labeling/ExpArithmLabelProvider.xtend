@@ -4,6 +4,10 @@
 package insa.ui.labeling
 
 import com.google.inject.Inject
+import expArithm.Plus
+import expArithm.Moins
+import expArithm.Mult
+import expArithm.Division
 
 /**
  * Provides labels for a EObjects.
@@ -17,13 +21,8 @@ class ExpArithmLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLa
 		super(delegate);
 	}
 
-	// Labels and icons can be computed like this:
-	
-//	def text(Greeting ele) {
-//		'A greeting to ' + ele.name
-//	}
-//
-//	def image(Greeting ele) {
-//		'Greeting.gif'
-//	}
+	def text(Plus sc) {"Plus"}
+	def text(Moins sc) {"Minus"}
+	def text(Mult sc) {"Mult"}
+	def text(Division sc) {"Division"}
 }
