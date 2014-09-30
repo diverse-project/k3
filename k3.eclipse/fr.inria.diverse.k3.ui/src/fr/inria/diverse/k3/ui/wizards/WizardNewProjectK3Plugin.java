@@ -13,10 +13,19 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.pde.internal.ui.PDEPlugin;
+import org.eclipse.pde.internal.ui.elements.ElementList;
+import org.eclipse.pde.internal.ui.wizards.WizardElement;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -36,6 +45,7 @@ import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathPlugin;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathStandAlone;
 import fr.inria.diverse.k3.ui.wizards.pages.WizardPageCustomNewProjectK3Plugin;
 import fr.inria.diverse.k3.ui.wizards.pages.WizardPageNewProjectK3Plugin;
+import fr.inria.diverse.k3.ui.wizards.pages.pde.TemplateListSelectionPage;
 
 public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 
@@ -44,14 +54,20 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	WizardPageNewProjectK3Plugin 		projectPage			 = new WizardPageNewProjectK3Plugin(this.context);
 	WizardPageCustomNewProjectK3Plugin 	projectPageCustom	 = new WizardPageCustomNewProjectK3Plugin(this.context);
 	
+	TemplateListSelectionPage templateSelectionPage;
+	
 	public WizardNewProjectK3Plugin() {
-		
+		templateSelectionPage = new TemplateListSelectionPage(getAvailableCodegenWizards(), context, "&Available Templates:");
 	}
 	
 	@Override
 	public void addPages() {
 		addPage(projectPage);
 		addPage(projectPageCustom);
+				
+		addPage(templateSelectionPage);
+		
+		
 	}
 	
 	@Override
@@ -407,6 +423,42 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			if (basePackage != null)
 				context.basePackage = new ToolsString().generateListPackage(basePackage, (byte)46);
 		}
+	}
+	
+/*	protected WizardElement createWizardElement(IConfigurationElement config) {
+		String name = config.getAttribute(WizardElement.ATT_NAME);
+		String id = config.getAttribute(WizardElement.ATT_ID);
+		String className = config.getAttribute(WizardElement.ATT_CLASS);
+		if (name == null || id == null || className == null)
+			return null;
+		WizardElement element = new WizardElement(config);
+		String imageName = config.getAttribute(WizardElement.ATT_ICON);
+		if (imageName != null) {
+			String pluginID = config.getNamespaceIdentifier();
+			Image image = PDEPlugin.getDefault().getLabelProvider().getImageFromPlugin(pluginID, imageName);
+			element.setImage(image);
+		}
+		return element;
+	} */
+	public ElementList getAvailableCodegenWizards() {
+		ElementList wizards = new ElementList("CodegenWizards"); //$NON-NLS-1$
+		/*IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint point = registry.getExtensionPoint(PDEPlugin.getPluginId(), PLUGIN_POINT);
+		if (point == null)
+			return wizards;
+		IExtension[] extensions = point.getExtensions();
+		for (int i = 0; i < extensions.length; i++) {
+			IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+			for (int j = 0; j < elements.length; j++) {
+				if (elements[j].getName().equals(TAG_WIZARD)) {
+					WizardElement element = createWizardElement(elements[j]);
+					if (element != null) {
+						wizards.add(element);
+					}
+				}
+			}
+		}*/
+		return wizards;
 	}
 	
 }
