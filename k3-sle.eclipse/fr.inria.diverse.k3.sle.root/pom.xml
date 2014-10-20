@@ -8,6 +8,9 @@
 	<name>K3SLE Root Build Manager</name>
 	
 	<modules>
+		<module>../../k3-al/fr.inria.diverse.k3.al.root</module>
+		<module>../../k3-sle.examples/fr.inria.diverse.k3.sle.examples.metamodels.root</module>
+		<module>../../k3-tools/fr.inria.diverse.k3.tools.root</module>
 		<module>../fr.inria.diverse.k3.sle.lib</module>
 		<module>../fr.inria.diverse.k3.sle.metamodel</module>
 		<module>../fr.inria.diverse.k3.sle</module>
@@ -23,7 +26,7 @@
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 		<tycho.version>0.21.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtext.version>2.6.0</xtext.version>
+		<xtext.version>2.7.2</xtext.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->
 	</properties>
 

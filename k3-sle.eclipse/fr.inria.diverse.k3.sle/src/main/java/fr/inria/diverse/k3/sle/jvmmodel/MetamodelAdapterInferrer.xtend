@@ -2,7 +2,6 @@ package fr.inria.diverse.k3.sle.jvmmodel
 
 import com.google.inject.Inject
 
-import fr.inria.diverse.k3.sle.ast.ASTHelper
 import fr.inria.diverse.k3.sle.ast.MetamodelExtensions
 import fr.inria.diverse.k3.sle.ast.ModelTypeExtensions
 import fr.inria.diverse.k3.sle.ast.NamingHelper
@@ -25,32 +24,32 @@ import org.eclipse.xtext.util.internal.Stopwatches
 
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
 
 class MetamodelAdapterInferrer
 {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
-	@Inject extension ASTHelper
 	@Inject extension NamingHelper
 	@Inject extension ModelTypeExtensions
 	@Inject extension MetamodelExtensions
 	@Inject extension EcoreExtensions
 	@Inject extension K3SLETypesBuilder
 
-	def void generateAdapter(Metamodel mm, ModelType superType, IJvmDeclaredTypeAcceptor acceptor) {
+	def void generateAdapter(Metamodel mm, ModelType superType, IJvmDeclaredTypeAcceptor acceptor, extension JvmTypeReferenceBuilder builder) {
 		val task = Stopwatches.forTask('''MetamodelAdapterInferrer.generateAdapter(«mm.name», «superType.name»''')
 		task.start
 
 		acceptor.accept(mm.toClass(mm.factoryAdapterNameFor(superType)))
-		.initializeLater[
-			superTypes += mm.newTypeRef(superType.factoryName)
+		[
+			superTypes += superType.factoryName.typeRef
 
-			members += mm.toField("adaptersFactory", mm.newTypeRef(mm.getAdaptersFactoryNameFor(superType)))[
+			members += mm.toField("adaptersFactory", mm.getAdaptersFactoryNameFor(superType).typeRef)[
 				initializer = '''«mm.getAdaptersFactoryNameFor(superType)».getInstance()'''
 			]
 
 			mm.pkgs.forEach[pkg |
-				members += mm.toField(pkg.nsPrefix + "Adaptee", mm.newTypeRef(mm.getFactoryFqnFor(pkg)))[
+				members += mm.toField(pkg.nsPrefix + "Adaptee", mm.getFactoryFqnFor(pkg).typeRef)[
 					initializer = '''«mm.getFactoryFqnFor(pkg)».eINSTANCE'''
 				]
 			]
@@ -68,25 +67,25 @@ class MetamodelAdapterInferrer
 						'''
 				]
 
-				newCreate.returnType = superType.newTypeRef(cls, #[newCreate])
+				newCreate.returnType = superType.typeRef(cls, #[newCreate])
 				members += newCreate
 			]
 		]
 
 		acceptor.accept(mm.toClass(mm.adapterNameFor(superType)))
-		.initializeLater[
-			superTypes += mm.newTypeRef(GenericAdapter, mm.newTypeRef(Resource))
-			superTypes += mm.newTypeRef(superType.fullyQualifiedName.toString)
+		[
+			superTypes += GenericAdapter.typeRef(Resource.typeRef)
+			superTypes += superType.fullyQualifiedName.toString.typeRef
 
-			members += mm.toField("adaptee",  mm.newTypeRef(Resource))
-			members += mm.toGetter("adaptee", mm.newTypeRef(Resource))
-			members += mm.toSetter("adaptee", mm.newTypeRef(Resource))
+			members += mm.toField("adaptee",  Resource.typeRef)
+			members += mm.toGetter("adaptee", Resource.typeRef)
+			members += mm.toSetter("adaptee", Resource.typeRef)
 
-			members += mm.toField("adaptersFactory", mm.newTypeRef(mm.getAdaptersFactoryNameFor(superType)))[
+			members += mm.toField("adaptersFactory", mm.getAdaptersFactoryNameFor(superType).typeRef)[
 				initializer = '''«mm.getAdaptersFactoryNameFor(superType)».getInstance()'''
 			]
 
-			members += mm.toMethod("getContents", mm.newTypeRef(List, mm.newTypeRef(Object)))[
+			members += mm.toMethod("getContents", List.typeRef(Object.typeRef))[
 				body = '''
 						java.util.List<java.lang.Object> ret = new java.util.ArrayList<java.lang.Object>() ;
 
@@ -102,21 +101,21 @@ class MetamodelAdapterInferrer
 					'''
 			]
 
-			members += mm.toMethod("getFactory", mm.newTypeRef(superType.factoryName))[
+			members += mm.toMethod("getFactory", superType.factoryName.typeRef)[
 				body = '''
 						return new «mm.factoryAdapterNameFor(superType)»() ;
 					'''
 			]
 
-			members += mm.toMethod("save", mm.newTypeRef(Void.TYPE))[
-				parameters += mm.toParameter("uri", mm.newTypeRef(String))
+			members += mm.toMethod("save", Void::TYPE.typeRef)[
+				parameters += mm.toParameter("uri", String.typeRef)
 
 				body = '''
 					this.adaptee.setURI(org.eclipse.emf.common.util.URI.createURI(uri));
 					this.adaptee.save(null);
 				'''
 
-				exceptions += mm.newTypeRef(java.io.IOException)
+				exceptions += java.io.IOException.typeRef
 			]
 		]
 

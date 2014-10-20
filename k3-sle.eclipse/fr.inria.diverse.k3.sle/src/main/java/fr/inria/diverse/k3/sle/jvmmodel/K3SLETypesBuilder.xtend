@@ -1,6 +1,7 @@
 package fr.inria.diverse.k3.sle.jvmmodel
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 
 import fr.inria.diverse.k3.sle.ast.ModelTypeExtensions
 import fr.inria.diverse.k3.sle.ast.NamingHelper
@@ -25,50 +26,55 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.TypesFactory
 
 import org.eclipse.xtext.common.types.util.TypeReferences
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
+import org.eclipse.emf.ecore.resource.ResourceSet
 
-import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-
+@Singleton
 class K3SLETypesBuilder
 {
 	@Inject extension EcoreExtensions
 	@Inject extension ModelTypeExtensions
-	@Inject extension JvmTypesBuilder
 	@Inject extension NamingHelper
 	@Inject TypeReferences typeReferences
+	@Inject JvmTypeReferenceBuilder$Factory builderFactory
+	@Inject extension JvmTypeReferenceBuilder builder
 
-	def dispatch JvmTypeReference newTypeRef(ModelType ctx, ETypedElement f, Iterable<JvmTypeParameterDeclarator> decl) {
+	def void setContext(ResourceSet rs) {
+		builder = builderFactory.create(rs)
+	}
+
+	def dispatch JvmTypeReference typeRef(ModelType ctx, ETypedElement f, Iterable<JvmTypeParameterDeclarator> decl) {
 		val baseType =
 			switch (f) {
 				case f.EGenericType !== null:
-					ctx.newTypeRef(f.EGenericType, decl)
+					ctx.typeRef(f.EGenericType, decl)
 				case f.EType !== null:
-					ctx.newTypeRef(f.EType, decl)
+					ctx.typeRef(f.EType, decl)
 				EOperation:
-					ctx.newTypeRef(Void.TYPE)
+					Void::TYPE.typeRef
 				default:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 			}
 
-		return if (f.many) ctx.newTypeRef(List, baseType) else baseType
+		return if (f.many) List.typeRef(baseType) else baseType
 	}
 
-	def dispatch JvmTypeReference newTypeRef(ModelType ctx, EGenericType t, Iterable<JvmTypeParameterDeclarator> decl) {
+	def dispatch JvmTypeReference typeRef(ModelType ctx, EGenericType t, Iterable<JvmTypeParameterDeclarator> decl) {
 		return
 			if (t.ETypeParameter !== null)
 				decl.createTypeParameterReference(t.ETypeParameter.name)
 			else if (!t.ETypeArguments.empty)
-				ctx.newTypeRef(
-					ctx.getFqnFor(t.EClassifier),
+				ctx.getFqnFor(t.EClassifier).typeRef(
 					t.ETypeArguments.map[ta |
 						if (ta.EClassifier !== null)
 							// FIXME: Generic types can not be abstracted for now
 							//        Uncomment when solved
 							//
-							//ctx.newTypeRef(ta.EClassifier, decl)
+							//typeRef(ta.EClassifier, decl)
 							if (ctx.isExtracted)
-								ctx.newTypeRef(ctx.extracted.getFqnFor(ta.EClassifier))
+								ctx.extracted.getFqnFor(ta.EClassifier).typeRef
 							else
-								ctx.newTypeRef(ta.EClassifier, decl)
+								ctx.typeRef(ta.EClassifier, decl)
 						else if (ta.ETypeParameter !== null)
 							decl.createTypeParameterReference(ta.ETypeParameter.name)
 						else
@@ -76,94 +82,94 @@ class K3SLETypesBuilder
 					]
 				)
 			else if (t.EClassifier !== null)
-				ctx.newTypeRef(t.EClassifier, decl)
+				ctx.typeRef(t.EClassifier, decl)
 			else
-				ctx.newTypeRef(Object)
+				Object.typeRef
 	}
 
-	def dispatch JvmTypeReference newTypeRef(ModelType ctx, EClassifier cls, Iterable<JvmTypeParameterDeclarator> decl) {
+	def dispatch JvmTypeReference typeRef(ModelType ctx, EClassifier cls, Iterable<JvmTypeParameterDeclarator> decl) {
 		return
 			switch (cls) {
 				case null:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 				EClass:
 					if (!cls.ETypeParameters.empty)
-						ctx.newTypeRef(
-							ctx.interfaceNameFor(cls),
+						ctx.interfaceNameFor(cls).typeRef(
 							cls.ETypeParameters.map[p | decl.createTypeParameterReference(p.name)]
 						)
 					else if (cls.abstractable)
-						ctx.newTypeRef(ctx.interfaceNameFor(cls))
+						ctx.interfaceNameFor(cls).typeRef
 					else if (cls.instanceClass !== null)
-						ctx.newTypeRef(cls.instanceClass.name)
+						cls.instanceClass.name.typeRef
 					else if (cls.instanceTypeName !== null)
-						ctx.newTypeRef(cls.instanceTypeName)
+						cls.instanceTypeName.typeRef
 				EEnum:
-					ctx.newTypeRef(ctx.getFqnFor(cls))
+					ctx.getFqnFor(cls).typeRef
 				EDataType:
 					if (cls.instanceClass !== null)
-						ctx.newTypeRef(cls.instanceClass.name)
+						cls.instanceClass.name.typeRef
 					else if (cls.instanceTypeName !== null)
-						ctx.newTypeRef(cls.instanceTypeName)
+						cls.instanceTypeName.typeRef
 				default:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 			}
 	}
 
-	def dispatch JvmTypeReference newTypeRef(Metamodel ctx, EClassifier cls, Iterable<JvmTypeParameterDeclarator> decl) {
+	def dispatch JvmTypeReference typeRef(Metamodel ctx, EClassifier cls, Iterable<JvmTypeParameterDeclarator> decl) {
 		return
 			switch (cls) {
 				case null:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 				EClass:
 					if (!cls.ETypeParameters.empty)
-						ctx.newTypeRef(
-							ctx.getFqnFor(cls),
+						ctx.getFqnFor(cls).typeRef(
 							cls.ETypeParameters.map[p | decl.createTypeParameterReference(p.name)]
 						)
 					else if (cls.abstractable)
-						ctx.newTypeRef(ctx.getFqnFor(cls))
+						ctx.getFqnFor(cls).typeRef
 					else if (cls.instanceClass !== null)
-						ctx.newTypeRef(cls.instanceClass.name)
+						cls.instanceClass.name.typeRef
 					else if (cls.instanceTypeName !== null)
-						ctx.newTypeRef(cls.instanceTypeName)
+						cls.instanceTypeName.typeRef
 				EEnum:
-					ctx.newTypeRef(ctx.getFqnFor(cls))
+					ctx.getFqnFor(cls).typeRef
 				EDataType:
 					if (cls.instanceClass !== null)
-						ctx.newTypeRef(cls.instanceClass.name)
+						cls.instanceClass.name.typeRef
 					else if (cls.instanceTypeName !== null)
-						ctx.newTypeRef(cls.instanceTypeName)
+						cls.instanceTypeName.typeRef
 				default:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 			}
 	}
 
-	def dispatch JvmTypeReference newTypeRef(Metamodel ctx, Metamodel sup, EClassifier cls) {
+	def dispatch JvmTypeReference typeRef(Metamodel ctx, Metamodel sup, EClassifier cls) {
 		return
 			switch (cls) {
 				case null:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 				EClass:
 					if (cls.abstractable)
-						ctx.newTypeRef(ctx.adapterNameFor(sup, cls))
+						ctx.adapterNameFor(sup, cls).typeRef
 					else if (cls.instanceClass !== null)
-						ctx.newTypeRef(cls.instanceClass.name)
+						cls.instanceClass.name.typeRef
 					else if (cls.instanceTypeName !== null)
-						ctx.newTypeRef(cls.instanceTypeName)
+						cls.instanceTypeName.typeRef
 				EEnum:
-					ctx.newTypeRef(sup.getFqnFor(cls))
+					sup.getFqnFor(cls).typeRef
 				EDataType:
 					if (cls.instanceClass !== null)
-						ctx.newTypeRef(cls.instanceClass.name)
+						cls.instanceClass.name.typeRef
 					else if (cls.instanceTypeName !== null)
-						ctx.newTypeRef(cls.instanceTypeName)
+						cls.instanceTypeName.typeRef
 				default:
-					ctx.newTypeRef(Object)
+					Object.typeRef
 			}
 	}
 
 	def JvmTypeReference createTypeParameterReference(JvmTypeParameterDeclarator[] lst, String find) {
-		return typeReferences.createTypeRef(lst.map[typeParameters].flatten.findFirst[name == find])
+		val findRef = lst.map[typeParameters].flatten.findFirst[name == find]
+		
+		return if (findRef !== null) typeReferences.createTypeRef(findRef) else Object.typeRef
 	}
 }

@@ -15,6 +15,7 @@ import org.eclipse.xtext.util.internal.Stopwatches
 
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
 
 class TransformationInferrer
 {
@@ -23,13 +24,13 @@ class TransformationInferrer
 	@Inject extension ASTHelper
 	@Inject extension NamingHelper
 
-	def void generateTransformation(XbaseTransformation transfo, IJvmDeclaredTypeAcceptor acceptor) {
+	def void generateTransformation(XbaseTransformation transfo, IJvmDeclaredTypeAcceptor acceptor, extension JvmTypeReferenceBuilder builder) {
 		val task = Stopwatches.forTask('''TransformationInferrer.generateTransformation(«transfo.name»)''')
 		task.start
 
 		acceptor.accept(transfo.toClass(transfo.className.toString))
-		.initializeLater[
-			val returnType = transfo.returnTypeRef ?: transfo.newTypeRef(Void.TYPE)
+		[
+			val returnType = transfo.returnTypeRef ?: Void::TYPE.typeRef
 
 			members += transfo.toMethod("call", returnType)[
 				^static = true
@@ -42,10 +43,10 @@ class TransformationInferrer
 			]
 
 			if (transfo.main) {
-				members += transfo.toMethod("main", transfo.newTypeRef(Void.TYPE))[
+				members += transfo.toMethod("main", Void::TYPE.typeRef)[
 					^static = true
 
-					parameters += transfo.toParameter("args", transfo.newTypeRef(String).addArrayTypeDimension)
+					parameters += transfo.toParameter("args", String.typeRef.addArrayTypeDimension)
 
 					val root = transfo.eContainer as ModelTypingSpace
 

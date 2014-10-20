@@ -18,6 +18,7 @@ import org.eclipse.xtext.util.internal.Stopwatches
 
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
 
 class MetamodelInferrer
 {
@@ -31,20 +32,20 @@ class MetamodelInferrer
 	@Inject extension MetaclassAdapterInferrer
 	@Inject extension InheritanceAdapterInferrer
 
-	def void generateAdapters(Metamodel mm, IJvmDeclaredTypeAcceptor acceptor) {
+	def void generateAdapters(Metamodel mm, IJvmDeclaredTypeAcceptor acceptor, extension JvmTypeReferenceBuilder builder) {
 		val task = Stopwatches.forTask('''MetamodelInferrer.generateAdapters(«mm.name»)''')
 		task.start
 
 		acceptor.accept(mm.toClass(mm.fullyQualifiedName.normalize.toString))
-		.initializeLater[
-			members += mm.toField("resource",  mm.newTypeRef(Resource))
-			members += mm.toGetter("resource", mm.newTypeRef(Resource))
-			members += mm.toSetter("resource", mm.newTypeRef(Resource))
+		[
+			members += mm.toField("resource",  Resource.typeRef)
+			members += mm.toGetter("resource", Resource.typeRef)
+			members += mm.toSetter("resource", Resource.typeRef)
 
 			mm.^implements.forEach[mt |
 				val adapName = mm.adapterNameFor(mt)
 
-				members += mm.toMethod("to" + mt.name, mm.newTypeRef(mt.fullyQualifiedName.toString))[
+				members += mm.toMethod("to" + mt.name, mt.fullyQualifiedName.toString.typeRef)[
 					body = '''
 						«adapName» adaptee = new «adapName»() ;
 						adaptee.setAdaptee(resource) ;
@@ -52,9 +53,9 @@ class MetamodelInferrer
 					'''
 				]
 
-				members += mm.toMethod("load", mm.newTypeRef(mm.fullyQualifiedName.normalize.toString))[
+				members += mm.toMethod("load", mm.fullyQualifiedName.normalize.toString.typeRef)[
 					^static = true
-					parameters += mm.toParameter("uri", mm.newTypeRef(String))
+					parameters += mm.toParameter("uri", String.typeRef)
 
 					body = '''
 						org.eclipse.emf.ecore.resource.ResourceSet rs = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl() ;
@@ -69,18 +70,18 @@ class MetamodelInferrer
 
 		// TODO: Test when the subtype has more classes than the supertype and vice-versa
 		mm.^implements.forEach[mt |
-			mm.generateAdapter(mt, acceptor)
+			mm.generateAdapter(mt, acceptor, builder)
 
 			mt.allClasses.filter[abstractable].forEach[cls |
-				mm.generateAdapter(mt, cls, acceptor)
+				mm.generateAdapter(mt, cls, acceptor, builder)
 			]
 
 			val adapFactName = mm.getAdaptersFactoryNameFor(mt)
 			acceptor.accept(mm.toClass(adapFactName))
-			.initializeLater[
-				members += mm.toField("instance", mm.newTypeRef(adapFactName))[static = true]
+			[
+				members += mm.toField("instance", adapFactName.typeRef)[static = true]
 
-				members += mm.toMethod("getInstance", mm.newTypeRef(adapFactName))[
+				members += mm.toMethod("getInstance", adapFactName.typeRef)[
 					static = true
 					body = '''
 						if (instance == null) {
@@ -93,8 +94,8 @@ class MetamodelInferrer
 				mt.allClasses.filter[abstractable].forEach[cls |
 					val adapName = mm.adapterNameFor(mt, cls)
 
-					members += mm.toMethod('''create«cls.name»Adapter''', mm.newTypeRef(adapName))[
-						parameters += mm.toParameter("adaptee", mm.newTypeRef(mm.getFqnFor(cls)))
+					members += mm.toMethod('''create«cls.name»Adapter''', adapName.typeRef)[
+						parameters += mm.toParameter("adaptee", mm.getFqnFor(cls).typeRef)
 
 						body = '''
 							«adapName» adap = new «adapName»() ;
@@ -107,7 +108,7 @@ class MetamodelInferrer
 		]
 
 		if (mm.hasSuperMetamodel)
-			mm.generateAdapters(mm.inheritanceRelation.superMetamodel, acceptor)
+			mm.generateAdapters(mm.inheritanceRelation.superMetamodel, acceptor, builder)
 
 		task.stop
 	}

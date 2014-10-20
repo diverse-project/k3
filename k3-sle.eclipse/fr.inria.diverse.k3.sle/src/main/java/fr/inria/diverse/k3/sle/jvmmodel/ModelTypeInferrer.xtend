@@ -21,6 +21,7 @@ import org.eclipse.xtext.util.internal.Stopwatches
 
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
 
 class ModelTypeInferrer
 {
@@ -33,30 +34,30 @@ class ModelTypeInferrer
 	@Inject extension EnumInferrer
 	@Inject extension MetaclassInterfaceInferrer
 
-	def void generateInterfaces(ModelType mt, IJvmDeclaredTypeAcceptor acceptor) {
+	def void generateInterfaces(ModelType mt, IJvmDeclaredTypeAcceptor acceptor, extension JvmTypeReferenceBuilder builder) {
 		val task = Stopwatches.forTask('''ModelTypeInferrer.generateInterfaces(«mt.name»)''')
 		task.start
 
 		acceptor.accept(mt.toInterface(mt.fullyQualifiedName.toString)[
-			superTypes += mt.newTypeRef(IModelType)
+			superTypes += IModelType.typeRef
 
-			members += mt.toMethod("getContents", mt.newTypeRef(List, mt.newTypeRef(Object)))[
+			members += mt.toMethod("getContents", List.typeRef(Object.typeRef))[
 				^abstract = true
 			]
 
-			members += mt.toMethod("getFactory", mt.newTypeRef(mt.factoryName))[
+			members += mt.toMethod("getFactory", mt.factoryName.typeRef)[
 				^abstract = true
 			]
 
-			members += mt.toMethod("save", mt.newTypeRef(Void.TYPE))[
-				parameters += mt.toParameter("uri", mt.newTypeRef(String))
+			members += mt.toMethod("save", Void::TYPE.typeRef)[
+				parameters += mt.toParameter("uri", String.typeRef)
 
-				exceptions += mt.newTypeRef(java.io.IOException)
+				exceptions += java.io.IOException.typeRef
 			]
 		])
 
 		acceptor.accept(mt.toInterface(mt.factoryName)[
-			superTypes += mt.newTypeRef(IFactory)
+			superTypes += IFactory.typeRef
 
 			mt.allClasses.filter[instantiable].forEach[cls |
 				members += mt.toMethod("create" + cls.name, null)[m |
@@ -66,18 +67,18 @@ class ModelTypeInferrer
 						m.typeParameters += TypesFactory.eINSTANCE.createJvmTypeParameter => [it.name = t.name]
 					]
 				] => [m |
-					m.returnType = mt.newTypeRef(cls, #[m])
+					m.returnType = mt.typeRef(cls, #[m])
 				]
 			]
 		])
 
 		mt.allClasses.filter[abstractable].forEach[cls |
-			mt.generateInterface(cls, acceptor)
+			mt.generateInterface(cls, acceptor, builder)
 		]
 
 		if (mt.isImported)
 			mt.allEnums.forEach[enu |
-				mt.generateEnum(enu, acceptor)
+				mt.generateEnum(enu, acceptor, builder)
 			]
 
 		task.stop

@@ -1,6 +1,7 @@
 package fr.inria.diverse.k3.sle.jvmmodel
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 
 import java.util.List
 
@@ -14,17 +15,24 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 
-import org.eclipse.xtext.xbase.typesystem.legacy.StandardTypeReferenceOwner
-
 import org.eclipse.xtext.xbase.typesystem.references.LightweightTypeReference
-import org.eclipse.xtext.xbase.typesystem.references.OwnedConverter
+import org.eclipse.xtext.xbase.typesystem.references.StandardTypeReferenceOwner
 
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypeReferenceBuilder
+import org.eclipse.emf.ecore.resource.ResourceSet
 
+@Singleton
 class JvmModelInferrerHelper
 {
+	@Inject JvmTypeReferenceBuilder$Factory builderFactory
+	@Inject extension JvmTypeReferenceBuilder builder
 	@Inject extension JvmTypesBuilder
 	@Inject CommonTypeComputationServices services
+
+	def void setContext(ResourceSet rs) {
+		builder = builderFactory.create(rs)
+	}
 
 	/*--- Getters / Setters  ---*/
 	def JvmOperation toGetterSignature(EStructuralFeature f, String name, JvmTypeReference type) {
@@ -59,7 +67,7 @@ class JvmModelInferrerHelper
 	}
 
 	def JvmOperation toUnsetter(EStructuralFeature f, String name) {
-		val s = f.toMethod("unset" + name.toFirstUpper, f.newTypeRef(Void.TYPE))[
+		val s = f.toMethod("unset" + name.toFirstUpper, Void::TYPE.typeRef)[
 			body = '''
 				adaptee.unset«name.toFirstUpper»() ;
 			'''
@@ -69,7 +77,7 @@ class JvmModelInferrerHelper
 	}
 
 	def JvmOperation toUnsetterCheck(EStructuralFeature f, String name) {
-		val s = f.toMethod("isSet" + name.toFirstUpper, f.newTypeRef(Boolean.TYPE))[
+		val s = f.toMethod("isSet" + name.toFirstUpper, Boolean::TYPE.typeRef)[
 			body = '''
 				return adaptee.isSet«name.toFirstUpper»() ;
 			'''
@@ -100,8 +108,7 @@ class JvmModelInferrerHelper
 	}
 
 	def LightweightTypeReference toLightweightTypeReference(JvmTypeReference typeRef, Resource context) {
-		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, context))
-		return converter.toLightweightReference(typeRef)
+		return new StandardTypeReferenceOwner(services, context).toLightweightTypeReference(typeRef)
 	}
 
 	def boolean parameterEquals(List<JvmFormalParameter> p1, List<JvmFormalParameter> p2) {

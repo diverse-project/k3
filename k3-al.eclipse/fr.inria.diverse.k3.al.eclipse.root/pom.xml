@@ -13,12 +13,12 @@
 
 
 	<properties>
-		<tycho.version>0.19.0</tycho.version>
-		<tycho-extras.version>0.19.0</tycho-extras.version>
+		<tycho.version>0.21.0</tycho.version>
+		<tycho-extras.version>0.21.0</tycho-extras.version>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler/</kepler-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
-		<xtend.version>2.6.0</xtend.version>
+		<xtend.version>2.7.2</xtend.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->
 	</properties>
 
