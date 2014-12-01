@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Annotationprocessor
+Bundle-SymbolicName: fr.inria.diverse.k3.al.annotationprocessor.plugin
+Bundle-Version: 3.0.0.qualifier
+Export-Package: fr.inria.diverse.k3.al.annotationprocessor
