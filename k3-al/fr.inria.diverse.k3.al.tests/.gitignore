@@ -3,3 +3,5 @@
 /.project
 /.classpath
 /META-INF
+/src/main/generated-sources
+/src/test/generated-sources

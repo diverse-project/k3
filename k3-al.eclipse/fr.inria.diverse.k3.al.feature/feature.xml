@@ -2,7 +2,7 @@
 <feature
       id="fr.inria.diverse.k3.al.feature"
       label="K3 AL feature"
-      version="3.0.0.qualifier">
+      version="3.1.0.qualifier">
 
    <description url="https://github.com/barais/k3/">
       K3 Action Language Project
