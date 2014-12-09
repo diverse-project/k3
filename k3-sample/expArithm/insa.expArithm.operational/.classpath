@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore_2.9.1.v20130827-0309.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi_2.9.1.v20130827-0309.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.emf.common_2.9.1.v20130827-0309.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/fr.inria.diverse.k3.al.annotationprocessor"/>
 	<classpathentry kind="con" path="org.eclipse.xtend.XTEND_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/fr.inria.diverse.k3.al.annotationprocessor-3.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
