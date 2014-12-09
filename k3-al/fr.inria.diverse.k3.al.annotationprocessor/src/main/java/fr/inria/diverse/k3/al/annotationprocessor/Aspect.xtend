@@ -705,7 +705,7 @@ val gemochack = '''try {
  
 		//Sort Dispatchmethod entries values by hierarchy of their containing classes
 		for (m : dispatchmethod.keySet) {
-			val l = dispatchmethod.get(m).sort(new SortMethod(context))
+			val l = dispatchmethod.get(m).sortWith(new SortMethod(context))
 			dispatchmethod.get(m).clear
 			dispatchmethod.get(m).addAll(l)
 			//context.addWarning(mclasses.get(0),dispatchmethod.get(m).size.toString + " "+ mclasses.size)
