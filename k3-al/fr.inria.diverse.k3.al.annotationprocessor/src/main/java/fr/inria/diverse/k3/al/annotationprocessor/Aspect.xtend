@@ -23,6 +23,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.expression.Expression
+import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 
 @Active(typeof(AspectProcessor)) 
 public annotation Aspect {
@@ -246,7 +247,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	{
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
-		val ret = getReturnInstruction(m, cxt, transactionSupport)				
+		val ret = getReturnInstruction(m, cxt, transactionSupport)
 		val call = new StringBuilder
 
 			//cxt.addError(m, ""+ dispatchmethod.size)
@@ -267,46 +268,69 @@ public class AspectProcessor extends AbstractClassProcessor
 //								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
 //						i=i+1
 //					}
-
-			val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
-«ret» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«s.replaceFirst(SELF_VAR_NAME,
-				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»);
-} else «ENDFOR»'''
+			val ifst = transformIfStatements(m, cxt, declTypes, s, ret, transactionSupport)
 			call.append(ifst).append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		}
-		else call.append('''«PRIV_PREFIX+m.simpleName»(«s»)''') //for getters & setters
-
+		else 
+		{
+			val instruction = transformNormalStatement(m, cxt, s, transactionSupport)
+			call.append(instruction) //for getters & setters
+		}
 		m.abstract = false
 				
 			
 	    m.body = [
 	    			getBody(clazz, className, call.toString, transactionSupport, ret)		
 	    		]
-		
-//		m.body = ['''
-//		org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain = org.eclipse.emf.transaction.TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(_self.eResource().getResourceSet());
-//		Object res = null;
-//		org.eclipse.emf.transaction.RecordingCommand command = new org.eclipse.emf.transaction.RecordingCommand(editingDomain) 
-//			{
-//				private java.util.List<Object> result = new java.util.ArrayList<Object>();
-//				
-//				@Override
-//				protected void doExecute() {
-//					«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-//					«IF ret.contains("return")»
-//					result.add(«call.toString»);
-//					«ELSE»
-//					«call.toString»;
-//					«ENDIF»					
-//				}
-//							
-//				@Override
-//				public java.util.Collection<?> getResult() {
-//					return result;
-//		        }
-//		};
-//		editingDomain.getCommandStack().execute(command);
-//		«ret»''']
+	}
+	
+	private def hasReturnType(MutableMethodDeclaration declaration, extension TransformationContext cxt)
+	{
+		return (declaration.returnType != newTypeReference("void"))
+	}
+	
+	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt, List<TypeDeclaration> declTypes, String parameters, String returnStatement, TransactionSupport transactionSupport)
+	{
+		var retBegin = ""
+		var retEnd = ""
+		if (returnStatement.contains("return")) 
+		{
+			switch(transactionSupport)
+			{
+				case TransactionSupport.None:
+					retBegin = "result ="
+				case TransactionSupport.EMF:
+				{
+					retBegin = "result.add("
+					retEnd = ")"
+				}
+			}			
+		}
+		val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+«retBegin» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
+				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)«retEnd»;
+} else «ENDFOR»'''
+		return ifst
+	}
+	
+	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt, String parameters, TransactionSupport transactionSupport)
+	{
+		var retBegin = ""
+		var retEnd = ""
+		if (hasReturnType(declaration, cxt))
+		{
+			switch(transactionSupport)
+			{
+				case TransactionSupport.None:
+					retBegin = "result ="
+				case TransactionSupport.EMF:
+				{
+					retBegin = "result.add("
+					retEnd = ")"
+				}
+			}			
+		}
+		return '''«retBegin»«PRIV_PREFIX+declaration.simpleName»(«parameters»)«retEnd»'''
 	}
 	
 	private	def getReturnInstruction(MutableMethodDeclaration declaration, 
@@ -314,7 +338,7 @@ public class AspectProcessor extends AbstractClassProcessor
 									TransactionSupport transactionSupport) 
 	{
 		var ret = ""
-		if (declaration.returnType != newTypeReference("void"))
+		if (hasReturnType(declaration, cxt))
 		{
 			if (transactionSupport.equals(TransactionSupport.EMF)) 
 			{
@@ -361,11 +385,7 @@ public class AspectProcessor extends AbstractClassProcessor
 						@Override
 						protected void doExecute() {
 							«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-							«IF returnStatement.contains("return")»
-							result.add(«call.toString»);
-							«ELSE»
 							«call.toString»;
-							«ENDIF»					
 						}
 									
 						@Override
@@ -384,9 +404,8 @@ public class AspectProcessor extends AbstractClassProcessor
 	{
 		return '''
 				«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-				Object result = null;
 				«IF returnStatement.contains("return")»
-					result = 
+					Object result = null;
 				«ENDIF»		
 				«call.toString»;			
 				«returnStatement»'''
