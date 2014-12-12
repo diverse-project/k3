@@ -25,6 +25,9 @@ abstract class Helper {
 	/** The name of the parameter 'className' of the annotation aspect. */
 	public static val String annotationName = "className"
 	
+	/** The name of the parameter 'transactionSupport' of the annotation aspect. */
+	public static val String annotationTransactionSupportName = "transactionSupport" 
+	
 	/**
 	 * Sorts the given classes following the inheritance order. Top classes are sorted at the end and
 	 * down classes are sorted the beginning.
@@ -185,7 +188,17 @@ abstract class Helper {
 			return annot.getClassValue(annotationName)
 		}catch(NullPointerException ex){ return null }
 	}
+
 	
+	static def TransactionSupport getAnnotationTransactionSupport(TypeDeclaration cl) {
+		if(cl===null || cl.annotations===null) return TransactionSupport.None;
+		try{
+			val annot = cl.annotations.findFirst[getClassValue(annotationName) !== null]
+			if(annot===null) return TransactionSupport.None
+			return TransactionSupport.valueOf(annot.getEnumValue(annotationTransactionSupportName).simpleName)
+		}catch(NullPointerException ex){ return TransactionSupport.None }
+	}
+
 
 	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. */
 	static def String getAspectedClassName(TypeDeclaration clazz) {
