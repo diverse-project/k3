@@ -221,6 +221,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	{
 		// Make PRIV_PREFIX+methodName as a copy of the method
 		clazz.addMethod(PRIV_PREFIX + m.simpleName, [
+				primarySourceElement = m
 				visibility = Visibility::PROTECTED
 				static = true
 				abstract = false
@@ -523,8 +524,12 @@ public class AspectProcessor extends AbstractClassProcessor
 		if (holderClass === null)
 			return;
 
+		holderClass.primarySourceElement = clazz
 		holderClass.visibility = Visibility::PUBLIC
-		holderClass.addConstructor [visibility = Visibility::PRIVATE]
+		holderClass.addConstructor [
+			visibility = Visibility::PRIVATE
+			primarySourceElement = clazz
+		]
 
 		holderClass.addField('INSTANCE') [
 			visibility = Visibility::PUBLIC
@@ -532,6 +537,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			final = true
 			type = holderClass.newTypeReference
 			initializer = ['''new «holderClass.simpleName»()''']
+			primarySourceElement = clazz
 		]
 
 		holderClass.addMethod('getSelf') [
@@ -544,22 +550,26 @@ public class AspectProcessor extends AbstractClassProcessor
 			INSTANCE.map.put(_self, new «clazz.qualifiedName + className + PROP_NAME»());
 		return INSTANCE.map.get(_self);'''
 			]
+			primarySourceElement = clazz
 		]
 
-		holderClass.addField('map', [
+		holderClass.addField('map')[
 			visibility = Visibility::PRIVATE
 			static = false
 			type = newTypeReference("java.util.Map", newTypeReference(identifier),
 				newTypeReference(clazz.qualifiedName + className + PROP_NAME))
 			initializer = [
-				'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()''']
-		])
- 
+				'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()'''
+			]
+			primarySourceElement = clazz
+		]
+
 		holderClass.addMethod('getMap') [
 			visibility = Visibility::PUBLIC
 			static = false
 			returnType = newTypeReference("java.util.Map", newTypeReference(identifier), newTypeReference(clazz.qualifiedName + className + PROP_NAME))
 			body = ['''return map;''']
+			primarySourceElement = clazz
 		]
 	}
 
@@ -586,6 +596,7 @@ public class AspectProcessor extends AbstractClassProcessor
 					final = f.final
 					type = f.type
 					if (f.initializer !== null) initializer = f.initializer
+					primarySourceElement = f
 				]
 			} else if (!f.static && f.simpleName == PROP_VAR_NAME) {
 				f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
@@ -609,6 +620,7 @@ public class AspectProcessor extends AbstractClassProcessor
 					type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
 					static = true
 					visibility = Visibility::PUBLIC
+					primarySourceElement = clazz
 				]
 		}
 	}
@@ -624,6 +636,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			var get = clazz.addMethod(f.simpleName)[
 					returnType = f.type
 					addParameter(SELF_VAR_NAME, newTypeReference(identifier))
+					primarySourceElement = f
 				]
 
 			bodies.put(get, ''' return «clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName»; ''')
@@ -647,6 +660,7 @@ val gemochack = '''try {
 						returnType = newTypeReference("void")
 						addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 						addParameter(f.simpleName, f.type)
+						primarySourceElement = f
 					]
 
 
