@@ -194,6 +194,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				body = ['''
 					«IF (sm.returnType.name != "void")»return «ENDIF» «sm.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«paramsList»);
 				''']
+				primarySourceElement = m
 			])
 		]
 	}
@@ -418,7 +419,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	 */
 	private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz, 
 													String identifier, 
-													TransformationContext cxt) 
+													extension TransformationContext cxt) 
 	{
 		val superClasses = Helper::getAnnotationWithType(clazz).filter[cl | cl != clazz.extendedClass].map[cl | cxt.findClass(cl.name)].filterNull
 		val Set<MutableClassDeclaration> scs = newHashSet
@@ -430,6 +431,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				!clazz.declaredMethods.exists[dm2 | Helper::isSamePrototype(dm, dm2, true)]].forEach[dm |
 				// Adding a new proxy method in the aspect class.
 				val me = clazz.addMethod(dm.simpleName) [
+					primarySourceElement = dm
 					visibility = dm.visibility
 					static = true
 					final = false
@@ -449,6 +451,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				val clName = fi.declaringType.simpleName
 
 				clazz.addMethod(fi.simpleName)[
+					primarySourceElement = fi
 					static = true
 					returnType = fi.type
 					addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
@@ -457,6 +460,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				
 				if (!fi.final)
 					clazz.addMethod(fi.simpleName)[
+						primarySourceElement = fi
 						static = true
 						returnType = cxt.newTypeReference("void")
 						addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
