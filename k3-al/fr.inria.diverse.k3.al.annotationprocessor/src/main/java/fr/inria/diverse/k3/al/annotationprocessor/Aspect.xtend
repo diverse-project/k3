@@ -22,7 +22,6 @@ import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
-import org.eclipse.xtend.lib.macro.expression.Expression
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 
 @Active(typeof(AspectProcessor)) 
@@ -354,6 +353,7 @@ public class AspectProcessor extends AbstractClassProcessor
 		{
 			ret = ""		
 		}
+		return ret
 	}
 
 	private def CharSequence getBody(MutableClassDeclaration clazz, 
