@@ -33,33 +33,33 @@ public annotation Composition {}
  */
 public class CompositionProcessor extends AbstractFieldProcessor {
 	// The name of the container attribute
-	protected val static String NAME_CONTAINER = "_kContainer" 
+	protected val static String NAME_CONTAINER = "_kContainer"
 	// Used to know the types which interface has been already generated.
 	protected val Set<TypeReference> interfaceObsGenerated = new HashSet<TypeReference>()
-	
+
 	// Returns the name of the generated interface
 	protected def String getObservabilityInterfaceName(TypeReference type) {
 		return type.name + "__K3__Observer4Composition"
 	}
-	
+
 	// Returns the name of the operation of the generated interface
 	protected def String getObservabilityOperationName(String typeName) {
-		return "__remove__K3__Observer4Composition_" + typeName 
+		return "__remove__K3__Observer4Composition_" + typeName
 	}
-	
-	
+
+
 	protected def TypeReference getFieldType(FieldDeclaration field, TransformationContext ctx) {
 		// TODO Support array
 		//TODO check wildcard
 		val type = field.type
-		
+
 		if(ctx!==null)
 			if(type.isAssignableFrom(ctx.newTypeReference(Collection))) {
 				ctx.addError(field, "Collections not supported yet.")
 				return null
-				
+
 //				val generics = type.actualTypeArguments
-//				
+//
 //				if(generics.size!=1) {
 //					ctx.addError(field, "Collections must define a unique generic type for the moment.")
 //					return null
@@ -69,9 +69,9 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 			}
 		return type
 	}
-	
-	
-	
+
+
+
 	override void doRegisterGlobals(FieldDeclaration field, RegisterGlobalsContext ctx) {
 		val type = getFieldType(field, null)
 		// Have to check that the interface of the corresponding type has not been generated yet.
@@ -88,16 +88,16 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 
 	override void doTransform(MutableFieldDeclaration field, TransformationContext ctx) {
 		val fieldType = getFieldType(field, ctx)
-		
+
 		if(fieldType===null) return;
-		
+
     	val clazzTypeField = ctx.findClass(fieldType.name)
-    	
+
 	    if(clazzTypeField===null) {
       		ctx.addError(field, "Cannot find the class " + field.type.name)
       		return
   		}
-  		
+
     	val clazzContainField = field.declaringType as MutableClassDeclaration
 		val interfObsName = getObservabilityInterfaceName(fieldType)
     	val typeRefContainer = ctx.newTypeReference(interfObsName)
@@ -110,7 +110,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
       		ctx.addError(field, "Primitive attributes cannot be composite.")
 
 		// The annotated field is now private in order to force the use of the generated getter/setter
-		// used as proxies for supporting the composition.		
+		// used as proxies for supporting the composition.
 		field.visibility = Visibility.PRIVATE
 
 		if(!clazzTypeField.declaredFields.exists[fi | fi.simpleName.equals(NAME_CONTAINER)]) {
@@ -119,7 +119,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 				visibility = Visibility.PRIVATE
 				type = typeRefContainer
 			]
-			
+
 			// Adding a setter for the container.
 			clazzTypeField.addMethod(NAME_CONTAINER) [
 				addParameter("obj", typeRefContainer)
@@ -130,7 +130,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 					«NAME_CONTAINER» = obj;
 				''']
 			]
-			
+
 			// Adding a getter for accessing the container.
 			clazzTypeField.addMethod(NAME_CONTAINER) [
 				returnType = ctx.newTypeReference("java.lang.Object")
@@ -143,25 +143,25 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 			ctx.findInterface(interfObsName).addMethod(obsMethodName)[
 				addParameter("object", ctx.newTypeReference(fieldType.name))
 			]
-			
+
 		if(!clazzContainField.implementedInterfaces.exists[interf | interf.simpleName.equals(interfObsName)])
 			// The class containing the annotated field now implements the generated interface to be notified
 			// when it does not contain the object
 			clazzContainField.implementedInterfaces = #[typeRefContainer]
-			
+
 		if(!clazzContainField.declaredMethods.exists[meth | meth.simpleName.equals(obsMethodName)]) {
 			// Have to implement the interface method in the class that contains the annotated field.
 			// Getting the fields of this class of the same type that the annotated field and being composed as well
 			val listFieldComposit = clazzContainField.declaredFields.filter[fi |
 				fi.type.equals(fieldType) && fi.annotations.exists[ann| ann.annotationTypeDeclaration.qualifiedName.equals(Composition.name)]]
-			
-			// Implementing the method of the interface	
+
+			// Implementing the method of the interface
 			clazzContainField.addMethod(obsMethodName) [
 				addParameter("obj", ctx.newTypeReference(fieldType.name))
 				// For each collected fields, checking whether the object given as parameter is the value of the field.
 				// If it is the case, setting the value to null of the field.
 				body = ['''
-					«FOR fi : listFieldComposit» 
+					«FOR fi : listFieldComposit»
 						if(this.«fi.simpleName»==obj) {
 							this.«fi.simpleName» = null;
 							return ;
@@ -170,7 +170,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 				''']
 			]
 		}
-		
+
 		// Adding a setter for the annotated field.
 		clazzContainField.addMethod(field.simpleName)[
 			visibility = oldFieldVisibility
@@ -183,7 +183,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 				«field.simpleName» = obj;
 			''']
 		]
-		
+
 		// Adding a getter to access the annotated field.
 		clazzContainField.addMethod(field.simpleName)[
 			// The visibility of the getter is the same that the original annotated field.

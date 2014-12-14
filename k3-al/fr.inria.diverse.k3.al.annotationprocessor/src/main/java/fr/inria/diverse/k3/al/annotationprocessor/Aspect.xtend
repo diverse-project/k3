@@ -24,7 +24,7 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 
-@Active(typeof(AspectProcessor)) 
+@Active(typeof(AspectProcessor))
 public annotation Aspect {
 	Class<?> className;
 	Class<?>[] with = #[];
@@ -55,11 +55,11 @@ annotation Abstract {}
 public class AspectProcessor extends AbstractClassProcessor
 {
 	Map<MutableClassDeclaration, List<MutableClassDeclaration>> listResMap = newHashMap
-	
+
 	// builder for mapping.properties file
-	val aspectMappingBuilder = new AspectMappingBuilder() 
-	
-	
+	val aspectMappingBuilder = new AspectMappingBuilder()
+
+
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
 	public static final String OVERRIDE_METHOD = OverrideAspectMethod.simpleName
@@ -70,10 +70,10 @@ public class AspectProcessor extends AbstractClassProcessor
 	/**
 	 * Phase 1: Register properties and context helpers
 	 */
-	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) 
+	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context)
 	{
 		val type = Helper::getAnnotationAspectType(annotatedClass)
-		if (type !== null) 
+		if (type !== null)
 		{
 			val className = type.simpleName
 			context.registerClass(annotatedClass.qualifiedName + className + PROP_NAME)
@@ -87,15 +87,15 @@ public class AspectProcessor extends AbstractClassProcessor
 	/**
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
-	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) 
+	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context)
 	{
 		val Map<MutableClassDeclaration, List<ClassDeclaration>> superclass = newHashMap
 		val Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod = newHashMap
 
 		mclasses = classes
-		
-		//context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)	
-		
+
+		//context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
+
 		initSuperclass(classes, context, superclass)
 		initDispatchmethod(superclass, dispatchmethod, context)
 
@@ -112,32 +112,32 @@ public class AspectProcessor extends AbstractClassProcessor
 				val className = typeRef.simpleName
 				val identifier = typeRef.name
 				val Map<MutableMethodDeclaration, String> bodies = newHashMap
-	
+
 				// Move non-static fields
 				fieldsProcessing(context, clazz, className, identifier, bodies)
-	
+
 				// Transform methods to static
 				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
 				aspectContextMaker(context, clazz, className, identifier)
 			}
 		}
-		
-		// prepare an AspectMApping properties file 
-		// it is partly done in this context and partly done in the generate code context 
+
+		// prepare an AspectMApping properties file
+		// it is partly done in this context and partly done in the generate code context
 		// (allows to get writting abilities and notification to Eclipse)
 		aspectMappingBuilder.readCurrentMapping(classes, context)
 		aspectMappingBuilder.cleanUnusedMapping(context)
-		
-		aspectMappingBuilder.addMappingForAnnotatedSourceElements()	
+
+		aspectMappingBuilder.addMappingForAnnotatedSourceElements()
 	}
-	
+
 	/**
 	 * Phase 3: use an additional code generator to produce the .k3_aspect_mapping.properties file
 	 */
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements, extension CodeGenerationContext context) {
-		
-		aspectMappingBuilder.writePropertyFile(context)		
-	} 
+
+		aspectMappingBuilder.writePropertyFile(context)
+	}
 
 
 	private def methodProcessingAddSelfStatic(MutableMethodDeclaration m, String identifier, extension TransformationContext cxt) {
@@ -148,9 +148,9 @@ public class AspectProcessor extends AbstractClassProcessor
 
 			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
 			if (m.abstract)
-				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))			
+				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))
 
-			m.parameters.toList.clear				
+			m.parameters.toList.clear
 			m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 
 			for (param : l) m.addParameter(param.key, param.value)
@@ -198,8 +198,8 @@ public class AspectProcessor extends AbstractClassProcessor
 			])
 		]
 	}
-	
-	
+
+
 	private def methodProcessingAddHidden(MutableMethodDeclaration m, String identifier, extension TransformationContext cxt) {
 		// Add "_hidden_" at the beginning of the replaced method name
 		if (m.annotations.exists[annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"]) {
@@ -214,10 +214,10 @@ public class AspectProcessor extends AbstractClassProcessor
 	}
 
 
-	private def void methodProcessingAddPriv(MutableMethodDeclaration m, 
-											MutableClassDeclaration clazz, 
+	private def void methodProcessingAddPriv(MutableMethodDeclaration m,
+											MutableClassDeclaration clazz,
 											Map<MutableMethodDeclaration,String> bodies,
-											extension TransformationContext cxt) 
+											extension TransformationContext cxt)
 	{
 		// Make PRIV_PREFIX+methodName as a copy of the method
 		clazz.addMethod(PRIV_PREFIX + m.simpleName, [
@@ -238,13 +238,13 @@ public class AspectProcessor extends AbstractClassProcessor
 	}
 
 
-	private def methodProcessingChangeBody(MutableMethodDeclaration m, 
-											MutableClassDeclaration clazz, 
-											extension TransformationContext cxt, 
-											Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod, 
-											List<String> inheritList, 
+	private def methodProcessingChangeBody(MutableMethodDeclaration m,
+											MutableClassDeclaration clazz,
+											extension TransformationContext cxt,
+											Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod,
+											List<String> inheritList,
 											String className,
-											TransactionSupport transactionSupport) 
+											TransactionSupport transactionSupport)
 	{
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
@@ -256,7 +256,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
 			//cxt.addError(m, ""+listmethod.size)
 			val declTypes = listmethod.map[declaringType]
-			
+
 			// A time-consuming check to be used for debugging only.
 			// Looks for any problem in the order of the classes.
 //					val declTypes = new ArrayList(listmethod.map[declaringType])
@@ -272,29 +272,29 @@ public class AspectProcessor extends AbstractClassProcessor
 			val ifst = transformIfStatements(m, cxt, declTypes, s, ret, transactionSupport)
 			call.append(ifst).append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		}
-		else 
+		else
 		{
 			val instruction = transformNormalStatement(m, cxt, s, transactionSupport)
 			call.append(instruction) //for getters & setters
 		}
 		m.abstract = false
-				
-			
+
+
 	    m.body = [
-	    			getBody(clazz, className, call.toString, transactionSupport, ret)		
-	    		]
+			getBody(clazz, className, call.toString, transactionSupport, ret)
+	    ]
 	}
-	
+
 	private def hasReturnType(MutableMethodDeclaration declaration, extension TransformationContext cxt)
 	{
 		return (declaration.returnType != newTypeReference("void"))
 	}
-	
+
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt, List<TypeDeclaration> declTypes, String parameters, String returnStatement, TransactionSupport transactionSupport)
 	{
 		var retBegin = ""
 		var retEnd = ""
-		if (returnStatement.contains("return")) 
+		if (returnStatement.contains("return"))
 		{
 			switch(transactionSupport)
 			{
@@ -305,7 +305,7 @@ public class AspectProcessor extends AbstractClassProcessor
 					retBegin = "result.add("
 					retEnd = ")"
 				}
-			}			
+			}
 		}
 		val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 «retBegin» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
@@ -313,7 +313,7 @@ public class AspectProcessor extends AbstractClassProcessor
 } else «ENDFOR»'''
 		return ifst
 	}
-	
+
 	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt, String parameters, TransactionSupport transactionSupport)
 	{
 		var retBegin = ""
@@ -329,67 +329,67 @@ public class AspectProcessor extends AbstractClassProcessor
 					retBegin = "result.add("
 					retEnd = ")"
 				}
-			}			
+			}
 		}
 		return '''«retBegin»«PRIV_PREFIX+declaration.simpleName»(«parameters»)«retEnd»'''
 	}
-	
-	private	def getReturnInstruction(MutableMethodDeclaration declaration, 
+
+	private	def getReturnInstruction(MutableMethodDeclaration declaration,
 									extension TransformationContext cxt,
-									TransactionSupport transactionSupport) 
+									TransactionSupport transactionSupport)
 	{
 		var ret = ""
 		if (hasReturnType(declaration, cxt))
 		{
-			if (transactionSupport.equals(TransactionSupport.EMF)) 
+			if (transactionSupport.equals(TransactionSupport.EMF))
 			{
-				ret = "return (" + declaration.returnType.name + ")command.getResult().iterator().next();" 				
+				ret = "return (" + declaration.returnType.name + ")command.getResult().iterator().next();"
 			}
 			else
 			{
-				ret = "return (" + declaration.returnType.name + ")result;"	
+				ret = "return (" + declaration.returnType.name + ")result;"
 			}
 		}
 		else
 		{
-			ret = ""		
+			ret = ""
 		}
 		return ret
 	}
 
-	private def CharSequence getBody(MutableClassDeclaration clazz, 
-									String className, 
+	private def CharSequence getBody(MutableClassDeclaration clazz,
+									String className,
 									String call,
-									TransactionSupport transactionSupport, 
-									String returnStatement) 
+									TransactionSupport transactionSupport,
+									String returnStatement)
 	{
 		switch(transactionSupport)
 		{
 			case TransactionSupport.EMF:
 				return getBodyWithEMFTransaction(clazz, className, call, returnStatement)
 			case TransactionSupport.None:
-				return getBodyWithoutTransaction(clazz, className, call, returnStatement)				
+				return getBodyWithoutTransaction(clazz, className, call, returnStatement)
 		}
 	}
-	
-	private def CharSequence getBodyWithEMFTransaction(MutableClassDeclaration clazz, 
+
+	private def CharSequence getBodyWithEMFTransaction(MutableClassDeclaration clazz,
 								String className,
 								String call,
-								String returnStatement) 
+								String returnStatement)
 	{
 		return '''
 				org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain = org.eclipse.emf.transaction.TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(_self.eResource().getResourceSet());
 				Object res = null;
-				org.eclipse.emf.transaction.RecordingCommand command = new org.eclipse.emf.transaction.RecordingCommand(editingDomain) 
+				org.eclipse.emf.transaction.RecordingCommand command = new org.eclipse.emf.transaction.RecordingCommand(editingDomain)
 					{
 						private java.util.List<Object> result = new java.util.ArrayList<Object>();
-						
+
 						@Override
 						protected void doExecute() {
 							«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 							«call.toString»;
 						}
-									
+
 						@Override
 						public java.util.Collection<?> getResult() {
 							return result;
@@ -398,18 +398,18 @@ public class AspectProcessor extends AbstractClassProcessor
 				editingDomain.getCommandStack().execute(command);
 				«returnStatement»'''
 	}
-	
-	private def CharSequence getBodyWithoutTransaction(MutableClassDeclaration clazz, 
+
+	private def CharSequence getBodyWithoutTransaction(MutableClassDeclaration clazz,
 								String className,
 								String call,
-								String returnStatement) 
+								String returnStatement)
 	{
 		return '''
 				«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 				«IF returnStatement.contains("return")»
 					Object result = null;
-				«ENDIF»		
-				«call.toString»;			
+				«ENDIF»
+				«call.toString»;
 				«returnStatement»'''
 	}
 
@@ -417,14 +417,14 @@ public class AspectProcessor extends AbstractClassProcessor
 	 * In the case of multi-inheritance, operations of the aspects that cannot be classically extended must be added
 	 * to the class.
 	 */
-	private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz, 
-													String identifier, 
-													extension TransformationContext cxt) 
+	private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz,
+													String identifier,
+													extension TransformationContext cxt)
 	{
 		val superClasses = Helper::getAnnotationWithType(clazz).filter[cl | cl != clazz.extendedClass].map[cl | cxt.findClass(cl.name)].filterNull
 		val Set<MutableClassDeclaration> scs = newHashSet
 	 	superClasses.forEach[sc | Helper::getSuperClasses(sc, scs, cxt)]
-		
+
 		scs.forEach[sc |
 			// Only non-private methods which does not already exist in the aspect class are considered.
 			sc.declaredMethods.filter[dm | dm.visibility != Visibility::PRIVATE && !dm.simpleName.startsWith(PRIV_PREFIX) &&
@@ -457,7 +457,7 @@ public class AspectProcessor extends AbstractClassProcessor
 					addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
 					body = ['''return «clName».«fi.simpleName»(«SELF_VAR_NAME»);''']
 				]
-				
+
 				if (!fi.final)
 					clazz.addMethod(fi.simpleName)[
 						primarySourceElement = fi
@@ -472,14 +472,14 @@ public class AspectProcessor extends AbstractClassProcessor
 	}
 
 
-	private def methodsProcessing(MutableClassDeclaration clazz, 
-								TransformationContext cxt, 
-								String identifier, 
-								Map<MutableMethodDeclaration,String> bodies, 
-								Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod, 
-								List<String> inheritList, 
+	private def methodsProcessing(MutableClassDeclaration clazz,
+								TransformationContext cxt,
+								String identifier,
+								Map<MutableMethodDeclaration,String> bodies,
+								Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod,
+								List<String> inheritList,
 								String className,
-								TransactionSupport transactionSupport) 
+								TransactionSupport transactionSupport)
 	{
 		for (m : clazz.declaredMethods) {
 			if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
@@ -491,15 +491,15 @@ public class AspectProcessor extends AbstractClassProcessor
 			}
 			else cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 		}
-		
+
 		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
 	}
 
 
 	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
 	 * checks that a super method exists in its hierarchy. */
-	private def boolean checkAnnotationprocessorCorrect(MutableMethodDeclaration m, 
-														MutableClassDeclaration clazz, 
+	private def boolean checkAnnotationprocessorCorrect(MutableMethodDeclaration m,
+														MutableClassDeclaration clazz,
 														TransformationContext cxt)
 	{
 		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]){
@@ -507,21 +507,21 @@ public class AspectProcessor extends AbstractClassProcessor
 		}
 		val supers = Helper::getDirectSuperClasses(clazz, cxt)
 		if (supers.empty){
-			cxt.addError(clazz,"pass par la")			
+			cxt.addError(clazz,"pass par la")
 			return false
 		}
-		
+
 		return supers.exists[superCl | Helper::findMethod(superCl, m, cxt) !== null]
 	}
 
 
 	/**
-	 * Create the class which link classes with their aspects 
+	 * Create the class which link classes with their aspects
 	 */
-	private def aspectContextMaker(extension TransformationContext context, 
-									MutableClassDeclaration clazz, 
-									String className, 
-									String identifier) 
+	private def aspectContextMaker(extension TransformationContext context,
+									MutableClassDeclaration clazz,
+									String className,
+									String identifier)
 	{
 		val holderClass = findClass(clazz.qualifiedName + className + CTX_NAME)
 
@@ -579,11 +579,11 @@ public class AspectProcessor extends AbstractClassProcessor
 
 
 	/** Move non static fields */
-	private def fieldProcessingMoveField(MutableClassDeclaration clazz, 
-										List<MutableFieldDeclaration> toRemove, 
+	private def fieldProcessingMoveField(MutableClassDeclaration clazz,
+										List<MutableFieldDeclaration> toRemove,
 										List<MutableFieldDeclaration> propertyAspect,
-										String className, 
-										extension TransformationContext context) 
+										String className,
+										extension TransformationContext context)
 	{
 		val c = findClass(clazz.qualifiedName + className + PROP_NAME)
 
@@ -608,11 +608,11 @@ public class AspectProcessor extends AbstractClassProcessor
 			}
 		}
 	}
-	
-	
-	private def void fieldProcessingAddField(MutableClassDeclaration clazz, 
-											String className, 
-											extension TransformationContext context) 
+
+
+	private def void fieldProcessingAddField(MutableClassDeclaration clazz,
+											String className,
+											extension TransformationContext context)
 	{
 		if (!clazz.declaredFields.exists[simpleName == PROP_VAR_NAME]) {
 			val clazzProp = findClass(clazz.qualifiedName + className + PROP_NAME)
@@ -630,11 +630,11 @@ public class AspectProcessor extends AbstractClassProcessor
 	}
 
 
-	private def fieldProcessingAddGetterSetter(MutableClassDeclaration clazz, 
-												List<MutableFieldDeclaration> propertyAspect, 
+	private def fieldProcessingAddGetterSetter(MutableClassDeclaration clazz,
+												List<MutableFieldDeclaration> propertyAspect,
 												String identifier,
-												Map<MutableMethodDeclaration,String> bodies, 
-												extension TransformationContext context) 
+												Map<MutableMethodDeclaration,String> bodies,
+												extension TransformationContext context)
 	{
 		for (f : propertyAspect) {
 			var get = clazz.addMethod(f.simpleName)[
@@ -650,7 +650,7 @@ val gemochack = '''try {
 			for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
 				if (m.getName().equals("set" + "«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
 						&& m.getParameterTypes().length == 1) {
-					m.invoke(_self, «f.simpleName »); 
+					m.invoke(_self, «f.simpleName »);
 
 				}
 			}
@@ -672,16 +672,16 @@ val gemochack = '''try {
 			}
 		}
 	}
-	
+
 
 	/**
 	 * Move fields of the aspect to the AspectProperties class
 	 */
-	private def fieldsProcessing(extension TransformationContext context, 
-								MutableClassDeclaration clazz, 
-								String className, 
-								String identifier, 
-								Map<MutableMethodDeclaration,String> bodies) 
+	private def fieldsProcessing(extension TransformationContext context,
+								MutableClassDeclaration clazz,
+								String className,
+								String identifier,
+								Map<MutableMethodDeclaration,String> bodies)
 	{
 		val List<MutableFieldDeclaration> toRemove = newArrayList
 		val List<MutableFieldDeclaration> propertyAspect = newArrayList
@@ -701,9 +701,9 @@ val gemochack = '''try {
 	 * @dispatchmethod Associations computed
 	 * @context
 	 */
-	private def initDispatchmethod(Map<MutableClassDeclaration,List<ClassDeclaration>> superclass, 
-									Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod, 
-									TransformationContext context) 
+	private def initDispatchmethod(Map<MutableClassDeclaration,List<ClassDeclaration>> superclass,
+									Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod,
+									TransformationContext context)
 	{
 		var i = 0
 		for (cl : superclass.keySet) {
@@ -724,7 +724,7 @@ val gemochack = '''try {
 					v.add(m)
 				}
 			}
-			
+
 			for (key : dispatchs.keySet) {
 				val res = dispatchs.get(key)
 				if (res.size > 1) {
@@ -737,9 +737,9 @@ val gemochack = '''try {
 					}
 				}
 			}
-			
+
 		}
- 
+
 		//Sort Dispatchmethod entries values by hierarchy of their containing classes
 		for (m : dispatchmethod.keySet) {
 			val l = dispatchmethod.get(m).sortWith(new SortMethod(context))
@@ -748,7 +748,7 @@ val gemochack = '''try {
 			//context.addWarning(mclasses.get(0),dispatchmethod.get(m).size.toString + " "+ mclasses.size)
 		}
 	}
-	
+
 	/**
 	 * For each annotated class store his super classes hierarchy.
 	 * An annotated class which is a parent of an other annotated
@@ -757,14 +757,14 @@ val gemochack = '''try {
 	 * @superclass Mapping computed between class and list of his super classes
 	 * @context
 	 */
-	private def initSuperclass(List<? extends MutableClassDeclaration> annotedClasses, 
-								TransformationContext context, 
+	private def initSuperclass(List<? extends MutableClassDeclaration> annotedClasses,
+								TransformationContext context,
 								Map<MutableClassDeclaration,
-								List<ClassDeclaration>> superclass) 
+								List<ClassDeclaration>> superclass)
 	{
 		//Add super classes for all annotated classes
-		
-		for (clazz : annotedClasses) 
+
+		for (clazz : annotedClasses)
 		{
 			val ext = new ArrayList<ClassDeclaration>
 			Helper::getSuperClass(ext, clazz, context)
@@ -775,7 +775,7 @@ val gemochack = '''try {
 
 		//Get all super classes
 		val allparent = new LinkedHashSet<ClassDeclaration>
-		for (child : superclass.keySet) 
+		for (child : superclass.keySet)
 		{
 			allparent.addAll(superclass.get(child))
 		}
@@ -783,7 +783,7 @@ val gemochack = '''try {
 		//Remove super classes which are annotated
 		for (p : allparent)
 		{
-			superclass.remove(p)			
+			superclass.remove(p)
 		}
 	}
 }

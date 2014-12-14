@@ -13,33 +13,33 @@ class TestAspect {
 	/*@org.junit.Test
 	def void testAspectOnInterfaceExtendsClass() {
 		val l = new FooAspect
-		assertEquals(l.fooOp, "foo2") 
-	}  */ 
-  
+		assertEquals(l.fooOp, "foo2")
+	}  */
+
 	/*@org.junit.Test
 	def void testAspectInheritance() {
- 
+
 		val l = new C
-		assertEquals(l.foo, "ABC") 
+		assertEquals(l.foo, "ABC")
 	}  */
- 
+
 	@Test
 	def void testAspectMethodReplacement() {
 		val l = new C
 		assertTrue(l.testReplacement)
-	} 
-	 
-	@Test 
+	}
+
+	@Test
 	def void testAspectReplaceAspectMethod() {
-		val l = new C 
+		val l = new C
 		//assertTrue(l.testReplaceAspectMethod)
 		assertTrue(true)
 	}
 
 	@Test
-	def void testStaticAndNotStaticAttribute() {  
+	def void testStaticAndNotStaticAttribute() {
 		val l = new C
-		val l1 = new C  
+		val l1 = new C
 		l.incI
 		l.incJ
 		l1.incI
@@ -54,8 +54,8 @@ class TestAspect {
 	@Test
 	def void testAbstractMethodOnAspect() {
 		val l = new C
-		l.foofoo 
-	} 
+		l.foofoo
+	}
 
 }
 
@@ -67,7 +67,7 @@ class A {
 }
 
 class B extends A {
-	
+
 	def override boolean testReplacement() {
 		return true
 	}
@@ -75,7 +75,7 @@ class B extends A {
 }
 
 class C extends B {
-	
+
 	def boolean testReplaceAspectMethod () {
 		return false
 	}
@@ -89,7 +89,7 @@ abstract class AspectA {
 	}
 
 	abstract def String foofoo()
- 
+
 }
 
 @Aspect(className=typeof(B))
@@ -131,7 +131,7 @@ class AspectC extends AspectB {
 	def String foo() {
 		return _self.super_foo + "C"
 
-	} 
+	}
 
 	def String foofoo() {
 		return "C"
@@ -146,10 +146,10 @@ interface FooInterface { }
 
 abstract class FooAbsClass {
 	def fooOp() {
-		println("foo1")	
+		println("foo1")
 	}
 }
- 
+
 @Aspect(className=typeof(FooInterface))
 class FooAspect extends FooAbsClass{
 	@OverrideAspectMethod
@@ -165,6 +165,6 @@ class FooAspect extends FooAbsClass{
 
 @Aspect(className=typeof(FooGenerics))
 class FooGenericsAspect {
-	
+
 }*/
 

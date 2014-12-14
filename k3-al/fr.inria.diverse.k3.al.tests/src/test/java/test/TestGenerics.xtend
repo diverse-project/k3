@@ -5,9 +5,9 @@ import static extension test.FooGenericsAspect.*
 
 public class TestGenerics{
 	def static void main(String[] args) {
-		val  l  = new AAAA()  
+		val  l  = new AAAA()
 		l.foo
-	}      
+	}
 }
 
 
@@ -20,7 +20,7 @@ class AAAA implements FooGenerics{
 	override getget() {
 		return null
 	}
-} 
+}
 
 @Aspect(className=typeof(Object))
 class FooFooGenerics2 {
@@ -30,7 +30,7 @@ class FooFooGenerics2 {
 @Aspect(className=typeof(FooGenerics))
 class FooGenericsAspect {
 	def void testets(String obj){}
-	
+
 	def void foo(){
 //		if(_self.getget!=null) {
 //			_self.testets(_self.getget)

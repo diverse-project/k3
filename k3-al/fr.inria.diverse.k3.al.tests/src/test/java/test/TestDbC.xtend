@@ -24,13 +24,13 @@ class TestDbC
 			fail("Should not occur")
 		}
 	}
-	
+
 	// Should actually throw an InvariantViolationException, see issue #18
 	@Test(expected = PreConditionViolationException)
 	def testNOKInv() {
 		new SimpleNOKInv().foo
 	}
-	
+
 	@Test
 	def testOKPrePost() {
 		try {
@@ -39,7 +39,7 @@ class TestDbC
 			fail("Should not occur")
 		}
 	}
-	
+
 	@Test
 	def testOKAll() {
 		try {
@@ -48,39 +48,39 @@ class TestDbC
 			fail("Should not occur")
 		}
 	}
-	
+
 	@Test(expected = PreConditionViolationException)
 	def testNOKPreCond() {
 		new SimpleNOKPreCond().foo
 	}
-	
+
 	@Test(expected = PostConditionViolationException)
 	def testNOKPostCondition() {
 		new SimpleNOKPostCond().foo
 	}
-	
+
 	@Test(expected = PreConditionViolationException)
 	def testOKInvNOKPre () {
 		new SimpleOKInvNOKPre().foo
 	}
-	
+
 	@Test(expected = PostConditionViolationException)
 	def testOKInvNOKPost () {
 		new SimpleOKInvNOKPost().foo
 	}
-	
+
 	// Should actually throw an InvariantViolationException, see issue #18
 	@Test(expected = PreConditionViolationException)
 	def testNOKInvOKPre() {
 		new SimpleNOKInvOKPre().foo
 	}
-	
+
 	// Should actually throw an InvariantViolationException, see issue #18
 	@Test(expected = PreConditionViolationException)
 	def testNOKInvOKPost() {
 		new SimpleNOKInvOKPost().foo
 	}
-	
+
 	// Should actually throw an InvariantViolationException, see issue #18
 	@Test(expected = PostConditionViolationException)
 	def testInvBrokenByFoo() {
@@ -91,14 +91,14 @@ class TestDbC
 @Contracted
 class SimpleOKInv {
 	@Inv def boolean inv() { true }
-	
+
 	def void foo() {}
 }
 
 @Contracted
 class SimpleNOKInv {
 	@Inv def boolean inv() { false }
-	
+
 	def void foo() {}
 }
 
@@ -106,7 +106,7 @@ class SimpleNOKInv {
 class SimpleOKPrePost {
 	@Pre  def boolean preFoo() { true }
 	@Post def boolean postFoo() { true }
-	
+
 	def void foo() {}
 }
 
@@ -115,21 +115,21 @@ class SimpleOKAll {
 	@Inv def boolean inv() { true }
 	@Pre  def boolean preFoo() { true}
 	@Post def boolean postFoo() { true }
-	
+
 	def void foo() {}
 }
 
 @Contracted
 class SimpleNOKPreCond {
 	@Pre def boolean preFoo() { false }
-	
+
 	def void foo() {}
 }
 
 @Contracted
 class SimpleNOKPostCond {
 	@Post def boolean postFoo() { false }
-	
+
 	def void foo() {}
 }
 
@@ -137,7 +137,7 @@ class SimpleNOKPostCond {
 class SimpleOKInvNOKPre {
 	@Inv def boolean inv() { true }
 	@Pre def boolean preFoo() { false }
-	
+
 	def void foo() {}
 }
 
@@ -145,7 +145,7 @@ class SimpleOKInvNOKPre {
 class SimpleOKInvNOKPost {
 	@Inv def boolean inv() { true }
 	@Post def boolean postFoo() { false }
-	
+
 	def void foo() {}
 }
 
@@ -153,7 +153,7 @@ class SimpleOKInvNOKPost {
 class SimpleNOKInvOKPre {
 	@Inv def boolean inv() { false }
 	@Pre def boolean preFoo() { true }
-	
+
 	def void foo() {}
 }
 
@@ -161,7 +161,7 @@ class SimpleNOKInvOKPre {
 class SimpleNOKInvOKPost {
 	@Inv def boolean inv() { false }
 	@Post def boolean postFoo() { true }
-	
+
 	def void foo() {}
 }
 
@@ -169,6 +169,6 @@ class SimpleNOKInvOKPost {
 class SimpleInvBrokenByFoo {
 	public int i = 0
 	@Inv def boolean inv() { i == 0 }
-	
+
 	def void foo() { i = 1 }
 }

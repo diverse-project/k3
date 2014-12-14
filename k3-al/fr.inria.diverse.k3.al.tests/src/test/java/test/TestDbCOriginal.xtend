@@ -14,25 +14,25 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 class TestCase
-{ 
+{
 	@Test(expected = PreConditionViolationException)
 	def testPre() {
 		val l = new RewriteMe
 		l.foo
 	}
-  
+
 	@Test(expected = PreConditionViolationException)
-	def void testInv() { 
+	def void testInv() {
 		val l = new RewriteMe1
 		l.foo
 	}
- 
+
 	@Test(expected = PostConditionViolationException)
 	def void testPost() {
 		val l = new RewriteMe2
 		l.foo
 	}
-	
+
 	@Test
 	def void testPreInheritance() {
 		try {
@@ -42,7 +42,7 @@ class TestCase
 			fail("Should not occur")
 		}
 	}
-	
+
 	@Test(expected = PreConditionViolationException)
 	def void testPreInheritance1() {
 		val l = new BDbc
@@ -60,7 +60,7 @@ class TestCase
 		val l = new BDbc2
 		l.bar
 	}
-	
+
 	@Test(expected = PostConditionViolationException)
 	def void testPostInheritance1() {
 		val l = new BDbc2
@@ -71,8 +71,8 @@ class TestCase
 /* */@Contracted
 class RewriteMe {
 
- 
-	def void foo() {} 
+
+	def void foo() {}
 
 	//TODO does not work together.
 	//It must be managed by the same processor
@@ -89,12 +89,12 @@ class RewriteMe1 {
 
 	@Inv
 	def boolean inv1() {
-		return false 
+		return false
 	}
- 
+
 	def void foo() {
 		println("ok")
-	} 
+	}
 
 }
 
@@ -102,10 +102,10 @@ class RewriteMe1 {
 @Contracted
 class RewriteMe2 {
 
- 
+
 	def void foo() {
 		println("ok")
-	} 
+	}
 
 
 	@Post
@@ -148,16 +148,16 @@ class BDbc extends ADbc {
 	override def boolean preFoo() {
 		return true;
 	}
-	
+
 		@Pre
 	override def boolean preBar() {
 		return false;
 	}
 
 	override  def void bar() {}
-	
 
- 
+
+
 }
 
 @Contracted
@@ -186,7 +186,7 @@ class BDbc1 extends ADbc1 {
 
 	override def void foo() {
 	}
- 
+
 }
 
 @Contracted
@@ -240,5 +240,5 @@ class BDbc2 extends ADbc2 {
 		return false;
 	}
 
- 
+
 }

@@ -13,131 +13,131 @@ class TestDynamicBinding {
 		val XExpression x = new X1()
 		assertEquals("test.X1 X1 test.X1 XExp test.X1 Root", x.visit)
 	}
-	
+
 	@Test def void testX1_as_XSubExp1() {
 		val XSubExp1 x = new X1()
 		assertEquals("test.X1 X1 test.X1 XExp test.X1 Root", x.visit)
 	}
-	
+
 	@Test def void testX1_as_X1() {
 		val x = new X1()
 		assertEquals("test.X1 X1 test.X1 XExp test.X1 Root", x.visit)
 	}
-	
-	
+
+
 	@Test def void testX2_as_XExpression() {
 		val XExpression x = new X2()
 		assertEquals("test.X2 X2 test.X2 XExp test.X2 Root", x.visit)
 	}
-	
+
 	@Test def void testX2_as_XSubExp2() {
 		val XSubExp2 x = new X2()
 		assertEquals("test.X2 X2 test.X2 XExp test.X2 Root", x.visit)
 	}
-	
+
 	@Test def void testX2_as_X2() {
 		val x = new X2()
 		assertEquals("test.X2 X2 test.X2 XExp test.X2 Root", x.visit)
 	}
-	
-	
+
+
 	@Test def void testX3_as_XExpression() {
 		val XExpression x = new X3
 		assertEquals("test.X3 X3 test.X3 XExp test.X3 Root", x.visit)
 	}
-	
+
 	@Test def void testX3_as_XSubExp3() {
 		val XSubExp3 x = new X3
 		assertEquals("test.X3 X3 test.X3 XExp test.X3 Root", x.visit)
 	}
-	
+
 	@Test def void testX3_as_X3() {
 		val x = new X3
 		assertEquals("test.X3 X3 test.X3 XExp test.X3 Root", x.visit)
 	}
-	
-	
-	
+
+
+
 	@Test def void testX4_as_XExpression() {
 		val XExpression x = new X4
 		assertEquals("test.X4 X4 test.X4 XExp test.X4 Root", x.visit)
 	}
-	
+
 	@Test def void testX4_as_XSubExp4() {
 		val XSubExp4 x = new X4
 		assertEquals("test.X4 X4 test.X4 XExp test.X4 Root", x.visit)
 	}
-	
+
 	@Test def void testX4_as_X4() {
 		val x = new X4
 		assertEquals("test.X4 X4 test.X4 XExp test.X4 Root", x.visit)
 	}
-	
-	
-	
-	
+
+
+
+
 	@Test def void testX5_as_XExpression() {
 		val XExpression x = new X5
 		assertEquals("test.X5 X5 test.X5 X2 test.X5 XExp test.X5 Root", x.visit)
 	}
-	
+
 	@Test def void testX5_as_XSubExp2() {
 		val XSubExp2 x = new X5
 		assertEquals("test.X5 X5 test.X5 X2 test.X5 XExp test.X5 Root", x.visit)
 	}
-	
+
 	@Test def void testX5_as_X5() {
 		val x = new X5
 		assertEquals("test.X5 X5 test.X5 X2 test.X5 XExp test.X5 Root", x.visit)
 	}
-	
-	
-	
+
+
+
 	@Test def void testX6_as_XExpression() {
 		val XExpression x = new X6
 		assertEquals("test.X6 X6 test.X6 X1 test.X6 XExp test.X6 Root", x.visit)
 	}
-	
+
 	@Test def void testX6_as_XSubExp1() {
 		val XSubExp1 x = new X6
 		assertEquals("test.X6 X6 test.X6 X1 test.X6 XExp test.X6 Root", x.visit)
 	}
-	
+
 	@Test def void testX6_as_X6() {
 		val x = new X6
 		assertEquals("test.X6 X6 test.X6 X1 test.X6 XExp test.X6 Root", x.visit)
 	}
-	
-	
-	
+
+
+
 	@Test def void testX7_as_XExpression() {
 		val XExpression x = new X7
 		assertEquals("test.X7 X7 test.X7 X4 test.X7 XExp test.X7 Root", x.visit)
 	}
-	
+
 	@Test def void testX7_as_XSubExp1() {
 		val XSubExp4 x = new X7
 		assertEquals("test.X7 X7 test.X7 X4 test.X7 XExp test.X7 Root", x.visit)
 	}
-	
+
 	@Test def void testX7_as_X7() {
 		val x = new X7
 		assertEquals("test.X7 X7 test.X7 X4 test.X7 XExp test.X7 Root", x.visit)
 	}
-	
-	
-	
-	
+
+
+
+
 	@Test def void testX8_as_XExpression() {
 		val XExpression x = new X8
 		assertEquals("test.X8 X8 test.X8 X2 test.X8 XExp test.X8 Root", x.visit)
 	}
-	
+
 	@Test def void testX8_as_XSubExp2() {
 		val XSubExp2 x = new X8
 		assertEquals("test.X8 X8 test.X8 X2 test.X8 XExp test.X8 Root", x.visit)
 	}
-	
+
 	@Test def void testX8_as_X8() {
 		val x = new X8
 		assertEquals("test.X8 X8 test.X8 X2 test.X8 XExp test.X8 Root", x.visit)

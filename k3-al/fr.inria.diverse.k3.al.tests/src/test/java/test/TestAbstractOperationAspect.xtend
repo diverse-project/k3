@@ -1,4 +1,4 @@
-                                             
+
 package test
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
@@ -14,29 +14,29 @@ class TestA {
 	def void test_ABC_Inheritance() {
 		val c = new C_A
 		var  A_A a  = c
-		assertEquals(a.foooo, "CAspect") 
+		assertEquals(a.foooo, "CAspect")
 	}
-} 
-       
- 
- 
- 
+}
+
+
+
+
 class A_A { }
- 
+
 class B_A extends A_A { }
 class C_A extends B_A {	}
 
 class D_A extends A_A {	}
 class E_A extends D_A {	}
-  
- 
- 
+
+
+
 @Aspect(className=typeof(A_A))
 class AAspect_A {
-	def String foooo() {}  
+	def String foooo() {}
 }
- 
- 
+
+
 
 @Aspect(className=typeof(B_A))
 class BAspect_A extends AAspect_A {
