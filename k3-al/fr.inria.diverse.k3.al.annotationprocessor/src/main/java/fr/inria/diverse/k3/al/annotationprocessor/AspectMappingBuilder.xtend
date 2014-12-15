@@ -9,6 +9,8 @@ import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import java.util.ArrayList
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -88,9 +90,12 @@ class AspectMappingBuilder {
 «entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
 			}
 
-			targetFilePath.contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
+			val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
 «buf.toString»'''
-
+			val oldContents = new String(Files.readAllBytes(Paths.get(targetFilePath.toURI)))
+			// do not use the contents API, it raises outofsync exception in Eclipse		if (targetFilePath.contents != contents) // compare new contents and old contents before file is written
+			if (oldContents != contents)
+				targetFilePath.contents = contents 		
 		}
 	}
 
