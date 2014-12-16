@@ -88,10 +88,21 @@ class AspectMappingBuilder {
 «entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
 			}
 
-		val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
-«buf.toString»'''
-	if (targetFilePath.contents != contents) // compare new contents and old contents before file is written
-			targetFilePath.contents = contents 	
+			val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
+	«buf.toString»'''
+			var write = false
+			if (!targetFilePath.exists)
+			{
+				write = true
+			}
+			else if (targetFilePath.contents != contents) // compare new contents and old contents before file is written	
+			{
+				write = true	
+			}
+			if (write)
+			{
+				targetFilePath.contents = contents 	
+			}
 		}
 	}
 
