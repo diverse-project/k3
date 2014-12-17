@@ -548,7 +548,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			visibility = Visibility::PUBLIC
 			static = true
 			addParameter("_self", newTypeReference(identifier))
-			returnType = newTypeReference(clazz.qualifiedName + className + PROP_NAME)
+			returnType = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
 			body = [
 				'''		if (!INSTANCE.map.containsKey(_self))
 			INSTANCE.map.put(_self, new «clazz.qualifiedName + className + PROP_NAME»());
@@ -561,7 +561,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			visibility = Visibility::PRIVATE
 			static = false
 			type = newTypeReference("java.util.Map", newTypeReference(identifier),
-				newTypeReference(clazz.qualifiedName + className + PROP_NAME))
+				findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
 			initializer = [
 				'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()'''
 			]
@@ -571,7 +571,7 @@ public class AspectProcessor extends AbstractClassProcessor
 		holderClass.addMethod('getMap') [
 			visibility = Visibility::PUBLIC
 			static = false
-			returnType = newTypeReference("java.util.Map", newTypeReference(identifier), newTypeReference(clazz.qualifiedName + className + PROP_NAME))
+			returnType = newTypeReference("java.util.Map", newTypeReference(identifier), findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
 			body = ['''return map;''']
 			primarySourceElement = clazz
 		]
