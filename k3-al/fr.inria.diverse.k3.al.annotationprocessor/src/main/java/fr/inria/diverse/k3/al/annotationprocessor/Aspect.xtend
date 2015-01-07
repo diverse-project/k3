@@ -287,7 +287,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 	private def hasReturnType(MutableMethodDeclaration declaration, extension TransformationContext cxt)
 	{
-		return (declaration.returnType != newTypeReference("void"))
+		return (declaration.returnType != newTypeReference("void") )
 	}
 
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt, List<TypeDeclaration> declTypes, String parameters, String returnStatement, TransactionSupport transactionSupport)
@@ -343,11 +343,27 @@ public class AspectProcessor extends AbstractClassProcessor
 		{
 			if (transactionSupport.equals(TransactionSupport.EMF))
 			{
-				ret = "return (" + declaration.returnType.name + ")command.getResult().iterator().next();"
+				if(! declaration.returnType.inferred){
+					ret = "return (" + declaration.returnType.name + ")command.getResult().iterator().next();"
+				}
+				else {
+					cxt.addError(declaration, "Cannot infer return type when Transaction support is enabled. Please specify the return type of this method.")
+					// not inferred, so cannot call its name there
+					ret = "return result;"
+				}				
 			}
 			else
 			{
-				ret = "return (" + declaration.returnType.name + ")result;"
+				
+				if(! declaration.returnType.inferred){
+					ret = "return (" + declaration.returnType.name + ")result;"				
+				}
+				else {
+					cxt.addError(declaration, "Cannot infer return type. Please specify the return type of this method.")
+					//TODO DVK. I think we can relax this restriction in this case by changing the generated code in order to directly assign the private method to the result without using an intermediate variable 
+					// not inferred, so cannot call its name there
+					ret = "return result;"
+				}
 			}
 		}
 		else
@@ -404,6 +420,7 @@ public class AspectProcessor extends AbstractClassProcessor
 								String call,
 								String returnStatement)
 	{
+		
 		return '''
 				«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 				«IF returnStatement.contains("return")»
