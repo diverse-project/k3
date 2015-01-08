@@ -23,6 +23,7 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
+import org.eclipse.xtend.lib.macro.declaration.MutableConstructorDeclaration
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -66,6 +67,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	public static final String PROP_VAR_NAME = "_self_"
 	public static final String SELF_VAR_NAME = "_self"
 	public static final String PRIV_PREFIX = "_privk3_"
+	public static final String PRIV_CONSTRUCTOR_POSTFIX = "_constructor_initializer"
 
 	/**
 	 * Phase 1: Register properties and context helpers
@@ -118,6 +120,10 @@ public class AspectProcessor extends AbstractClassProcessor
 
 				// Transform methods to static
 				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
+				
+				// transform constructor into static method
+				constructorsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
+				
 				aspectContextMaker(context, clazz, className, identifier)
 			}
 		}
@@ -511,6 +517,8 @@ public class AspectProcessor extends AbstractClassProcessor
 
 		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
 	}
+	
+	
 
 
 	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
@@ -530,7 +538,24 @@ public class AspectProcessor extends AbstractClassProcessor
 
 		return supers.exists[superCl | Helper::findMethod(superCl, m, cxt) !== null]
 	}
-
+	
+	
+	private def constructorsProcessing(MutableClassDeclaration clazz,
+								TransformationContext cxt,
+								String identifier,
+								Map<MutableMethodDeclaration,String> bodies,
+								Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod,
+								List<String> inheritList,
+								String className,
+								TransactionSupport transactionSupport)
+	{
+		
+		for (c : clazz.declaredConstructors) {
+			if(c.body != null){
+				cxt.addError(c, "Constructors not supported in aspect. Please consider using the @AspectInitializer annotation instead.")
+			}			
+		}
+	}
 
 	/**
 	 * Create the class which link classes with their aspects
