@@ -10,6 +10,8 @@ import fr.inria.diverse.k3.al.annotationprocessor.ReplaceAspectMethod
 
 class MOMR_A {
 
+	
+
 	def public boolean testReplacement() {
 		return false
 	}
@@ -20,7 +22,7 @@ class MOMR_B extends MOMR_A {
 	def public override boolean testReplacement() {
 		return true
 	}
-
+ 
 }
 
 class MOMR_C extends MOMR_B {
@@ -36,22 +38,25 @@ class MOMR_C extends MOMR_B {
 @Aspect(className=typeof(MOMR_A))
 abstract class AspectA {
 
+	var String nameA =""
+
 	def String foo() {
 		return "A"
 	}
 
 	abstract def String foofoo()
-
+ 
 }
 
 @Aspect(className=MOMR_B)
 class AspectB extends AspectA {
+	var String nameB = ""
 	
-	@OverrideAspectMethod
+	@OverrideAspectMethod 
 	def String foo() {
 		return _self.super_foo + "B"
 
-	}
+	} 
 
 	def String foofoo() {
 		return "B"
