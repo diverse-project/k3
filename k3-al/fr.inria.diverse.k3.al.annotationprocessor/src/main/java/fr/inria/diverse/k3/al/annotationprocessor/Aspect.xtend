@@ -23,7 +23,6 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
-import org.eclipse.xtend.lib.macro.declaration.MutableConstructorDeclaration
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -39,6 +38,8 @@ public enum TransactionSupport
 }
 
 public annotation OverrideAspectMethod {}
+
+public annotation AspectInitializerMethod {}
 
 public annotation NotAspectProperty {}
 
@@ -64,10 +65,10 @@ public class AspectProcessor extends AbstractClassProcessor
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
 	public static final String OVERRIDE_METHOD = OverrideAspectMethod.simpleName
+	public static final String INITIALIZER_METHOD = AspectInitializerMethod.simpleName
 	public static final String PROP_VAR_NAME = "_self_"
 	public static final String SELF_VAR_NAME = "_self"
 	public static final String PRIV_PREFIX = "_privk3_"
-	public static final String PRIV_CONSTRUCTOR_POSTFIX = "_constructor_initializer"
 
 	/**
 	 * Phase 1: Register properties and context helpers
@@ -100,6 +101,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 		initSuperclass(classes, context, superclass)
 		initDispatchmethod(superclass, dispatchmethod, context)
+		
 
 		for (clazz : classes) {
 			val List<MutableClassDeclaration> listRes = Helper::sortByClassInheritance(clazz, classes, context)
@@ -122,7 +124,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
 				
 				// transform constructor into static method
-				constructorsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
+				constructorsProcessing(clazz, context)
 				
 				aspectContextMaker(context, clazz, className, identifier)
 			}
@@ -541,20 +543,27 @@ public class AspectProcessor extends AbstractClassProcessor
 	
 	
 	private def constructorsProcessing(MutableClassDeclaration clazz,
-								TransformationContext cxt,
-								String identifier,
-								Map<MutableMethodDeclaration,String> bodies,
-								Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod,
-								List<String> inheritList,
-								String className,
-								TransactionSupport transactionSupport)
+								TransformationContext cxt
+								)
 	{
 		
 		for (c : clazz.declaredConstructors) {
 			if(c.body != null){
-				cxt.addError(c, "Constructors not supported in aspect. Please consider using the @AspectInitializer annotation instead.")
+				cxt.addError(c, "Constructors not supported in aspect. Please consider using the @AspectInitializerMethod annotation instead.")
 			}			
 		}
+	}
+
+	private def List<MutableMethodDeclaration> getInitializerMethods(extension TransformationContext context,
+									MutableClassDeclaration clazz){
+										
+		val List<MutableMethodDeclaration> result = newArrayList
+		for (m : clazz.declaredMethods) {
+			if (m.annotations.exists[annotationTypeDeclaration.simpleName == INITIALIZER_METHOD]){
+				result.add(m)
+			}
+		}
+		return result
 	}
 
 	/**
@@ -586,14 +595,18 @@ public class AspectProcessor extends AbstractClassProcessor
 			primarySourceElement = clazz
 		]
 
+		val List<MutableMethodDeclaration> initializerMethods =getInitializerMethods(context, clazz)
 		holderClass.addMethod('getSelf') [
 			visibility = Visibility::PUBLIC
 			static = true
 			addParameter("_self", newTypeReference(identifier))
 			returnType = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
 			body = [
-				'''		if (!INSTANCE.map.containsKey(_self))
+				'''		if (!INSTANCE.map.containsKey(_self)){
 			INSTANCE.map.put(_self, new «clazz.qualifiedName + className + PROP_NAME»());
+			«FOR initMethod : initializerMethods»«clazz.qualifiedName +"." + initMethod.simpleName»(_self);
+			«ENDFOR»
+		}
 		return INSTANCE.map.get(_self);'''
 			]
 			primarySourceElement = clazz
