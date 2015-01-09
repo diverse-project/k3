@@ -147,6 +147,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 	private def methodProcessingAddSelfStatic(MutableMethodDeclaration m, String identifier, extension TransformationContext cxt) {
 		// In not visited method, add _self as first parameter and set it static
+		// also add _self_ as second parameter
 		if (m.parameters.empty || m.parameters.head.simpleName != SELF_VAR_NAME) {
 			val l = new ArrayList<Pair<String, TypeReference>>
 			for (p1 : m.parameters) l.add(new Pair(p1.simpleName, p1.type))
@@ -157,6 +158,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 			m.parameters.toList.clear
 			m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
+			
 
 			for (param : l) m.addParameter(param.key, param.value)
 		}
@@ -164,7 +166,10 @@ public class AspectProcessor extends AbstractClassProcessor
 		m.setStatic(true)
 	}
 
-	private def methodProcessingAddSuper(MutableMethodDeclaration m, MutableClassDeclaration clazz, extension TransformationContext cxt) {
+	private def methodProcessingAddSuper(MutableMethodDeclaration m, 
+											MutableClassDeclaration clazz,
+											String aspectizedClassName, 
+											extension TransformationContext cxt) {
 		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD])
 			return
 
@@ -185,19 +190,26 @@ public class AspectProcessor extends AbstractClassProcessor
 		val multiSuper = superMeths.size > 1
 
 		superMeths.forEach[sm |
-			val superNamePrefix = if (multiSuper) "super_" + Helper::getAspectedClassName(sm.declaringType).split("\\.").last + "_" else "super_"
+			val superAspectedClassName = Helper::getAspectedClassName(sm.declaringType).split("\\.").last
+			val superNamePrefix = if (multiSuper) "super_" + superAspectedClassName + "_" else "super_"
 
 			clazz.addMethod(superNamePrefix + m.simpleName, [
 				val paramsList = new StringBuilder
 				visibility = Visibility::PRIVATE
 				static = true
 				returnType = m.returnType
+				
+				
+				// inject the companion xxxAspectProperties as first parameter of the priv method
+				//addParameter(PROP_VAR_NAME, findClass(clazz.qualifiedName+ aspectizedClassName  + PROP_NAME).newTypeReference)
+				
 				for (p : m.parameters) addParameter(p.simpleName, p.type)
 				paramsList.append(m.parameters.map[simpleName].join(','))
 				//TODO find super method
-
+				
 				body = ['''
-					«IF (sm.returnType.name != "void")»return «ENDIF» «sm.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«paramsList»);
+					«sm.declaringType.newTypeReference.name+ superAspectedClassName + PROP_NAME» «PROP_VAR_NAME» = «sm.declaringType.newTypeReference.name+ superAspectedClassName + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+					«IF (sm.returnType.name != "void")»return «ENDIF» «sm.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«PROP_VAR_NAME», «paramsList»);
 				''']
 				primarySourceElement = m
 			])
@@ -221,9 +233,11 @@ public class AspectProcessor extends AbstractClassProcessor
 
 	private def void methodProcessingAddPriv(MutableMethodDeclaration m,
 											MutableClassDeclaration clazz,
+											String aspectizedClassName,
 											Map<MutableMethodDeclaration,String> bodies,
 											extension TransformationContext cxt)
 	{
+		
 		// Make PRIV_PREFIX+methodName as a copy of the method
 		clazz.addMethod(PRIV_PREFIX + m.simpleName, [
 				primarySourceElement = m
@@ -237,6 +251,8 @@ public class AspectProcessor extends AbstractClassProcessor
 					if (m.body === null)
 						body = [bodies.get(m)] // getters & setters
 					else body = m.body
+				// inject the companion xxxAspectProperties as first parameter of the priv method
+				addParameter(PROP_VAR_NAME, findClass(clazz.qualifiedName+ aspectizedClassName  + PROP_NAME).newTypeReference)
 				for (p : m.parameters)
 					addParameter(p.simpleName, p.type)
 		])
@@ -312,11 +328,24 @@ public class AspectProcessor extends AbstractClassProcessor
 				}
 			}
 		}
-		val ifst = '''«FOR dt : declTypes» if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
-«retBegin» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
+		val StringBuilder sb = new StringBuilder  
+		for(dt : declTypes){
+			if(m.declaringType.equals(dt)){
+				// if the method is local, call it
+				sb.append(''' if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+«retBegin» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parameters.replaceFirst(SELF_VAR_NAME,
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)«retEnd»;
-} else «ENDFOR»'''
-		return ifst
+} else ''')
+			}
+			else{
+				// if the method is local, otherwise call the public helper for this type (this ensures that the correct XXXAspectProperties will be set
+				sb.append(''' if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+«retBegin» «dt.newTypeReference.name».«m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
+				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)«retEnd»;
+} else ''')
+			}
+		}
+		return sb.toString
 	}
 
 	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt, String parameters, TransactionSupport transactionSupport)
@@ -336,7 +365,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				}
 			}
 		}
-		return '''«retBegin»«PRIV_PREFIX+declaration.simpleName»(«parameters»)«retEnd»'''
+		return '''«retBegin»«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)«retEnd»'''
 	}
 
 	private	def getReturnInstruction(MutableMethodDeclaration declaration,
@@ -407,7 +436,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 						@Override
 						protected void doExecute() {
-							«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+							«clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 							«call.toString»;
 						}
 
@@ -427,7 +456,7 @@ public class AspectProcessor extends AbstractClassProcessor
 	{
 		
 		return '''
-				«PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+				«clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 				«IF returnStatement.contains("return")»
 					Object result = null;
 				«ENDIF»
@@ -500,16 +529,16 @@ public class AspectProcessor extends AbstractClassProcessor
 								Map<MutableMethodDeclaration,String> bodies,
 								Map<MethodDeclaration,Set<MethodDeclaration>> dispatchmethod,
 								List<String> inheritList,
-								String className,
+								String aspectizedClassName,
 								TransactionSupport transactionSupport)
 	{
 		for (m : clazz.declaredMethods) {
 			if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
 				methodProcessingAddSelfStatic(m, identifier, cxt)
-				methodProcessingAddSuper(m, clazz, cxt)
+				methodProcessingAddSuper(m, clazz, aspectizedClassName, cxt)
 				methodProcessingAddHidden(m, identifier, cxt)
-				methodProcessingAddPriv(m, clazz, bodies, cxt)
-				methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, className, transactionSupport)
+				methodProcessingAddPriv(m, clazz, aspectizedClassName, bodies, cxt)
+				methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, aspectizedClassName, transactionSupport)
 			}
 			else cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 		}
@@ -627,25 +656,28 @@ public class AspectProcessor extends AbstractClassProcessor
 										extension TransformationContext context)
 	{
 		val c = findClass(clazz.qualifiedName + className + PROP_NAME)
-
-		for (f : clazz.declaredFields) {
-			if (f.simpleName != PROP_VAR_NAME) {
-				toRemove.add(f)
-
-				if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
-					propertyAspect.add(f)
-
-				c.addField(f.simpleName) [
-					visibility = Visibility::PUBLIC
-					static = f.static
-					final = f.final
-					type = f.type
-					if (f.initializer !== null) initializer = f.initializer
-					primarySourceElement = f
-				]
-			} else if (!f.static && f.simpleName == PROP_VAR_NAME) {
-				f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
-				f.static = true
+		if (c === null)
+			addError(clazz, "Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects.")
+		else {
+			for (f : clazz.declaredFields) {
+				if (f.simpleName != PROP_VAR_NAME) {
+					toRemove.add(f)
+	
+					if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
+						propertyAspect.add(f)
+	
+					c.addField(f.simpleName) [
+						visibility = Visibility::PUBLIC
+						static = f.static
+						final = f.final
+						type = f.type
+						if (f.initializer !== null) initializer = f.initializer
+						primarySourceElement = f
+					]
+				} else if (!f.static && f.simpleName == PROP_VAR_NAME) {
+					f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
+					f.static = true
+				}
 			}
 		}
 	}
@@ -684,9 +716,9 @@ public class AspectProcessor extends AbstractClassProcessor
 					primarySourceElement = f
 				]
 
-			bodies.put(get, ''' return «clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName»; ''')
+			bodies.put(get, ''' return «PROP_VAR_NAME».«f.simpleName»; ''')
 
-val gemochack = '''try {
+			val gemochack = '''try {
 
 			for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
 				if (m.getName().equals("set" + "«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
@@ -709,7 +741,7 @@ val gemochack = '''try {
 					]
 
 
-				bodies.put(set, '''«clazz.qualifiedName».«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemochack.toString» ''')
+				bodies.put(set, '''«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemochack.toString» ''')
 			}
 		}
 	}
@@ -728,7 +760,7 @@ val gemochack = '''try {
 		val List<MutableFieldDeclaration> propertyAspect = newArrayList
 
 		fieldProcessingMoveField(clazz, toRemove, propertyAspect, className, context)
-		fieldProcessingAddField(clazz, className, context)
+		// DVK changing _self_ into a local variable fieldProcessingAddField(clazz, className, context)
 		fieldProcessingAddGetterSetter(clazz, propertyAspect, identifier, bodies, context)
 
 		for (f : toRemove) f.remove
