@@ -23,7 +23,6 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
-import org.eclipse.xtend.lib.macro.declaration.MutableConstructorDeclaration
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -121,7 +120,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				// Transform methods to static
 				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
 				
-				// transform constructor into static method
+				// constructor are currently not allowed, report error if there are some.
 				constructorsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className, transactionSupport)
 				
 				aspectContextMaker(context, clazz, className, identifier)
@@ -130,7 +129,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 		// prepare an AspectMApping properties file
 		// it is partly done in this context and partly done in the generate code context
-		// (allows to get writting abilities and notification to Eclipse)
+		// (allows to get writing abilities and notification to Eclipse)
 		aspectMappingBuilder.readCurrentMapping(classes, context)
 		aspectMappingBuilder.cleanUnusedMapping(context)
 
