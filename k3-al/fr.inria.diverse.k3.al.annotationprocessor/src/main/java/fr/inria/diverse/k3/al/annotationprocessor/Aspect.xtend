@@ -633,7 +633,7 @@ public class AspectProcessor extends AbstractClassProcessor
 			type = newTypeReference("java.util.Map", newTypeReference(identifier),
 				findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
 			initializer = [
-				'''new java.util.HashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()'''
+				'''new java.util.WeakHashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()'''
 			]
 			primarySourceElement = clazz
 		]
