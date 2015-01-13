@@ -85,13 +85,6 @@ public class ExpArithmPackageImpl extends EPackageImpl implements ExpArithmPacka
 	private EClass divisionEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType doubleEDataType = null;
-
-	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -265,15 +258,6 @@ public class ExpArithmPackageImpl extends EPackageImpl implements ExpArithmPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EDataType getdouble() {
-		return doubleEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public ExpArithmFactory getExpArithmFactory() {
 		return (ExpArithmFactory)getEFactoryInstance();
 	}
@@ -316,9 +300,6 @@ public class ExpArithmPackageImpl extends EPackageImpl implements ExpArithmPacka
 		multEClass = createEClass(MULT);
 
 		divisionEClass = createEClass(DIVISION);
-
-		// Create data types
-		doubleEDataType = createEDataType(DOUBLE);
 	}
 
 	/**
@@ -367,7 +348,7 @@ public class ExpArithmPackageImpl extends EPackageImpl implements ExpArithmPacka
 		initEReference(getOperateurBinaire_EltDroit(), this.getEltExp(), null, "eltDroit", null, 1, 1, OperateurBinaire.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(valeurEClass, Valeur.class, "Valeur", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getValeur_Valeur(), this.getdouble(), "valeur", null, 1, 1, Valeur.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getValeur_Valeur(), ecorePackage.getEDouble(), "valeur", null, 1, 1, Valeur.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(plusEClass, Plus.class, "Plus", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -376,9 +357,6 @@ public class ExpArithmPackageImpl extends EPackageImpl implements ExpArithmPacka
 		initEClass(multEClass, Mult.class, "Mult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(divisionEClass, Division.class, "Division", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		// Initialize data types
-		initEDataType(doubleEDataType, Double.class, "double", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

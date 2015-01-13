@@ -1,6 +1,6 @@
 {
     "platform": [
-        "http://download.eclipse.org/releases/kepler",
+        "http://download.eclipse.org/releases/luna",
         "http://download.eclipse.org/modeling/emf/emf/updates/releases/"
         ],
      "xtext": [

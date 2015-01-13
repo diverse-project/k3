@@ -18,7 +18,7 @@ public annotation XtextTest
 {
 	Class<?> rootType
 	String   inputFile
-	boolean  withValidation = true
+	boolean withValidation = true
 }
 
 class XtextTestProcessor extends AbstractClassProcessor
@@ -30,7 +30,7 @@ class XtextTestProcessor extends AbstractClassProcessor
 	override void doTransform(MutableClassDeclaration cls, extension TransformationContext ctx) {
 		val ann = cls.annotations.findFirst[annotationTypeDeclaration == XtextTest.newTypeReference.type]
 
-		if (ann == null) {
+		if (ann === null) {
 			cls.addError("Couldn't find annotation type XtextTest")
 			return
 		}
@@ -47,8 +47,9 @@ class XtextTestProcessor extends AbstractClassProcessor
 			cls.generateParsingTest(ctx)
 	}
 
-	def generateSetupMethod(MutableClassDeclaration cls, extension TransformationContext ctx) {
+	def void generateSetupMethod(MutableClassDeclaration cls, extension TransformationContext ctx) {
 		cls.addMethod("setUp")[
+			primarySourceElement = cls
 			addAnnotation(findTypeGlobally("org.junit.Before").newAnnotationReference)
 			body = '''
 				try {
@@ -68,8 +69,9 @@ class XtextTestProcessor extends AbstractClassProcessor
 		]
 	}
 
-	def generateParsingTest(MutableClassDeclaration cls, extension TransformationContext ctx) {
+	def void generateParsingTest(MutableClassDeclaration cls, extension TransformationContext ctx) {
 		cls.addMethod("testParsing")[
+			primarySourceElement = cls
 			addAnnotation(findTypeGlobally("org.junit.Test").newAnnotationReference)
 			body = '''
 				this._validationTestHelper.assertNoErrors(this.root);
@@ -77,8 +79,9 @@ class XtextTestProcessor extends AbstractClassProcessor
 		]
 	}
 
-	def generateEmfValidationTest(MutableClassDeclaration cls, extension TransformationContext ctx) {
+	def void generateEmfValidationTest(MutableClassDeclaration cls, extension TransformationContext ctx) {
 		cls.addMethod("testEmfValidation")[
+			primarySourceElement = cls
 			addAnnotation(findTypeGlobally("org.junit.Test").newAnnotationReference)
 			body = '''
 				org.junit.Assert.assertEquals(org.eclipse.emf.ecore.util.Diagnostician.INSTANCE.validate(root).getCode(), org.eclipse.emf.common.util.Diagnostic.OK);
@@ -86,10 +89,11 @@ class XtextTestProcessor extends AbstractClassProcessor
 		]
 	}
 
-	def generateFields(MutableClassDeclaration cls, extension TransformationContext ctx) {
+	def void generateFields(MutableClassDeclaration cls, extension TransformationContext ctx) {
 		// ValidationTestHelper
 		if (withValidation)
 			cls.addField("_validationTestHelper")[
+				primarySourceElement = cls
 				addAnnotation(findTypeGlobally("com.google.inject.Inject").newAnnotationReference)
 				addAnnotation(findTypeGlobally("org.eclipse.xtext.xbase.lib.Extension").newAnnotationReference)
 				type = findTypeGlobally("org.eclipse.xtext.junit4.validation.ValidationTestHelper").newTypeReference
@@ -97,6 +101,7 @@ class XtextTestProcessor extends AbstractClassProcessor
 
 		// ValidationTestHelper
 		cls.addField("_compilationTestHelper")[
+			primarySourceElement = cls
 			addAnnotation(findTypeGlobally("com.google.inject.Inject").newAnnotationReference)
 			addAnnotation(findTypeGlobally("org.eclipse.xtext.xbase.lib.Extension").newAnnotationReference)
 			type = findTypeGlobally("org.eclipse.xtext.xbase.compiler.CompilationTestHelper").newTypeReference
@@ -104,6 +109,7 @@ class XtextTestProcessor extends AbstractClassProcessor
 
 		// ParseHelper
 		cls.addField("_parseHelper")[
+			primarySourceElement = cls
 			addAnnotation(findTypeGlobally("com.google.inject.Inject").newAnnotationReference)
 			addAnnotation(findTypeGlobally("org.eclipse.xtext.xbase.lib.Extension").newAnnotationReference)
 			type = newTypeReference("org.eclipse.xtext.junit4.util.ParseHelper", rootType)
@@ -111,11 +117,13 @@ class XtextTestProcessor extends AbstractClassProcessor
 
 		// Input sequence
 		cls.addField("inputSequence")[
+			primarySourceElement = cls
 			type = StringBuffer.newTypeReference
 		]
 
 		// Root element
 		cls.addField("root")[
+			primarySourceElement = cls
 			type = rootType
 		]
 	}

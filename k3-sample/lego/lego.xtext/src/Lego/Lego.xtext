@@ -1,0 +1,56 @@
+grammar insa.Lego hidden(SL_COMMENT, ML_COMMENT, WS)
+
+import "platform:/resource/lego/metamodel/robot.ecore#//robot" as robot
+//import "platform:/resource/lego/metamodel/robot.ecore"
+import "platform:/resource/lego/metamodel/robot.ecore#//FlotCtrl" as FlotCtrl
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+ProgramUnit returns robot::ProgramUnit: (block+=Expression)* ;
+
+Expression returns FlotCtrl::Expression: WhileLoop | NegExp | AndExp | IfBlock | Command;
+
+BoolExp returns FlotCtrl::BoolExp: NegExp | AndExp | HasTurnedCmd | ObstacleCmd;
+
+WhileLoop returns FlotCtrl::WhileLoop: 'while' loopCond=BoolExp 'do' (block+=Expression)* 'end';
+
+NegExp returns FlotCtrl::NegExp: 'not' exp=BoolExp ;
+
+AndExp returns FlotCtrl::AndExp: 'and' leftExp=BoolExp rightExp=BoolExp;
+
+IfBlock returns FlotCtrl::IfBlock: 'if' condition=BoolExp 'then' (thenBlock+=Expression)* ('else' (elseBlock+=Expression)*)? 'end';
+
+Command returns robot::Command: MoveCmd | PrintCmd | SetTurnAngleCmd | StopEngineCmd | StopProgramCmd | TurnCmd | HasTurnedCmd | ObstacleCmd;
+
+Bip returns robot::Bip: 'bip' '(' 'duration' '=' duration=INT ',' 'power' '=' power=DOUBLE ',' 'repeat' '=' repet=BOOLEAN_LITERAL ')' ;
+
+HasTurnedCmd returns robot::HasTurnedCmd: 'hasTurned' '(' 'angle' '=' angle=DOUBLE ')' ;
+
+MoveCmd returns robot::MoveCmd: 'move' '(' 'power' '=' power=DOUBLE ')' ;
+
+PrintCmd returns robot::PrintCmd: 'display' '(' 'msg' '=' msg=STRING ',' 'duration' '=' duration=INT ',' 'line' '=' line=INT ',' 'col' '=' col=INT ')' ;
+
+SetTurnAngleCmd returns robot::SetTurnAngleCmd: 'setTurnAngle' '(' 'angle' '=' angle=DOUBLE ')' ;
+
+StopEngineCmd returns robot::StopEngineCmd : {robot::StopEngineCmd} 'stopEngine' ;
+
+StopProgramCmd returns robot::StopProgramCmd: {robot::StopProgramCmd} 'stopProgram' ;
+
+TurnCmd returns robot::TurnCmd: 'turn' '(' 'power' '=' power=DOUBLE ',' 'angle' '=' angle=DOUBLE ')' ;
+
+ObstacleCmd returns robot::ObstacleCmd: 'obstacle' '(' 'distance' '=' distance=DOUBLE ')' ;
+
+
+
+
+BOOLEAN_LITERAL returns ecore::EBoolean: 'true'|'false';
+terminal STRING	: 
+			'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' |
+			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'" ; 
+terminal ML_COMMENT	: '/*' -> '*/';
+terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
+terminal WS			: (' '|'\t'|'\r'|'\n')+;
+terminal fragment DIGIT: '0'..'9';
+terminal DOUBLE returns ecore::EDouble: INT ('.' DIGIT*);
+terminal INT returns ecore::EInt: '0' | ('1'..'9' DIGIT*);
+
+

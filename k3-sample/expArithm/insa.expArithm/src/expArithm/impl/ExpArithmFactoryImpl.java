@@ -28,7 +28,7 @@ public class ExpArithmFactoryImpl extends EFactoryImpl implements ExpArithmFacto
 	 */
 	public static ExpArithmFactory init() {
 		try {
-			ExpArithmFactory theExpArithmFactory = (ExpArithmFactory)EPackage.Registry.INSTANCE.getEFactory("http://expArithm"); 
+			ExpArithmFactory theExpArithmFactory = (ExpArithmFactory)EPackage.Registry.INSTANCE.getEFactory(ExpArithmPackage.eNS_URI);
 			if (theExpArithmFactory != null) {
 				return theExpArithmFactory;
 			}
@@ -65,36 +65,6 @@ public class ExpArithmFactoryImpl extends EFactoryImpl implements ExpArithmFacto
 			case ExpArithmPackage.DIVISION: return createDivision();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-			case ExpArithmPackage.DOUBLE:
-				return createdoubleFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case ExpArithmPackage.DOUBLE:
-				return convertdoubleToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -156,24 +126,6 @@ public class ExpArithmFactoryImpl extends EFactoryImpl implements ExpArithmFacto
 	public Division createDivision() {
 		DivisionImpl division = new DivisionImpl();
 		return division;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Double createdoubleFromString(EDataType eDataType, String initialValue) {
-		return (Double)super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertdoubleToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

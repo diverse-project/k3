@@ -29,13 +29,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * @generated
  */
 public class ValeurItemProvider
-	extends EltExpItemProvider
-	implements
-		IEditingDomainItemProvider,
-		IStructuredItemContentProvider,
-		ITreeItemContentProvider,
-		IItemLabelProvider,
-		IItemPropertySource {
+	extends EltExpItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -79,7 +73,7 @@ public class ValeurItemProvider
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -103,11 +97,8 @@ public class ValeurItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		Double labelValue = ((Valeur)object).getValeur();
-		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Valeur_type") :
-			getString("_UI_Valeur_type") + " " + label;
+		Valeur valeur = (Valeur)object;
+		return getString("_UI_Valeur_type") + " " + valeur.getValeur();
 	}
 
 	/**

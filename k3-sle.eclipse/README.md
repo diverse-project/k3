@@ -1,17 +1,18 @@
-K3SLE
+Melange
 =====
 
 TODO
 ----
-- [ ] Scala as an alternative target language
-- [ ] **Externalize all AST-completion operations in a IDerivedStateComputer post-processor**
+
+- [ ] Capitalize adapters creation in dedicated factories
+- [ ] Externalize all AST-completion operations in a IDerivedStateComputer post-processor
 - [ ] Modeling in-the-large
 	- [ ] Metamodels attributes and operations
 	- [X] Modeltypes attributes and operations
 - [X] Aspects weaving
 	- [X] Weave aspects into a metamodel
 	- [ ] Allow definition of generic aspects (on modeltypes)
-	- [ ] Generic extraction of metamodel fragments from aspect definition
+	- [X] Generic extraction of metamodel fragments from aspect definition
 - [X] Subtyping Algorithm
 	- [X] Take aspects signatures into account
 	- [ ] Ensure termination (check for cycles)
@@ -25,13 +26,13 @@ TODO
 - [ ] Register to the EMF notification system (eg. 2-ways list adapters)
 - [X] Allow arbitrary return types for transformations
 - [ ] Create models from scratch using the generated factories, avoiding families mixing
-- [X] Support metamodels making use of external references (to be checked)
+- [X] Support metamodels making use of external references
 - [X] Allow import of Ecore for modeltype definition
 - [ ] Automatically merge different Ecore inherited and/or imported
 - [ ] Write static semantic constraints on the abstract syntax
-- [ ] Manage annotations on Ecore file to specify which elements need to be exposed by the interface
+- [ ] Manage annotations on Ecore file to specify which elements need to be exposed in the interface
 - [X] Expose methods signatures in the interface
-- [ ] Define inheritance / aspects weaving, etc. in terms of metamodels merging
+- [X] Define inheritance / aspects weaving, etc. in terms of metamodels merging (partially)
 - [ ] Define independently and use modeltypes algebra for any kind of operators
 - [ ] Support adaptation mechanisms between model types (at least through renaming)
 - [ ] Manage visibilities, both when extracting interfaces and aspects' semantics
@@ -52,6 +53,14 @@ TESTS
 
 TOWARDS STANDALONE
 ------------------
-- [ ] K3Resource
-- [ ] K3Metadata?
-- [ ] ModelTypingSpace manager within Eclipse project or workspace
+- [ ] MelangeResource
+- [ ] MelangeMetadata?
+- [ ] ModelTypingSpace manager within Eclipse project or workspace
+
+PERFORMANCE
+-----------
+- [ ] Disable Xtext services (indexing, scoping, etc.) on EPackages and their subtree (which constitutes the biggest part of the overall AST)
+- [ ] Alternatively, remove ModelingElement from the AST and use an external hash table to keep track of the associated EPackages
+- [ ] Keep track of the generated artifacts (Melange/EMF) and regenerate them only when necessary
+- [ ] exactType should be immutable reference to the EPackages defining the metamodel they are extracted from. No need to copy anything
+
