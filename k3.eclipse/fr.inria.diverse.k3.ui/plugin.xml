@@ -11,7 +11,7 @@
       <wizard
             canFinishEarly="true"
             category="fr.inria.diverse.k3.category"
-            class="fr.inria.diverse.k3.ui.wizards.WizardNewProjectK3Plugin"
+            class="fr.inria.diverse.k3.ui.wizards.NewK3ProjectWizard"
             icon="icons/new_kermeta_project.gif"
             id="fr.inria.diverse.k3.ui.wizards.WizardNewProjectK3Plugin"
             name="K3 Project"

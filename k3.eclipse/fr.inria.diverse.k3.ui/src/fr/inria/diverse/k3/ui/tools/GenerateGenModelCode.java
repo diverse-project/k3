@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
+import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardFields;
+
 public class GenerateGenModelCode {
 
 	/**
@@ -34,7 +36,7 @@ public class GenerateGenModelCode {
 
 	org.eclipse.emf.codegen.ecore.Generator generator;
 	
-	public Boolean existGenModel (Context context) {
+	public Boolean existGenModel (NewK3ProjectWizardFields context) {
 		int i = 0;
 		Boolean bRet = false;
 		int endIndex = context.ecoreIFile.getLocation().toOSString().length();

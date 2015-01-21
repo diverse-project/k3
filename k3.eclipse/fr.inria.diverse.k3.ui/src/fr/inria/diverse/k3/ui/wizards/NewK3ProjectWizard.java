@@ -1,6 +1,7 @@
 package fr.inria.diverse.k3.ui.wizards;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
@@ -20,17 +21,23 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.elements.ElementList;
-import org.eclipse.pde.internal.ui.wizards.WizardElement;
+import org.eclipse.pde.ui.IPluginContentWizard;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.AbstractNewProjectWizardWithTemplates;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.TemplateListSelectionPage;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.WizardElement;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.IProjectContentWizard;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.ProjectTemplateApplicationOperation;
 import fr.inria.diverse.k3.ui.Activator;
-import fr.inria.diverse.k3.ui.tools.Context;
 import fr.inria.diverse.k3.ui.tools.FileUtils;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
 import fr.inria.diverse.k3.ui.tools.IFolderUtils;
@@ -43,29 +50,30 @@ import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspath;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathMaven;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathPlugin;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathStandAlone;
-import fr.inria.diverse.k3.ui.wizards.pages.WizardPageCustomNewProjectK3Plugin;
-import fr.inria.diverse.k3.ui.wizards.pages.WizardPageNewProjectK3Plugin;
-import fr.inria.diverse.k3.ui.wizards.pages.pde.TemplateListSelectionPage;
+import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardFields;
+import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectCustomWizardPage;
+import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardPage;
 
-public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
+public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates implements INewWizard {
 
-	protected Context context = new Context();
+
 	
-	WizardPageNewProjectK3Plugin 		projectPage			 = new WizardPageNewProjectK3Plugin(this.context);
-	WizardPageCustomNewProjectK3Plugin 	projectPageCustom	 = new WizardPageCustomNewProjectK3Plugin(this.context);
+	protected NewK3ProjectWizardFields 		context;
 	
-	TemplateListSelectionPage templateSelectionPage;
+	protected NewK3ProjectWizardPage 		projectPage;
+	//WizardPageCustomNewProjectK3Plugin 	projectPageCustom	 = new WizardPageCustomNewProjectK3Plugin(this.context);
 	
-	public WizardNewProjectK3Plugin() {
-		templateSelectionPage = new TemplateListSelectionPage(getAvailableCodegenWizards(), context, "&Available Templates:");
+	
+	public NewK3ProjectWizard() {
+		context = new NewK3ProjectWizardFields();
 	}
 	
 	@Override
 	public void addPages() {
-		addPage(projectPage);
-		addPage(projectPageCustom);
-				
-		addPage(templateSelectionPage);
+		projectPage			 = new NewK3ProjectWizardPage(this.context);
+		
+		addPage(projectPage);			
+		addPage(getTemplateListSelectionPage(context));
 		
 		
 	}
@@ -80,11 +88,11 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 	public boolean performFinish() {	
 		try {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace(); 
-			final IProjectDescription description = workspace.newProjectDescription(this.context.nameProject);
-			if (!this.context.locationProject.equals(workspace.getRoot().getLocation().toOSString()))
-				description.setLocation(new Path(this.context.locationProject));
+			final IProjectDescription description = workspace.newProjectDescription(this.context.projectName);
+			if (!this.context.projectLocation.equals(workspace.getRoot().getLocation().toOSString()))
+				description.setLocation(new Path(this.context.projectLocation));
 			
-			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.nameProject);
+			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(this.context.projectName);
 			IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
 					project.create(description, monitor);
@@ -92,6 +100,19 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 					addKermetaNatureToProject(project);
 					
 					configureProject(project, monitor);
+					
+					
+					// launch the template
+					
+					IProjectContentWizard contentWizard = templateSelectionPage.getSelectedWizard();
+					try {
+						getContainer().run(false, true, new ProjectTemplateApplicationOperation(context, project, contentWizard));
+					} catch (InvocationTargetException e) {
+						Activator.logErrorMessage(e.getMessage(), e);
+					} catch (InterruptedException e) {
+						Activator.logErrorMessage(e.getMessage(), e);
+					}
+					
 					//setClassPath(project, monitor);
 					project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 				}
@@ -125,10 +146,10 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 			if(!description.hasNature("org.eclipse.xtext.ui.shared.xtextNature")){
 				addNature(description, "org.eclipse.xtext.ui.shared.xtextNature");				
 			}
-			if((this.context.kindsOfProject == Context.KindsOfProject.PLUGIN) && (!description.hasNature("org.eclipse.pde.PluginNature"))){
+			if((this.context.kindsOfProject == NewK3ProjectWizardFields.KindsOfProject.PLUGIN) && (!description.hasNature("org.eclipse.pde.PluginNature"))){
 				addNature(description, "org.eclipse.pde.PluginNature");				
 			}
-			if((this.context.kindsOfProject == Context.KindsOfProject.MAVEN) && (!description.hasNature("org.eclipse.m2e.core.maven2Nature"))){
+			if((this.context.kindsOfProject == NewK3ProjectWizardFields.KindsOfProject.MAVEN) && (!description.hasNature("org.eclipse.m2e.core.maven2Nature"))){
 				addNature(description, "org.eclipse.m2e.core.maven2Nature");			
 			}
 			project.setDescription(description, null);
@@ -154,10 +175,11 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				sourceFolderName= "src/";
 			}
 			createSettingsResourcePrefs(project, monitor);
-			if(context.ecoreIFile != null){
+
+			IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
+/*			if(context.ecoreIFile != null){
 				createProjectWithEcore(monitor, sourceFolderName);
 			} else {
-				IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
 				if(context.useEMF){
 					createMiniEcoreAspectSampleXtend(project, monitor, sourceFolderName);
 				}
@@ -165,6 +187,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 					createMiniAspectSampleXtend(project, monitor, sourceFolderName);
 				}
 			}
+*/			
 			switch (this.context.kindsOfProject)
 			{
 			case STANDALONE :
@@ -242,7 +265,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
 		
-		String contents = K3FileTemplates.manifestMFPlugin(this.context.nameProject, new ArrayList<String>(), new ArrayList<String>());
+		String contents = K3FileTemplates.manifestMFPlugin(this.context.projectName, new ArrayList<String>(), new ArrayList<String>());
 		FileUtils.writeInFile(file, contents, monitor);    
     }
 	
@@ -283,9 +306,9 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		String contents = "";
 		if(!bEcoreProject) {
 			if(this.context.ecoreProject) {
-				contents = K3SampleFilesTemplates.pomXmlK3Ecore(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
+				contents = K3SampleFilesTemplates.pomXmlK3Ecore(this.context.projectName, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 			}else {
-				contents = K3SampleFilesTemplates.pomXmlK3(this.context.nameProject, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
+				contents = K3SampleFilesTemplates.pomXmlK3(this.context.projectName, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
 			}
 		} else {
 			contents = K3SampleFilesTemplates.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
@@ -293,7 +316,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		FileUtils.writeInFile(file, contents, monitor);
 	}
 		
-	private void createDefaultKmt(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
+/*	private void createDefaultKmt(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
 		String path = sourceFolderName + this.context.namePackage + "/HelloEcore.xtend";
 		IContainer currentContainer = project;
 		IFile file = currentContainer.getFile(new Path(path));
@@ -344,12 +367,12 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 
 		FileUtils.writeInFile(file, contents, monitor);
 	}
-	
-	public Context getContext() {
+*/	
+	public NewK3ProjectWizardFields getContext() {
 		return context;
 	}
 	
-	public boolean createProjectWithEcore(IProgressMonitor monitor, String sourceFolderName) {
+/*	public boolean createProjectWithEcore(IProgressMonitor monitor, String sourceFolderName) {
 		boolean returnVal = true;
 
 		updateBasePackageFromGenModel(this.context);
@@ -379,7 +402,7 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 
 		return returnVal;
 	}
-
+*/
 	public void addNatureToProject(IProject project, Boolean tabNature[]) {
 		IProjectDescription description;
 		try {
@@ -411,11 +434,11 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 		return this.context.namePackage;
 	}
 
-	public WizardPageNewProjectK3Plugin getPageProject() {
+	public NewK3ProjectWizardPage getPageProject() {
 		return this.projectPage;
 	}
 	
-	public void updateBasePackageFromGenModel(Context context) {
+	public void updateBasePackageFromGenModel(NewK3ProjectWizardFields context) {
 		 GenerateGenModelCode genmodel = new GenerateGenModelCode();
 		 String basePackage;
 		if(genmodel.existGenModel(context)) {
@@ -424,41 +447,12 @@ public class WizardNewProjectK3Plugin extends Wizard implements INewWizard {
 				context.basePackage = new ToolsString().generateListPackage(basePackage, (byte)46);
 		}
 	}
-	
-/*	protected WizardElement createWizardElement(IConfigurationElement config) {
-		String name = config.getAttribute(WizardElement.ATT_NAME);
-		String id = config.getAttribute(WizardElement.ATT_ID);
-		String className = config.getAttribute(WizardElement.ATT_CLASS);
-		if (name == null || id == null || className == null)
-			return null;
-		WizardElement element = new WizardElement(config);
-		String imageName = config.getAttribute(WizardElement.ATT_ICON);
-		if (imageName != null) {
-			String pluginID = config.getNamespaceIdentifier();
-			Image image = PDEPlugin.getDefault().getLabelProvider().getImageFromPlugin(pluginID, imageName);
-			element.setImage(image);
-		}
-		return element;
-	} */
-	public ElementList getAvailableCodegenWizards() {
-		ElementList wizards = new ElementList("CodegenWizards"); //$NON-NLS-1$
-		/*IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry.getExtensionPoint(PDEPlugin.getPluginId(), PLUGIN_POINT);
-		if (point == null)
-			return wizards;
-		IExtension[] extensions = point.getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(TAG_WIZARD)) {
-					WizardElement element = createWizardElement(elements[j]);
-					if (element != null) {
-						wizards.add(element);
-					}
-				}
-			}
-		}*/
-		return wizards;
+
+	@Override
+	public String getTargetPluginId() {		
+		return Activator.PLUGIN_ID;
 	}
+	
+	
 	
 }

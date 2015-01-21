@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="fr.inria.diverse.commons.eclipse.pde.templates">
+      <template
+            class="fr.inria.diverse.k3.ui.templates.k3al.MiniAspectSampleTemplate"
+            contributingId="fr.inria.diverse.k3.ui.templates.template1"
+            id="fr.inria.diverse.k3.ui.templates.mini_aspect_sample_template"
+            name="Mini Aspect Sample">
+      </template>
+      <template
+            class="fr.inria.diverse.k3.ui.templates.k3al.MiniEcoreAspectSampleTemplate"
+            contributingId="fr.inria.diverse.k3.ui.templates.template1"
+            id="fr.inria.diverse.k3.ui.templates.mini_ecore_aspect_sample_template"
+            name="Mini Ecore Aspect Sample">
+      </template>
+      <template
+            class="fr.inria.diverse.k3.ui.templates.k3al.UserEcoreBasicAspectTemplate"
+            contributingId="fr.inria.diverse.k3.ui.templates.template1"
+            id="fr.inria.diverse.k3.ui.templates.user_ecore_basic_aspects_template"
+            name="User Ecore Basic Aspects">
+      </template>
+   </extension>
+   <extension
+         point="fr.inria.diverse.commons.eclipse.pde.projectContent">
+      <wizard
+            class="fr.inria.diverse.k3.ui.templates.k3al.MiniAspectSampleNewWizard"
+            id="fr.inria.diverse.k3.ui.templates.projectContent.MiniAspectSample"
+            name="Mini Aspect Sample"
+            targetPluginId="fr.inria.diverse.k3.ui">
+      </wizard>
+      <wizard
+            class="fr.inria.diverse.k3.ui.templates.k3al.MiniEcoreAspectSampleNewWizard"
+            id="fr.inria.diverse.k3.ui.templates.projectContent.MiniEcoreAspectSample"
+            name="Mini Ecore Aspect Sample"
+            targetPluginId="fr.inria.diverse.k3.ui">
+      </wizard>
+      <wizard
+            class="fr.inria.diverse.k3.ui.templates.k3al.UserEcoreBasicAspectNewWizard"
+            id="fr.inria.diverse.k3.ui.templates.projectContent.UserEcoreBasicAspect"
+            name="User Ecore Basic Aspects"
+            targetPluginId="fr.inria.diverse.k3.ui">
+      </wizard>
+   </extension>
+
+</plugin>

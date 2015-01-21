@@ -1,0 +1,93 @@
+/*******************************************************************************
+ *  Copyright (c) 2000, 2007 IBM Corporation and others.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ * 
+ *  Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package fr.inria.diverse.k3.ui.templates.k3al;
+
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardPage;
+
+import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
+import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
+import fr.inria.diverse.k3.ui.templates.K3TemplateSection;
+import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardFields;
+
+public class MiniAspectSampleTemplate extends K3TemplateSection {
+	public static final String KEY_CLASS_NAME = "className"; //$NON-NLS-1$
+	public static final String KEY_ASPECTCLASS_NAME = "aspectClassName"; //$NON-NLS-1$
+	public static final String CLASS_NAME = "SampleMain"; //$NON-NLS-1$
+	public static final String ASPECTCLASS_NAME = "SampleXMLFileAspect"; //$NON-NLS-1$
+
+	/**
+	 * Constructor for HelloWorldTemplate.
+	 */
+	public MiniAspectSampleTemplate() {
+		setPageCount(1);
+		createOptions();
+	}
+
+	/** 
+	 * used to retrieve the template folder
+	 */
+	public String getSectionId() {
+		return "miniAspectSample"; //$NON-NLS-1$
+	}
+
+	/*
+	 * @see ITemplateSection#getNumberOfWorkUnits()
+	 */
+	public int getNumberOfWorkUnits() {
+		return super.getNumberOfWorkUnits() + 1;
+	}
+
+	private void createOptions() {
+		addOption(KEY_PACKAGE_NAME, K3TemplateMessages.MiniAspectSampleTemplate_packageName, (String) null, 0);
+		addOption(KEY_CLASS_NAME, K3TemplateMessages.MiniAspectSampleTemplate_className, CLASS_NAME, 0);
+		addOption(KEY_ASPECTCLASS_NAME, K3TemplateMessages.MiniAspectSampleTemplate_aspectClassName, ASPECTCLASS_NAME, 0);
+	}
+
+	public void addPages(Wizard wizard) {
+		WizardPage page = createPage(0, IHelpContextIds.TEMPLATE_MINI_ASPECT_SAMPLE);
+		page.setTitle(K3TemplateMessages.MiniAspectSampleTemplate_title);
+		page.setDescription(K3TemplateMessages.MiniAspectSampleTemplate_desc);
+		wizard.addPage(page);
+		markPagesAdded();
+	}
+
+	public boolean isDependentOnParentWizard() {
+		return true;
+	}
+
+	protected void initializeFields(NewK3ProjectWizardFields data) {
+		initializeOption(KEY_PACKAGE_NAME, data.namePackage);
+	}
+
+
+	public String getUsedExtensionPoint() {
+		return "org.eclipse.ui.actionSets"; //$NON-NLS-1$
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.pde.ui.templates.ITemplateSection#getFoldersToInclude()
+	 */
+	public String[] getNewFiles() {
+		return new String[] {"icons/"}; //$NON-NLS-1$
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.pde.internal.ui.wizards.templates.PDETemplateSection#formatPackageName(java.lang.String)
+	 */
+	protected String getFormattedPackageName(String id) {
+		String packageName = super.getFormattedPackageName(id);
+		if (packageName.length() != 0)
+			return packageName + ".actions"; //$NON-NLS-1$
+		return "actions"; //$NON-NLS-1$
+	}
+}

@@ -32,42 +32,42 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.emf.common.ui.dialogs.WorkspaceResourceDialog;
 import org.eclipse.emf.mapping.ecore2ecore.presentation.Ecore2EcoreEditorPlugin;
 
-import fr.inria.diverse.k3.ui.tools.Context;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.k3.ui.tools.ErrorMessage;
 
-public class WizardPageNewProjectK3Plugin extends WizardPage {
+public class NewK3ProjectWizardPage extends WizardPage {
 
-	protected Context		context;
+	protected NewK3ProjectWizardFields		context;
 	
 	protected static final List<String> FILE_EXTENSIONS = Arrays.asList(new String [] { "ecore" });
 	protected ErrorMessage[] errorMessage;
-	protected boolean 	enableNext;
+	protected boolean 	enableNext = true;
 	
 	protected Composite 	container;
 	protected Label 		lblProjectName;
-	protected Label 		lblTemplateEcore;
+//	protected Label 		lblTemplateEcore;
 	protected Text 			txtProjectName;
 	protected Text 			txtProjectLocation;
-	protected Text 			txtPathEcore;
+//	protected Text 			txtPathEcore;
 	protected Button		btnBrowseLocation;
-	protected Button 		btnBrowseEcore;
+//	protected Button 		btnBrowseEcore;
 	//protected Button 		btnCreateEmfProject;
 	protected Button 		btnCheckLocation;
-	protected Button 		btnCheckEcore;
-	protected Button 		btnCheckSLE;
+//	protected Button 		btnCheckEcore;
+//	protected Button 		btnCheckSLE;
 	protected Button 		btnCheckEMF;
 	protected Button 		btnCheckKMF;
 	protected Button 		btnRadioStandAlone;
 	protected Button 		btnRadioPlugIn;
 	protected Button 		btnRadioMaven;
-	protected Combo 		combo;
+//	protected Combo 		combo;
 	protected Group 		grpGeneral;
 	protected Group 		grpKindOfProject;
 	protected Group 		grpModelingOptions;
-	protected Group 		grpSLEOptions;
+//protected Group 		grpSLEOptions;
 	protected Group 		grpTemplateOptions;
 
-	public WizardPageNewProjectK3Plugin(Context context){
+	public NewK3ProjectWizardPage(NewK3ProjectWizardFields context){
 		super("wizardPage");
 		this.context = context;
 		setTitle("New Kermeta 3 project");
@@ -81,10 +81,11 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	 * Constructor for KermetaNewWizardDashboard.
 	 * @param pageName
 	 */
-	public WizardPageNewProjectK3Plugin(ISelection selection) {
+	public NewK3ProjectWizardPage(ISelection selection) {
 		super("wizardPage");
 		setTitle("New Kermeta 3 project");
 		setDescription("This wizard creates a new kermeta 3 project");
+		setPageComplete(true);
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		new Label(grpGeneral, SWT.NONE);
 		
 		txtProjectName = new Text(grpGeneral, SWT.BORDER);
-		txtProjectName.setText(this.context.nameProject);
+		txtProjectName.setText(this.context.projectName);
 		txtProjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		new Label(grpGeneral, SWT.NONE);
 				
@@ -146,7 +147,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		});
 		txtProjectLocation = new Text(grpGeneral, SWT.BORDER);
 		txtProjectLocation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		txtProjectLocation.setText(this.context.locationProject);
+		txtProjectLocation.setText(this.context.projectLocation);
 		
 		btnBrowseLocation = new Button(grpGeneral, SWT.NONE);
 		btnBrowseLocation.setText("Browse...");
@@ -170,7 +171,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnRadioPlugIn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.PLUGIN);
+				updateKindsOfProject(NewK3ProjectWizardFields.KindsOfProject.PLUGIN);
 			}
 		});
 		
@@ -180,7 +181,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnRadioStandAlone.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.STANDALONE);
+				updateKindsOfProject(NewK3ProjectWizardFields.KindsOfProject.STANDALONE);
 			}
 		});
 		
@@ -190,7 +191,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		btnRadioMaven.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				updateKindsOfProject(Context.KindsOfProject.MAVEN);
+				updateKindsOfProject(NewK3ProjectWizardFields.KindsOfProject.MAVEN);
 			}
 		});
 
@@ -223,7 +224,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		new Label(grpModelingOptions, SWT.NONE);
 		new Label(grpModelingOptions, SWT.NONE);
 		
-		btnCheckEcore = new Button(grpModelingOptions, SWT.CHECK);
+	/*	btnCheckEcore = new Button(grpModelingOptions, SWT.CHECK);
 		btnCheckEcore.setText("reference an existing ecore file");
 		new Label(grpModelingOptions, SWT.NONE);
 		new Label(grpModelingOptions, SWT.NONE);
@@ -251,10 +252,10 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 				}
 			}
 		});
-		
+		*/
 		
 		//-----------------------------------------------
-		grpSLEOptions = new Group(container, SWT.NONE);
+/*		grpSLEOptions = new Group(container, SWT.NONE);
 		grpSLEOptions.setText("Language engineering options");
 		grpSLEOptions.setLayout(new GridLayout(4, false));
 		
@@ -267,12 +268,12 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 				updateUseSLE(btnCheckSLE.getSelection()); 
 			}
 		});
-		
-		grpTemplateOptions = new Group(container, SWT.NONE);
+	*/	
+	/*	grpTemplateOptions = new Group(container, SWT.NONE);
 		grpTemplateOptions.setText("Template options");
 		grpTemplateOptions.setLayout(new GridLayout(4, false));
-		lblTemplateEcore = new Label(grpTemplateOptions, SWT.NONE);
-		lblTemplateEcore.setText("use a template based on ecore file");
+	//	lblTemplateEcore = new Label(grpTemplateOptions, SWT.NONE);
+	//	lblTemplateEcore.setText("use a template based on ecore file");
 		new Label(grpTemplateOptions, SWT.NONE);
 		new Label(grpTemplateOptions, SWT.NONE);
 		new Label(grpTemplateOptions, SWT.NONE);
@@ -287,26 +288,26 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(combo.getSelectionIndex() == 2) {
-					updateNextButton (true);
+			//		updateNextButton (true);
 				}
 				else {
-					updateNextButton (false);
+			//		updateNextButton (false);
 				}
 			}
 		});
-		
+	*/	
 		//-----------------------------------------------
 		
 		//initialization of enabled state of controls
 		txtProjectLocation.setEnabled(false);
 		btnBrowseLocation.setEnabled(false);
-		btnBrowseEcore.setEnabled(false);
-		txtPathEcore.setEnabled(false);
-		lblTemplateEcore.setEnabled(false);
+	//	btnBrowseEcore.setEnabled(false);
+	//	txtPathEcore.setEnabled(false);
+	//	lblTemplateEcore.setEnabled(false);
 		//btnCreateEmfProject.setEnabled(false);
-		combo.setEnabled(false);
+	//	combo.setEnabled(false);
 		btnRadioPlugIn.setSelection(true);
-		btnCheckSLE.setEnabled(true);
+	//	btnCheckSLE.setEnabled(true);
 		
 		//analysis of the existing of the project name
 		if (existNameProject()) {
@@ -326,10 +327,10 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected String locationDialog () {
 		DirectoryDialog dirDialog = new DirectoryDialog(new Shell());
 	    dirDialog.setText("Select location directory");
-	    this.context.locationProject = dirDialog.open();
-	    return this.context.locationProject;
+	    this.context.projectLocation = dirDialog.open();
+	    return this.context.projectLocation;
 	}
-	  
+	/*  
 	protected boolean workspaceDialog() {
 		boolean bResult = false;
 		
@@ -372,6 +373,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		}
 		return bResult;
 	}
+	*/
 	
 	protected void activErrorMessage (int index, boolean bActiv) {
 		this.errorMessage[index].setActive(bActiv);
@@ -411,27 +413,27 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 	protected void updateUseEMF (boolean bState) {
 		this.context.useEMF = bState;
 		btnCheckEMF.setSelection(bState);
-		btnCheckSLE.setEnabled(bState);
-		updateBtnCheckEcore();
+//		btnCheckSLE.setEnabled(bState);
+	//	updateBtnCheckEcore();
 	}
 	protected void updateUseKMF (boolean bState) {
 		this.context.useKMF = bState;
 		btnCheckKMF.setSelection(bState);
 	}
-	protected void updateUseSLE (boolean bState) {
+/*	protected void updateUseSLE (boolean bState) {
 		this.context.useSLE = bState;
 		btnCheckSLE.setSelection(bState);
 		//grpSLEOptions.setEnabled(bState);
 	}
-	
+	*/
 //	protected void updateCreateEMFProject(Boolean bVal) {
 //		this.context.bCreateEMFProject = bVal;
 //	}
 	
 	protected void updateNameProject (String nameProject) {
-		this.context.nameProject = nameProject;
+		this.context.projectName = nameProject;
 	}
-	protected void updateBtnCheckEcore () {
+	/*protected void updateBtnCheckEcore () {
 		if (btnCheckEcore.getSelection()) {
 			this.context.ecoreProject = true;
 			btnBrowseEcore.setEnabled(true);
@@ -452,19 +454,19 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 			//btnCreateEmfProject.setEnabled(false);
 			combo.setEnabled(false);
 			combo.select(0);
-			updateNextButton (false);
+		//	updateNextButton (false);
 			setPageComplete(true);
 			activErrorMessage(1, false);
 		} 
-	}
-	protected void updateNextButton (boolean enable) {
+	}*/
+/*	protected void updateNextButton (boolean enable) {
 		enableNext = enable;
 		canFlipToNextPage();
 		getWizard().getContainer().updateButtons();
 		this.context.indexTransfomation = this.combo.getSelectionIndex();
-	}
+	}*/
 	
-	protected void updateKindsOfProject (Context.KindsOfProject kindsOfProject) {
+	protected void updateKindsOfProject (NewK3ProjectWizardFields.KindsOfProject kindsOfProject) {
 		this.context.kindsOfProject = kindsOfProject;
 	}
 	
@@ -473,6 +475,7 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		return enableNext;
 	}
 	
+/*	
 	public void setEcoreLoaded(IFile ecoreFile) {
 		btnCheckEcore.setSelection(true);
 		//btnCheckEcore.setEnabled(true);
@@ -485,23 +488,23 @@ public class WizardPageNewProjectK3Plugin extends WizardPage {
 		//updateCreateEMFProject(false);
 		combo.setEnabled(true);
 		txtPathEcore.setText(ecoreFile.getFullPath().toOSString());
-		/*String[] ecoreName = ecoreFile.getName().split(".ecore") ;
+*/		/*String[] ecoreName = ecoreFile.getName().split(".ecore") ;
 		StringBuffer st = new StringBuffer();
 		for (int i = 0; i < ecoreName.length; i++) {
 			st.append(ecoreName[i]);
 		}*/
-		//this.txtProjectName.setText(st + ".model");
+/*		//this.txtProjectName.setText(st + ".model");
 		
 		this.context.ecoreIFile = ecoreFile;
 		this.context.ecoreProjectPath = ecoreFile.getProject().getFullPath().toOSString();
 	}
-	
+	*/
 	public void setProjectName(String nameProject) {
 		this.txtProjectName.setText(nameProject);
-		this.context.nameProject = nameProject;
+		this.context.projectName = nameProject;
 	}
 	
-	public void setProjectKind(Context.KindsOfProject kindsOfProject) {
+	public void setProjectKind(NewK3ProjectWizardFields.KindsOfProject kindsOfProject) {
 		switch(kindsOfProject){
 		case STANDALONE:
 			btnRadioStandAlone.setSelection(true);

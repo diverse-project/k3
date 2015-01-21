@@ -21,11 +21,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import fr.inria.diverse.k3.ui.tools.Context;
-
-public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
+public class NewK3ProjectCustomWizardPage extends WizardPage {
 	
-	private Context		context;
+	private NewK3ProjectWizardFields		context;
 	
 	protected Composite 	container;
 	protected Group 		grpOperationFeatures;
@@ -49,7 +47,7 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	protected Button 		btnRemove;
 	protected String[] 		tabItem =  {"yes", "context", "Context"};
 	
-	public WizardPageCustomNewProjectK3Plugin (Context context){
+	public NewK3ProjectCustomWizardPage (NewK3ProjectWizardFields context){
 		super("wizardPage");
 		this.context = context;
 		setTitle("Custom Operation for New Kermeta project");
@@ -61,15 +59,15 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 	 * Constructor for KermetaNewWizardDashboard.
 	 * @param pageName
 	 */
-	public WizardPageCustomNewProjectK3Plugin (ISelection selection) {
+/*	public NewK3ProjectCustomWizardPage (ISelection selection) {
 		super("wizardPage");
 		setTitle("Custom Operation for New Kermeta project");
 		setDescription("This wizard configures the operation which has to add at the aspect files at the new kermeta project");
 	}
-	
+*/	
 	@Override
 	public void createControl(Composite parent) {
-		container = new Composite(parent, SWT.NULL);
+/*		container = new Composite(parent, SWT.NULL);
 		container.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		//-----------------------------------------------
@@ -177,8 +175,8 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 		// Required to avoid an error in the system
 		setControl(container);
 		setPageComplete(true);
-	}
-	
+*/	}
+/*	
 	protected void addParameter () {
 		if (!txtParameterName.getText().isEmpty() && !txtParameterType.getText().isEmpty() && !existParameter()) {
 			TableItem 	newItem 		= new TableItem(table, SWT.LEFT);
@@ -255,5 +253,5 @@ public class WizardPageCustomNewProjectK3Plugin extends WizardPage {
 		}
 		return result;
 	}
-	
+	*/
 }
