@@ -29,18 +29,27 @@
             id="fr.inria.diverse.k3.ui.templates.projectContent.MiniAspectSample"
             name="Mini Aspect Sample"
             targetPluginId="fr.inria.diverse.k3.ui">
+         <description>
+            This template will generate a sample aspect class on top of a standard java class (java.io.File) and  generate a main class using this aspect.
+         </description>
       </wizard>
       <wizard
             class="fr.inria.diverse.k3.ui.templates.k3al.MiniEcoreAspectSampleNewWizard"
             id="fr.inria.diverse.k3.ui.templates.projectContent.MiniEcoreAspectSample"
             name="Mini Ecore Aspect Sample"
             targetPluginId="fr.inria.diverse.k3.ui">
+         <description>
+            This template will generate some sample aspects classes on top of ecore.ecore (will not cover all the classes of this metamodel)  and  generate a main class using these aspects.
+         </description>
       </wizard>
       <wizard
             class="fr.inria.diverse.k3.ui.templates.k3al.UserEcoreBasicAspectNewWizard"
             id="fr.inria.diverse.k3.ui.templates.projectContent.UserEcoreBasicAspect"
             name="User Ecore Basic Aspects"
             targetPluginId="fr.inria.diverse.k3.ui">
+         <description>
+            This template will generate a complete set of aspect classes on top of all the classes from the provided ecore file.
+         </description>
       </wizard>
    </extension>
 
