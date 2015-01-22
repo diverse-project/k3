@@ -9,8 +9,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 
+import fr.inria.diverse.commons.eclipse.resources.IFolderUtils;
 import fr.inria.diverse.k3.ui.Activator;
-import fr.inria.diverse.k3.ui.tools.IFolderUtils;
 
 public class ManageClasspathMaven extends ManageClasspath {
 

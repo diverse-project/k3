@@ -37,14 +37,14 @@ import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.WizardElement;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.IProjectContentWizard;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.ProjectTemplateApplicationOperation;
+import fr.inria.diverse.commons.eclipse.resources.IFileUtils;
+import fr.inria.diverse.commons.eclipse.resources.IFolderUtils;
+import fr.inria.diverse.commons.eclipse.resources.ProjectDescriptor;
 import fr.inria.diverse.k3.ui.Activator;
-import fr.inria.diverse.k3.ui.tools.FileUtils;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
-import fr.inria.diverse.k3.ui.tools.IFolderUtils;
 import fr.inria.diverse.k3.ui.tools.K3FileTemplates;
 import fr.inria.diverse.k3.ui.tools.K3SampleFilesTemplates;
 import fr.inria.diverse.k3.ui.tools.ManifestChanger;
-import fr.inria.diverse.k3.ui.tools.ProjectDescriptor;
 import fr.inria.diverse.k3.ui.tools.ToolsString;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspath;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathMaven;
@@ -191,10 +191,10 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 			switch (this.context.kindsOfProject)
 			{
 			case STANDALONE :
-				FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.ui","zips/k3.zip"));
-				FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.ui","zips/xtend.zip"));
+				IFileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.ui","zips/k3.zip"));
+				IFileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.ui","zips/xtend.zip"));
 				if(context.useEMF)
-					FileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.ui","zips/emf.zip"));				
+					IFileUtils.unZip(project, new ProjectDescriptor("fr.inria.diverse.k3.ui","zips/emf.zip"));				
 				classpath = new ManageClasspathStandAlone("lib");
 				classpath.setClasspath(project, monitor);
 				break;
@@ -266,7 +266,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3FileTemplates.manifestMFPlugin(this.context.projectName, new ArrayList<String>(), new ArrayList<String>());
-		FileUtils.writeInFile(file, contents, monitor);    
+		IFileUtils.writeInFile(file, contents, monitor);    
     }
 	
     private void createBuildProperties(IProject project, IProgressMonitor monitor) throws Exception {	    
@@ -275,7 +275,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3SampleFilesTemplates.buildProperties();
-		FileUtils.writeInFile(file, contents, monitor);   
+		IFileUtils.writeInFile(file, contents, monitor);   
     }
     
     private void createSettingsResourcePrefs(IProject project, IProgressMonitor monitor) throws Exception {	    
@@ -287,7 +287,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3SampleFilesTemplates.eclipseResourcePrefs();
-		FileUtils.writeInFile(file, contents, monitor);   
+		IFileUtils.writeInFile(file, contents, monitor);   
     }
     
 	private void createPlugInFile(IProject project,IProgressMonitor monitor) throws Exception {
@@ -296,7 +296,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		IFile file = currentContainer.getFile(new Path(path));
 		
 		String contents = K3FileTemplates.pluginbasisXML();
-		FileUtils.writeInFile(file, contents, monitor);
+		IFileUtils.writeInFile(file, contents, monitor);
 	}
 	
 	private void createMavenFile(IProject project,IProgressMonitor monitor, Boolean bEcoreProject) throws Exception {
@@ -313,7 +313,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		} else {
 			contents = K3SampleFilesTemplates.pomXmlMetamodel(this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 		}
-		FileUtils.writeInFile(file, contents, monitor);
+		IFileUtils.writeInFile(file, contents, monitor);
 	}
 		
 /*	private void createDefaultKmt(IProject project,IProgressMonitor monitor, String sourceFolderName) throws CoreException{
