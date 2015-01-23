@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.JvmVisibility
 import org.eclipse.xtext.common.types.TypesFactory
 
 import org.eclipse.xtext.util.internal.Stopwatches
@@ -203,7 +204,10 @@ class MetaclassAdapterInferrer
 				jvmCls.members += newOp
 			]
 
-			mm.allAspects.filter[aspectedClass.name == cls.name]
+			mm.allAspects.filter[asp |
+				asp.aspectedClass.name == cls.name ||
+				cls.EAllSuperTypes.exists[asp.aspectedClass.name == name]
+			]
 			.forEach[aspect |
 				val asp = aspect.aspectTypeRef.type as JvmDeclaredType
 				// FIXME: This should be checked in the recursive hierarchy
@@ -216,6 +220,7 @@ class MetaclassAdapterInferrer
 					&& !op.simpleName.startsWith("super_")
 					//&& op.parameters.head?.name == "_self"
 					&& !jvmCls.members.exists[opp | opp.simpleName == op.simpleName] // FIXME
+					&& op.visibility == JvmVisibility.PUBLIC
 				]
 				.forEach[op |
 					val paramsList = new StringBuilder
