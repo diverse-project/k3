@@ -12,9 +12,6 @@
    <feature url="features/fr.inria.diverse.k3.al.feature_3.1.0.qualifier.jar" id="fr.inria.diverse.k3.al.feature" version="3.1.0.qualifier">
       <category name="k3"/>
    </feature>
-   <feature url="features/fr.inria.diverse.k3.sle.sdk_3.1.0.qualifier.jar" id="fr.inria.diverse.k3.sle.sdk" version="3.1.0.qualifier">
-      <category name="k3"/>
-   </feature>
    <category-def name="k3" label="Kermeta3"/>
    <category-def name="DiverSE-commons" label="DiverSE commons"/>
 </site>
