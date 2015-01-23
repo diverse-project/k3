@@ -19,10 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.ui.dialogs.WorkspaceResourceDialog;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -142,8 +139,11 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	}
 
 	protected void initializeFields(BaseProjectWizardFields data) {
-	//	initializeOption(KEY_PACKAGE_NAME, data.packageName);
+		// save reference to content for later use 
 		_data = (NewK3ProjectWizardFields)data;
+		// initialize values according to previous pages content
+		String packageName = getFormattedPackageName(((NewK3ProjectWizardFields)data).projectName);
+		initializeOption(KEY_PACKAGE_NAME, packageName);
 	}
 
 
@@ -159,15 +159,6 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		return new String[] {"icons/"}; //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.pde.internal.ui.wizards.templates.PDETemplateSection#formatPackageName(java.lang.String)
-	 */
-	protected String getFormattedPackageName(String id) {
-		String packageName = super.getFormattedPackageName(id);
-		if (packageName.length() != 0)
-			return packageName + ".actions"; //$NON-NLS-1$
-		return "actions"; //$NON-NLS-1$
-	}
 	
 	
 	

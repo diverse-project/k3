@@ -13,6 +13,7 @@ package fr.inria.diverse.k3.ui.templates.k3al;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
 import fr.inria.diverse.k3.ui.templates.K3TemplateSection;
@@ -64,8 +65,9 @@ public class MiniAspectSampleTemplate extends K3TemplateSection {
 		return true;
 	}
 
-	protected void initializeFields(NewK3ProjectWizardFields data) {
-		initializeOption(KEY_PACKAGE_NAME, data.namePackage);
+	protected void initializeFields(BaseProjectWizardFields data) {
+		String packageName = getFormattedPackageName(((NewK3ProjectWizardFields)data).projectName);
+		initializeOption(KEY_PACKAGE_NAME, packageName);
 	}
 
 
@@ -79,15 +81,5 @@ public class MiniAspectSampleTemplate extends K3TemplateSection {
 	 */
 	public String[] getNewFiles() {
 		return new String[] {"icons/"}; //$NON-NLS-1$
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.pde.internal.ui.wizards.templates.PDETemplateSection#formatPackageName(java.lang.String)
-	 */
-	protected String getFormattedPackageName(String id) {
-		String packageName = super.getFormattedPackageName(id);
-		if (packageName.length() != 0)
-			return packageName + ".actions"; //$NON-NLS-1$
-		return "actions"; //$NON-NLS-1$
 	}
 }
