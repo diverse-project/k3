@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/fr.inria.diverse.k3.tools.aspectGenerator-3.0.0-SNAPSHOT.jar
+ lib/fr.inria.diverse.k3.tools.aspectGenerator-3.1.0-SNAPSHOT.jar
 Export-Package: fr.inria.diverse.k3.ui.templates,
  fr.inria.diverse.k3.ui.templates.k3al

@@ -38,12 +38,7 @@
 						<configuration>
 							<artifactItems>
 							<!-- lib is for internally used jar -->
-								<artifactItem>
-									<groupId>fr.inria.diverse.k3.tools</groupId>
-									<artifactId>fr.inria.diverse.k3.tools.aspectGenerator</artifactId>
-									<version>${project.version}</version>
-									<outputDirectory>lib</outputDirectory>
-								</artifactItem>
+							
 							<!-- libraries is for jar needing to be deployed in standalone projects -->
 								<artifactItem>
 									<groupId>fr.inria.diverse.k3.al</groupId>
