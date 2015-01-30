@@ -17,7 +17,7 @@ interface C {
 
 @Aspect(className = Object)
 abstract class VisitorAspect {
-	Boolean foobar
+	public Boolean foobar
 
 	def StringBuilder visit() {
 		return new StringBuilder("Visiting VisitorAspect with " + _self.class.simpleName)
@@ -56,7 +56,7 @@ class BAspect extends VisitorAspect {
 
 @Aspect(className = C)
 class CAspect extends VisitorAspect {
-	int fooAttr
+	public int fooAttr
 
 	@OverrideAspectMethod
 	def StringBuilder visit(){

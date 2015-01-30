@@ -39,8 +39,8 @@ abstract class AspectA {
 
 @Aspect(className=typeof(B))
 class AspectB extends AspectA {
-	static int i = 3
-	int j = 3
+	public static int i = 3
+	public int j = 3
 
 	def void incI() {
 

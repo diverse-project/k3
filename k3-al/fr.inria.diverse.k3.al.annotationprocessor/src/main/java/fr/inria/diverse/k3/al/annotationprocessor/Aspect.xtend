@@ -714,6 +714,7 @@ public class AspectProcessor extends AbstractClassProcessor
 					returnType = f.type
 					addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 					primarySourceElement = f
+					visibility = f.visibility
 				]
 
 			bodies.put(get, ''' return «PROP_VAR_NAME».«f.simpleName»; ''')
@@ -737,6 +738,7 @@ public class AspectProcessor extends AbstractClassProcessor
 						returnType = newTypeReference("void")
 						addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 						addParameter(f.simpleName, f.type)
+						visibility = f.visibility
 						primarySourceElement = f
 					]
 
