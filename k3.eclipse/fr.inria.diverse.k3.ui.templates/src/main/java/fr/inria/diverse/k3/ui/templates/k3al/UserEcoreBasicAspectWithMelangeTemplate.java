@@ -70,8 +70,9 @@ public class UserEcoreBasicAspectWithMelangeTemplate extends UserEcoreBasicAspec
 	protected void initializeFields(BaseProjectWizardFields data) {
 		super.initializeFields(data);	
 		if(_data.ecoreIFile != null){
-			initializeOption(KEY_METAMODEL_NAME,_data.ecoreIFile.getLocation().removeFileExtension().lastSegment()+"Metamodel");
-			initializeOption(KEY_MELANGE_FILE_NAME,_data.ecoreIFile.getLocation().removeFileExtension().lastSegment());
+			String ecoreBaseName = _data.ecoreIFile.getLocation().removeFileExtension().lastSegment();
+			initializeOption(KEY_METAMODEL_NAME,Character.toUpperCase(ecoreBaseName.charAt(0)) + ecoreBaseName.substring(1));
+			initializeOption(KEY_MELANGE_FILE_NAME,ecoreBaseName);
 		}
 		else{
 			initializeOption(KEY_METAMODEL_NAME,METAMODEL_NAME);
