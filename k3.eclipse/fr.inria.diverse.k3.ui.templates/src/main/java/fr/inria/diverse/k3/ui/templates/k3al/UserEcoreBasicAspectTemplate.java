@@ -46,7 +46,8 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	public static final String KEY_ASPECTCLASS_POSTFIX = "aspectClassPostfix"; //$NON-NLS-1$
 	public static final String ASPECTCLASS_POSTFIX = "Aspect"; //$NON-NLS-1$
 	public static final String KEY_ASPECTFILE_NAME = "aspectFileName"; //$NON-NLS-1$
-	public static final String KEY_ECOREFILE_LOCATION = "ecoreFileLocation"; //$NON-NLS-1$
+	public static final String ASPECTFILE_NAME = "MyAspects"; //$NON-NLS-1$
+	public static final String KEY_ECOREFILE_PATH = "ecoreFilePath"; //$NON-NLS-1$
 	
 	protected static final List<String> FILE_EXTENSIONS = Arrays.asList(new String [] { "ecore" });
 
@@ -76,10 +77,10 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 
 	private void createOptions() {
 		addOption(KEY_PACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_packageName, (String) null, 0);
-		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, (String) null, 0);
+		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, ASPECTFILE_NAME, 0);
 		addOption(KEY_ASPECTCLASS_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfix, ASPECTCLASS_POSTFIX, 0);
 		//addOption(KEY_ECOREFILE_LOCATION, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFileLocation, (String) null, 0);
-		TemplateOption ecoreLocationOption  = new AbstractStringWithButtonOption(this, KEY_ECOREFILE_LOCATION, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFileLocation) {
+		TemplateOption ecoreLocationOption  = new AbstractStringWithButtonOption(this, KEY_ECOREFILE_PATH, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFilePath) {
 			@Override
 			public String doSelectButton() {
 				final IWorkbenchWindow workbenchWindow = PlatformUI
@@ -116,8 +117,8 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 				if (files.length > 0) {
 					UserEcoreBasicAspectTemplate.this._data.ecoreIFile = files[0];
 					//txtPathEcore.setText(files[i].getFullPath().toOSString());
-					UserEcoreBasicAspectTemplate.this._data.ecoreProjectPath = files[0].getProject().getFullPath().toOSString();
-					return files[0].getLocation().toOSString();
+					//UserEcoreBasicAspectTemplate.this._data.ecoreProjectPath = files[0].getProject().getFullPath().toOSString();
+					return files[0].getFullPath().toOSString();
 				}
 
 				return null;
@@ -141,9 +142,13 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	protected void initializeFields(BaseProjectWizardFields data) {
 		// save reference to content for later use 
 		_data = (NewK3ProjectWizardFields)data;
-		// initialize values according to previous pages content
-		String packageName = getFormattedPackageName(((NewK3ProjectWizardFields)data).projectName);
+		// initialize values according to previous pages content or o
+		String packageName = getFormattedPackageName(_data.projectName);
 		initializeOption(KEY_PACKAGE_NAME, packageName);
+		if(_data.ecoreIFile != null){
+			initializeOption(KEY_ECOREFILE_PATH,_data.ecoreIFile.getFullPath().toOSString());
+		} 
+		
 	}
 
 
@@ -171,7 +176,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		super.generateFiles(monitor);
 		
 		k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
-				_data.basePackage,
+				new ArrayList<String>(),
 				"File:///"+_data.projectLocation,
 				_data.projectName,
 				null, //_data.operationName,

@@ -305,7 +305,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		IFile file = currentContainer.getFile(new Path(path));
 		String contents = "";
 		if(!bEcoreProject) {
-			if(this.context.ecoreProject) {
+			if(this.context.ecoreIFile != null) {
 				contents = K3SampleFilesTemplates.pomXmlK3Ecore(this.context.projectName, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT", this.context.ecoreIFile.getName() + ".metamodel", this.context.ecoreIFile.getName() + ".metamodel", "0.0.1-SNAPSHOT");
 			}else {
 				contents = K3SampleFilesTemplates.pomXmlK3(this.context.projectName, "GroupID", "ArtifactID", "0.0.1-SNAPSHOT");
@@ -438,7 +438,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 		return this.projectPage;
 	}
 	
-	public void updateBasePackageFromGenModel(NewK3ProjectWizardFields context) {
+/*	public void updateBasePackageFromGenModel(NewK3ProjectWizardFields context) {
 		 GenerateGenModelCode genmodel = new GenerateGenModelCode();
 		 String basePackage;
 		if(genmodel.existGenModel(context)) {
@@ -446,7 +446,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 			if (basePackage != null)
 				context.basePackage = new ToolsString().generateListPackage(basePackage, (byte)46);
 		}
-	}
+	}*/
 
 	@Override
 	public String getTargetPluginId() {		

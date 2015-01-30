@@ -42,7 +42,7 @@ public class K3TemplateMessages extends NLS {
 	public static String UserEcoreBasicAspectTemplate_packageName;
 	public static String UserEcoreBasicAspectTemplate_aspectFileName;
 	public static String UserEcoreBasicAspectTemplate_aspectClassPostfix;
-	public static String UserEcoreBasicAspectTemplate_ecoreFileLocation;
+	public static String UserEcoreBasicAspectTemplate_ecoreFilePath;
 	public static String UserEcoreBasicAspectTemplate_title;
 	public static String UserEcoreBasicAspectTemplate_desc;
 	public static String UserEcoreBasicAspectTemplate_wtitle;

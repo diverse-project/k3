@@ -407,9 +407,9 @@ public class NewK3ProjectWizardPage extends WizardPage {
 		}
 	}
 	
-	protected void updateEcoreProject (boolean bState) {
+	/*protected void updateEcoreProject (boolean bState) {
 		this.context.ecoreProject = bState;
-	}
+	}*/
 	protected void updateUseEMF (boolean bState) {
 		this.context.useEMF = bState;
 		btnCheckEMF.setSelection(bState);
