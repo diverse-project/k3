@@ -16,5 +16,7 @@ public interface IHelpContextIds {
 	public static final String TEMPLATE_HELLO_WORLD = PREFIX + "template_hello_world"; //$NON-NLS-1$
 	public static final String TEMPLATE_MINI_ASPECT_SAMPLE = PREFIX + "template_mini_aspect_sample"; //$NON-NLS-1$
 	public static final String TEMPLATE_MINI_ECORE_ASPECT_SAMPLE = PREFIX + "template_mini_ecore_aspect_sample"; //$NON-NLS-1$
+	public static final String TEMPLATE_ECORE_ASPECT = PREFIX + "template_ecore_aspect"; //$NON-NLS-1$
+	public static final String TEMPLATE_ECORE_ASPECT_WITH_MELANGE = PREFIX + "template_ecore_aspect_with_melange"; //$NON-NLS-1$
 
 }

@@ -47,5 +47,12 @@ public class K3TemplateMessages extends NLS {
 	public static String UserEcoreBasicAspectTemplate_desc;
 	public static String UserEcoreBasicAspectTemplate_wtitle;
 	
+	// UserEcoreBasicAspectWithMelange constants
+	public static String UserEcoreBasicAspectWithMelangeTemplate_melangeFileName;
+	public static String UserEcoreBasicAspectWithMelangeTemplate_melangeMetamodelName;
+	public static String UserEcoreBasicAspectWithMelangeTemplate_title;
+	public static String UserEcoreBasicAspectWithMelangeTemplate_desc;
+	public static String UserEcoreBasicAspectWithMelangeTemplate_wtitle;
+	
 
 }

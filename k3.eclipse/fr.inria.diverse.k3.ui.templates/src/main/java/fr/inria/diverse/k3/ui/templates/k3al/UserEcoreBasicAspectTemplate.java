@@ -75,7 +75,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		return super.getNumberOfWorkUnits() + 1;
 	}
 
-	private void createOptions() {
+	protected void createOptions() {
 		addOption(KEY_PACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_packageName, (String) null, 0);
 		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, ASPECTFILE_NAME, 0);
 		addOption(KEY_ASPECTCLASS_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfix, ASPECTCLASS_POSTFIX, 0);
@@ -128,7 +128,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	}
 
 	public void addPages(Wizard wizard) {
-		WizardPage page = createPage(0, IHelpContextIds.TEMPLATE_MINI_ASPECT_SAMPLE);
+		WizardPage page = createPage(0, IHelpContextIds.TEMPLATE_ECORE_ASPECT);
 		page.setTitle(K3TemplateMessages.UserEcoreBasicAspectTemplate_title);
 		page.setDescription(K3TemplateMessages.UserEcoreBasicAspectTemplate_desc);
 		wizard.addPage(page);
