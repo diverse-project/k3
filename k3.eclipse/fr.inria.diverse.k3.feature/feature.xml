@@ -18,10 +18,6 @@ This feature offers various tools for developping projects with Kermeta 3
    </license>
 
    <includes
-         id="fr.inria.diverse.k3.sle.sdk"
-         version="0.0.0"/>
-
-   <includes
          id="fr.inria.diverse.k3.al.feature"
          version="0.0.0"/>
 
