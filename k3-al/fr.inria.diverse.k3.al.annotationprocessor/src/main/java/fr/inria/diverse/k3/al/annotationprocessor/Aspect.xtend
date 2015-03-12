@@ -302,7 +302,7 @@ public class AspectProcessor extends AbstractClassProcessor
 
 
 	    m.body = [
-			getBody(clazz, className, call.toString, transactionSupport, ret)
+			getBody(clazz, className, call.toString, transactionSupport, ret, m.simpleName)
 	    ]
 	}
 
@@ -411,12 +411,13 @@ public class AspectProcessor extends AbstractClassProcessor
 									String className,
 									String call,
 									TransactionSupport transactionSupport,
-									String returnStatement)
+									String returnStatement,
+									String methodName)
 	{
 		switch(transactionSupport)
 		{
 			case TransactionSupport.EMF:
-				return getBodyWithEMFTransaction(clazz, className, call, returnStatement)
+				return getBodyWithEMFTransaction(clazz, className, call, returnStatement, methodName)
 			case TransactionSupport.None:
 				return getBodyWithoutTransaction(clazz, className, call, returnStatement)
 		}
@@ -425,9 +426,11 @@ public class AspectProcessor extends AbstractClassProcessor
 	private def CharSequence getBodyWithEMFTransaction(MutableClassDeclaration clazz,
 								String className,
 								String call,
-								String returnStatement)
+								String returnStatement,
+								String methodName)
 	{
 		return '''
+				org.gemoc.execution.engine.core.MSEManager.getInstance().raiseMSEOccurrence(_self, "«methodName»");
 				org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain = org.eclipse.emf.transaction.TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(_self.eResource().getResourceSet());
 				Object res = null;
 				org.eclipse.emf.transaction.RecordingCommand command = new org.eclipse.emf.transaction.RecordingCommand(editingDomain)
