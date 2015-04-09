@@ -491,7 +491,8 @@ public class AspectProcessor extends AbstractClassProcessor
 					final = false
 					abstract = false
 					returnType = dm.returnType
-					dm.parameters.forEach[par | addParameter(par.simpleName, par.type)]
+					addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
+					dm.parameters.drop(1).forEach[par | addParameter(par.simpleName, par.type)]
 				]
 
 				// This new method must be transformed like the other ones.

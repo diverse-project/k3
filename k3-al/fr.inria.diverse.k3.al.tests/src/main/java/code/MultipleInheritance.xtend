@@ -19,6 +19,8 @@ interface C {
 abstract class VisitorAspect {
 	public Boolean foobar
 
+	def void testBugOverride() {}
+
 	def StringBuilder visit() {
 		return new StringBuilder("Visiting VisitorAspect with " + _self.class.simpleName)
 	}
