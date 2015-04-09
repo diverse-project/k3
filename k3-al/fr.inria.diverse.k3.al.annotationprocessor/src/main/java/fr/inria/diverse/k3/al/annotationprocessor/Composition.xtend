@@ -172,7 +172,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 		}
 
 		// Adding a setter for the annotated field.
-		clazzContainField.addMethod(field.simpleName)[
+		clazzContainField.addMethod("set" + field.simpleName.toFirstUpper)[
 			visibility = oldFieldVisibility
 			addParameter("obj", fieldType)
 			// This setter is a proxy to do jobs related to composition.
@@ -185,7 +185,7 @@ public class CompositionProcessor extends AbstractFieldProcessor {
 		]
 
 		// Adding a getter to access the annotated field.
-		clazzContainField.addMethod(field.simpleName)[
+		clazzContainField.addMethod("get" + field.simpleName.toFirstUpper)[
 			// The visibility of the getter is the same that the original annotated field.
 			visibility = oldFieldVisibility
 			returnType = field.type
