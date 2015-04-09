@@ -104,13 +104,13 @@ class OppositeProcessor extends AbstractFieldProcessor
 		val f = field.simpleName
 
 		if (field.type.isCollection) {
-			containingType.addMethod(f)[
+			containingType.addMethod(field.getterName)[
 				visibility = Visibility.PUBLIC
 				returnType = newTypeReference(ImmutableList, field.type.actualTypeArguments.head)
 				body = '''return com.google.common.collect.ImmutableList.copyOf(«f») ;'''
 			]
 		} else {
-			containingType.addMethod(f)[
+			containingType.addMethod(field.getterName)[
 				visibility = Visibility.PUBLIC
 				returnType = field.type
 				body = '''return «f» ;'''
@@ -141,7 +141,7 @@ class OppositeProcessor extends AbstractFieldProcessor
 				'''
 			]
 		} else {
-			containingType.addMethod(field.simpleName)[
+			containingType.addMethod(field.setterName)[
 				visibility = Visibility.PUBLIC
 				addParameter("obj", field.type)
 				body = '''
@@ -286,5 +286,13 @@ class OppositeProcessor extends AbstractFieldProcessor
 	protected def boolean isCollection(TypeReference type)
 	{
 		return Collection.newTypeReference(newWildcardTypeReference).isAssignableFrom(type)
+	}
+
+	protected def String getGetterName(MutableFieldDeclaration f) {
+		return '''get«f.simpleName.toFirstUpper»'''
+	}
+
+	protected def String getSetterName(MutableFieldDeclaration f) {
+		return '''set«f.simpleName.toFirstUpper»'''
 	}
 }
