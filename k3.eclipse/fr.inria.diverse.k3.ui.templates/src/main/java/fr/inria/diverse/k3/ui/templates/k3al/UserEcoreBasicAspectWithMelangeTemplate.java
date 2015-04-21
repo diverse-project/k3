@@ -18,11 +18,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.osgi.framework.BundleException;
 
+import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.k3.ui.templates.Activator;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
-import fr.inria.diverse.k3.ui.tools.ManifestChanger;
 import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardFields.KindsOfProject;
 
 public class UserEcoreBasicAspectWithMelangeTemplate extends UserEcoreBasicAspectTemplate {
@@ -97,7 +97,7 @@ public class UserEcoreBasicAspectWithMelangeTemplate extends UserEcoreBasicAspec
 				manifestChanger = new ManifestChanger(project.getFile("META-INF/MANIFEST.MF"));
 				manifestChanger.addPluginDependency(_data.ecoreIFile.getProject().getName(), "0.0.0", false, true);
 				manifestChanger.addPluginDependency("fr.inria.diverse.melange.lib", "0.0.0", false, true);
-				manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
+				manifestChanger.commit();
 			} catch (IOException | BundleException e) {
 				Activator.logErrorMessage(e.getMessage(), e);
 			}

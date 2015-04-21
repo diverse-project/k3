@@ -31,6 +31,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.AbstractNewProjectWizardWithTemplates;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.TemplateListSelectionPage;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.WizardElement;
@@ -44,7 +45,6 @@ import fr.inria.diverse.k3.ui.Activator;
 import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
 import fr.inria.diverse.k3.ui.tools.K3FileTemplates;
 import fr.inria.diverse.k3.ui.tools.K3SampleFilesTemplates;
-import fr.inria.diverse.k3.ui.tools.ManifestChanger;
 import fr.inria.diverse.k3.ui.tools.ToolsString;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspath;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathMaven;
@@ -241,7 +241,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 					manifestChanger.addPluginDependency("fr.inria.diverse.k3.sle.lib", "3.0.0", true, true);
 				}
 			}
-			manifestChanger.writeManifest(project.getFile("META-INF/MANIFEST.MF"));
+			manifestChanger.commit();
 			createPlugInFile(project, monitor);
 			createBuildProperties(project, monitor);			
 		} catch (Exception e) {
