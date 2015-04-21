@@ -5,26 +5,21 @@ import java.util.ArrayList
 
 class Context {
 	
-	//public List<String> 	basePackage
-	public List<String> 	packageCollection
+	public String 			ecoreBasePackage
 	public List<String>		classCollection
 	public List<String>		classAspectCollection
 	public Integer 			counterPackage
 	public StringBuffer		kmtContent
 	public String			projectName
 	public String			projectPath
+	public String 			aspectBasePackage
+	public String			aspectPackagePostFix		// postfix to add for aspect packages
 	public String			nameOperation
 	public Boolean			isOverride
 	public List<String>		operationParams
 	public List<String>		listNewClass
 	
-	new(List<String> basePackage, String projectPath, String projectName, String nameOperation,List<String> listNewClass, List<String> operationParams) {
-		packageCollection = new ArrayList<String>
-		if(basePackage.size > 0) {
-			for (elt : basePackage) {
-				packageCollection.add(elt);
-			}
-		}
+	new( String projectPath, String projectName, String ecoreBasePackage, String aspectBasePackage, String aspectPackPostFix, String nameOperation, List<String> listNewClass, List<String> operationParams) {
 		classCollection = new ArrayList<String>
 		classAspectCollection = new ArrayList<String>
 		counterPackage = 0
@@ -33,7 +28,10 @@ class Context {
 		this.projectPath = projectPath +"/" + projectName + "/src/"
 		this.nameOperation = nameOperation
 		isOverride = false
-		this.operationParams = operationParams
+		this.operationParams = operationParams		
+		this.ecoreBasePackage = ecoreBasePackage
+		this.aspectBasePackage = aspectBasePackage	
+		this.aspectPackagePostFix = aspectPackPostFix
 		this.listNewClass = listNewClass
 		
 	}

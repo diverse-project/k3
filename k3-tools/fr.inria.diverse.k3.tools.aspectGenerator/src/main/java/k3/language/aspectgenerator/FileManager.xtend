@@ -7,33 +7,34 @@ import java.util.List
 
 class FileManager {
 	
-	def public static void writeFile(String pathProject, String nameFile, List<String> collectionPackage, String content) {
+	def public static void writeFile(String pathProject, String nameFile, String packageQualifiedName, String content) {
 		
 		println("projectPath = " + pathProject);
 		println("nameFile = " + nameFile);
+		println("packageQualifiedName = " + packageQualifiedName);
 		println("content = " + content);
 		
 		
-		var String pathCurrent = writePackage(pathProject, collectionPackage)
+		val String pathCurrent = writePackage(pathProject, packageQualifiedName)
+		println("pathCurrent = " + pathCurrent);
 		
-		var BufferedWriter buffer = new BufferedWriter(new FileWriter(pathCurrent + nameFile + ".xtend"))
+		val BufferedWriter buffer = new BufferedWriter(new FileWriter(pathCurrent + nameFile + ".xtend"))
 		
 		buffer.write(content)
 		buffer.flush
 		buffer.close
 	}
 	
-	def static private String writePackage(String pathProject, List<String> collectionPackage) {
+	def public static String writePackage(String pathProject, String packageQualifiedName) {
 		
 		var String currentPath = pathProject + "/"
-		
-		for(pack : collectionPackage) {
+		for(pack : packageQualifiedName.split("\\.")) {
 			currentPath = currentPath + "/" + pack
 			var File dir =  new File(currentPath);
 			dir.mkdirs
 		}
 		currentPath = currentPath + "/"
-		
+		println("currentPath = " + currentPath);
 		return currentPath
 	}
 	

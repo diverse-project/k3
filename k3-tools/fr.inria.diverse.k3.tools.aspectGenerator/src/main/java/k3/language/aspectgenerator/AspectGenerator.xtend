@@ -13,6 +13,7 @@ import static extension k3.language.aspectgenerator.EPackageAspect.*
 import static extension k3.language.aspectgenerator.EClassAspect.*
 import java.util.ArrayList
 import java.util.List
+import java.io.File
 
 class AspectGenerator{
 
@@ -20,46 +21,45 @@ class AspectGenerator{
 	public def static void main(String[] args) {
 		//println('Hello Kermeta on top of Xtend!')
 		println(System.getProperty("user.dir") + "/target/");
-		var String projectPath = System.getProperty("user.dir") + "/target/"
-		var String projectName = "aspectKermeta"
-		var String operationName = "eval"
-		var List<String> listNewClass = new ArrayList<String>()
-		var List<String> operationParams = new ArrayList<String>()
+		val String projectPath = System.getProperty("user.dir") + "/target/"
+		val String projectName = "aspectKermeta"
+		val File dir =  new File(projectPath+projectName+"/src");
+		dir.mkdirs
+		val String operationName = "eval"
+		val List<String> listNewClass = new ArrayList<String>()
+		val List<String> operationParams = new ArrayList<String>()
 		listNewClass.add("Context")
 		listNewClass.add("Essai")
 		operationParams.add("Context context")
 		operationParams.add("Essai test")
 		
-		aspectGenerate(new ArrayList<String>(), projectPath, projectName, operationName, "ASMLogo.ecore", listNewClass, operationParams)
+		aspectGenerate( projectPath, projectName, "ASMLogo.ecore", "", "testbase", ".aspects", operationName, operationParams,  listNewClass)
 
 	}
 	
-	public def static aspectGenerate(List<String> basePackage, String projectPath, String projectName, String operationName, String ecorePath, List<String> listNewClass, List<String> operationParams) {
-		var Context context = new Context(basePackage, projectPath, projectName, operationName, listNewClass, operationParams)
+	public def static aspectGenerate( String projectPath, String projectName,  String ecoreURI, String ecoreBasePackage, String aspectBasePackage, String aspectPackPostFix, String operationName, List<String> operationParams, List<String> listNewClass) {
+		val Context context = new Context( projectPath, projectName,  ecoreBasePackage, aspectBasePackage, aspectPackPostFix, operationName, listNewClass, operationParams)
 		
 		//Load Ecore Model
-		var fact = new EcoreResourceFactoryImpl
+		val fact = new EcoreResourceFactoryImpl
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {
 			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE)
 		}
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", fact)
 		
-		var rs = new ResourceSetImpl()
-		var uri = URI.createURI(ecorePath)
-		var res = rs.getResource(uri, true)
+		val rs = new ResourceSetImpl()
+		val uri = URI.createURI(ecoreURI)
+		val res = rs.getResource(uri, true)
 
-		var EPackage p = res.contents.get(0) as EPackage
+		val EPackage p = res.contents.get(0) as EPackage
 		p.generateAspect(context)
 		generateClass(context)
 	}
 	
 	private static def void generateClass(Context context) {
-		// initialization of packaging for the class "Context"
-		var List<String> packageCollection = new ArrayList<String>
-		packageCollection.add(context.projectName)
 		
 		// initialization of the content of file "Context.xtend"
-		var StringBuffer content = new StringBuffer
+		val StringBuffer content = new StringBuffer
 		
 		
 		for(c : context.listNewClass) {
@@ -67,7 +67,9 @@ class AspectGenerator{
 			content.append("class "+ c +" {\n\n")
 			content.append("\tnew (){\n\n\t}")
 			content.append("\n\n}\n")
-			FileManager.writeFile(context.projectPath.substring(8), c, packageCollection, content.toString)
+			println(context.projectPath)
+			println(context.projectPath)
+			FileManager.writeFile(context.projectPath, c, context.projectName, content.toString)
 			content.delete(0, content.length)
 		}
 	}
@@ -77,7 +79,6 @@ class AspectGenerator{
 class EPackageAspect { 
 	
 	public def void generateAspect(Context context) {		
-		_self.addPackage(context)
 		
 		for (p : _self.ESubpackages){
 			 p.generateAspect(context)
@@ -91,42 +92,46 @@ class EPackageAspect {
 				}
 			}
 			_self.manageImport(context)
-			FileManager.writeFile(context.projectPath.substring(8), context.packageCollection.last, context.packageCollection, context.kmtContent.toString)
+			println(" _self.getAspectPackageQualifiedName(context)="+ _self.getAspectPackageQualifiedName(context))
+			FileManager.writeFile(context.projectPath, _self.name+"Aspects", _self.getAspectPackageQualifiedName(context), context.kmtContent.toString)
 			context.classCollection = new ArrayList<String>
 			context.classAspectCollection = new ArrayList<String>
 			context.kmtContent = new StringBuffer
 			
 		}
-		
-		_self.deletePackage(context)
+
 	}
 	
-	def private void addPackage (Context context) {
-		context.counterPackage = context.counterPackage + 1
-		context.packageCollection.add(_self.name)		
+	/** 
+	 * returns the qualified name for the package containing the aspect for this EPackage
+	 */
+	def public String getAspectPackageQualifiedName(Context context){
+		if(context.aspectBasePackage.isEmpty)
+			return _self.getEPackageQualifiedName(context) + context.aspectPackagePostFix
+		else
+			return context.aspectBasePackage+"."+_self.getEPackageQualifiedName(context) + context.aspectPackagePostFix
 	}
-			
-		
-	def private void deletePackage (Context context) {
-		context.packageCollection.remove(context.counterPackage - 1)
-		if (context.counterPackage > 0) {
-			context.counterPackage = context.counterPackage - 1
-		}	
+	def public String getEcoreBasePackageQualifiedName(Context context){
+		if(context.ecoreBasePackage.isEmpty)
+			return _self.getEPackageQualifiedName(context) 
+		else
+			return context.ecoreBasePackage+"."+_self.getEPackageQualifiedName(context) 
+	}
+	
+	def public String getEPackageQualifiedName(Context context){
+		if(_self.ESuperPackage != null){
+			return _self.ESuperPackage.getEPackageQualifiedName(context)+"."+_self.name
+		}
+		else {
+			return _self.name
+		}
 	}
 	
 	def private void manageImport(Context context) {
-		var String pack = ""
+		var String aspectPackQualifiedName = _self.getAspectPackageQualifiedName(context)
 		var StringBuffer aspect = new StringBuffer
 		
-		for(pc : context.packageCollection) {
-			if(context.packageCollection.last() == pc){
-				pack = pack + pc	
-			} else {
-				pack = pack + pc + "."
-			}
-		}
-		
-		aspect.append("package " + pack + "\n\n")			
+		aspect.append("package " + aspectPackQualifiedName + "\n\n")			
 		aspect.append("import fr.inria.diverse.k3.al.annotationprocessor.Aspect\n")
 		
 		if(context.isOverride) {
@@ -139,13 +144,13 @@ class EPackageAspect {
 		}
 		
 		for (cl : context.classCollection){
-			aspect.append("import " + pack + "." + cl + "\n")
+			aspect.append("import " + _self.getEcoreBasePackageQualifiedName(context) + "." + cl + "\n")
 		}
 		
 		aspect.append("\n")
 		
 		for (cl : context.classAspectCollection){
-			aspect.append("import static extension " + pack + "." + cl + ".*\n")
+			aspect.append("import static extension " + aspectPackQualifiedName + "." + cl + ".*\n")
 		}
 		
 		aspect.append("\n")

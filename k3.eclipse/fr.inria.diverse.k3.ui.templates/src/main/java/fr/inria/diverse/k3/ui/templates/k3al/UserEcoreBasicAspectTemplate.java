@@ -45,6 +45,12 @@ import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardFields.KindsOfProj
 public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	public static final String KEY_ASPECTCLASS_POSTFIX = "aspectClassPostfix"; //$NON-NLS-1$
 	public static final String ASPECTCLASS_POSTFIX = "Aspect"; //$NON-NLS-1$
+	public static final String KEY_ASPECTBASEPACKAGE_NAME = "aspectBasePackage"; //$NON-NLS-1$
+	public static final String ASPECTBASEPACKAGE_NAME = ""; //$NON-NLS-1$
+	public static final String KEY_ASPECTPACKAGE_POSTFIX = "aspectPackagePostfix"; //$NON-NLS-1$
+	public static final String ASPECTPACKAGE_POSTFIX = ".aspects"; //$NON-NLS-1$
+	public static final String KEY_ECOREBASEPACKAGE_NAME = "ecoreBasePackage"; //$NON-NLS-1$
+	public static final String ECOREBASEPACKAGE_NAME = ""; //$NON-NLS-1$
 	public static final String KEY_ASPECTFILE_NAME = "aspectFileName"; //$NON-NLS-1$
 	public static final String ASPECTFILE_NAME = "MyAspects"; //$NON-NLS-1$
 	public static final String KEY_ECOREFILE_PATH = "ecoreFilePath"; //$NON-NLS-1$
@@ -77,8 +83,11 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 
 	protected void createOptions() {
 		addOption(KEY_PACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_packageName, (String) null, 0);
+		addOption(KEY_ASPECTBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectBasePackageName, ASPECTBASEPACKAGE_NAME, 0).setRequired(false);
+		addOption(KEY_ASPECTPACKAGE_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectPackagePostfix, ASPECTPACKAGE_POSTFIX, 0).setRequired(false);
 		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, ASPECTFILE_NAME, 0);
 		addOption(KEY_ASPECTCLASS_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfix, ASPECTCLASS_POSTFIX, 0);
+		addOption(KEY_ECOREBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreBasePackageName, ECOREBASEPACKAGE_NAME, 0).setRequired(false);
 		//addOption(KEY_ECOREFILE_LOCATION, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFileLocation, (String) null, 0);
 		TemplateOption ecoreLocationOption  = new AbstractStringWithButtonOption(this, KEY_ECOREFILE_PATH, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFilePath) {
 			@Override
@@ -176,13 +185,15 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		super.generateFiles(monitor);
 		
 		k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
-				new ArrayList<String>(),
-				"File:///"+_data.projectLocation,
+				_data.projectLocation,
 				_data.projectName,
+				"File:///"+_data.ecoreIFile.getLocation().toOSString(),  
+				(String) this.getValue(KEY_ECOREBASEPACKAGE_NAME), // ecoreBasePackage (String) this.getValue(KEY_PACKAGE_NAME)
+				(String) this.getValue(KEY_ASPECTBASEPACKAGE_NAME), // aspectBasePackage
+				(String) this.getValue(KEY_ASPECTPACKAGE_POSTFIX), // aspectPackageSuffix
 				null, //_data.operationName,
-				"File:///"+_data.ecoreIFile.getLocation().toOSString(), 
-				new ArrayList<String>(), //_data.listNewClass, (no need to create empty classes)
-				new ArrayList<String>()//_data.operationParams
+				new ArrayList<String>(),//_data.operationParams
+				new ArrayList<String>() //_data.listNewClass, (no parameters so no need to create empty classes)
 				);
 		
 		// now also fix the project configuration
