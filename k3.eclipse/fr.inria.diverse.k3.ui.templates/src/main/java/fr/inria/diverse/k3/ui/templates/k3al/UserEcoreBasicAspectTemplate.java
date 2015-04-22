@@ -34,6 +34,7 @@ import fr.inria.diverse.commons.eclipse.pde.classpath.ClasspathHelper;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.AbstractStringWithButtonOption;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.TemplateOption;
 import fr.inria.diverse.k3.ui.templates.Activator;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
@@ -59,12 +60,15 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 
 	NewK3ProjectWizardFields _data;
 	
+	protected NewProjectTemplateWizard hostWizard;
+	
 	/**
 	 * Constructor for HelloWorldTemplate.
 	 */
-	public UserEcoreBasicAspectTemplate() {
+	public UserEcoreBasicAspectTemplate(NewProjectTemplateWizard hostWizard) {
 		setPageCount(1);
 		createOptions();
+		this.hostWizard = hostWizard;
 	}
 
 	/** 
@@ -82,7 +86,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	}
 
 	protected void createOptions() {
-		addOption(KEY_PACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_packageName, (String) null, 0);
+		//addOption(KEY_PACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_packageName, (String) null, 0);
 		addOption(KEY_ASPECTBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectBasePackageName, ASPECTBASEPACKAGE_NAME, 0).setRequired(false);
 		addOption(KEY_ASPECTPACKAGE_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectPackagePostfix, ASPECTPACKAGE_POSTFIX, 0).setRequired(false);
 		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, ASPECTFILE_NAME, 0);
@@ -152,8 +156,8 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		// save reference to content for later use 
 		_data = (NewK3ProjectWizardFields)data;
 		// initialize values according to previous pages content or o
-		String packageName = getFormattedPackageName(_data.projectName);
-		initializeOption(KEY_PACKAGE_NAME, packageName);
+		//String packageName = getFormattedPackageName(_data.projectName);
+		//initializeOption(KEY_PACKAGE_NAME, packageName);
 		if(_data.ecoreIFile != null){
 			initializeOption(KEY_ECOREFILE_PATH,_data.ecoreIFile.getFullPath().toOSString());
 		} 
@@ -180,7 +184,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 	 * @see fr.inria.diverse.k3.ui.templates.K3TemplateSection#generateFiles(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void generateFiles(IProgressMonitor monitor) throws CoreException {
+	protected void generateFiles(IProgressMonitor monitor) throws CoreException {		
 		updateDataFromOptions();
 		super.generateFiles(monitor);
 		
@@ -228,8 +232,9 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 
 	
 	public void updateDataFromOptions() {
+		if(_data == null) initializeFields(hostWizard.getData());
 		// for convenience, copy the appropriate values from the wizard options into the data 
-		_data.namePackage = (String) this.getValue(KEY_PACKAGE_NAME);
+		//_data.namePackage = (String) this.getValue(KEY_PACKAGE_NAME);
 		
 	}
 }

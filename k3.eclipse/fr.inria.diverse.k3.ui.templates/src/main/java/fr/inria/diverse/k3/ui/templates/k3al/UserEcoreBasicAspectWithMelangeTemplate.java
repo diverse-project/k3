@@ -20,6 +20,7 @@ import org.osgi.framework.BundleException;
 
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
+import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
 import fr.inria.diverse.k3.ui.templates.Activator;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
@@ -35,9 +36,8 @@ public class UserEcoreBasicAspectWithMelangeTemplate extends UserEcoreBasicAspec
 	/**
 	 * Constructor for HelloWorldTemplate.
 	 */
-	public UserEcoreBasicAspectWithMelangeTemplate() {
-		setPageCount(1);
-		createOptions();
+	public UserEcoreBasicAspectWithMelangeTemplate(NewProjectTemplateWizard hostWizard) {
+		super(hostWizard);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class UserEcoreBasicAspectWithMelangeTemplate extends UserEcoreBasicAspec
 	 * @see fr.inria.diverse.k3.ui.templates.K3TemplateSection#generateFiles(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected void generateFiles(IProgressMonitor monitor) throws CoreException {
+	protected void generateFiles(IProgressMonitor monitor) throws CoreException {		
 		updateDataFromOptions();
 		super.generateFiles(monitor);
 		

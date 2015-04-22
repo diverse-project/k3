@@ -178,7 +178,7 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 			}
 			createSettingsResourcePrefs(project, monitor);
 
-			IFolderUtils.createFolder(sourceFolderName + getContextNamePackage(), project, monitor);
+			IFolderUtils.createFolder(sourceFolderName + getContextNamePackage().replaceAll("\\.", "/"), project, monitor);
 /*			if(context.ecoreIFile != null){
 				createProjectWithEcore(monitor, sourceFolderName);
 			} else {

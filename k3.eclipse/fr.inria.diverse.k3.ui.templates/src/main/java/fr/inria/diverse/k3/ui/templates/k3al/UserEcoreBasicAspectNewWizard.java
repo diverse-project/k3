@@ -34,7 +34,7 @@ public class UserEcoreBasicAspectNewWizard extends NewProjectTemplateWizard {
 	 * @see NewExtensionTemplateWizard#createTemplateSections()
 	 */
 	public ITemplateSection[] createTemplateSections() {
-		return new ITemplateSection[] {new UserEcoreBasicAspectTemplate()};
+		return new ITemplateSection[] {new UserEcoreBasicAspectTemplate(this)};
 	}
 
 	

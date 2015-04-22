@@ -34,7 +34,7 @@ public class UserEcoreBasicAspectWithMelangeNewWizard extends NewProjectTemplate
 	 * @see NewExtensionTemplateWizard#createTemplateSections()
 	 */
 	public ITemplateSection[] createTemplateSections() {
-		return new ITemplateSection[] {new UserEcoreBasicAspectWithMelangeTemplate()};
+		return new ITemplateSection[] {new UserEcoreBasicAspectWithMelangeTemplate(this)};
 	}
 
 	
