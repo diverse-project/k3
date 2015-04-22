@@ -184,7 +184,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		updateDataFromOptions();
 		super.generateFiles(monitor);
 		
-		k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
+		k3.language.aspectgenerator.Context aspectGeneratorContext = k3.language.aspectgenerator.AspectGenerator.aspectGenerate (
 				_data.projectLocation,
 				_data.projectName,
 				"File:///"+_data.ecoreIFile.getLocation().toOSString(),  
@@ -204,6 +204,9 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 			try {
 				manifestChanger = new ManifestChanger(project.getFile("META-INF/MANIFEST.MF"));
 				manifestChanger.addPluginDependency(_data.ecoreIFile.getProject().getName(), "0.0.0", false, true);
+				for(String createdPackage : aspectGeneratorContext.createdPackages){
+					manifestChanger.addExportPackage(createdPackage);
+				}
 				manifestChanger.commit();
 			} catch (IOException | BundleException e) {
 				Activator.logErrorMessage(e.getMessage(), e);

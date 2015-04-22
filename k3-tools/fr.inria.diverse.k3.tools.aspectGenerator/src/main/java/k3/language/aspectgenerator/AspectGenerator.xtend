@@ -37,7 +37,7 @@ class AspectGenerator{
 
 	}
 	
-	public def static aspectGenerate( String projectPath, String projectName,  String ecoreURI, String ecoreBasePackage, String aspectBasePackage, String aspectPackPostFix, String operationName, List<String> operationParams, List<String> listNewClass) {
+	public def static Context aspectGenerate( String projectPath, String projectName,  String ecoreURI, String ecoreBasePackage, String aspectBasePackage, String aspectPackPostFix, String operationName, List<String> operationParams, List<String> listNewClass) {
 		val Context context = new Context( projectPath, projectName,  ecoreBasePackage, aspectBasePackage, aspectPackPostFix, operationName, listNewClass, operationParams)
 		
 		//Load Ecore Model
@@ -54,6 +54,7 @@ class AspectGenerator{
 		val EPackage p = res.contents.get(0) as EPackage
 		p.generateAspect(context)
 		generateClass(context)
+		return context
 	}
 	
 	private static def void generateClass(Context context) {
@@ -85,7 +86,8 @@ class EPackageAspect {
 		}
 		
 		if (_self.EClassifiers.exists[elt | elt instanceof EClass]) {
-					
+			
+			context.createdPackages.add(_self.getAspectPackageQualifiedName(context))			
 			for(c : _self.EClassifiers){
 				if(c instanceof EClass) {
 					(c as EClass).generateAspect(context)

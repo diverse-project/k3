@@ -18,6 +18,10 @@ class Context {
 	public Boolean			isOverride
 	public List<String>		operationParams
 	public List<String>		listNewClass
+	/** Lists the packages that have been created during the process 
+	 * (might be useful to update the exported packages in an eclipse plugin)
+	 */
+	public List<String>		createdPackages = new ArrayList<String>
 	
 	new( String projectPath, String projectName, String ecoreBasePackage, String aspectBasePackage, String aspectPackPostFix, String nameOperation, List<String> listNewClass, List<String> operationParams) {
 		classCollection = new ArrayList<String>
