@@ -3,6 +3,7 @@ package fr.inria.diverse.k3.ui.wizards;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -31,6 +32,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import fr.inria.diverse.commons.eclipse.pde.java.JavaNameHelper;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.AbstractNewProjectWizardWithTemplates;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.TemplateListSelectionPage;
@@ -431,9 +433,17 @@ public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates im
 	
 	
 	private String getContextNamePackage() {
-		return this.context.namePackage;
+		if(this.context.namePackage == null || this.context.namePackage.isEmpty()){
+			// create a name from the project name
+			return JavaNameHelper.getFormattedPackageName(context.projectName);
+		}
+		else {
+			return this.context.namePackage;
+		}
 	}
 
+	
+	
 	public NewK3ProjectWizardPage getPageProject() {
 		return this.projectPage;
 	}

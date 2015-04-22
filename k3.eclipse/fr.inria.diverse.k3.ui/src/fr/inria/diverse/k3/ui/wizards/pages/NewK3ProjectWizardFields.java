@@ -37,7 +37,7 @@ public class NewK3ProjectWizardFields extends BaseProjectWizardFields {
 		this.kindsOfProject			= KindsOfProject.PLUGIN;
 		this.ecoreIFile				= null;
 		this.genModelFile			= null;
-		this.namePackage 			= "sample";
+		this.namePackage 			= "";
 		//this.ecoreProject 			= false;
 		//this.basePackage			= new ArrayList<String>();
 		//this.typeProject			= "None";
