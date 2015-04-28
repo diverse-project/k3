@@ -449,6 +449,7 @@ public class AspectProcessor extends AbstractClassProcessor
 				        }
 				};
 				editingDomain.getCommandStack().execute(command);
+				org.gemoc.execution.engine.core.MSEManager.getInstance().endMSEOccurrence();
 				«returnStatement»'''
 	}
 
