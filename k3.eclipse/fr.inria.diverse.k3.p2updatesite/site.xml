@@ -4,14 +4,14 @@
       <category name="k3"/>
    </feature>
    <feature url="features/fr.inria.diverse.commons.eclipse.feature_1.0.0.qualifier.jar" id="fr.inria.diverse.commons.eclipse.feature" version="1.0.0.qualifier">
-      <category name="DiverSE-commons"/>
+      <category name="diverse_commons"/>
    </feature>
    <feature url="features/org.eclipse.emf.ecoretools.registration.feature_0.1.2.qualifier.jar" id="org.eclipse.emf.ecoretools.registration.feature" version="0.1.2.qualifier">
-      <category name="DiverSE-commons"/>
+      <category name="diverse_commons"/>
    </feature>
    <feature url="features/fr.inria.diverse.k3.al.feature_3.1.0.qualifier.jar" id="fr.inria.diverse.k3.al.feature" version="3.1.0.qualifier">
       <category name="k3"/>
    </feature>
    <category-def name="k3" label="Kermeta3"/>
-   <category-def name="DiverSE-commons" label="DiverSE commons"/>
+   <category-def name="diverse_commons" label="DiverSE Commons"/>
 </site>
