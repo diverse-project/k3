@@ -152,16 +152,17 @@ public class AspectProcessor extends AbstractClassProcessor {
 		aspectMappingBuilder.writePropertyFile(context)
 
 		for (clazz : annotatedSourceElements) {
- 
+ 			
 			val typeRef = Helper::getAnnotationAspectType(clazz)
 			val stAspectJ = new StringBuilder
-  
+  			var doGenerate=false
 			stAspectJ.append("package " + typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")) + ";\n")
 			stAspectJ.append("public aspect AspectJ" + typeRef.simpleName + "{\n")
 			//stAspectJ.append(clazz.declaredMethods.size)
 			for (m : clazz.declaredMethods) {
 				if (m.annotations.exists[annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"]) {
 					// return MyAspectA.foo2(self, (String)thisJoinPoint.getArgs()[0]);
+					doGenerate=true
 					stAspectJ.append(
 						m.returnType.simpleName + " around (" + typeRef.name +
 							" self)  :target (self) && (call ( " + m.returnType.name + " " + typeRef.name +
@@ -194,6 +195,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 			 
 		for (a : clazz.declaredFields) {
 				if (a.annotations.exists[annotationTypeDeclaration.simpleName == "SynchroField"]) {
+					doGenerate=true
+					
 					stAspectJ.append("void around ("+ typeRef.name+" self)  :target (self) &&  call ( void "+ typeRef.simpleName+".");
 					stAspectJ.append("set"+a.simpleName.toFirstUpper + "("+ a.type.name + ")){")
 					stAspectJ.append(clazz.qualifiedName+"."+ a.simpleName +"(self, (" + a.type.name +")thisJoinPoint.getArgs()[0]);");
@@ -217,8 +220,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val contents = '''// AspectJ classes that have been aspectized and name
 «stAspectJ.toString»'''
 
-			// if (!targetFilePath.exists)
-			targetFilePath.contents = contents
+			 if (doGenerate)
+				targetFilePath.contents = contents
 		}
 
 	}
