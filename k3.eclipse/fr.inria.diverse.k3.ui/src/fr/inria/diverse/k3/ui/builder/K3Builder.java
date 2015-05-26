@@ -1,16 +1,12 @@
 package fr.inria.diverse.k3.ui.builder;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
-
-//import javax.xml.parsers.ParserConfigurationException;
-//import javax.xml.parsers.SAXParser;
-//import javax.xml.parsers.SAXParserFactory;
-
-import java.util.Map.Entry;
-import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -20,6 +16,13 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.osgi.framework.BundleException;
+
+import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
+import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerExportPackage;
+//import javax.xml.parsers.ParserConfigurationException;
+//import javax.xml.parsers.SAXParser;
+//import javax.xml.parsers.SAXParserFactory;
 //import org.xml.sax.SAXException;
 //import org.xml.sax.SAXParseException;
 //import org.xml.sax.helpers.DefaultHandler;
@@ -52,10 +55,89 @@ public class K3Builder extends IncrementalProjectBuilder {
 				// handle changed resource
 				//checkXML(resource);
 				new AspectMappingPropertiesChecker(K3Builder.this).checkK3AspectMappingPropertiesForGeneratedJava(resource);
+				
+				if (resource instanceof IFile && resource.getName().endsWith(".xtend")) {
+					IProject project = resource.getProject();
+					if(project.hasNature("org.eclipse.pde.PluginNature")){
+						IFolder root = project.getFolder("xtend-gen");
+						Set<String> packs = findPackage(root);
+						updateManifest(project, packs);
+					}
+				}
+				
 				break;
 			}
 			//return true to continue visiting children.
 			return true;
+		}
+
+		private void updateManifest(IProject project, Set<String> packs) {
+			IFile manifest = project.getFile("META-INF/MANIFEST.MF");
+			ManifestChanger changer = new ManifestChanger(manifest);
+			ManifestChangerExportPackage updater = new ManifestChangerExportPackage(changer);
+			
+			for(String pack : packs){
+				try {
+					updater.add(pack);
+					changer.commit();
+				} catch (BundleException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		/**
+		 * Search for package in @resource.
+		 * Return empty list if none.
+		 * 
+		 * @param resource Explored resource 
+		 * @param folderName Name of the containing package
+		 */
+		private Set<String> findPackage(IFolder root) {
+			Set<String> res = new HashSet<String>();
+			
+			try {
+				for(IResource member : root.members()){
+					if(member.getType() == IResource.FOLDER){
+						Set<String> subRes = findPackageRec(member, member.getName());
+						res.addAll(subRes);
+					}
+				}
+			} catch (CoreException e) {e.printStackTrace();}
+			
+			return res;
+		}
+
+		/**
+		 * Recursive search for package in @resource.
+		 * Return empty list if none.
+		 * 
+		 * @param resource Explored resource 
+		 * @param folderName Name of the containing package
+		 */
+		private Set<String> findPackageRec(IResource resource, String packageName) {
+			
+			Set<String> res = new HashSet<String>();
+			
+			if(resource.getType() == IResource.FOLDER){
+				try {
+					for(IResource member : ((IFolder)resource).members()){
+						if(member.getType() == IResource.FOLDER){
+							Set<String> subRes = findPackageRec(member, packageName+"."+member.getName());
+							res.addAll(subRes);
+						}
+						else if(member.getType() == IResource.FILE && member.getFileExtension().equals("java")){
+							res.add(packageName);
+						}
+					}
+				} catch (CoreException e) {e.printStackTrace();}
+			}
+			
+			return res;
 		}
 	}
 
