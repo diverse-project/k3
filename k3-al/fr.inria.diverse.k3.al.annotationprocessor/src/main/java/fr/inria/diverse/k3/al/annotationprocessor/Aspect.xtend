@@ -158,10 +158,8 @@ public class AspectProcessor extends AbstractClassProcessor {
   			var doGenerate=false
 			stAspectJ.append("package " + typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")) + ";\n")
 			stAspectJ.append("public aspect AspectJ" + typeRef.simpleName + "{\n")
-			//stAspectJ.append(clazz.declaredMethods.size)
 			for (m : clazz.declaredMethods) {
 				if (m.annotations.exists[annotationTypeDeclaration.simpleName == "ReplaceAspectMethod"]) {
-					// return MyAspectA.foo2(self, (String)thisJoinPoint.getArgs()[0]);
 					doGenerate=true
 					stAspectJ.append(
 						m.returnType.simpleName + " around (" + typeRef.name +
@@ -183,20 +181,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 				} 
 
 			}
-			/*	void around (A self)  :target (self) &&  call ( void A.setA(int ) )  {
-		MyAspectA.a(self, (int)thisJoinPoint.getArgs()[0]);
-		proceed(self);		
-	}
-	void around (A self)  :target (self) &&  call ( void MyAspectA.a(A,int ) )  {
-		self.setA((int)thisJoinPoint.getArgs()[0]);
-		proceed(self);
-	} 
-			 */
-			 
+
 		for (a : clazz.declaredFields) {
 				if (a.annotations.exists[annotationTypeDeclaration.simpleName == "SynchroField"]) {
 					doGenerate=true
-					
 					stAspectJ.append("void around ("+ typeRef.name+" self)  :target (self) &&  call ( void "+ typeRef.simpleName+".");
 					stAspectJ.append("set"+a.simpleName.toFirstUpper + "("+ a.type.name + ")){")
 					stAspectJ.append(clazz.qualifiedName+"."+ a.simpleName +"(self, (" + a.type.name +")thisJoinPoint.getArgs()[0]);");
@@ -207,19 +195,12 @@ public class AspectProcessor extends AbstractClassProcessor {
 					stAspectJ.append("proceed(self);\n}\n")		
 				}
 		} 
-		
-
 			stAspectJ.append("\n}\n")
-			// context.addError(classes.get(0),stAspectJ.toString)
 			val filePath = clazz.compilationUnit.filePath
-			// var path = filePath.projectSourceFolders.filter[s|s.toString.contains("gen")].head
-			// context.addError(classes.get(0),""+filePath.targetFolder)
 			var Path targetFilePath = filePath.targetFolder.append(
 				typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")) + "/AspectJ" + typeRef.simpleName + ".aj")
-			// context.addError(classes.get(0),""+targetFilePath)
 			val contents = '''// AspectJ classes that have been aspectized and name
 «stAspectJ.toString»'''
-
 			 if (doGenerate)
 				targetFilePath.contents = contents
 		}
