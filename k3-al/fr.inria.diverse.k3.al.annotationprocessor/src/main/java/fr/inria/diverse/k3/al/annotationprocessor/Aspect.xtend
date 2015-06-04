@@ -28,6 +28,7 @@ import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import java.util.List
 import java.util.Map
 import org.eclipse.xtend.lib.macro.file.Path
+import java.io.File
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
@@ -52,7 +53,7 @@ public annotation ReplaceAspectMethod {
 public annotation SynchroField {
 }
 
-
+	
 
 /**
  * Used to tag a k3 operation as abstract as initially defined.
@@ -197,8 +198,12 @@ public class AspectProcessor extends AbstractClassProcessor {
 		} 
 			stAspectJ.append("\n}\n")
 			val filePath = clazz.compilationUnit.filePath
+			var Path targetFilePathFolder = filePath.targetFolder.append(
+				typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")).toString.replace(".",/*File.separatorChar.toString*/"/" ) )
+			targetFilePathFolder.mkdir
 			var Path targetFilePath = filePath.targetFolder.append(
-				typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")) + "/AspectJ" + typeRef.simpleName + ".aj")
+				typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")).toString.replace(".",/*File.separatorChar.toString*/"/" ) + "/AspectJ" + typeRef.simpleName + ".aj")
+				
 			val contents = '''// AspectJ classes that have been aspectized and name
 «stAspectJ.toString»'''
 			 if (doGenerate)
