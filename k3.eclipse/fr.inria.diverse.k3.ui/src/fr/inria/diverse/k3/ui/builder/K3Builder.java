@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -16,10 +17,12 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.osgi.framework.BundleException;
 
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerExportPackage;
+import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerPluginDependency;
 //import javax.xml.parsers.ParserConfigurationException;
 //import javax.xml.parsers.SAXParser;
 //import javax.xml.parsers.SAXParserFactory;
@@ -47,6 +50,38 @@ public class K3Builder extends IncrementalProjectBuilder {
 			case IResourceDelta.ADDED:
 				// handle added resource
 				//checkXML(resource);
+				if (resource instanceof IFile && resource.getName().endsWith(".aj")) {
+					IProject project = resource.getProject();
+					if(!project.hasNature("org.eclipse.ajdt.ui.ajnature")){
+						//Add nature
+						try {
+							IProjectDescription desc = project.getDescription();
+							String[] prevNatures = desc.getNatureIds();
+							String[] newNatures = new String[prevNatures.length + 1];
+							System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+							newNatures[prevNatures.length] = "org.eclipse.ajdt.ui.ajnature";
+							desc.setNatureIds(newNatures);
+							project.setDescription(desc, new NullProgressMonitor());
+						} catch (CoreException e) {
+						    e.printStackTrace();
+						}
+						//Add Aspectj dependency
+						try {
+							if(project.hasNature("org.eclipse.pde.PluginNature")){
+								IFile manifest = project.getFile("META-INF/MANIFEST.MF");
+								ManifestChanger changer = new ManifestChanger(manifest);
+								ManifestChangerPluginDependency updater = new ManifestChangerPluginDependency(changer);
+								updater.add("org.aspectj.runtime");
+								changer.commit();
+							}
+						} catch (BundleException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
 				break;
 			case IResourceDelta.REMOVED:
 				// handle removed resource
@@ -138,6 +173,25 @@ public class K3Builder extends IncrementalProjectBuilder {
 			}
 			
 			return res;
+		}
+		
+		private boolean hasAjFile(IResource resource) {
+			if(resource.getType() == IResource.FOLDER){
+				try {
+					for(IResource member : ((IFolder)resource).members()){
+						if(member.getType() == IResource.FOLDER){
+							if(hasAjFile(member)){
+								return true;
+							}
+						}
+						else if(member.getType() == IResource.FILE && member.getFileExtension().equals("aj")){
+							return true;
+						}
+					}
+				} catch (CoreException e) {e.printStackTrace();}
+			}
+			
+			return false;
 		}
 	}
 
