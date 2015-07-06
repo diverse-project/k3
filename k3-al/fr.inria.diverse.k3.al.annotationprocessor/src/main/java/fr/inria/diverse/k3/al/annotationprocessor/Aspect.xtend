@@ -20,26 +20,15 @@ import org.eclipse.xtend.lib.macro.declaration.MethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
+import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
-import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.file.Path
-import org.eclipse.xtend.lib.macro.CodeGenerationContext
-import java.util.List
-import java.util.Map
-import org.eclipse.xtend.lib.macro.file.Path
-import java.io.File
 
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
 	Class<?> className;
 	Class<?>[] with = #[];
-	TransactionSupport transactionSupport = TransactionSupport.None;
-}
-
-public enum TransactionSupport {
-	None,
-	EMF
 }
 
 public annotation OverrideAspectMethod {
@@ -52,6 +41,8 @@ public annotation ReplaceAspectMethod {
 }
 public annotation SynchroField {
 }
+
+public annotation Step{}
 
 	
 
@@ -73,6 +64,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
 	public static final String OVERRIDE_METHOD = OverrideAspectMethod.simpleName
+	public static final String STEP = Step.simpleName
 	public static final String PROP_VAR_NAME = "_self_"
 	public static final String SELF_VAR_NAME = "_self"
 	public static final String PRIV_PREFIX = "_privk3_"
@@ -112,7 +104,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 			val typeRef = Helper::getAnnotationAspectType(clazz)
 
-			val transactionSupport = Helper::getAnnotationTransactionSupport(clazz)
 			if (typeRef === null)
 				clazz.addError("The aspectized class cannot be resolved.")
 			else {
@@ -124,12 +115,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 				fieldsProcessing(context, clazz, className, identifier, bodies)
 
 				// Transform methods to static
-				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className,
-					transactionSupport)
+				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
 
 				// constructor are currently not allowed, report error if there are some.
-				constructorsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className,
-					transactionSupport)
+				constructorsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
 
 				aspectContextMaker(context, clazz, className, identifier)
 			}
@@ -326,10 +315,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	private def methodProcessingChangeBody(MutableMethodDeclaration m, MutableClassDeclaration clazz,
 		extension TransformationContext cxt, Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod,
-		List<String> inheritList, String className, TransactionSupport transactionSupport) {
+		List<String> inheritList, String className) {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
-		val ret = getReturnInstruction(m, cxt, transactionSupport)
+		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
+		val ret = getReturnInstruction(m, cxt, isStep)
 		val call = new StringBuilder
 
 		// cxt.addError(m, ""+ dispatchmethod.size)
@@ -350,17 +340,18 @@ public class AspectProcessor extends AbstractClassProcessor {
 //								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
 //						i=i+1
 //					}
-			val ifst = transformIfStatements(m, cxt, declTypes, s, ret, transactionSupport)
+			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep)
 			call.append(ifst).
 				append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		} else {
-			val instruction = transformNormalStatement(m, cxt, s, transactionSupport)
+			val instruction = transformNormalStatement(m, cxt, s,isStep)
 			call.append(instruction) // for getters & setters
 		}
 		m.abstract = false
 
+		
 		m.body = [
-			getBody(clazz, className, call.toString, transactionSupport, ret, m.simpleName)
+			getBody(clazz, className, call.toString, isStep, ret, m.simpleName)
 		]
 	}
 
@@ -369,19 +360,18 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt,
-		List<TypeDeclaration> declTypes, String parameters, String returnStatement,
-		TransactionSupport transactionSupport) {
+		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep) {
 			var retBegin = ""
 			var retEnd = ""
 			if (returnStatement.contains("return")) {
-				switch (transactionSupport) {
-					case TransactionSupport.None:
+				if (!isStep) {
 						retBegin = "result ="
-					case TransactionSupport.EMF: {
-						retBegin = "result.add("
+						}
+					else {
+						retBegin = "addToResult("
 						retEnd = ")"
 					}
-				}
+				
 			}
 			val StringBuilder sb = new StringBuilder
 			for (dt : declTypes) {
@@ -403,33 +393,31 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 
 		private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-			String parameters, TransactionSupport transactionSupport) {
+			String parameters, boolean isStep) {
 			var retBegin = ""
 			var retEnd = ""
 			if (hasReturnType(declaration, cxt)) {
-				switch (transactionSupport) {
-					case TransactionSupport.None:
-						retBegin = "result ="
-					case TransactionSupport.EMF: {
-						retBegin = "result.add("
+				if (!isStep) {
+					retBegin = "result ="
+					}
+					else {
+						retBegin = "addToResult("
 						retEnd = ")"
 					}
 				}
-			}
+			
 			return '''«retBegin»«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)«retEnd»'''
 		}
 
 		private def getReturnInstruction(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-			TransactionSupport transactionSupport) {
+			 boolean isStep) {
 			var ret = ""
 			if (hasReturnType(declaration, cxt)) {
-				if (transactionSupport.equals(TransactionSupport.EMF)) {
+				if (isStep) {
 					if (! declaration.returnType.inferred) {
 						ret = "return (" + declaration.returnType.name + ")command.getResult().iterator().next();"
 					} else {
-						cxt.addError(declaration,
-							"Cannot infer return type when Transaction support is enabled. Please specify the return type of this method."
-						)
+						cxt.addError(declaration, "Cannot infer return type when @Step is enabled. Please specify the return type of this method.")
 						// not inferred, so cannot call its name there
 						ret = "return result;"
 					}
@@ -452,43 +440,36 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 
 		private def CharSequence getBody(MutableClassDeclaration clazz, String className, String call,
-			TransactionSupport transactionSupport, String returnStatement, String methodName) {
-			switch (transactionSupport) {
-				case TransactionSupport.EMF:
-					return getBodyWithEMFTransaction(clazz, className, call, returnStatement, methodName)
-				case TransactionSupport.None:
-					return getBodyWithoutTransaction(clazz, className, call, returnStatement)
-			}
+			boolean isStep, String returnStatement, String methodName) {
+			
+				if (isStep)
+					return getBodyWithStep(clazz, className, call, returnStatement, methodName)
+				else
+					return getBodyWithoutStep(clazz, className, call, returnStatement)
+			
 		}
 
-		private def CharSequence getBodyWithEMFTransaction(MutableClassDeclaration clazz, String className, String call,
+		private def CharSequence getBodyWithStep(MutableClassDeclaration clazz, String className, String call,
 			String returnStatement,
 			String methodName) {
 				return '''
-				org.gemoc.execution.engine.core.MSEManager.getInstance().raiseMSEOccurrence(_self, "«methodName»");
-				org.eclipse.emf.transaction.TransactionalEditingDomain editingDomain = org.eclipse.emf.transaction.TransactionalEditingDomain.Factory.INSTANCE.getEditingDomain(_self.eResource().getResourceSet());
-				Object res = null;
-				org.eclipse.emf.transaction.RecordingCommand command = new org.eclipse.emf.transaction.RecordingCommand(editingDomain)
-					{
-						private java.util.List<Object> result = new java.util.ArrayList<Object>();
-				
-						@Override
-						protected void doExecute() {
-					«clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-					«call.toString»;
-						}
-				
-						@Override
-						public java.util.Collection<?> getResult() {
-					return result;
-					     }
+				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
+					@Override
+					public void execute() {
+						«clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+						«call.toString»;
+					}
 				};
-				editingDomain.getCommandStack().execute(command);
-				org.gemoc.execution.engine.core.MSEManager.getInstance().endMSEOccurrence();
+				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager manager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
+				if (manager != null) {
+					manager.execute(_self,command,"«methodName»");
+				} else {
+					command.execute();
+				}
 				«returnStatement»'''
 			}
 
-			private def CharSequence getBodyWithoutTransaction(MutableClassDeclaration clazz, String className,
+			private def CharSequence getBodyWithoutStep(MutableClassDeclaration clazz, String className,
 				String call, String returnStatement) {
 
 				return '''
@@ -566,15 +547,14 @@ public class AspectProcessor extends AbstractClassProcessor {
 			private def methodsProcessing(MutableClassDeclaration clazz, TransformationContext cxt, String identifier,
 				Map<MutableMethodDeclaration, String> bodies,
 				Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
-				String aspectizedClassName, TransactionSupport transactionSupport) {
+				String aspectizedClassName) {
 				for (m : clazz.declaredMethods) {
 					if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
 						methodProcessingAddSelfStatic(m, identifier, cxt)
 						methodProcessingAddSuper(m, clazz, aspectizedClassName, cxt)
 						methodProcessingAddHidden(m, identifier, cxt)
 						methodProcessingAddPriv(m, clazz, aspectizedClassName, bodies, cxt)
-						methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, aspectizedClassName,
-							transactionSupport)
+						methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, aspectizedClassName)
 					} else
 						cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 				}
@@ -601,7 +581,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			private def constructorsProcessing(MutableClassDeclaration clazz, TransformationContext cxt,
 				String identifier, Map<MutableMethodDeclaration, String> bodies,
 				Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
-				String className, TransactionSupport transactionSupport) {
+				String className) {
 
 				for (c : clazz.declaredConstructors) {
 					if (c.body != null) {
