@@ -189,17 +189,6 @@ abstract class Helper {
 		}catch(NullPointerException ex){ return null }
 	}
 
-
-	static def TransactionSupport getAnnotationTransactionSupport(TypeDeclaration cl) {
-		if(cl===null || cl.annotations===null) return TransactionSupport.None;
-		try{
-			val annot = cl.annotations.findFirst[getClassValue(annotationName) !== null]
-			if(annot===null) return TransactionSupport.None
-			return TransactionSupport.valueOf(annot.getEnumValue(annotationTransactionSupportName).simpleName)
-		}catch(NullPointerException ex){ return TransactionSupport.None }
-	}
-
-
 	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. */
 	static def String getAspectedClassName(TypeDeclaration clazz) {
 		val type = getAnnotationAspectType(clazz)
