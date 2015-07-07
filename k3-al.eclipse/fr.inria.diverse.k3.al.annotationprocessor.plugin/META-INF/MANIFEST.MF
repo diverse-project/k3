@@ -13,4 +13,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/fr.inria.diverse.k3.al.annotationprocessor.jar
 Export-Package: fr.inria.diverse.k3.al.annotationprocessor,
- fr.inria.diverse.k3.al.annotationprocessor.plugin
+ fr.inria.diverse.k3.al.annotationprocessor.plugin,
+ fr.inria.diverse.k3.al.annotationprocessor.stepmanager
