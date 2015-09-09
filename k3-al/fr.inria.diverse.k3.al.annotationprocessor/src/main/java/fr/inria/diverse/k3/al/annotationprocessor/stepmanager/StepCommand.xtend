@@ -2,16 +2,16 @@ package fr.inria.diverse.k3.al.annotationprocessor.stepmanager
 
 abstract class StepCommand {
 
-	private java.util.List<Object> result = new java.util.ArrayList<Object>();
+	private Object result
 
 	public def void execute() ;
 	
-	protected def boolean addToResult(Object o) {
-		return result.add(o);
+	protected def void addToResult(Object o) {
+		result = o;
 	}
 
-	public def java.util.Collection<?> getResult() {
-		return result.immutableCopy
+	public def Object getResult() {
+		return result;
 	}
 
 }

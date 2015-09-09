@@ -415,7 +415,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			if (hasReturnType(declaration, cxt)) {
 				if (isStep) {
 					if (! declaration.returnType.inferred) {
-						ret = "return (" + declaration.returnType.name + ")command.getResult().iterator().next();"
+						ret = "return (" + declaration.returnType.name + ")command.getResult();"
 					} else {
 						cxt.addError(declaration, "Cannot infer return type when @Step is enabled. Please specify the return type of this method.")
 						// not inferred, so cannot call its name there
