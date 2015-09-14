@@ -713,6 +713,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 							addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 							primarySourceElement = f
 							visibility = f.visibility
+							f.annotations.forEach[ann | addAnnotation(ann)]
 						]
 
 						bodies.put(get, ''' return «PROP_VAR_NAME».«f.simpleName»; ''')
@@ -737,6 +738,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 								addParameter(f.simpleName, f.type)
 								visibility = f.visibility
 								primarySourceElement = f
+								f.annotations.forEach[ann | addAnnotation(ann)]
 							]
 
 							bodies.put(
