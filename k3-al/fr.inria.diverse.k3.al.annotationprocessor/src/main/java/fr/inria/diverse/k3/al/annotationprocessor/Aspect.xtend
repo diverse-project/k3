@@ -716,20 +716,37 @@ public class AspectProcessor extends AbstractClassProcessor {
 							f.annotations.forEach[ann | addAnnotation(ann)]
 						]
 
-						bodies.put(get, ''' return «PROP_VAR_NAME».«f.simpleName»; ''')
+						val gemocHackGetter = '''
+							try {
+								for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+									if (m.getName().equals("get«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»") &&
+										m.getParameterTypes().length == 0) {
+											Object ret = m.invoke(_self);
+											if (ret != null) {
+												return («f.type.type.qualifiedName») ret;
+											}
+									}
+								}
+							} catch (Exception e) {
+								// Chut !
+							}
+							return «PROP_VAR_NAME».«f.simpleName»;
+						'''
 
-						val gemochack = '''try {
+						bodies.put(get, '''«gemocHackGetter»''')
 
-			for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
-				if (m.getName().equals("set" + "«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
-						&& m.getParameterTypes().length == 1) {
-					m.invoke(_self, «f.simpleName»);
-
-				}
-			}
-		} catch (Exception e) {
-			// Chut !
-		}'''
+						val gemocHackSetter = '''
+							try {
+								for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+									if (m.getName().equals("set«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
+											&& m.getParameterTypes().length == 1) {
+										m.invoke(_self, «f.simpleName»);
+									}
+								}
+							} catch (Exception e) {
+								// Chut !
+							}
+						'''
 
 						if (!f.final) {
 							var set = clazz.addMethod(f.simpleName) [
@@ -742,7 +759,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 							]
 
 							bodies.put(
-								set, '''«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemochack.toString» ''')
+								set, '''«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemocHackSetter» ''')
 						}
 					}
 				}
