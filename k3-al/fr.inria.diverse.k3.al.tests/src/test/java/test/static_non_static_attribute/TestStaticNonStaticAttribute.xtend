@@ -16,8 +16,8 @@ class TestStaticNonStaticAttribute {
 		l.incJ
 		l1.incI
 		l1.incJ
-		assertEquals(l.i, 5)
-		assertEquals(l1.i, 5)
+		assertEquals(AspectB::i, 5)
+		assertEquals(AspectB::i, 5)
 		assertEquals(l.j, 4)
 		assertEquals(l1.j, 4)
 	}
@@ -43,8 +43,7 @@ class AspectB extends AspectA {
 	public int j = 3
 
 	def void incI() {
-
-		_self.i = _self.i + 1
+		i = i + 1
 	}
 
 	def void incJ() {
