@@ -663,23 +663,25 @@ public class AspectProcessor extends AbstractClassProcessor {
 						)
 					else {
 						for (f : clazz.declaredFields) {
-							if (f.simpleName != PROP_VAR_NAME) {
-								toRemove.add(f)
+							if (!f.static) {
+								if (f.simpleName != PROP_VAR_NAME) {
+									toRemove.add(f)
 
-								if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
-									propertyAspect.add(f)
+									if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
+										propertyAspect.add(f)
 
-								c.addField(f.simpleName) [
-									visibility = Visibility::PUBLIC
-									static = f.static
-									final = f.final
-									type = f.type
-									if(f.initializer !== null) initializer = f.initializer
-									primarySourceElement = f
-								]
-							} else if (!f.static && f.simpleName == PROP_VAR_NAME) {
-								f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
-								f.static = true
+									c.addField(f.simpleName) [
+										visibility = Visibility::PUBLIC
+										static = f.static
+										final = f.final
+										type = f.type
+										if(f.initializer !== null) initializer = f.initializer
+										primarySourceElement = f
+									]
+								} else {
+									f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
+									f.static = true
+								}
 							}
 						}
 					}
