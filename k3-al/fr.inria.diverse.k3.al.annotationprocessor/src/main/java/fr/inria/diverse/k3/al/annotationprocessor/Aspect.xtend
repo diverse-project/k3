@@ -44,6 +44,8 @@ public annotation SynchroField {
 
 public annotation Step{}
 
+public annotation Main{}
+
 	
 
 /**
