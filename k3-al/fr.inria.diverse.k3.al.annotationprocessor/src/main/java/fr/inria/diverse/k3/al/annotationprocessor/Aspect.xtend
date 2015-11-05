@@ -25,6 +25,7 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 
+@Retention(RetentionPolicy::RUNTIME)
 @Active(typeof(AspectProcessor))
 public annotation Aspect {
 	Class<?> className;
@@ -44,6 +45,7 @@ public annotation SynchroField {
 
 public annotation Step{}
 
+@Retention(RetentionPolicy::RUNTIME)
 public annotation Main{}
 
 	
