@@ -45,6 +45,7 @@ public annotation SynchroField {
 
 public annotation Step{}
 
+@Target(#[ElementType::METHOD])
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Main{}
 
