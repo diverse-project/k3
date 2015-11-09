@@ -467,7 +467,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				};
 				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager manager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
 				if (manager != null) {
-					manager.executeStep(_self,command,"«methodName»");
+					manager.executeStep(_self,command,"«className»","«methodName»");
 				} else {
 					command.execute();
 				}
