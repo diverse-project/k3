@@ -89,11 +89,11 @@ public class K3Builder extends IncrementalProjectBuilder {
 					updater.add(pack);
 					changer.commit();
 				} catch (BundleException e) {
-					e.printStackTrace();
+					Activator.logErrorMessage(e.getMessage(), e);
 				} catch (IOException e) {
-					e.printStackTrace();
+					Activator.logErrorMessage(e.getMessage(), e);
 				} catch (CoreException e) {
-					e.printStackTrace();
+					Activator.logErrorMessage(e.getMessage(), e);
 				}
 			}
 		}
@@ -115,7 +115,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 						res.addAll(subRes);
 					}
 				}
-			} catch (CoreException e) {e.printStackTrace();}
+			} catch (CoreException e) {Activator.logErrorMessage(e.getMessage(), e);}
 			
 			return res;
 		}
@@ -142,7 +142,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 							res.add(packageName);
 						}
 					}
-				} catch (CoreException e) {e.printStackTrace();}
+				} catch (CoreException e) {Activator.logErrorMessage(e.getMessage(), e);}
 			}
 			
 			return res;
@@ -161,7 +161,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 							return true;
 						}
 					}
-				} catch (CoreException e) {e.printStackTrace();}
+				} catch (CoreException e) {Activator.logErrorMessage(e.getMessage(), e);}
 			}
 			
 			return false;
@@ -207,7 +207,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 					desc.setNatureIds(newNatures);
 					project.setDescription(desc, new NullProgressMonitor());
 				} catch (CoreException e) {
-				    e.printStackTrace();
+					Activator.logErrorMessage(e.getMessage(), e);
 				}
 				//Add Aspectj dependency
 				try {
