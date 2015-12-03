@@ -1,7 +1,6 @@
 package fr.inria.diverse.k3.ui.builder;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -25,12 +24,6 @@ import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerExportPackage;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerPluginDependency;
 import fr.inria.diverse.k3.ui.Activator;
-//import javax.xml.parsers.ParserConfigurationException;
-//import javax.xml.parsers.SAXParser;
-//import javax.xml.parsers.SAXParserFactory;
-//import org.xml.sax.SAXException;
-//import org.xml.sax.SAXParseException;
-//import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
