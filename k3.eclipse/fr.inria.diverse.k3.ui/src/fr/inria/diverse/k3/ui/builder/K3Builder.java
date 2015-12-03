@@ -1,6 +1,7 @@
 package fr.inria.diverse.k3.ui.builder;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -195,9 +196,15 @@ public class K3Builder extends IncrementalProjectBuilder {
 		}
 	}
 
+	protected AspectMappingPropertiesChecker _aspectMappingPropertiesChecker;
+	
 	class K3BuilderResourceVisitor implements IResourceVisitor {
 		public boolean visit(IResource resource) {
-			new AspectMappingPropertiesChecker(K3Builder.this).checkK3AspectMappingPropertiesForGeneratedJava(resource);
+			if(_aspectMappingPropertiesChecker == null){
+				_aspectMappingPropertiesChecker = new AspectMappingPropertiesChecker(K3Builder.this);
+			}
+			_aspectMappingPropertiesChecker.checkK3AspectMappingPropertiesForGeneratedJava(resource);
+			
 			//return true to continue visiting children.
 			return true;
 		}
