@@ -24,6 +24,7 @@ import org.osgi.framework.BundleException;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerExportPackage;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerPluginDependency;
+import fr.inria.diverse.k3.ui.Activator;
 //import javax.xml.parsers.ParserConfigurationException;
 //import javax.xml.parsers.SAXParser;
 //import javax.xml.parsers.SAXParserFactory;
@@ -50,38 +51,7 @@ public class K3Builder extends IncrementalProjectBuilder {
 			switch (delta.getKind()) {
 			case IResourceDelta.ADDED:
 				// handle added resource
-				//checkXML(resource);
-				if (resource instanceof IFile && resource.getName().endsWith(".aj")) {
-					IProject project = resource.getProject();
-					if(!project.hasNature("org.eclipse.ajdt.ui.ajnature")){
-						//Add nature
-						try {
-							IProjectDescription desc = project.getDescription();
-							String[] prevNatures = desc.getNatureIds();
-							String[] newNatures = new String[prevNatures.length + 1];
-							System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-							newNatures[prevNatures.length] = "org.eclipse.ajdt.ui.ajnature";
-							desc.setNatureIds(newNatures);
-							project.setDescription(desc, new NullProgressMonitor());
-						} catch (CoreException e) {
-						    e.printStackTrace();
-						}
-						//Add Aspectj dependency
-						try {
-							if(project.hasNature("org.eclipse.pde.PluginNature")){
-								IFile manifest = project.getFile("META-INF/MANIFEST.MF");
-								ManifestChanger changer = new ManifestChanger(manifest);
-								ManifestChangerPluginDependency updater = new ManifestChangerPluginDependency(changer);
-								updater.add("org.aspectj.runtime");
-								changer.commit();
-							}
-						} catch (BundleException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
+				checkAspectJNature(resource);
 				
 				break;
 			case IResourceDelta.REMOVED:
@@ -89,8 +59,10 @@ public class K3Builder extends IncrementalProjectBuilder {
 				break;
 			case IResourceDelta.CHANGED:
 				// handle changed resource
-				//checkXML(resource);
-				new AspectMappingPropertiesChecker(K3Builder.this).checkK3AspectMappingPropertiesForGeneratedJava(resource);
+				if(_aspectMappingPropertiesChecker == null){
+					_aspectMappingPropertiesChecker = new AspectMappingPropertiesChecker(K3Builder.this);
+				}
+				_aspectMappingPropertiesChecker.checkK3AspectMappingPropertiesForGeneratedJava(resource);
 				
 				if (resource instanceof IFile && resource.getName().endsWith(".xtend")) {
 					IProject project = resource.getProject();
@@ -205,43 +177,55 @@ public class K3Builder extends IncrementalProjectBuilder {
 			}
 			_aspectMappingPropertiesChecker.checkK3AspectMappingPropertiesForGeneratedJava(resource);
 			
+			try {
+				checkAspectJNature(resource);
+			} catch (CoreException e) {
+				Activator.logErrorMessage(e.getMessage(), e);
+			}
+			
 			//return true to continue visiting children.
 			return true;
 		}
 	}
 
-//	class XMLErrorHandler extends DefaultHandler {
-//		
-//		private IFile file;
-//
-//		public XMLErrorHandler(IFile file) {
-//			this.file = file;
-//		}
-//
-//		private void addMarker(SAXParseException e, int severity) {
-//			K3Builder.this.addMarker(file, e.getMessage(), e
-//					.getLineNumber(), severity);
-//		}
-//
-//		public void error(SAXParseException exception) throws SAXException {
-//			addMarker(exception, IMarker.SEVERITY_ERROR);
-//		}
-//
-//		public void fatalError(SAXParseException exception) throws SAXException {
-//			addMarker(exception, IMarker.SEVERITY_ERROR);
-//		}
-//
-//		public void warning(SAXParseException exception) throws SAXException {
-//			addMarker(exception, IMarker.SEVERITY_WARNING);
-//		}
-//	}
-
 	public static final String BUILDER_ID = "fr.inria.diverse.k3.ui.k3Builder";
 
 	private static final String MARKER_TYPE = "fr.inria.diverse.k3.ui.k3Problem";
 
-//	private SAXParserFactory parserFactory;
 
+	protected void checkAspectJNature(IResource resource) throws CoreException{
+		if (resource instanceof IFile && resource.getName().endsWith(".aj")) {
+			IProject project = resource.getProject();
+			if(!project.hasNature("org.eclipse.ajdt.ui.ajnature")){
+				//Add nature
+				try {
+					IProjectDescription desc = project.getDescription();
+					String[] prevNatures = desc.getNatureIds();
+					String[] newNatures = new String[prevNatures.length + 1];
+					System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+					newNatures[prevNatures.length] = "org.eclipse.ajdt.ui.ajnature";
+					desc.setNatureIds(newNatures);
+					project.setDescription(desc, new NullProgressMonitor());
+				} catch (CoreException e) {
+				    e.printStackTrace();
+				}
+				//Add Aspectj dependency
+				try {
+					if(project.hasNature("org.eclipse.pde.PluginNature")){
+						IFile manifest = project.getFile("META-INF/MANIFEST.MF");
+						ManifestChanger changer = new ManifestChanger(manifest);
+						ManifestChangerPluginDependency updater = new ManifestChangerPluginDependency(changer);
+						updater.add("org.aspectj.runtime");
+						changer.commit();
+					}
+				} catch (BundleException e) {
+					Activator.logErrorMessage(e.getMessage(), e);
+				} catch (IOException e) {
+					Activator.logErrorMessage(e.getMessage(), e);
+				}
+			}
+		}
+	}
 	
 	/**
 	 * convenient method for marking file associated with this builder
