@@ -43,12 +43,18 @@ public annotation ReplaceAspectMethod {
 public annotation SynchroField {
 }
 
+/** Step annotation is used by GEMOC to produce StepCommands */
 public annotation Step{}
 
+/** Main annotation is used by GEMOC to tag aspect methods to be the main entry point of a sequential model execution */
 @Target(#[ElementType::METHOD])
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Main{}
 
+/** Main annotation is used by GEMOC to tag aspect methods to be an initialization method before a  model execution */
+@Target(#[ElementType::METHOD])
+@Retention(RetentionPolicy::RUNTIME)
+public annotation InitializeModel{}
 	
 
 /**
