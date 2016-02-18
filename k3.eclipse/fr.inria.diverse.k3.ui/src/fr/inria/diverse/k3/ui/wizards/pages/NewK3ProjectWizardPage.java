@@ -1,11 +1,10 @@
 package fr.inria.diverse.k3.ui.wizards.pages;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -16,23 +15,13 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.emf.common.ui.dialogs.WorkspaceResourceDialog;
-import org.eclipse.emf.mapping.ecore2ecore.presentation.Ecore2EcoreEditorPlugin;
 
-import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.k3.ui.tools.ErrorMessage;
 
 public class NewK3ProjectWizardPage extends WizardPage {
@@ -107,7 +96,9 @@ public class NewK3ProjectWizardPage extends WizardPage {
 		
 		txtProjectName = new Text(grpGeneral, SWT.BORDER);
 		txtProjectName.setText(this.context.projectName);
-		txtProjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		GridData projectNameGrid = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
+		projectNameGrid.widthHint = 500;
+		txtProjectName.setLayoutData(projectNameGrid);
 		new Label(grpGeneral, SWT.NONE);
 				
 		txtProjectName.addModifyListener(new ModifyListener() {
