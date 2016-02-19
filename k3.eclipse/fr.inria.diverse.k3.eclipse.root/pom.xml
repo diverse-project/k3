@@ -25,7 +25,9 @@
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler/</kepler-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<xtend.version>2.7.3</xtend.version>
-		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->
+		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->		
+		<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>
 	</properties>
 
 
@@ -169,9 +171,6 @@
 
 		<pluginManagement>
 			<plugins>
-				
-
-			
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>target-platform-configuration</artifactId>
@@ -185,7 +184,7 @@
 						<compilerArguments>
 							<inlineJSR />
 							<enableJavadoc />
-							<encoding>ISO-8859-1</encoding>
+							<encoding>${project.build.sourceEncoding}</encoding>
 						</compilerArguments>
 					</configuration>
 				</plugin>
@@ -199,10 +198,18 @@
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
 							<version>${tycho-extras.version}</version>
 						</dependency>
+						<dependency>
+        					<groupId>org.eclipse.tycho.extras</groupId>
+				        	<artifactId>tycho-sourceref-jgit</artifactId>
+				        	<version>${tycho-extras.version}</version>
+				      	</dependency>
 					</dependencies>
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
 						<format>'v'yyyyMMdd-HHmm</format>
+						<sourceReferences>
+        					<generate>true</generate>
+      					</sourceReferences>
 					</configuration>
 				</plugin>
 				<plugin>
