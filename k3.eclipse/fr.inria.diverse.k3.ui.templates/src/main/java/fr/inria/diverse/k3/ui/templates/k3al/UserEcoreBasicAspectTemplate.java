@@ -91,7 +91,7 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		addOption(KEY_ASPECTPACKAGE_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectPackagePostfix, ASPECTPACKAGE_POSTFIX, 0).setRequired(false);
 		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, ASPECTFILE_NAME, 0);
 		addOption(KEY_ASPECTCLASS_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfix, ASPECTCLASS_POSTFIX, 0);
-		addOption(KEY_ECOREBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreBasePackageName, ECOREBASEPACKAGE_NAME, 0).setRequired(false);
+		addOption(KEY_ECOREBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreBasePackageName, null, 0).setRequired(false);
 		//addOption(KEY_ECOREFILE_LOCATION, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFileLocation, (String) null, 0);
 		TemplateOption ecoreLocationOption  = new AbstractStringWithButtonOption(this, KEY_ECOREFILE_PATH, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFilePath) {
 			@Override
@@ -160,8 +160,10 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 		//initializeOption(KEY_PACKAGE_NAME, packageName);
 		if(_data.ecoreIFile != null){
 			initializeOption(KEY_ECOREFILE_PATH,_data.ecoreIFile.getFullPath().toOSString());
+		}
+		if(_data.basePackage != null){
+			initializeOption(KEY_ECOREBASEPACKAGE_NAME,_data.basePackage);
 		} 
-		
 	}
 
 

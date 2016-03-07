@@ -22,7 +22,7 @@ public class NewK3ProjectWizardFields extends BaseProjectWizardFields {
 	// this is a way to programmatically initialize some fields in the templates
 	//public boolean 			ecoreProject;
 	public String 			genModelFile;
-	//public List<String>		basePackage;
+	public String			basePackage;
 	//public String 			typeProject;
 	public IFile 			ecoreIFile;
 	//public String 			ecoreProjectPath;
@@ -38,8 +38,8 @@ public class NewK3ProjectWizardFields extends BaseProjectWizardFields {
 		this.ecoreIFile				= null;
 		this.genModelFile			= null;
 		this.namePackage 			= "";
+		this.basePackage			= "";
 		//this.ecoreProject 			= false;
-		//this.basePackage			= new ArrayList<String>();
 		//this.typeProject			= "None";
 		//this.ecoreProjectPath		= "";
 	}
