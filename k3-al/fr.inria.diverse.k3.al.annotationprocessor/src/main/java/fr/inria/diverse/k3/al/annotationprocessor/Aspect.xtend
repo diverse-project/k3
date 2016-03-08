@@ -25,7 +25,7 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 
-//@Retention(RetentionPolicy::RUNTIME)
+@Retention(RetentionPolicy::RUNTIME)
 @Active(typeof(AspectProcessor)) 
 @Target(ElementType.TYPE)
 public annotation Aspect { 
