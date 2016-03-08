@@ -25,13 +25,14 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 
-@Retention(RetentionPolicy::RUNTIME)
-@Active(typeof(AspectProcessor))
-public annotation Aspect {
+//@Retention(RetentionPolicy::RUNTIME)
+@Active(typeof(AspectProcessor)) 
+@Target(ElementType.TYPE)
+public annotation Aspect { 
 	Class<?> className;
 	Class<?>[] with = #[];
 }
-
+ 
 public annotation OverrideAspectMethod {
 }
 
@@ -55,7 +56,7 @@ public annotation Main{}
 @Target(#[ElementType::METHOD])
 @Retention(RetentionPolicy::RUNTIME)
 public annotation InitializeModel{}
-	
+	 
 
 /**
  * Used to tag a k3 operation as abstract as initially defined.
@@ -109,6 +110,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		initDispatchmethod(superclass, dispatchmethod, context)
 
 		for (clazz : classes) {
+			
 			val List<MutableClassDeclaration> listRes = Helper::sortByClassInheritance(clazz, classes, context)
 			val List<String> inheritList = listRes.map[simpleName]
 			listResMap.put(clazz, listRes)
@@ -561,6 +563,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 				String aspectizedClassName) {
 				for (m : clazz.declaredMethods) {
 					if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
+						m.removeAnnotation(m.annotations.findFirst[an | an.annotationTypeDeclaration.qualifiedName=="java.lang.Override"])
+						
 						methodProcessingAddSelfStatic(m, identifier, cxt)
 						methodProcessingAddSuper(m, clazz, aspectizedClassName, cxt)
 						methodProcessingAddHidden(m, identifier, cxt)
@@ -840,9 +844,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 					// Sort Dispatchmethod entries values by hierarchy of their containing classes
 					for (m : dispatchmethod.keySet) {
 						val l = dispatchmethod.get(m).sortWith(new SortMethod(context))
+						
 						dispatchmethod.get(m).clear
 						dispatchmethod.get(m).addAll(l)
-					// context.addWarning(mclasses.get(0),dispatchmethod.get(m).size.toString + " "+ mclasses.size)
+						//dispatchmethod.class
+	//					val buf = new StringBuffer
+	//					dispatchmethod.keySet.forEach[m1 | buf.append("\n"+m1.simpleName + " " + m1.declaringType.simpleName + ": ") dispatchmethod.get(m1).forEach[m2 | buf.append(m2.simpleName + " " + m2.declaringType.simpleName + ", ")]    ]					
+	//					context.addWarning(mclasses.get(0),buf.toString)
 					}
 				}
 
@@ -891,7 +899,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 					Helper::getSuperClass(ext1, arg2.declaringType as ClassDeclaration, context)
 					Helper::getSuperClass(ext, arg0.declaringType as ClassDeclaration, context)
-
+					//val buf = new StringBuffer
+					//ext1.forEach[e|buf.append(e.simpleName +" ")]
+					//val buf1 = new StringBuffer
+					//ext.forEach[e|buf1.append(e.simpleName +" ")]
+					//context.addWarning(arg2,arg2.declaringType.simpleName + buf)
+					
+					
 					if (ext.contains(arg2.declaringType)) {
 						// context.addError(arg0.declaringType,arg0.declaringType.simpleName + " > " + arg2.declaringType.simpleName+" " +ext.size)
 						return -1
