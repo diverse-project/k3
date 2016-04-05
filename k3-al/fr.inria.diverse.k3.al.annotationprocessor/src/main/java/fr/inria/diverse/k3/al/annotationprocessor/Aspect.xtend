@@ -332,7 +332,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
-		val ret = getReturnInstruction(m, cxt, isStep)
+		val ret = getReturnInstruction(m, cxt)
 		val call = new StringBuilder
 
 		// cxt.addError(m, ""+ dispatchmethod.size)
@@ -353,18 +353,18 @@ public class AspectProcessor extends AbstractClassProcessor {
 //								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
 //						i=i+1
 //					}
-			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep)
+			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, className)
 			call.append(ifst).
 				append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		} else {
-			val instruction = transformNormalStatement(m, cxt, s,isStep)
+			val instruction = transformNormalStatement(m, cxt, s,isStep, className)
 			call.append(instruction) // for getters & setters
 		}
 		m.abstract = false
 
 		
 		m.body = [
-			getBody(clazz, className, call.toString, isStep, ret, m.simpleName)
+			getBody(clazz, className, call.toString, ret)
 		]
 	}
 
@@ -373,69 +373,58 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt,
-		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep) {
-			var retBegin = ""
-			var retEnd = ""
-			if (returnStatement.contains("return")) {
-				if (!isStep) {
-						retBegin = "result ="
-						}
-					else {
-						retBegin = "addToResult("
-						retEnd = ")"
-					}
-				
-			}
+		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, String className) {
+			val hasReturn = returnStatement.contains("return")
+			val resultVar = "result"
 			val StringBuilder sb = new StringBuilder
 			for (dt : declTypes) {
+				var String call = "" 
+				
 				if (m.declaringType.equals(dt)) {
+					
 					// if the method is local, call it
-					sb.append(''' if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
-«retBegin» «dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parameters.replaceFirst(SELF_VAR_NAME,
-				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)«retEnd»;
-} else ''')
+					call = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parameters.replaceFirst(SELF_VAR_NAME,
+				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
+				
+					if (isStep) 
+						call = surroundWithStepCommandExecution(className, m.simpleName , call, hasReturn, resultVar)
+					 else if (hasReturn) 
+						call = '''«resultVar» = «call»'''
+						
 				} else {
+					
 					// if the method is local, otherwise call the public helper for this type (this ensures that the correct XXXAspectProperties will be set
-					sb.append(''' if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
-«retBegin» «dt.newTypeReference.name».«m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
-				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)«retEnd»;
-} else ''')
+					call = '''«dt.newTypeReference.name».«m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
+				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
+					if (hasReturn) 
+						call = '''«resultVar» = «call»'''
 				}
+				
+				sb.append(''' if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+					«call»;
+} else ''')
 			}
 			return sb.toString
 		}
 
 		private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-			String parameters, boolean isStep) {
-			var retBegin = ""
-			var retEnd = ""
-			if (hasReturnType(declaration, cxt)) {
-				if (!isStep) {
-					retBegin = "result ="
-					}
-					else {
-						retBegin = "addToResult("
-						retEnd = ")"
-					}
-				}
+			String parameters, boolean isStep, String className) {
+			val hasReturn = hasReturnType(declaration, cxt)
+			val resultVar = "result"
+						
+			var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
 			
-			return '''«retBegin»«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)«retEnd»'''
+			if (isStep)
+				call = surroundWithStepCommandExecution(className, declaration.simpleName , call, hasReturn, resultVar)
+			else if (hasReturn)
+				call = '''«resultVar» = «call»'''
+			
+			return call + ";"
 		}
 
-		private def getReturnInstruction(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-			 boolean isStep) {
+		private def getReturnInstruction(MutableMethodDeclaration declaration, extension TransformationContext cxt) {
 			var ret = ""
 			if (hasReturnType(declaration, cxt)) {
-				if (isStep) {
-					if (! declaration.returnType.inferred) {
-						ret = "return (" + declaration.returnType.name + ")command.getResult();"
-					} else {
-						cxt.addError(declaration, "Cannot infer return type when @Step is enabled. Please specify the return type of this method.")
-						// not inferred, so cannot call its name there
-						ret = "return result;"
-					}
-				} else {
-
 					if (! declaration.returnType.inferred) {
 						ret = "return (" + declaration.returnType.name + ")result;"
 					} else {
@@ -445,32 +434,22 @@ public class AspectProcessor extends AbstractClassProcessor {
 						// not inferred, so cannot call its name there
 						ret = "return result;"
 					}
-				}
 			} else {
 				ret = ""
 			}
 			return ret
 		}
-
-		private def CharSequence getBody(MutableClassDeclaration clazz, String className, String call,
-			boolean isStep, String returnStatement, String methodName) {
-			
-				if (isStep)
-					return getBodyWithStep(clazz, className, call, returnStatement, methodName)
-				else
-					return getBodyWithoutStep(clazz, className, call, returnStatement)
-			
-		}
-
-		private def CharSequence getBodyWithStep(MutableClassDeclaration clazz, String className, String call,
-			String returnStatement,
-			String methodName) {
-				return '''
+		
+		private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar) {
+			return '''
 				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
 					@Override
 					public void execute() {
-						«clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-						«call.toString»;
+						«IF hasReturn»
+						addToResult(«code»);
+						«ELSE»
+						«code»;
+						«ENDIF»
 					}
 				};
 				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager manager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
@@ -479,10 +458,16 @@ public class AspectProcessor extends AbstractClassProcessor {
 				} else {
 					command.execute();
 				}
-				«returnStatement»'''
-			}
+				«IF hasReturn»
+				«resultVar» = command.getResult();
+				«ENDIF»
+				'''
+		}
+		
+		
 
-			private def CharSequence getBodyWithoutStep(MutableClassDeclaration clazz, String className,
+
+			private def CharSequence getBody(MutableClassDeclaration clazz, String className,
 				String call, String returnStatement) {
 
 				return '''
@@ -563,6 +548,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				String aspectizedClassName) {
 				for (m : clazz.declaredMethods) {
 					if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
+						
 						m.removeAnnotation(m.annotations.findFirst[an | an.annotationTypeDeclaration.qualifiedName=="java.lang.Override"])
 						
 						methodProcessingAddSelfStatic(m, identifier, cxt)
