@@ -277,7 +277,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				// TODO find super method
 				body = [
 					'''
-						«sm.declaringType.newTypeReference.name+ superAspectedClassName + PROP_NAME» «PROP_VAR_NAME» = «sm.declaringType.newTypeReference.name+ superAspectedClassName + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+						final «sm.declaringType.newTypeReference.name+ superAspectedClassName + PROP_NAME» «PROP_VAR_NAME» = «sm.declaringType.newTypeReference.name+ superAspectedClassName + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 						«IF (sm.returnType.name != "void")»return «ENDIF» «sm.declaringType.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(«PROP_VAR_NAME», «paramsList»);
 					'''
 				]
@@ -471,7 +471,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				String call, String returnStatement) {
 
 				return '''
-				«clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+				final «clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
 				«IF returnStatement.contains("return")»
 					Object result = null;
 				«ENDIF»
