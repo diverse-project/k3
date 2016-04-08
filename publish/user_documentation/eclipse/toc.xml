@@ -7,7 +7,7 @@
          <topic label="Open class mechanism" href="ch01.html#_open_class_mechanism"/>
       </topic>
    </topic>
-   <topic label="UI user guide" href="ch02.html">
+   <topic label="UI User Guide" href="ch02.html">
       <topic label="New K3 project wizard" href="ch02.html#_new_k3_project_wizard">
          <topic label="Modeling options" href="ch02.html#_modeling_options"/>
          <topic label="Dependency management option" href="ch02.html#_dependency_management_option"/>
