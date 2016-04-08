@@ -1,0 +1,257 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.inria.diverse.k3.documentation</groupId>
+    <artifactId>k3.user.documentation</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <!-- <packaging>jdocbook</packaging>--> 
+    <packaging>jar</packaging>
+   
+    <name>K3 User Documentation</name>
+    <description>The documentation for generating a book using the GitHub wiki.</description>
+    <url>https://github.com/gemoc/gemoc-studio/wiki/GuideREADME</url>
+
+    <properties>
+        <!-- Distribution URLs -->
+        <jboss.releases.repo.url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</jboss.releases.repo.url>
+        <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
+        
+        <!-- publish location -->
+        <publish.directory>${basedir}/../../publish/user_documentation</publish.directory>
+    </properties>
+
+    <scm>
+        <connection>scm:git://github.com/gemoc/gemoc-studio.wiki.git</connection>
+        <developerConnection>scm:git@github.com:gemoc/gemoc-studio.wiki.git</developerConnection>
+        <url>https://github.com/gemoc/gemoc-studio/wiki/_access</url>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>jboss</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>jboss-releases-repository</id>
+            <name>JBoss Releases Repository</name>
+            <url>${jboss.releases.repo.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>jboss-snapshots-repository</id>
+            <name>JBoss Snapshots Repository</name>
+            <url>${jboss.snapshots.repo.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+        
+            <!-- Generate a docbook xml file from the asciidoc files -->
+             <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.2</version>
+                <executions>
+                    <execution>
+                        <id>output-docbook</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+		                    <!-- <sourceDirectory>${basedir}</sourceDirectory>-->
+		                    <imagesDir>.</imagesDir>  <!-- AsciiDoc 1.5.0 presuppose that images are in a subfolder "images", but the files already have this info in the source files  -->
+		                    <outputDirectory>${basedir}/target/generated-docbook</outputDirectory>
+		                    <backend>docbook</backend>
+		                    <doctype>book</doctype>
+		                </configuration>
+                    </execution>
+                 </executions>
+            </plugin>
+            <!-- generate the images from plantUMl -->
+            <!-- <plugin>
+		      <groupId>com.github.jeluard</groupId>
+		      <artifactId>plantuml-maven-plugin</artifactId>
+		      <version>7941</version>
+		      <executions>
+                    <execution>
+                        <id>output-plantuml</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+              </executions>
+		      <configuration>
+		       <outputDirectory>${basedir}/target/plantuml</outputDirectory>
+		        <sourceFiles>
+		          <directory>${basedir}</directory>
+		          <includes>
+		            <include>t-images/*.plantuml</include>
+		          </includes>
+		        </sourceFiles>
+		      </configuration>
+		      <dependencies>
+		        <dependency>
+		          <groupId>net.sourceforge.plantuml</groupId>
+		          <artifactId>plantuml</artifactId>
+		          <version>7976</version>
+		        </dependency>
+		      </dependencies>
+		    </plugin>  -->
+			<!-- docbook generation part -->
+			<plugin>
+			<!-- exemple : http://www.springsurf.org/sites/1.0.0-RC2/spring-surf-devtools/spring-surf-doc-plugin/examples/springsurf.html -->				
+				<groupId>com.agilejava.docbkx</groupId>
+				<artifactId>docbkx-maven-plugin</artifactId>
+				<version>2.0.15</version>
+				<executions>
+					<!-- *********************** -->
+			    	<!-- GENERATION OF THE GUIDE -->
+			    	<!-- *********************** -->
+					<execution>
+						<id>manual-single-page-html</id>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<chunkedOutput>false</chunkedOutput>
+							<highlightSource>true</highlightSource>
+							<highlightXslthlConfig>${basedir}/../docbkx/custom/highlighters/xslthl-config.xml</highlightXslthlConfig> 
+							<htmlCustomization>${basedir}/../docbkx/custom/xsl/customized.html-base.xsl</htmlCustomization>
+							<base.dir></base.dir>
+							<sourceDirectory>${project.build.directory}/generated-docbook/</sourceDirectory>
+							<targetDirectory>${publish.directory}/html_single/</targetDirectory>
+							<includes>user_documentation.xml</includes>
+							<preProcess>
+			 					<copy todir="${publish.directory}/html_single/images">
+									<fileset dir="src/main/asciidoc/images" />
+								</copy>
+								<copy todir="${publish.directory}/html_single/">
+									<fileset dir="../docbkx/resources" />
+								</copy>
+							</preProcess>
+						</configuration>
+					</execution>
+	 				<execution>
+						<id>manual-multi-page-html</id>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+						<configuration>
+							<chunkedOutput>true</chunkedOutput>
+							<highlightSource>true</highlightSource>
+							<highlightXslthlConfig>${basedir}/../docbkx/custom/highlighters/xslthl-config.xml</highlightXslthlConfig> 
+							<htmlCustomization>${basedir}/../docbkx/custom/xsl/customized.html-base.chunked.xsl</htmlCustomization>
+							<base.dir></base.dir>
+							<sourceDirectory>${project.build.directory}/generated-docbook/</sourceDirectory>
+							<targetDirectory>${publish.directory}/html/</targetDirectory>
+							<includes>user_documentation.xml</includes>
+							<preProcess>
+			 					<copy todir="${publish.directory}/html/images">
+									<fileset dir="src/main/asciidoc/images" />
+								</copy>
+								<copy todir="${publish.directory}/html/">
+									<fileset dir="../docbkx/resources" />
+								</copy>
+							</preProcess>
+						</configuration>
+						<phase>generate-resources</phase>
+					</execution>
+					<execution>
+						<id>multi-page-eclipse</id>
+						<goals>
+							<goal>generate-eclipse</goal>
+						</goals>
+						<configuration>
+							<chunkedOutput>true</chunkedOutput>
+							<highlightSource>true</highlightSource>
+							<highlightXslthlConfig>${basedir}/src/docbkx/custom/highlighters/xslthl-config.xml</highlightXslthlConfig> 
+							<htmlCustomization>${basedir}/src/docbkx/custom/xsl/customized.html-base-eclipse.xsl</htmlCustomization>
+							<xincludeSupported>true</xincludeSupported>
+							<base.dir></base.dir>
+							<sourceDirectory>${project.build.directory}/generated-docbook/</sourceDirectory>
+							<targetDirectory>${publish.directory}/eclipse/</targetDirectory>
+							<includes>user_documentation.xml</includes>
+							<preProcess>
+			 					<copy todir="${publish.directory}/eclipse/images">
+									<fileset dir="src/main/asciidoc/images" />
+								</copy>
+								<copy todir="${publish.directory}/eclipse/">
+									<fileset dir="../docbkx/resources" />
+								</copy>
+							</preProcess>
+						</configuration>
+						<phase>generate-resources</phase>
+					</execution> 
+				</executions>
+				<configuration> <!-- global configuration for all executions -->
+          			<highlightSource>1</highlightSource>
+          			<xincludeSupported>true</xincludeSupported>
+	          		<entities>
+			            <entity>
+			            	<name>version</name> <!-- replace occurence of &version; -->
+			            	<value>${project.version}</value>
+			        	</entity>
+			        	<entity>
+			            	<name>buildNumber</name> <!-- replace occurence of &build_time; -->
+			            	<value>${buildNumber}</value>
+			        	</entity>
+			    	</entities>
+       			</configuration>
+				<dependencies>
+					<dependency>
+					  <groupId>net.sf.docbook</groupId>
+					  <artifactId>docbook-xml</artifactId>
+					  <version>5.0-all</version>
+					  <type>zip</type>
+					  <classifier>resources</classifier>
+					</dependency>
+					<dependency>
+						<groupId>org.docbook</groupId>
+						<artifactId>docbook-xml</artifactId>
+						<version>4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.xmlgraphics</groupId>
+						<artifactId>fop</artifactId>
+						<version>1.0</version>
+					</dependency>
+					<dependency>
+						<groupId>net.sf.saxon</groupId>
+						<artifactId>saxon</artifactId>
+						<version>8.7</version>
+					</dependency>
+					<dependency>
+					  <groupId>net.sf.docbook</groupId>
+					  <artifactId>docbook-xsl</artifactId>
+					  <version>1.75.2</version>
+					  <type>zip</type>
+					  <classifier>ns-resources</classifier>
+					</dependency>
+					<dependency>
+			           <groupId>net.sf.xslthl</groupId>
+			           <artifactId>xslthl</artifactId>
+			           <version>2.0.1</version>
+			           <scope>runtime</scope>
+			        </dependency>
+				</dependencies>
+			</plugin>
+
+        </plugins>
+    </build>
+
+</project>

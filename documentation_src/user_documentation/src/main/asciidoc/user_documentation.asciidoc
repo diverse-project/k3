@@ -1,0 +1,14 @@
+:imagesdir: images
+
+= K3 User Documentation
+:doctype: book
+:toc:
+:numbered:
+
+[NOTE]
+====
+The latest version of this document is available online from http://diverse-project.github.io/k3/
+====
+
+
+include::./presentation.asciidoc[]

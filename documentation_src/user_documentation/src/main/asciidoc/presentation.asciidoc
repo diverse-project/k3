@@ -1,0 +1,85 @@
+== Presentation
+
+K3 is an action language build  on top of the Xtend programming language in order to use it for **executable metamodeling**.
+
+
+Its key feature allows
+to "re-open" classes of an Ecore metamodel and to weave new features or 
+operations in these classes. 
+
+The combinaison of K3 and Xtend allows to address a wide range of activities related to model element manipulation. This includes activites such as:
+
+* weaving operational semantics in metamodel definition
+* defining model to model transformations
+* defining model to text transformations
+
+[NOTE]
+====
+For an even larger range of activities, K3 is natively used by Melange. Melange allows to build a type system for models and enable scenarios such as:
+
+* **Language extension** Using high-level operators (e.g. inheritance, merge), language definitions can be manipulated, extended or restrained to create new DSLs.
+* **Model polymorphism** Melange’s type system supports
+ model polymorphism and substitutability, and the definition of generic 
+transformations that can be applied on models originating from different
+ DSLs.
+====
+
+
+Technically, K3 consists in a set of active annotations that can be used in 
+plain Xtend files to express e.g. aspects, pre/post conditions or 
+invariants, and uses Xbase as the expression language for operations 
+bodies.
+
+NOTE: Actually, many of K3 annotations are not dependent on EMF/ecore and can also work on plain java classe.
+
+=== Key features
+
+==== Full java compatibility
+
+**Integrating Kermeta and java code has never been that easy !**
+
+K3 action language is built as an extension to Xtend that in turn is able to fully reuse existing java bytecode. **Java code can be used from Xtend/K3 and vice versa**.
+
+:mag: Actually, Xtend generates java code for its classes, so once compiled and deployed you may not even known that it was written in Xtend/K3. If you are curious, you can have a look to the _xtend-gen_ folder to see these generated java classes.
+
+
+:mag: Technically K3AL is a set of [active annotations](http://www.eclipse.org/xtend/documentation.html#activeAnnotations) for Xtend. These annotations will support the K3 specific concepts (@Aspect, @Singleton, ...) and generate the appropriate java code. 
+
+TIP: Despite that Kermeta was first intended to model manipulation, this java integration means that K3AL can be used for any kind of program.
+
+
+==== Open class mechanism
+
+
+As all other versions of Kermeta, K3 Action Language leverages the open-class mechanism. It
+allows to “re-open” existing meta-classes of a metamodel to insert new features such as attributes, references, or operations. **Please note that return types of aspects methods cannot be inferred: they must be explicitly written!**
+
+```k3
+package mypackage
+
+import fr.inria.triskell.k3.Aspect
+
+import mypackage.OtherClass
+import static extension mypackage.OtherClassAspect.*
+
+@Aspect(className=OtherClass)
+class OtherClassAspect {
+	var int foo = 1
+
+    def void display (){
+         prinln("I am OtherClassAspect")
+         // The keyword _self must be used to refer to attributes and operations of the class and aspect.
+         _self.foo = 2
+         _self.callingOnOperationOfOtherClass()
+    }
+}
+```
+
+This mechanism serves as the basis for the definition of aspects on metamodels elements, enabling aspect-oriented modeling that helps to model complex software artifacts composed of
+intertwined and cross-cutting concerns.
+
+Typical use of such construct are the Visitor and Interpreter design patterns which are implemented in a more elegant and readable way with Aspect Oriented languages than with with classical Object Oriented languages.
+
+.Object Oriented visitor versus Aspect Oriented visitor
+image::images/OOVisitor-vs-AOVisitor.png[Object Oriented visitor versus Aspect Oriented visitor, 800]
+
