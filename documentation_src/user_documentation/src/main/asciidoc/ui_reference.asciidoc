@@ -1,4 +1,4 @@
-== UI user guide
+== UI User Guide
 
 
 K3 comes with several wizard and template facilities to help you start your projects.
@@ -48,7 +48,7 @@ image::images/new_k3_project_templates_screenshot.png[]
 
 These templates allows to create typical project structures for various needs.
 
-One of the most useful is the _Use Ecore Basic aspect_ which ask the user for an initial Ecore model (and its project). With this ecore model, it will automatically create an aspect class for each metaclasses in the ecore. It takes care of replicating the inheritance tree in the aspects classes.
+One of the most useful is the _Use Ecore Basic aspect_ which asks the user for an initial Ecore model (and its project). With this ecore model, it will automatically create an aspect class for each metaclasses in the ecore. It takes care of replicating the inheritance tree in the aspects classes.
 
 [note]
 ====
