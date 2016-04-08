@@ -8,50 +8,117 @@
 3. Update the imported packages using **ctrl+shift+o**
 
 
+Let's start from a classic class _Foo_ that we will extend with aspects.
+```xtend
+package mypackage
+class Foo{
+    def void hello(){
+        println("Hello from Foo")
+    }
+}
+```
+
+now we will add a aspect on it.
+
 ```k3
 package mypackage
 
 import fr.inria.triskell.k3.Aspect
 
-import mypackage.OtherClass
+import mypackage.Foo
 
-@Aspect(className=OtherClass)
-class OtherClassAspect {
+@Aspect(className=Foo)
+class FooAspect {
     def void display (){
-         prinln("I am OtherClassAspect")
+         prinln("I am FooAspect")
     }
 }
 ```
 
-In an aspect you can use the attributes and operations of both the augmented class and the aspect itself.<br/>
+In an aspect you can use the attributes and operations of both the augmented class and the aspect itself.
+
 In aspects **the keyword** "_**this**_" **must not be used**.
 Instead, the keyword "**_self**" must be used.
 
 ```k3
-@Aspect(className=OtherClass)
-class OtherClassAspect {
-   var int foo = 1
+@Aspect(className=BaseClass)
+class BaseClassAspect {
+    int anInteger = 1
 
     def void display (){
          // The keyword _self must be used to refer to attributes and operations of the class and aspect.
-         _self.foo = 2
-         _self.callingOnOperationOfOtherClass()
+         _self.anInteger = 2
+         _self.hello()
     }
 }
 ```
 
 Despite it should be legal, due to a bug in xtend, we **do not** recommand the following syntax:
-```
+```k3
 @Aspect(className=typeof(OtherClass))
 ```
 It may raise strange scope issue, especially in case of aspects defined in several packages.
 
-==== Extending an aspect
+==== Using aspect from another k3/xTend program
 
-Extending an aspect can be performed as in Xtend.<br/>
-However, an aspect can inherit from another aspect only!<br/>
-To use the operations and attributes added in a class, you have to import the aspect:
+To use the aspect, you need to import the correct classes and indicates to xTend thant some additionnal feautres can come from the aspect.
+
+This is done using the special import **import static extension** which enable the use of the additions declared in the aspect.
+
+
+```k3
+package mypackage
+
+import mypackage.Foo
+import mypackage.FooAspect
+
+import static extension mypackage.FooAspect.*
+
+class Main {
+    def static void main(){
+      val Foo f1 = new Foo   
+      f1.display()
+    }
+}
+
+```
+
+TODO: ajouter dans un callout To use the operations and attributes added in a class, you have to import the aspect:
 _import static extension myPkg.AspectName.*_
+
+
+===== Disambiguisation
+
+If several operations or attributes have similar names, xTend may not find the expected feature.
+In that case you need to disambiguise the call by accessing the underlying helper class.
+
+_* TODO *_ show an example of direct, non ambiguious call using the underlying helper class.
+
+[Tip]
+----
+Be careful when cleaning unused imports while your programs isn't complete (for example using **ctrl+shift+o**) because it will also removed unused static extension and will disable the code completion (**ctrl+space**) for the features of these aspects.
+----
+
+==== Extending an aspect (classic inheritance)
+
+Extending an aspect can be performed as in Xtend.
+
+Let's consider the class _Bar_ that inherits from _Foo_
+
+
+Let's start from a classic class _Foo_ that we will extend with aspects.
+```xtend
+package mypackage
+class Bar extends Foo{
+    def void hello(){
+        println("Hello from Bar")
+    }
+}
+```
+
+
+However, as for Java, an aspect can directly inherit from only one aspect!
+
 
 ```k3
 package mypackage
@@ -59,25 +126,17 @@ package mypackage
 import fr.inria.triskell.k3.Aspect
 import fr.inria.triskell.k3.OverrideAspectMethod
 
-import mypackage.OtherClass
-import mypackage.MyClass
+import mypackage.Foo
+import mypackage.Bar
 
-import static extension mypackage.OtherClassAspect.*
+import static extension mypackage.FooAspect.*
 
-@Aspect(className=OtherClass)
-class OtherClassAspect {
-    def void display(){
-      prinln("I am OtherClassAspect")
-    }
-}
-
-@Aspect(className=MyClass)
-class MyClassAspect extends OtherClassAspect {
-    // Annotation to tag the operation as an operation 
-    // overloading a super operation
+@Aspect(className=Bar)
+class BarAspect extends FooAspect {
+    // Annotation to tag the operation as an operation overloading a super operation
     @OverrideAspectMethod
     def void display(){
-      println("I am MyClassAspect")
+      println("I am BarAspect")
     }
 }
 ```
@@ -98,3 +157,11 @@ class MyClassAspect extends OtherClassAspect {
 
 
 === Advanced
+
+==== Extending an aspect (multi inheritance)
+Even if Java allows only one inheritance via _extends_.
+When using EMF, it is legal to inherit from several class. The underlying framework will take care to implement a pattern using Interfaces.
+
+Our aspects must alos be able to deal  with that situation.
+
+For this K3, offers the ??? annotation

@@ -13,4 +13,6 @@ The latest version of this document is available online from http://diverse-proj
 
 include::./presentation.asciidoc[]
 
+include::./reference.asciidoc[]
+
 include::./ui_reference.asciidoc[]
