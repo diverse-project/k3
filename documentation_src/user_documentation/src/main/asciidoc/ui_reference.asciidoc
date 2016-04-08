@@ -1,0 +1,56 @@
+== UI user guide
+
+
+K3 comes with several wizard and template facilities to help you start your projects.
+
+This can be either by reproducing one of the featured examples or by using the __new K3 project wizard__.
+
+
+
+=== New K3 project wizard
+
+As K3 can be used in several situations, the wizard allows to create project for the various configurations:
+
+1. Eclipse plugin
+2. Standard java project with embedded libraries (compiled with eclipse)
+3. Maven java project
+
+and using a modeling framework or not.
+
+
+image::images/new_k3_project_screenshot.png[]
+
+
+==== Modeling options
+The Modeling environment can also be set to use EMF/Ecore
+when checking the **Use EMF** option. In this case it will  add the dependencies to the correct jars dependeing on the dependency management Eclipse plugin with Ecore/EMF.
+
+==== Dependency management option
+When set to **Plug-in** the project uses the Eclipse Plugin nature for defining the dependencies.
+So all the K3 jar and xTend jar will be referenced in the __manifest.mf__ of the project.
+
+When set to **Standalone** 
+In that mode, all the depencies are copied in a lib folder.
+This includes K3 jar, but also xTend jar.
+It is based on the eclipse standard java compiler for defining dependencies.
+This mode can be useful as a base for small project with few dependencies
+
+When set to **Maven** 
+In that mode, the project will be a maven project and dependencies will be resolved using maven.
+
+
+==== Templates
+
+when clicking on _next_ in the first page your can acces to the _templates_
+
+
+image::images/new_k3_project_templates_screenshot.png[]
+
+These templates allows to create typical project structures for various needs.
+
+One of the most useful is the _Use Ecore Basic aspect_ which ask the user for an initial Ecore model (and its project). With this ecore model, it will automatically create an aspect class for each metaclasses in the ecore. It takes care of replicating the inheritance tree in the aspects classes.
+
+[note]
+====
+Please note that some templates may require a given dependency management or modeling framework. Those templates will not be available if the options on the first page are not compatible with the template.
+====
