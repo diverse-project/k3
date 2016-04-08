@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<toc label="K3 User Documentation" topic="user_documentation.html">
+   <topic label="" href="pr01.html"/>
+   <topic label="Presentation" href="ch01.html">
+      <topic label="Key features" href="ch01.html#_key_features">
+         <topic label="Full java compatibility" href="ch01.html#_full_java_compatibility"/>
+         <topic label="Open class mechanism" href="ch01.html#_open_class_mechanism"/>
+      </topic>
+   </topic>
+</toc>
