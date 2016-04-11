@@ -57,7 +57,7 @@ allows to “re-open” existing meta-classes of a metamodel to insert new featu
 ```k3
 package mypackage
 
-import fr.inria.triskell.k3.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 
 import mypackage.OtherClass
 import static extension mypackage.OtherClassAspect.*

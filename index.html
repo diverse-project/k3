@@ -15,8 +15,8 @@
 		<item><a href="#">Item #1</a></item>
 		<item><a href="#">Item #2</a></item>
 		<item><a href="#">Item #3</a></item>
-		<item></item> <!-- add a divider -->
-		<item><a href="#">Item #4</a></item>
+		<item></item> --><!-- add a divider -->
+<!--	<item><a href="#">Item #4</a></item>
 	</menu> -->
 <!--	<toc>My TOC</toc> -->
 	<item><a href="https://github.com/diverse-project/k3">Fork on Github</a></item>
@@ -51,21 +51,33 @@ It allows to “re-open” existing meta-classes of a metamodel to insert new featur
 ```xtend
 package mypackage
 
-import fr.inria.triskell.k3.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 
 import mypackage.OtherClass
 import static extension mypackage.OtherClassAspect.*
 
 @Aspect(className=OtherClass)
 class OtherClassAspect {
-	var int foo = 1
+	var int foo = 1		// a new attribute foo for OtherClass
 
-    def void display (){
-         prinln("I am OtherClassAspect")
-         // The keyword _self must be used to refer to attributes and operations of the class and aspect.
+    def void display (){	// a new operation display for OtherClass
+         prinln("I am OtherClassAspect")         
          _self.foo = 2
          _self.callingOnOperationOfOtherClass()
     }
+}
+```
+
+
+```xtend
+import mypackage.OtherClass
+import static extension mypackage.OtherClassAspect.*
+
+class Main {
+	def void main(){
+		val OtherClass myOtherClass = new OtherClass
+		myOtherClass.display()	// call display method defined on aspect on object OtherClass
+	}
 }
 ```
 
