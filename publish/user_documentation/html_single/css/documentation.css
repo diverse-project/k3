@@ -41,8 +41,10 @@ ul li p:first-child {margin:0em;}
 /* Images */
 
 img {
-    display:block;
-    margin:2em 0;
+//    display:block;
+//    margin:2em 0;
+    display:inline;
+    margin:0em 0;
 }
 
 .inlinemediaobject, .inlinemediaobject img {
