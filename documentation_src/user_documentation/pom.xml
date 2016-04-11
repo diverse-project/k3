@@ -58,7 +58,7 @@
         <plugins>
         
             <!-- Generate a docbook xml file from the asciidoc files -->
-             <plugin>
+              <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>1.5.2</version>
@@ -71,8 +71,8 @@
                         </goals>
                         <configuration>
 		                    <!-- <sourceDirectory>${basedir}</sourceDirectory>-->
-		                    <imagesDir>.</imagesDir>  <!-- AsciiDoc 1.5.0 presuppose that images are in a subfolder "images", but the files already have this info in the source files  -->
-		                    <outputDirectory>${basedir}/target/generated-docbook</outputDirectory>
+		                     <imagesDir>.</imagesDir>  <!-- AsciiDoc 1.5.0 presuppose that images are in a subfolder "images", but the files already have this info in the source files  -->
+		                     <outputDirectory>${basedir}/target/generated-docbook</outputDirectory>
 		                    <backend>docbook</backend>
 		                    <doctype>book</doctype>
 		                </configuration>
