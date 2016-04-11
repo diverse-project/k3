@@ -137,7 +137,7 @@
 							<includes>user_documentation.xml</includes>
 							<preProcess>
 			 					<copy todir="${publish.directory}/html_single/images">
-									<fileset dir="src/main/asciidoc/images" />
+									<fileset dir="${project.build.directory}/generated-docbook/images" />
 								</copy>
 								<copy todir="${publish.directory}/html_single/">
 									<fileset dir="../docbkx/resources" />
@@ -161,7 +161,7 @@
 							<includes>user_documentation.xml</includes>
 							<preProcess>
 			 					<copy todir="${publish.directory}/html/images">
-									<fileset dir="src/main/asciidoc/images" />
+									<fileset dir="${project.build.directory}/generated-docbook/images" />
 								</copy>
 								<copy todir="${publish.directory}/html/">
 									<fileset dir="../docbkx/resources" />
@@ -187,7 +187,7 @@
 							<includes>user_documentation.xml</includes>
 							<preProcess>
 			 					<copy todir="${publish.directory}/eclipse/images">
-									<fileset dir="src/main/asciidoc/images" />
+									<fileset dir="${project.build.directory}/generated-docbook/images" />
 								</copy>
 								<copy todir="${publish.directory}/eclipse/">
 									<fileset dir="../docbkx/resources" />
