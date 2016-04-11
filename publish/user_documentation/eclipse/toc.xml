@@ -13,7 +13,7 @@
          <topic label="Using aspect from another k3/xTend program" href="ch02.html#_using_aspect_from_another_k3_xtend_program">
             <topic label="Disambiguisation" href="ch02.html#_disambiguisation"/>
          </topic>
-         <topic label="Extending an aspect (classic inheritance)" href="ch02.html#_extending_an_aspect_classic_inheritance"/>
+         <topic label="Aspect inheritance (simple inheritance)" href="ch02.html#_aspect_inheritance_simple_inheritance"/>
          <topic label="Calling a super operation" href="ch02.html#_calling_a_super_operation"/>
       </topic>
       <topic label="Advanced" href="ch02s02.html">
