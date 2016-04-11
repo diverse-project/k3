@@ -1,0 +1,34 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+
+package blogsite {
+class Blog {
+    title : String
+}
+
+class Post{
+    title : String
+    content : String
+}
+
+class Comment {
+    content : String
+}
+
+abstract HasAuthor{
+    author : String
+}
+
+HasAuthor <|- Post
+HasAuthor <|- Comment
+
+Blog *-- "*" Post : posts
+Post *-- "*" Comment : comments
+
+}
+@enduml

@@ -1,159 +1,253 @@
 == Language Reference
 
 === Basic
+To illustrate the use of K3, in the following sections, we will extend a base 
+java structure. so let’s consider the following set of classes of a small ecore 
+representing a Blog.
+
+.Metamodel used as base for the examples)
+image::images/blog-base-diagram.png[]
 
 ==== Creating an aspect on a class
-1. Add the annotation _**Aspect**_ on the class corresponding to the aspect
-2. Specify the class to augment using the annotation parameter **className**
-3. Update the imported packages using **ctrl+shift+o**
+
+Defining an aspect on a class is done by adding the annotation __**Aspect**__ 
+on the class corresponding to the aspect. The annotation parameter **className** will indicates which is the base 
+class that will be augmented.
 
 
-Let's start from a classic class _Foo_ that we will extend with aspects.
-```xtend
-package mypackage
-class Foo{
-    def void hello(){
-        println("Hello from Foo")
+[source,k3]
+----
+package blogsite.aspects
+
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect <1>
+
+import blogsite.Blog
+
+@Aspect(className=Blog) <2>
+class BlogAspect {
+    def void display (){
+         prinln("I am BlogAspect")
     }
 }
-```
+----
 
-now we will add a aspect on it.
+<1> Import the annotation processor for Aspect
+<2> Add an aspect on top of class Blog
 
-```k3
-package mypackage
+In an aspect you can use the attributes and operations of both the augmented 
+class and the aspect itself.
 
-import fr.inria.triskell.k3.Aspect
+In aspects **the keyword** "__**this**__" 
+**must not be used**. Instead, the 
+keyword "**_self**" must be used.
 
-import mypackage.Foo
+[source,k3]
+----
+@Aspect(className=Blog)
+class BlogAspect {
+    int blogVersion = 1 <1>
 
-@Aspect(className=Foo)
-class FooAspect {
-    def void display (){
-         prinln("I am FooAspect")
-    }
-}
-```
-
-In an aspect you can use the attributes and operations of both the augmented class and the aspect itself.
-
-In aspects **the keyword** "_**this**_" **must not be used**.
-Instead, the keyword "**_self**" must be used.
-
-```k3
-@Aspect(className=BaseClass)
-class BaseClassAspect {
-    int anInteger = 1
-
-    def void display (){
+    def void changeTitle (String  newTitle, int newVersion){
          // The keyword _self must be used to refer to attributes and operations of the class and aspect.
-         _self.anInteger = 2
-         _self.hello()
+         _self.blogVersion = newVersion <2>
+         _self.title =  newTitle <3>
     }
 }
-```
+----
 
+<1> this attrbute exists only in the aspect
+<2> in aspect, attribute defined on aspect is accessed via **_self**
+<3> in aspect, attribute defined on the base class is accessed via **_self**
+
+[Warning]
+====
 Despite it should be legal, due to a bug in xtend, we **do not** recommand the following syntax:
-```k3
+
+----
 @Aspect(className=typeof(OtherClass))
-```
-It may raise strange scope issue, especially in case of aspects defined in several packages.
+----
+
+It may raise strange scope issue, especially in case of aspects 
+defined in several packages.
+====
 
 ==== Using aspect from another k3/xTend program
 
-To use the aspect, you need to import the correct classes and indicates to xTend thant some additionnal feautres can come from the aspect.
+To use the aspect, you need to import the correct classes and indicates to 
+xTend thant some additionnal features can come from the aspect.
 
-This is done using the special import **import static extension** which enable the use of the additions declared in the aspect.
+This is done using the special import **import 
+static extension** which enable the use of the additions declared 
+in the aspect.
 
+[source,k3]
+----
+package blogsite.demo
 
-```k3
-package mypackage
+import blogsite.Blog
+import blogsite.aspects.BlogAspect
 
-import mypackage.Foo
-import mypackage.FooAspect
-
-import static extension mypackage.FooAspect.*
+import static extension blogsite.aspects.BlogAspect.* <1>
 
 class Main {
     def static void main(){
-      val Foo f1 = new Foo   
-      f1.display()
+      val Blog b1 = new Blog
+      b1.display() <2>
     }
 }
+----
 
-```
-
-TODO: ajouter dans un callout To use the operations and attributes added in a class, you have to import the aspect:
-_import static extension myPkg.AspectName.*_
-
+<1> This __import static extension 
+<myPkg.AspectName>.*__ allows to make visible the attributes and 
+operations defined on BlogAspect.
+<2> method display() is visible thanks to the __import 
+static extension BlogAspect.*__
 
 ===== Disambiguisation
 
-If several operations or attributes have similar names, xTend may not find the expected feature.
-In that case you need to disambiguise the call by accessing the underlying helper class.
+If several operations or attributes have similar names, xTend may not find the 
+expected feature. In that case you need to disambiguise the call by accessing 
+the underlying helper class.
 
-_* TODO *_ show an example of direct, non ambiguious call using the underlying helper class.
+[NOTE]
+====
+To have more details about the precise mecanism of this helper class 
+please refer to the chapter at the end of this document.
+====
+
+[source,k3]
+----
+@Aspect(className=Blog)
+class BlogAspect2 {
+    int title = 1 <1>
+}
+----
+
+[source,k3]
+----
+import static extension blogsite.aspects.BlogAspect2.*
+
+class Main {
+    def static void main(){
+      val Blog b1 = new Blog
+      println( b1.title) <2>
+      println( BlogAspect2.title(b1) <3>
+    }
+}
+----
+
+<1> Might be ambiguous because it reuse the name of an attribute on the base class
+<2> returns the attribute ``title`` of the base object 
+b1.
+<3> return the attribute ``title`` of the companion object 
+for the aspect BlogAspect2.
+
+
 
 [Tip]
-----
+====
 Be careful when cleaning unused imports while your programs isn't complete (for example using **ctrl+shift+o**) because it will also removed unused static extension and will disable the code completion (**ctrl+space**) for the features of these aspects.
+====
+
+==== Aspect inheritance (simple inheritance)
+
+An Aspect class can inherit fields and methods from another class. The simple inheritance is acheived using the **__extends__** keyword from Xtend.
+
+[IMPORTANT]
+====
+However, as for Java, an aspect can directly inherit from only one aspect ! For 
+multiple inheritence, please refer to the advanced section.
+====
+
+[source,k3]
+----
+package blogsite.aspects
+
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
+
+import blogsite.HasAuthor
+import blogsite.Post
+
+import static extension blogsite.HasAuthor.*
+import static extension blogsite.PostAspect.*
+
+@Aspect(className=HasAuthor)
+class HasAuthorAspect {
+
+    def String display (){
+        returns _self.author
+    }
+}
+
+@Aspect(className=Post)
+class PostAspect extends HasAuthorAspect{ <1>
+
+    @OverrideAspectMethod <2>
+    def String display (){
+        returns _self.title + " by " + _self.author
+    }
+}
 ----
 
-==== Extending an aspect (classic inheritance)
+<1> PostAspect inherits from HasAuthorAspect
+<2> the **__OverrideAspectMethod__** 
+annotionation is required to indicates that the method already exists in the 
+parent aspect class and must be overriden.
 
-Extending an aspect can be performed as in Xtend.
 
-Let's consider the class _Bar_ that inherits from _Foo_
+[TIP]
+====
+Inheritance can also be used to modularize an aspect class even if the base class doesn’t have a parent. In that case both 
+Aspect classes should be weaved on the same base class.
 
+For example:
 
-Let's start from a classic class _Foo_ that we will extend with aspects.
-```xtend
-package mypackage
-class Bar extends Foo{
-    def void hello(){
-        println("Hello from Bar")
+[source,k3]
+----
+@Aspect(className=HasAuthor)
+class HasAuthorParentAspect {
+    def String authorTitle = "Mr"
+}
+@Aspect(className=HasAuthor)
+class HasAuthorAspect extends HasAuthorParentAspect{
+    def String display (){
+        returns _self.authorTitle + " " + _self.author
     }
 }
-```
-
-
-However, as for Java, an aspect can directly inherit from only one aspect!
-
-
-```k3
-package mypackage
-
-import fr.inria.triskell.k3.Aspect
-import fr.inria.triskell.k3.OverrideAspectMethod
-
-import mypackage.Foo
-import mypackage.Bar
-
-import static extension mypackage.FooAspect.*
-
-@Aspect(className=Bar)
-class BarAspect extends FooAspect {
-    // Annotation to tag the operation as an operation overloading a super operation
-    @OverrideAspectMethod
-    def void display(){
-      println("I am BarAspect")
-    }
-}
-```
+----
+====
 
 ==== Calling a super operation
-A call to a super operation can be done by writing **super_** followed by the name of the operation. Do not forget to use **_self** to handle elements of the class or aspect.
+A call to a super operation can be done by writing **super_** followed by the name of the 
+operation. Do not forget to use **_self** 
+to handle elements of the class or aspect.
 
-```k3
-@Aspect(className=MyClass)
-class MyClassAspect extends OtherClassAspect {
+The previous example could have been written like this:
+
+[source,k3]
+----
+package blogsite.aspects
+
+import fr.inria.diverse.k3.al.annotationprocessor.Aspect
+import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
+
+import blogsite.HasAuthor
+import blogsite.Post
+
+import static extension blogsite.HasAuthor.*
+import static extension blogsite.PostAspect.*
+
+@Aspect(className=Post)
+class PostAspect extends HasAuthorAspect{
+
     @OverrideAspectMethod
-    def void display(){
-       _self.super_display()
-       prinln("I am MyClassAspect")
+    def String display (){
+        returns _self.title + " by " + _self.super_display() <1>
     }
 }
-```
+----
+<1> call the parent display() method
 
 
 === Advanced
