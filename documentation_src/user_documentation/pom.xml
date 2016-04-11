@@ -80,7 +80,7 @@
                  </executions>
             </plugin>
             <!-- generate the images from plantUMl -->
-            <!-- <plugin>
+            <plugin>
 		      <groupId>com.github.jeluard</groupId>
 		      <artifactId>plantuml-maven-plugin</artifactId>
 		      <version>7941</version>
@@ -94,13 +94,13 @@
                     </execution>
               </executions>
 		      <configuration>
-		       <outputDirectory>${basedir}/target/plantuml</outputDirectory>
-		        <sourceFiles>
-		          <directory>${basedir}</directory>
-		          <includes>
-		            <include>t-images/*.plantuml</include>
-		          </includes>
-		        </sourceFiles>
+		      	<outputDirectory>${basedir}/target/generated-docbook/images</outputDirectory>
+		      	<sourceFiles>
+          			<directory>${basedir}</directory>
+          			<includes>
+            			<include>src/main/plantuml/**/*.plantuml</include>
+          			</includes>
+        		</sourceFiles>
 		      </configuration>
 		      <dependencies>
 		        <dependency>
@@ -109,7 +109,7 @@
 		          <version>7976</version>
 		        </dependency>
 		      </dependencies>
-		    </plugin>  -->
+		    </plugin>  
 			<!-- docbook generation part -->
 			<plugin>
 			<!-- exemple : http://www.springsurf.org/sites/1.0.0-RC2/spring-surf-devtools/spring-surf-doc-plugin/examples/springsurf.html -->				

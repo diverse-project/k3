@@ -50,7 +50,7 @@ These templates allows to create typical project structures for various needs.
 
 One of the most useful is the _Use Ecore Basic aspect_ which asks the user for an initial Ecore model (and its project). With this ecore model, it will automatically create an aspect class for each metaclasses in the ecore. It takes care of replicating the inheritance tree in the aspects classes.
 
-[note]
+[NOTE]
 ====
 Please note that some templates may require a given dependency management or modeling framework. Those templates will not be available if the options on the first page are not compatible with the template.
 ====

@@ -59,7 +59,7 @@ class BlogAspect {
 <2> in aspect, attribute defined on aspect is accessed via **_self**
 <3> in aspect, attribute defined on the base class is accessed via **_self**
 
-[Warning]
+[WARNING]
 ====
 Despite it should be legal, due to a bug in xtend, we **do not** recommand the following syntax:
 
@@ -144,7 +144,7 @@ for the aspect BlogAspect2.
 
 
 
-[Tip]
+[TIP]
 ====
 Be careful when cleaning unused imports while your programs isn't complete (for example using **ctrl+shift+o**) because it will also removed unused static extension and will disable the code completion (**ctrl+space**) for the features of these aspects.
 ====
