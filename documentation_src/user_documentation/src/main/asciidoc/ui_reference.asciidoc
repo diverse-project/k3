@@ -54,3 +54,10 @@ One of the most useful is the _Use Ecore Basic aspect_ which asks the user for a
 ====
 Please note that some templates may require a given dependency management or modeling framework. Those templates will not be available if the options on the first page are not compatible with the template.
 ====
+
+=== New Example wizard
+
+K3 comes with a set of running examples that you can use as a starting point.
+
+Retreive them from Eclipse: _File > New > Example... >_ 
+then look for the K3 category.
