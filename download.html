@@ -29,55 +29,31 @@
 
 <textarea theme="united" style="display:none;">
 
-# K3
+# Download
 
-K3 is an action language build on top of the Xtend programming language in order to use it for executable metamodeling.
+K3 is available in different packages
 
-Its key feature allows to "re-open" classes of an Ecore metamodel and to weave new features or operations in these classes.
+## Eclipse bundle
+
+K3 is bundled in some preconfigured eclipse packages:
+* In the GEMOC Studio - http://gemoc.org/studio-download/
+* In the DiverSE Studio - https://ci.inria.fr/diverse-commons/job/diverse-studio/
+* In the Melange Studio (soon !) 
+
+## Update site
+K3 can be installed on any existing Eclipse via Eclipse Update site:
+ 
+http://www.kermeta.org/k3/update/
+
+1. Do a right click on the ‘update site’ link above and select Copy Link Location.
+2. In your Eclipse IDE, go in menu Help > Install New Software…
+3. Add… button
+4. Right click and past the link in the location field
+5. Ok button
+6. Check all the stuff and finish the installation
+7. You are ready to play with K3 !
 
 
-# Features
-K3 provides
-  
-## Full java compatibility
-
-Integrating Kermeta and java code has never been that easy !
-
-K3 action language is built as an extension to Xtend that in turn is able to fully reuse existing java bytecode. Java code can be used from Xtend/K3 and vice versa
-
-## Open class mechanism
-It allows to “re-open” existing meta-classes of a metamodel to insert new features such as attributes, references, or operations.
-
-```xtend
-package mypackage
-
-import fr.inria.triskell.k3.Aspect
-
-import mypackage.OtherClass
-import static extension mypackage.OtherClassAspect.*
-
-@Aspect(className=OtherClass)
-class OtherClassAspect {
-	var int foo = 1
-
-    def void display (){
-         prinln("I am OtherClassAspect")
-         // The keyword _self must be used to refer to attributes and operations of the class and aspect.
-         _self.foo = 2
-         _self.callingOnOperationOfOtherClass()
-    }
-}
-```
-
-## Compatibilty with Melange
-
-K3 is natively used by Melange. Melange allows to build a type system for models and enable scenarios such as:
-
-* **Language extension** Using high-level operators (e.g. inheritance, merge), language definitions can be manipulated, extended or restrained to create new DSLs.
-* **Model polymorphism** Melange’s type system supports
- model polymorphism and substitutability, and the definition of generic 
-transformations that can be applied on models originating from different
- DSLs.
 
 
 
