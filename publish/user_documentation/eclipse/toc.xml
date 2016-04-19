@@ -7,25 +7,35 @@
          <topic label="Open class mechanism" href="ch01.html#_open_class_mechanism"/>
       </topic>
    </topic>
-   <topic label="Language Reference" href="ch02.html">
-      <topic label="Basic" href="ch02.html#_basic">
-         <topic label="Creating an aspect on a class" href="ch02.html#_creating_an_aspect_on_a_class"/>
-         <topic label="Using aspect from another k3/xTend program" href="ch02.html#_using_aspect_from_another_k3_xtend_program">
-            <topic label="Disambiguisation" href="ch02.html#_disambiguisation"/>
+   <topic label="Language Memento" href="ch02.html">
+      <topic label="Main notations for K3." href="ch02.html#_main_notations_for_k3"/>
+      <topic label="Main annotations for K3." href="ch02s02.html"/>
+      <topic label="Project Specific Annotations" href="ch02s03.html"/>
+      <topic label="Experimental annotations" href="ch02s04.html">
+         <topic label="Structure Modelling annotations" href="ch02s04.html#_structure_modelling_annotations"/>
+         <topic label="Design by Contract annotations" href="ch02s04.html#_design_by_contract_annotations"/>
+      </topic>
+   </topic>
+   <topic label="Language Reference" href="ch03.html">
+      <topic label="Basic" href="ch03.html#_basic">
+         <topic label="Creating an aspect on a class" href="ch03.html#_creating_an_aspect_on_a_class"/>
+         <topic label="Using aspect from another k3/xTend program" href="ch03.html#_using_aspect_from_another_k3_xtend_program">
+            <topic label="Disambiguisation" href="ch03.html#_disambiguisation"/>
          </topic>
-         <topic label="Aspect inheritance (simple inheritance)" href="ch02.html#_aspect_inheritance_simple_inheritance"/>
-         <topic label="Calling a super operation" href="ch02.html#_calling_a_super_operation"/>
+         <topic label="Aspect inheritance (simple inheritance)" href="ch03.html#_aspect_inheritance_simple_inheritance"/>
+         <topic label="Calling a super operation" href="ch03.html#_calling_a_super_operation"/>
       </topic>
-      <topic label="Advanced" href="ch02s02.html">
-         <topic label="Extending an aspect (multi inheritance)" href="ch02s02.html#_extending_an_aspect_multi_inheritance"/>
+      <topic label="Advanced" href="ch03s02.html">
+         <topic label="Extending an aspect (multi inheritance)" href="ch03s02.html#_extending_an_aspect_multi_inheritance"/>
       </topic>
    </topic>
-   <topic label="UI User Guide" href="ch03.html">
-      <topic label="New K3 project wizard" href="ch03.html#_new_k3_project_wizard">
-         <topic label="Modeling options" href="ch03.html#_modeling_options"/>
-         <topic label="Dependency management option" href="ch03.html#_dependency_management_option"/>
-         <topic label="Templates" href="ch03.html#_templates"/>
+   <topic label="UI User Guide" href="ch04.html">
+      <topic label="New K3 project wizard" href="ch04.html#_new_k3_project_wizard">
+         <topic label="Modeling options" href="ch04.html#_modeling_options"/>
+         <topic label="Dependency management option" href="ch04.html#_dependency_management_option"/>
+         <topic label="Templates" href="ch04.html#_templates"/>
       </topic>
-      <topic label="New Example wizard" href="ch03s02.html"/>
+      <topic label="New Example wizard" href="ch04s02.html"/>
    </topic>
+   <topic label="Implentation details" href="ch05.html"/>
 </toc>
