@@ -1,0 +1,79 @@
+== Language Memento
+
+This section present a brief overview of the keywords, annotations and syntax elements used by K3. The main elements are detailled in the <<LanguageReference>> chapter.
+
+=== Main notations for K3.
+
+[width="100%",options="header", cols="1e,3a"]
+|====================
+| keyword/syntax  |  Short description
+| _self |   In an Aspect, **_self** is a reference to the current object.
+| import static extension XYZAspect.* |  makes all all features defined on XYZAspect available in the current compilation unit (xtend file).
+|====================
+
+=== Main annotations for K3.
+
+All K3 annotations are defined in the package `fr.inria.diverse.k3.al.annotationprocessor`
+
+[width="100%",options="header", cols="1s,1m,5a"]
+|====================
+| Annotation  | Applies to | Short description
+| @Aspect |  Class | Indicates that the class is an aspect on top of another class.
+
+[source,k3]
+----
+@Aspect(className=XYZ)
+class XYZAspect {}
+----
+| @OverrideAspectMethod | Method | allows to override a method when an aspect class inherits from another aspect class.
+| @ReplaceAspectMethod |  Method |
+| @SynchroField | Field |  
+| @Abstract |  Method | Used to tag a k3 operation as abstract when initially defined.  
+| @Singleton | Class | The fields defined in the aspect are shared by all instances of the base class.
+|====================
+
+
+=== Project Specific Annotations
+[width="100%",options="header", cols="1s,1m,1m,3a"]
+|====================
+| Annotation  | Project | Applies to | Short description
+| @Step | GEMOC | Method |  __Requires Modelanimation framework__ +
+The method is executed in an EMF Transaction in order to allow edition and observation of the changes on the model.
+| @Main | GEMOC | Method | Used to define possible entry methods of Sequential engine.
+| @InitializeModel | GEMOC | Method | Used to define a method that initializes the model before starting an engine (Sequential or Concurrent).
+[source,k3]
+----
+@InitializeModel
+def public void initialize(List<String> args){}
+----
+
+|====================
+
+=== Experimental  annotations 
+Annotations that have been coded but need further development in order to be fully usable. Help welcome :-)
+
+==== Structure Modelling annotations
+
+
+[width="100%",options="header", cols="1s,1m,5a"]
+|====================
+| Annotation  | Applies to |  Short description
+| @NotAspectProperty | Field |
+| @Composition | Field |
+| @Containment | Field |
+| @Opposite | Field |
+|====================
+
+==== Design by Contract annotations
+
+This annotation set allows to do some design by contract programming.
+
+[width="100%",options="header", cols="1s,1m,5a"]
+|====================
+| Annotation  | Applies to |  Short description
+| @Contracted | Class | Indicates that the class will define contracts. 
+| @Inv | Method |Indicates that this contract must be true for all instances of the base class. +
+__Know limitation :__ there is no way to prevent the invariant from doing some side effects on the model.
+| @Pre | Method |
+| @Post | Method | 
+|====================

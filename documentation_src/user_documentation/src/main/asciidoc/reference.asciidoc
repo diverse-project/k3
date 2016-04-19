@@ -1,3 +1,4 @@
+[[LanguageReference]]
 == Language Reference
 
 === Basic
@@ -37,9 +38,9 @@ class BlogAspect {
 In an aspect you can use the attributes and operations of both the augmented 
 class and the aspect itself.
 
-In aspects **the keyword** "__**this**__" 
-**must not be used**. Instead, the 
-keyword "**_self**" must be used.
+In aspects, **the keyword** "__**this**__" 
+**must not be used**. Use the 
+keyword "**_self**" instead.
 
 [source,k3]
 ----

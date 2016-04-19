@@ -1,0 +1,7 @@
+== Implentation details
+
+This section presents how K3 is implemented and which compiling scheme it follows.
+
+Understanding this compilation scheme should help integrating K3 code in a larger application.
+
+TODO

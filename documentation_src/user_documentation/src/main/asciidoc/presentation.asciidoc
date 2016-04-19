@@ -51,8 +51,10 @@ TIP: Despite that Kermeta was first intended to model manipulation, this java in
 ==== Open class mechanism
 
 
+
+
 As all other versions of Kermeta, K3 Action Language leverages the open-class mechanism. It
-allows to “re-open” existing meta-classes of a metamodel to insert new features such as attributes, references, or operations. **Please note that return types of aspects methods cannot be inferred: they must be explicitly written!**
+allows to "re-open" existing meta-classes of a metamodel to insert new features such as attributes, references, or operations. **Please note that return types of aspects methods cannot be inferred: they must be explicitly written!**
 
 ```k3
 package mypackage
