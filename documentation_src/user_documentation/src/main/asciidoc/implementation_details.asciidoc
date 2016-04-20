@@ -1,7 +1,179 @@
 == Implentation details
 
-This section presents how K3 is implemented and which compiling scheme it follows.
+This section presents how K3 is implemented and which compiling scheme it follows. 
 
-Understanding this compilation scheme should help integrating K3 code in a larger application.
+Most K3 users would probably not need to read this section. However, understanding this compilation scheme should help integrating K3 code in a larger application.
 
-TODO
+Basically, K3 works by combining 2 mains Xtend mecanisms :
+
+* http://www.eclipse.org/xtend/documentation/202_xtend_classes_members.html#extension-imports[Static Extension import] with wildcards.
+* http://www.eclipse.org/xtend/documentation/204_activeannotations.html[Active annotations].
+
+
+
+=== Import static extension with wildcard
+
+In  Java, **https://en.wikipedia.org/wiki/Static_import[Static import]** is a feature  that allows members (fields and methods) defined in a class as ``public static`` to be used in Java code without specifying the class in which the field is defined. The wildcard allow to access all the static members of a class.
+
+
+In Xtend, http://www.eclipse.org/xtend/documentation/202_xtend_classes_members.html#extension-methods[extension methods] allow to add new methods to existing types without modifying them.
+They are based on a simple syntactic trick: Instead of passing the first
+ argument of an extension method inside the parentheses of a method 
+invocation, the method can be called with the first argument as its 
+receiver - it can be called as if the method was one of the argument 
+type’s members. 
+
+
+
+When used with a wildcard, the `import static extension` allow to apply this to all static methods of a class. 
+
+
+[source,xtend]
+----
+import static extension java.lang.Math.*;
+// [..]
+
+val double f1 = 2.5
+val double f2 = 2.9
+		
+Math.max(f1,f2) <1>
+		
+max(f1,f2) <2>
+		
+f1.max(f2) <3>
+---- 
+<1> is the classic way to access the static method (with only a `import java.lang.Math` )
+<2> is allowed by java with an `import java.lang.Math.*` or `import java.lang.Math.max`
+<3> is allowed by Xtend's `extension`. This pointed notation gives the feeling to call the `max` method as if it was defined on `double`.
+
+
+K3 use this mecanism extensively.
+
+
+=== K3 Active annotations
+
+`import static extension` is enough to contribute operations to a class, however we also often need to contribute fields.
+
+To do so, K3 implement a set of http://www.eclipse.org/xtend/documentation/204_activeannotations.html[Active annotations]. This kind of annoation allows to contribute to Xtend java code generator and rewrite a part of the resulting java code.
+
+The **@Aspect** annotation allows to generate a set of classes that declares static methods that will be made avialable thanks to the `import static extension`. This set of classes implements a pattern that allows to to store the fields defined in the aspects.
+
+For every aspect class:
+
+* it creates a class with static methods. It acts as the public interface for the aspect. 
+* It creates an `*AspectProperties` class that is the companion object that will store the attributes defined by aspect.
+* It creates an `*AspectContext` class that defines the mapping between the base object and the companion object.
+
+[TIP]
+====
+The result of the compilation of Xtend and K3 annotations in plain java is visible in the `xtend-gen` folder.
+====
+
+
+==== K3 Active annotations compilation example
+Let's consider the following K3 code that adds a String attribute to the File class:
+
+[source,K3]
+----
+import static extension k3project.SampleXMLFileAspect.*
+
+@Aspect(className=java.io.File )
+class SampleXMLFileAspect {
+	public String contentType = ""
+}
+//[..]
+    val f = new File("toto.txt")
+    f.contentType = "txt"
+----
+
+It will be compiled in 3 Java classes : `SampleXMLFileAspect`, `SampleXMLFileAspectFileAspectContext` and `SampleXMLFileAspectFileAspectProperties`.
+
+`SampleXMLFileAspect` is the public interface that declares all ``public static`` methods that are make available with the `import static extension`. A technical part is kept in private.
+
+[NOTE]
+====
+You can notice the systematic use of **_self** as the first parameter of the static methods. this allows to access to the object instance.
+====
+
+`SampleXMLFileAspectFileAspectProperties` is the companion object that is associated to the base object.
+
+`SampleXMLFileAspectFileAspectContext` implements the map that allows to get the companion object `SampleXMLFileAspectFileAspectProperties` via the **_self* keyword. 
+
+
+[source,java]
+----
+public class SampleXMLFileAspectFileAspectProperties {
+  public String contentType = "";
+}
+----
+
+[source,java]
+----
+public class SampleXMLFileAspect {
+  public static void writeXML(final File _self) {
+    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    _privk3_writeXML(_self_, _self);
+  }
+  
+  public static String contentType(final File _self) {
+    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    Object result = null;
+    result =_privk3_contentType(_self_, _self);
+    return (java.lang.String)result;
+  }
+  
+  public static void contentType(final File _self, final String contentType) {
+    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    _privk3_contentType(_self_, _self,contentType);
+  }
+    protected static String _privk3_contentType(final SampleXMLFileAspectFileAspectProperties _self_, final File _self) {
+    try {
+    	for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+    		if (m.getName().equals("getContentType") &&
+    			m.getParameterTypes().length == 0) {
+    				Object ret = m.invoke(_self);
+    				if (ret != null) {
+    					return (java.lang.String) ret;
+    				}
+    		}
+    	}
+    } catch (Exception e) {
+    	// Chut !
+    }
+    return _self_.contentType;
+  }
+  
+  protected static void _privk3_contentType(final SampleXMLFileAspectFileAspectProperties _self_, final File _self, final String contentType) {
+    _self_.contentType = contentType; try {
+    	for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+    		if (m.getName().equals("setContentType")
+    				&& m.getParameterTypes().length == 1) {
+    			m.invoke(_self, contentType);
+    		}
+    	}
+    } catch (Exception e) {
+    	// Chut !
+    }
+  }
+}
+----
+
+
+[source,java]
+----
+public class SampleXMLFileAspectFileAspectContext {
+  public final static SampleXMLFileAspectFileAspectContext INSTANCE = new SampleXMLFileAspectFileAspectContext();
+  
+  public static SampleXMLFileAspectFileAspectProperties getSelf(final File _self) {
+    		if (!INSTANCE.map.containsKey(_self))
+    			INSTANCE.map.put(_self, new org.sample.k3project.SampleXMLFileAspectFileAspectProperties());
+    		return INSTANCE.map.get(_self);
+  }
+  
+  private Map<File, SampleXMLFileAspectFileAspectProperties> map = new java.util.WeakHashMap<java.io.File, org.sample.k3project.SampleXMLFileAspectFileAspectProperties>();
+  
+  public Map<File, SampleXMLFileAspectFileAspectProperties> getMap() {
+    return map;
+  }
+}
+----
