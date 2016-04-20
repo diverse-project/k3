@@ -2,7 +2,10 @@
 
 This section presents how K3 is implemented and which compiling scheme it follows. 
 
-Most K3 users would probably not need to read this section. However, understanding this compilation scheme should help integrating K3 code in a larger application.
+[NOTE]
+====
+Most K3 users would probably not need to read this section. However, understanding this compilation scheme should help integrating K3 code in a larger applications.
+====
 
 Basically, K3 works by combining 2 mains Xtend mecanisms :
 
