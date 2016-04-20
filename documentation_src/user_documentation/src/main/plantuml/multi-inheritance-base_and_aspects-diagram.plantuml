@@ -1,0 +1,52 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+
+package multiparent {
+class Parent1 {
+}
+
+class Parent2 {
+}
+
+class Parent3{
+}
+
+class Child{
+}
+
+Parent1 <|- Child
+Parent2 <|- Child
+Parent3 <|- Child
+
+}
+
+package multiparent.aspects {
+class Parent1Aspect {
+}
+
+class Parent2Aspect {
+}
+
+class Parent3Aspect{
+}
+
+class ChildAspect{
+}
+
+Parent1Aspect <|- ChildAspect
+Parent2Aspect <|- ChildAspect
+Parent3Aspect <|- ChildAspect
+
+}
+
+Parent1 .. Parent1Aspect
+Parent2 .. Parent2Aspect
+Parent3 .. Parent3Aspect
+Child .. ChildAspect
+
+@enduml

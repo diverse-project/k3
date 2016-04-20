@@ -157,7 +157,7 @@ An Aspect class can inherit fields and methods from another class. The simple in
 [IMPORTANT]
 ====
 However, as for Java, an aspect can directly inherit from only one aspect ! For 
-multiple inheritence, please refer to the advanced section.
+multiple inheritance, please refer to the advanced section.
 ====
 
 [source,k3]
@@ -197,28 +197,6 @@ annotionation is required to indicates that the method already exists in the
 parent aspect class and must be overriden.
 
 
-[TIP]
-====
-Inheritance can also be used to modularize an aspect class even if the base class doesn’t have a parent. In that case both 
-Aspect classes should be weaved on the same base class.
-
-For example:
-
-[source,k3]
-----
-@Aspect(className=HasAuthor)
-class HasAuthorParentAspect {
-    def String authorTitle = "Mr"
-}
-@Aspect(className=HasAuthor)
-class HasAuthorAspect extends HasAuthorParentAspect{
-    def String display (){
-        returns _self.authorTitle + " " + _self.author
-    }
-}
-----
-====
-
 ==== Calling a super operation
 A call to a super operation can be done by writing **super_** followed by the name of the 
 operation. Do not forget to use **_self** 
@@ -257,6 +235,74 @@ class PostAspect extends HasAuthorAspect{
 Even if Java allows only one inheritance via _extends_.
 When using EMF, it is legal to inherit from several class. The underlying framework will take care to implement a pattern using Interfaces.
 
-Our aspects must alos be able to deal  with that situation.
+Our aspects must also be able to deal  with that situation.
 
-For this K3, offers the ??? annotation
+The **@Aspect** annotation can then take a **with** attribute to indicate this inheritance.
+
+If the following ecore model and its java implementation, there is a multi-inheritance from Child class to 3 ParentX classes.
+
+.Metamodel used as base for the multi inheritance example
+image::images/multi-inheritance-base-diagram.png[]
+
+then, in order to correctly reflect these inheritances in the aspects, we will define the following.
+
+[source,k3]
+----
+// [..]
+
+import static extension multiparents.Parent1.*
+import static extension multiparents.Parent2.*
+import static extension multiparents.Parent3.*
+import static extension multiparents.Child.*
+
+@Aspect(className=Parent1) <1>
+class Parent1Aspect {
+   def void someParent1Method(){
+      // [..]
+   }
+}
+@Aspect(className=Parent2) 
+class Parent2Aspect {
+   def void someParent2Method(){
+      // [..]
+   }
+}
+@Aspect(className=Parent3) 
+class Parent3Aspect {
+   def void someParent3Method(){
+      // [..]
+   }
+}
+
+@Aspect(className=Child, with=#[ParentAspect2, ParentAspect3] ) <2>
+class PostAspect extends Parent1Aspect{ <3>
+   def void someMethod(){
+      _self.someParent1Method()
+      _self.someParent2Method()
+      _self.someParent3Method()
+   }
+}
+
+----
+<1> each parent defines its own aspects.
+<2> secondary aspect inheritances are added thanks to the **with** attribute.
+<3> primary aspect inheritance is declared using the **extends** keyword like a single inheritance.
+
+.Multi inheritance example with aspects
+image::images/multi-inheritance-base_and_aspects-diagram.png[]
+
+[TIP]
+====
+The syntax `with=#[ParentAspect2, ParentAspect3]`  indicates that we create a list with 2 additional parents (in addition to the primary one that has been defined using the **extends** keyword). If there is only one additional parent, then the following syntax will also work : `with=ParentAspect2`
+====
+
+[IMPORTANT]
+====
+When an ecore model defines an inheritance structure, the best practice is to fully reflect the structure in the aspects. Othewise, the dynamic dispatch may lead to non-intuitive behaviors.
+====
+
+
+
+=== Replacing a method of the base class
+
+K3 uses the **@ReplaceAspectMethod** annotation to replace a method that is defined in the base class by a method in the aspect.
