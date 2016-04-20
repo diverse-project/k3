@@ -159,7 +159,7 @@ public class SampleXMLFileAspect {
 ----
 
 
-[source,java]
+[source,]
 ----
 public class SampleXMLFileAspectFileAspectContext {
   public final static SampleXMLFileAspectFileAspectContext INSTANCE = new SampleXMLFileAspectFileAspectContext();
@@ -169,11 +169,12 @@ public class SampleXMLFileAspectFileAspectContext {
     			INSTANCE.map.put(_self, new org.sample.k3project.SampleXMLFileAspectFileAspectProperties());
     		return INSTANCE.map.get(_self);
   }
+  private Map<File, ModuleAspectFileAspectProperties> map = new java.util.WeakHashMap<java.io.File, org.sample.k3project.ModuleAspectFileAspectProperties>();
   
-  private Map<File, SampleXMLFileAspectFileAspectProperties> map = new java.util.WeakHashMap<java.io.File, org.sample.k3project.SampleXMLFileAspectFileAspectProperties>();
-  
-  public Map<File, SampleXMLFileAspectFileAspectProperties> getMap() {
+  public Map<File, ModuleAspectFileAspectProperties> getMap() {
     return map;
   }
+  
 }
 ----
+
