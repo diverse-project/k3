@@ -12,19 +12,19 @@ class SampleXMLFileAspect {
   <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">public</b> String contentType = <i xmlns:fo="http://www.w3.org/1999/XSL/Format" style="color:blue" class="hl-string">""</i>;
 }</pre><pre class="programlisting"><b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">public</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">class</b> SampleXMLFileAspect {
   <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">public</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">static</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">void</b> writeXML(<b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">final</b> File _self) {
-    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
     _privk3_writeXML(_self_, _self);
   }
 
   <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">public</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">static</b> String contentType(<b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">final</b> File _self) {
-    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
     Object result = null;
     result =_privk3_contentType(_self_, _self);
     <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">return</b> (java.lang.String)result;
   }
 
   <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">public</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">static</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">void</b> contentType(<b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">final</b> File _self, <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">final</b> String contentType) {
-    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
     _privk3_contentType(_self_, _self,contentType);
   }
     <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">protected</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">static</b> String _privk3_contentType(<b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">final</b> SampleXMLFileAspectFileAspectProperties _self_, <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">final</b> File _self) {
@@ -61,10 +61,10 @@ class SampleXMLFileAspect {
 
   public static SampleXMLFileAspectFileAspectProperties getSelf(final File _self) {
     		if (!INSTANCE.map.containsKey(_self))
-    			INSTANCE.map.put(_self, new org.sample.k3project.SampleXMLFileAspectFileAspectProperties());
+    			INSTANCE.map.put(_self, new k3project.SampleXMLFileAspectFileAspectProperties());
     		return INSTANCE.map.get(_self);
   }
-  private Map&lt;File, ModuleAspectFileAspectProperties&gt; map = new java.util.WeakHashMap&lt;java.io.File, org.sample.k3project.ModuleAspectFileAspectProperties&gt;();
+  private Map&lt;File, ModuleAspectFileAspectProperties&gt; map = new java.util.WeakHashMap&lt;java.io.File, k3project.ModuleAspectFileAspectProperties&gt;();
 
   public Map&lt;File, ModuleAspectFileAspectProperties&gt; getMap() {
     return map;
