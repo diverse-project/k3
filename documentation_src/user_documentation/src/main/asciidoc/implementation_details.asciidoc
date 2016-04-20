@@ -92,12 +92,12 @@ It will be compiled in 3 Java classes : `SampleXMLFileAspect`, `SampleXMLFileAsp
 
 [NOTE]
 ====
-You can notice the systematic use of **_self** as the first parameter of the static methods. this allows to access to the object instance.
+You can notice the systematic use of **_self** as the first parameter of the static methods. This allows to access to the object instance from the bodies of aspect methods.
 ====
 
 `SampleXMLFileAspectFileAspectProperties` is the companion object that is associated to the base object.
 
-`SampleXMLFileAspectFileAspectContext` implements the map that allows to get the companion object `SampleXMLFileAspectFileAspectProperties` via the **_self* keyword. 
+`SampleXMLFileAspectFileAspectContext` implements the map that allows to get the companion object `SampleXMLFileAspectFileAspectProperties` via the *_self* keyword. 
 
 
 [source,java]
