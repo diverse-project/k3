@@ -68,12 +68,13 @@ Annotations that have been coded but need further development in order to be ful
 
 This annotation set allows to do some design by contract programming.
 
+__Know limitation :__ there is no way to prevent the contracts from doing some side effects on the model.
+
 [width="100%",options="header", cols="1s,1m,5a"]
 |====================
 | Annotation  | Applies to |  Short description
 | @Contracted | Class | Indicates that the class will define contracts. 
-| @Inv | Method |Indicates that this contract must be true for all instances of the base class. +
-__Know limitation :__ there is no way to prevent the invariant from doing some side effects on the model.
+| @Inv | Method |Indicates that this contract must be true for all instances of the base class. 
 | @Pre | Method |
 | @Post | Method | 
 |====================
