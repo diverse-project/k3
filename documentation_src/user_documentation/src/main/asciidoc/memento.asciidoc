@@ -26,8 +26,8 @@ All K3 annotations are defined in the package `fr.inria.diverse.k3.al.annotation
 class XYZAspect {}
 ----
 | @OverrideAspectMethod | Method | allows to override a method when an aspect class inherits from another aspect class.
-| @ReplaceAspectMethod |  Method |
-| @SynchroField | Field |  
+| @ReplaceAspectMethod |  Method | allows to replace a method that is defined in the base class.
+| @SynchroField | Field | When a field exists both in the base class and in the aspect, this annotation make sure to synchronize their values when assigning one of the fields.
 | @Abstract |  Method | Used to tag a k3 operation as abstract when initially defined.  
 | @Singleton | Class | The fields defined in the aspect are shared by all instances of the base class.
 |====================
