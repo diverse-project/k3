@@ -1,0 +1,73 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>K3 Active annotations</title><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="user_documentation.html" title="K3 User Documentation"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Implentation details"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Implentation details"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">K3 Active annotations</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;5.&nbsp;Implentation details</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="section" title="K3 Active annotations"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="_k3_active_annotations"></a>K3 Active annotations</h2></div></div></div><p><code class="literal">import static extension</code> is enough to contribute operations to a class, however we also often need to contribute fields.</p><p>To do so, K3 implement a set of <a class="link" href="http://www.eclipse.org/xtend/documentation/204_activeannotations.html" target="_top">Active annotations</a>. This kind of annoation allows to contribute to Xtend java code generator and rewrite a part of the resulting java code.</p><p>The <span class="strong"><strong>@Aspect</strong></span> annotation allows to generate a set of classes that declares static methods that will be made avialable thanks to the <code class="literal">import static extension</code>. This set of classes implements a pattern that allows to to store the fields defined in the aspects.</p><p>For every aspect class:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">it creates a class with static methods. It acts as the public interface for the aspect.</li><li class="listitem">It creates an <code class="literal">*AspectProperties</code> class that is the companion object that will store the attributes defined by aspect.</li><li class="listitem">It creates an <code class="literal">*AspectContext</code> class that defines the mapping between the base object and the companion object.</li></ul></div><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>The result of the compilation of Xtend and K3 annotations in plain java is visible in the <code class="literal">xtend-gen</code> folder.</p></div><div class="section" title="K3 Active annotations compilation example"><div class="titlepage"><div><div><h3 class="title"><a name="_k3_active_annotations_compilation_example"></a>K3 Active annotations compilation example</h3></div></div></div><p>Let&#8217;s consider the following K3 code that adds a String attribute to the File class:</p><pre class="programlisting">import static extension k3project.SampleXMLFileAspect.*
+
+@Aspect(className=java.io.File )
+class SampleXMLFileAspect {
+	public String contentType = ""
+}
+//[..]
+    val f = new File("toto.txt")
+    f.contentType = "txt"</pre><p>It will be compiled in 3 Java classes : <code class="literal">SampleXMLFileAspect</code>, <code class="literal">SampleXMLFileAspectFileAspectContext</code> and <code class="literal">SampleXMLFileAspectFileAspectProperties</code>.</p><p><code class="literal">SampleXMLFileAspect</code> is the public interface that declares all <code class="literal">public static</code> methods that are make available with the <code class="literal">import static extension</code>. A technical part is kept in private.</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>You can notice the systematic use of <span class="strong"><strong>_self</strong></span> as the first parameter of the static methods. this allows to access to the object instance.</p></div><p><code class="literal">SampleXMLFileAspectFileAspectProperties</code> is the companion object that is associated to the base object.</p><p><code class="literal">SampleXMLFileAspectFileAspectContext</code> implements the map that allows to get the companion object <code class="literal">SampleXMLFileAspectFileAspectProperties</code> via the <span class="strong"><strong>*_self</strong></span> keyword.</p><pre class="programlisting">public class SampleXMLFileAspectFileAspectProperties {
+  public String contentType = "";
+}</pre><pre class="programlisting">public class SampleXMLFileAspect {
+  public static void writeXML(final File _self) {
+    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    _privk3_writeXML(_self_, _self);
+  }
+
+  public static String contentType(final File _self) {
+    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    Object result = null;
+    result =_privk3_contentType(_self_, _self);
+    return (java.lang.String)result;
+  }
+
+  public static void contentType(final File _self, final String contentType) {
+    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    _privk3_contentType(_self_, _self,contentType);
+  }
+    protected static String _privk3_contentType(final SampleXMLFileAspectFileAspectProperties _self_, final File _self) {
+    try {
+    	for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+    		if (m.getName().equals("getContentType") &amp;&amp;
+    			m.getParameterTypes().length == 0) {
+    				Object ret = m.invoke(_self);
+    				if (ret != null) {
+    					return (java.lang.String) ret;
+    				}
+    		}
+    	}
+    } catch (Exception e) {
+    	// Chut !
+    }
+    return _self_.contentType;
+  }
+
+  protected static void _privk3_contentType(final SampleXMLFileAspectFileAspectProperties _self_, final File _self, final String contentType) {
+    _self_.contentType = contentType; try {
+    	for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
+    		if (m.getName().equals("setContentType")
+    				&amp;&amp; m.getParameterTypes().length == 1) {
+    			m.invoke(_self, contentType);
+    		}
+    	}
+    } catch (Exception e) {
+    	// Chut !
+    }
+  }
+}</pre><pre class="screen">public class SampleXMLFileAspectFileAspectContext {
+  public final static SampleXMLFileAspectFileAspectContext INSTANCE = new SampleXMLFileAspectFileAspectContext();
+
+  public static SampleXMLFileAspectFileAspectProperties getSelf(final File _self) {
+    		if (!INSTANCE.map.containsKey(_self))
+    			INSTANCE.map.put(_self, new org.sample.k3project.SampleXMLFileAspectFileAspectProperties());
+    		return INSTANCE.map.get(_self);
+  }
+  private Map&lt;File, ModuleAspectFileAspectProperties&gt; map = new java.util.WeakHashMap&lt;java.io.File, org.sample.k3project.ModuleAspectFileAspectProperties&gt;();
+
+  public Map&lt;File, ModuleAspectFileAspectProperties&gt; getMap() {
+    return map;
+  }
+
+}</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="ch05.html">Up</a></td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;5.&nbsp;Implentation details&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="user_documentation.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>
