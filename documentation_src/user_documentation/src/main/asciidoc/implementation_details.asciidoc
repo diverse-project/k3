@@ -111,19 +111,19 @@ public class SampleXMLFileAspectFileAspectProperties {
 ----
 public class SampleXMLFileAspect {
   public static void writeXML(final File _self) {
-    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
     _privk3_writeXML(_self_, _self);
   }
   
   public static String contentType(final File _self) {
-    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
     Object result = null;
     result =_privk3_contentType(_self_, _self);
     return (java.lang.String)result;
   }
   
   public static void contentType(final File _self, final String contentType) {
-    org.sample.k3project.SampleXMLFileAspectFileAspectProperties _self_ = org.sample.k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
+    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
     _privk3_contentType(_self_, _self,contentType);
   }
     protected static String _privk3_contentType(final SampleXMLFileAspectFileAspectProperties _self_, final File _self) {
@@ -166,10 +166,10 @@ public class SampleXMLFileAspectFileAspectContext {
   
   public static SampleXMLFileAspectFileAspectProperties getSelf(final File _self) {
     		if (!INSTANCE.map.containsKey(_self))
-    			INSTANCE.map.put(_self, new org.sample.k3project.SampleXMLFileAspectFileAspectProperties());
+    			INSTANCE.map.put(_self, new k3project.SampleXMLFileAspectFileAspectProperties());
     		return INSTANCE.map.get(_self);
   }
-  private Map<File, ModuleAspectFileAspectProperties> map = new java.util.WeakHashMap<java.io.File, org.sample.k3project.ModuleAspectFileAspectProperties>();
+  private Map<File, ModuleAspectFileAspectProperties> map = new java.util.WeakHashMap<java.io.File, k3project.ModuleAspectFileAspectProperties>();
   
   public Map<File, ModuleAspectFileAspectProperties> getMap() {
     return map;
