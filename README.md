@@ -5,7 +5,7 @@ K3 is an action language build on top of the Xtend programming language in order
 
 Its key feature allows to "re-open" classes of an Ecore metamodel and to weave new features or operations in these classes.
 
-Please have a look to the **[http://diverse-project.github.io/k3/](http://diverse-project.github.io/k3/)** for more details and tutorials.
+Please have a look to **[http://diverse-project.github.io/k3/](http://diverse-project.github.io/k3/)** for more details and tutorials.
 
 
 Contributing
