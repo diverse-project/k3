@@ -28,6 +28,7 @@
       <topic label="Advanced" href="ch03s02.html">
          <topic label="Extending an aspect (multi inheritance)" href="ch03s02.html#_extending_an_aspect_multi_inheritance"/>
       </topic>
+      <topic label="Replacing a method of the base class" href="ch03s03.html"/>
    </topic>
    <topic label="UI User Guide" href="ch04.html">
       <topic label="New K3 project wizard" href="ch04.html#_new_k3_project_wizard">
