@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>K3 - Executable Meta-modelling</title>
-  <meta name="description" content="Kermeta 3 site" />
+  <title>K3 - Executable Meta-Modeling</title>
+  <meta name="description" content="Documentation of the Kermeta 3 (K3) language" />
 </head>
 
 <body>
@@ -34,69 +34,58 @@
 
 # K3
 
-K3 is an action language build on top of the Xtend programming language in order to use it for executable metamodeling.
+K3 is an action language built on top of the Xtend programming language and mainly used to implement the execution semantics of Ecore metamodels.
+Concretely, K3 allows to "re-open" the classes generated from an Ecore metamodel using simple annotations in order to weave new features and operations.
+Main features of K3 include:
 
-Its key feature allows to "re-open" classes of an Ecore metamodel and to weave new features or operations in these classes.
+* **Executable metamodeling**: Using K3, one can insert new methods in existing Ecore meta-classes, with their implementation. These methods define the execution semantics of the corresponding metamodel in the form of an interpreter;
+* **Metamodel extension**: The very same mechanism can be used to extend existing Ecore metamodels and insert new features (eg. attributes) in a non-intrusive way;
+* **Full Java compatibility**: K3 files are plain Xtend files. As such, K3 files are ultimately compiled as plain Java code. This means that Java code and API can be used in K3 files and *vice versa*.
 
-
-# Features
-K3 provides
-  
-## Full java compatibility
-
-Integrating Kermeta and java code has never been that easy !
-
-K3 action language is built as an extension to Xtend that in turn is able to fully reuse existing java bytecode. Java code can be used from Xtend/K3 and vice versa
-
-## Open class mechanism
-It allows to "re-open" existing meta-classes of a metamodel to insert new features such as attributes, references, or operations.
+## Open-class mechanism
+In a nutshell, the open-class mechanism of K3 allows to "re-open" existing meta-classes of an Ecore metamodel to insert new features such as attributes, references, or operations.
+The following listings illustrate a typical use of this mechanism.
+The `@Aspect` annotation takes as argument the meta-class to re-open, and inserts new features into it.
+In this case, a new attribute 'counter' and a method 'increment' are inserted:
 
 ```xtend
 package mypackage
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 
-import mypackage.OtherClass
-import static extension mypackage.OtherClassAspect.*
+import mymetamodel.MyClass
 
-@Aspect(className=OtherClass)
-class OtherClassAspect {
-	var int foo = 1		// a new attribute foo for OtherClass
+@Aspect(className = MyClass)
+class MyClassAspect {
+	int counter = 0
 
-    def void display (){	// a new operation display for OtherClass
-         prinln("I am OtherClassAspect")         
-         _self.foo = 2
-         _self.callingOnOperationOfOtherClass()
+    def void increment() {
+		println("Invoking MyClassAspect::increment()")
+         _self.counter = _self.counter + 1
     }
 }
 ```
 
+New features inserted by the aspect can then be transparently accessed from anywhere else, as if they were actual members of the class:
 
 ```xtend
-import mypackage.OtherClass
-import static extension mypackage.OtherClassAspect.*
+import mymetamodel.MyClass
+
+import static extension mypackage.MyClassAspect.*
 
 class Main {
-	def void main(){
-		val OtherClass myOtherClass = new OtherClass
-		myOtherClass.display()	// call display method defined on aspect on object OtherClass
+	def static void main(String[] args) {
+		val MyClass testCls = new MyClass()
+		testCls.increment() // Prints message and increments the internal counter
 	}
 }
 ```
 
 ## Compatibilty with Melange
 
-K3 is natively used by Melange. Melange allows to build a type system for models and enable scenarios such as:
-
-* **Language extension** Using high-level operators (e.g. inheritance, merge), language definitions can be manipulated, extended or restrained to create new DSLs.
-* **Model polymorphism** Melange's type system supports
- model polymorphism and substitutability, and the definition of generic 
-transformations that can be applied on models originating from different
- DSLs.
-
-
-
-
+Melange is a language workbench that supports language extension, composition, and interoperability. In Melange, language designers can define the syntax and semantics of their DSLs and use high-level operators to extend and compose DSLs together.
+Melange relies on Ecore for the definition of the abstract syntax of a DSL and on K3 for the definition of its operational semantics.
+More information on Melange can be found on the [official website](http://melange-lang.org).
 
 <hr/>
 <div style="background:#fafaff; min-height:50px; padding:0 5px; margin:0">
