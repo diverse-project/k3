@@ -113,10 +113,6 @@ public class SampleXMLFileAspectFileAspectProperties {
 [source,java]
 ----
 public class SampleXMLFileAspect {
-  public static void writeXML(final File _self) {
-    k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
-    _privk3_writeXML(_self_, _self);
-  }
   
   public static String contentType(final File _self) {
     k3project.SampleXMLFileAspectFileAspectProperties _self_ = k3project.SampleXMLFileAspectFileAspectContext.getSelf(_self);
