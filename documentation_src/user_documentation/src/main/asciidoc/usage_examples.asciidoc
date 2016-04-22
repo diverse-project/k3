@@ -1,0 +1,16 @@
+[[K3UsageExamples]]
+== K3 Usage Examples
+
+This chapter presents some of the typical usages of Kermeta.
+It presents how Kermeta helps to solve some problem and the best practices that impro6ve the way to solve them.
+
+
+=== K3 for Simple model transformation
+
+There are several ways to https://en.wikipedia.org/wiki/Model_transformation#Classification_of_model_transformations[classify model transformations] depending on their purpose (number of input and output models, use of different metamodels, ...)
+
+As a general purpose model manipulation language, K3 can be used for most usages.
+
+Let's consider a typical model-to-model transformation that transforms one model of a given domain to another model of another domain. This classic problem can easily be handled by K3. It can also be extended if the problem grows, for example to take into account to more input and out models.
+
+For the example, we will consider out _Blog_  metamodel from  and will transform it into a MiniGraph metamodel . 
