@@ -1,4 +1,4 @@
-package code
+package test.multipleinheritance.base
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod

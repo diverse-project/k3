@@ -1,11 +1,11 @@
-package test
+package test.multipleinheritance
 
-import code.Factory
+import test.multipleinheritance.base.Factory
 import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension code.AAspect.*
+import static extension test.multipleinheritance.base.AAspect.*
 
 class TestMultiInheritance {
 	@Test def void testVisitA() {
