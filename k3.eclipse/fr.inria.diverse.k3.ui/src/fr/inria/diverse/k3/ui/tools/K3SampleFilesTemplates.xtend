@@ -80,9 +80,9 @@ import java.util.ArrayList
 @Aspect(className=java.io.File)
 class SampleXMLFileAspect {
 	
-	var String contentType = ""
+	public var String contentType = ""
 	
-	var ArrayList<String> contentArrayList = newArrayList("")
+	public var ArrayList<String> contentArrayList = newArrayList("")
 	
 	public def void writeXML(){		
 		var PrintWriter writer = new PrintWriter(_self, "UTF-8");
