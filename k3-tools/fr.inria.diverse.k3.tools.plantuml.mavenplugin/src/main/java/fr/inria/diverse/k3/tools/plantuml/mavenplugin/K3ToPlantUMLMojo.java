@@ -92,8 +92,7 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
      * base package name will be removed from generated diagram
      * Default is ""
      *
-     * @parameter expression=""
-     * @required
+     * @parameter default-value=""
      */
     private String basePackageName;
     
@@ -112,20 +111,21 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
 
         //org.apache.log4j.BasicConfigurator.configure();
         //System.out.println("K2CompilerMojo.execute");
-    	this.getLog().info("generate a plantUML file "+output.getAbsolutePath()+" from "+input.getAbsolutePath()+" using base package name "+basePackageName);
+    	this.getLog().info("K3 to plantuml output: "+output.getAbsolutePath());
         /* CHECK IF GENERATION IF OK */
         
         checkFile(input.getAbsolutePath().toString());
         if(processIndividually){
         	if(input.isDirectory() && output.isDirectory()){
         		for(File f :input.listFiles()){
+        	    	this.getLog().info("Processing "+input.getAbsolutePath()+" using base package name "+basePackageName);
         			K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
         			String outputPathForItem =output.getPath() +File.separator;
         			if(f.isDirectory()){
     	        		generator.generatePlantUMLForFolder(f.getPath(), 
     	        				basePackageName, 
     	        				outputPathForItem + f.getName() + File.separator + genSubFolder + File.separator + f.getName() +".plantuml");
-    	        	} else {
+    	        	} else if(f.getName().endsWith(".xtend")){
     	        		generator.generatePlantUMLForFile(f.getPath(), 
     	        				basePackageName, 
     	        				outputPathForItem + genSubFolder + File.separator + f.getName().replace(".xtend", ".plantuml"));
@@ -137,6 +137,7 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
         }
         else {
 	        try {
+    	    	this.getLog().info("Processing "+input.getAbsolutePath()+" using base package name "+basePackageName);
 	        	K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
 	        	
 	        	if(input.isDirectory()){

@@ -61,7 +61,7 @@ class K3ToPlantUMLGenerator {
 	public def void generateForFolder(String inputFolderPath, String basePackage){
 		val folderFile = new File(inputFolderPath)
 		folderFile.listFiles.forEach[folderContent |
-			println(folderContent.path) 
+			//println(folderContent.path) 
 			switch folderContent{
 					
 				case folderContent.isFile() && folderContent.name.endsWith(".xtend"):{
@@ -82,7 +82,7 @@ class K3ToPlantUMLGenerator {
 		val res = rs.getResource(fileUri, true)
 		val ast = res.contents.head as XtendFile
 		
-		val currentPackageName = if(ast.package.startsWith(basePackage)){
+		val currentPackageName = if(!basePackage.isNullOrEmpty && ast.package.startsWith(basePackage)){
 			ast.package.replaceFirst(basePackage, "")
 		} else ast.package
 		val packageTypes = new ArrayList<String>
@@ -90,7 +90,7 @@ class K3ToPlantUMLGenerator {
 
 		ast.xtendTypes.forEach[	t|
 			
-			println(t.name)	
+			//println(t.name)	
 			val typeKind = switch t {
 				XtendInterface:
 					"interface"
