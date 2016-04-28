@@ -1,3 +1,3 @@
 == Test MultipleInheritance
 
-![multipleinheritance.png](multipleinheritance.png)
+![multipleinheritance.png](gen-plantuml/multipleinheritance.png)

@@ -1,0 +1,22 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package simple {
+	class	TestSimple {
+		void testStaticAndNotStaticAttribute()
+	}
+	class	B {
+	}
+	class	AspectB << (@,#FF7700) Aspect >> {
+		i : int
+		j : int
+		void incI()
+		void incJ()
+	}
+}
+B .. AspectB : <      
+@enduml

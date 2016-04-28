@@ -1,0 +1,125 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package dynamicbinding {
+	class	TestDynamicBinding {
+		PACKAGE_NAME : String
+		void testX1_as_XExpression()
+		void testX1_as_XSubExp1()
+		void testX1_as_X1()
+		void testX2_as_XExpression()
+		void testX2_as_XSubExp2()
+		void testX2_as_X2()
+		void testX3_as_XExpression()
+		void testX3_as_XSubExp3()
+		void testX3_as_X3()
+		void testX4_as_XExpression()
+		void testX4_as_XSubExp4()
+		void testX4_as_X4()
+		void testX5_as_XExpression()
+		void testX5_as_XSubExp2()
+		void testX5_as_X5()
+		void testX6_as_XExpression()
+		void testX6_as_XSubExp1()
+		void testX6_as_X6()
+		void testX7_as_XExpression()
+		void testX7_as_XSubExp1()
+		void testX7_as_X7()
+		void testX8_as_XExpression()
+		void testX8_as_XSubExp2()
+		void testX8_as_X8()
+	}
+	interface	XExpression {
+	}
+	interface	XSubExp1 {
+	}
+	interface	XSubExp2 {
+	}
+	interface	XSubExp3 {
+	}
+	interface	XSubExp4 {
+	}
+	class	X1 {
+	}
+	class	X8 {
+	}
+	class	X7 {
+	}
+	class	X2 {
+	}
+	class	X5 {
+	}
+	class	X3 {
+	}
+	class	X6 {
+	}
+	class	X4 {
+	}
+	abstract	RootAspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X8Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X1Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X6Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	abstract	XExpressionAspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X7Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X5Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X2Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X3Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+	class	X4Aspect << (@,#FF7700) Aspect >> {
+		String visit()
+	}
+}
+XExpression <|-- XSubExp1      
+XExpression <|-- XSubExp2      
+XExpression <|-- XSubExp3      
+XExpression <|-- XSubExp4      
+XSubExp1 <|.. X1      
+XExpression <|.. X8      
+XSubExp2 <|.. X8      
+X4 <|-- X7      
+XSubExp2 <|.. X2      
+X2 <|-- X5      
+XSubExp3 <|.. X3      
+X1 <|-- X6      
+XSubExp4 <|.. X4      
+Object .. RootAspect : <      
+X2Aspect <|-- X8Aspect      
+X8 .. X8Aspect : <      
+XExpressionAspect <|-- X1Aspect      
+XSubExp1 .. X1Aspect : <      
+X1Aspect <|-- X6Aspect      
+X6 .. X6Aspect : <      
+RootAspect <|-- XExpressionAspect      
+XExpression .. XExpressionAspect : <      
+X4Aspect <|-- X7Aspect      
+X7 .. X7Aspect : <      
+X2Aspect <|-- X5Aspect      
+X5 .. X5Aspect : <      
+XExpressionAspect <|-- X2Aspect      
+XSubExp2 .. X2Aspect : <      
+XExpressionAspect <|-- X3Aspect      
+XSubExp3 .. X3Aspect : <      
+XExpressionAspect <|-- X4Aspect      
+XSubExp4 .. X4Aspect : <      
+@enduml

@@ -36,6 +36,28 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
+			
+			<!-- generate plantuml from test folders -->
+	        <plugin>
+	        	<groupId>fr.inria.diverse.k3</groupId>
+				<artifactId>fr.inria.diverse.k3.tools.plantuml.mavenplugin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals><goal>generate</goal></goals>
+						<id>TestSimple.plantuml</id>
+						<configuration>
+							<input>${basedir}/src/test/java/test</input>
+							<basePackageName>test.</basePackageName>
+							<processIndividually>true</processIndividually>
+							<output>${basedir}/src/test/java/test</output>
+							
+						</configuration>
+					</execution>
+				</executions>
+	        </plugin>	    
+			
 			<!-- generate the images from plantUMl -->
             <plugin>
 		      <groupId>com.github.jeluard</groupId>

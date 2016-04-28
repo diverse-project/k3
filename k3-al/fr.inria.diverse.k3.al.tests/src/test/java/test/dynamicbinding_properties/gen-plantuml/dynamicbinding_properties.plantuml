@@ -1,0 +1,40 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package dynamicbinding_properties {
+	class	TestDynamicBindingProperties {
+		void testX1_i1()
+		void testX2_i1()
+		void testX3_i1()
+		void testX2_getI1FromX2()
+		void testX3_getI1FromX2()
+	}
+	class	X1 {
+	}
+	class	X2 {
+	}
+	class	X3 {
+	}
+	class	AspectX1 << (@,#FF7700) Aspect >> {
+		i1 : String
+	}
+	class	AspectX2 << (@,#FF7700) Aspect >> {
+		i2 : String
+		String getI1FromX2()
+	}
+	class	AspectX3 << (@,#FF7700) Aspect >> {
+		i3 : String
+	}
+}
+X1 <|-- X2      
+X2 <|-- X3      
+X1 .. AspectX1 : <      
+AspectX1 <|-- AspectX2      
+X2 .. AspectX2 : <      
+AspectX2 <|-- AspectX3      
+X3 .. AspectX3 : <      
+@enduml

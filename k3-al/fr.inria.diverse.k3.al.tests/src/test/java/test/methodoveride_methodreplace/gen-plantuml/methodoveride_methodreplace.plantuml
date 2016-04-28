@@ -1,0 +1,42 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package methodoveride_methodreplace {
+	class	MOMR_A {
+		boolean testReplacement()
+	}
+	class	MOMR_B {
+		boolean testReplacement()
+	}
+	class	MOMR_C {
+		boolean testReplaceAspectMethod()
+		boolean testNotReplacedMethod()
+	}
+	abstract	AspectA << (@,#FF7700) Aspect >> {
+		nameA : String
+		String foo()
+		String foofoo()
+	}
+	class	AspectB << (@,#FF7700) Aspect >> {
+		nameB : String
+		String foo()
+		String foofoo()
+	}
+	class	AspectC << (@,#FF7700) Aspect >> {
+		boolean testReplaceAspectMethod()
+		String foo()
+		String foofoo()
+	}
+}
+MOMR_A <|-- MOMR_B      
+MOMR_B <|-- MOMR_C      
+MOMR_A .. AspectA : <      
+AspectA <|-- AspectB      
+MOMR_B .. AspectB : <      
+AspectB <|-- AspectC      
+MOMR_C .. AspectC : <      
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package static_non_static_attribute {
+	class	TestStaticNonStaticAttribute {
+		void testStaticAndNotStaticAttribute()
+	}
+	class	A {
+	}
+	class	B {
+	}
+	abstract	AspectA << (@,#FF7700) Aspect >> {
+	}
+	class	AspectB << (@,#FF7700) Aspect >> {
+		i : int
+		j : int
+		void incI()
+		void incJ()
+	}
+}
+A <|-- B      
+A .. AspectA : <      
+AspectA <|-- AspectB      
+B .. AspectB : <      
+@enduml

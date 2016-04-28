@@ -1,0 +1,22 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package dynamic_dispatch_multifile {
+	class	ChildB {
+	}
+	class	ChildBAspect << (@,#FF7700) Aspect >> {
+		String myOperation()
+	}
+}
+Parent <|-- ChildA      
+Parent .. ParentAspect : <      
+ParentAspect <|-- ChildAAspect      
+ChildA .. ChildAAspect : <      
+void <|-- ChildB      
+void <|-- ChildBAspect      
+ChildB .. ChildBAspect : <      
+@enduml

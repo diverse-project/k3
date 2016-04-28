@@ -1,0 +1,28 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package memoryleak {
+	class	TestMemoryLeak {
+		MEGABYTE : long
+		void testNoAspectMemoryLeak()
+		void testBaseMemoryLeakIntenal()
+		void testAspectPropertiesMemoryLeak()
+		void testAspectPropertiesMemoryLeakIntenal()
+		long toMB(bytes : long)
+		long printUsedMemory(msg : String)
+	}
+	class	MemLeakB {
+		someDataAssociatedToB : String
+		id : long
+	}
+	class	AspectMemLeakB << (@,#FF7700) Aspect >> {
+		someDataAssociatedToAspectB : String
+		String foo()
+	}
+}
+MemLeakB .. AspectMemLeakB : <      
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package multipleinheritance {
+	class	TestMultiInheritance {
+		void testVisitA()
+		void testAccessInheritedField1()
+		void testAccessInheritedField2()
+	}
+}
+package multipleinheritance.base {
+	interface	A {
+		int getA()
+	}
+	interface	B {
+		boolean getB()
+	}
+	interface	C {
+		String getC()
+	}
+	abstract	VisitorAspect << (@,#FF7700) Aspect >> {
+		foobar : Boolean
+		void testBugOverride()
+		StringBuilder visit()
+	}
+	class	AAspect << (@,#FF7700) Aspect >> {
+		StringBuilder visit()
+		void fooA()
+		void fooA2()
+	}
+	class	BAspect << (@,#FF7700) Aspect >> {
+		StringBuilder visit()
+		void fooBMethod()
+	}
+	class	CAspect << (@,#FF7700) Aspect >> {
+		fooAttr : int
+		StringBuilder visit()
+		void fooCMethod()
+	}
+	class	AImpl {
+		_c : C
+		 getA()
+		 getC()
+	}
+	class	BImpl {
+		 getB()
+	}
+	class	CImpl {
+		 getC()
+	}
+	class	Factory {
+		A newA()
+		B newB()
+		C newC()
+	}
+}
+B <|-- A      
+C <|-- A      
+Object .. VisitorAspect : <      
+BAspect <|-- AAspect      
+A .. AAspect : <      
+CAspect <|.. AAspect      
+VisitorAspect <|-- BAspect      
+B .. BAspect : <      
+VisitorAspect <|-- CAspect      
+C .. CAspect : <      
+BImpl <|-- AImpl      
+A <|.. AImpl      
+B <|.. BImpl      
+C <|.. CImpl      
+@enduml
