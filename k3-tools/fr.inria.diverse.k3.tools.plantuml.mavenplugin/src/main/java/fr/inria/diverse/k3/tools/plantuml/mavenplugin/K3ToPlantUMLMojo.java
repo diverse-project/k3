@@ -64,19 +64,28 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
     protected MavenProject project;
     /**
      * Input K3 file or folder containing K3 files
-     *
+     * if 
      * @parameter
      * @required
      */
     private File input;
     /**
      * Output plantuml file
-     *
+     * if not set, will compute a name from input name
      * @parameter
      * @required
      */
-    private File outputFile;
+    private File output;
 
+    /**
+     * if set to true, and if the input is a folder, all the content of the folder will be process individually
+     * in that case the output must be a folder, the plantuml file names will be computed from folder content name and genSubFolder parameter
+     * Default is "false"
+     *
+     * @parameter expression="false"
+     * @required
+     */
+    private boolean processIndividually;
 
     /**
      * base package name
@@ -88,28 +97,57 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
      */
     private String basePackageName;
     
+    /**
+     * genSubFolder
+     * if processIndividually is set to true the plantuml file will be generated in a sub folder 
+     * Default is "gen-plantuml"
+     *
+     * @parameter default-value="gen-plantuml"
+     */
+    private String genSubFolder;
+    
     
    
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         //org.apache.log4j.BasicConfigurator.configure();
         //System.out.println("K2CompilerMojo.execute");
-    	this.getLog().info("generate a plantUML file "+outputFile.getAbsolutePath()+" from "+input.getAbsolutePath()+" using base package name "+basePackageName);
+    	this.getLog().info("generate a plantUML file "+output.getAbsolutePath()+" from "+input.getAbsolutePath()+" using base package name "+basePackageName);
         /* CHECK IF GENERATION IF OK */
         
         checkFile(input.getAbsolutePath().toString());
-        try {
-        	K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
-        	
-        	if(input.isDirectory()){
-        		generator.generatePlantUMLForFolder(input.getPath(), basePackageName, outputFile.getPath());
+        if(processIndividually){
+        	if(input.isDirectory() && output.isDirectory()){
+        		for(File f :input.listFiles()){
+        			K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
+        			String outputPathForItem =output.getPath() +File.separator;
+        			if(f.isDirectory()){
+    	        		generator.generatePlantUMLForFolder(f.getPath(), 
+    	        				basePackageName, 
+    	        				outputPathForItem + f.getName() + File.separator + genSubFolder + File.separator + f.getName() +".plantuml");
+    	        	} else {
+    	        		generator.generatePlantUMLForFile(f.getPath(), 
+    	        				basePackageName, 
+    	        				outputPathForItem + genSubFolder + File.separator + f.getName().replace(".xtend", ".plantuml"));
+    	        	}
+        		}
         	} else {
-        		generator.generatePlantUMLForFile(input.getPath(), basePackageName, outputFile.getPath());
+        		this.getLog().error("input and output must be folder is the option processIndividually is set to true");
         	}
-		} catch (Exception e) {
-			this.getLog().error(e.getMessage(),e);
-		}
-        
+        }
+        else {
+	        try {
+	        	K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
+	        	
+	        	if(input.isDirectory()){
+	        		generator.generatePlantUMLForFolder(input.getPath(), basePackageName, output.getPath());
+	        	} else {
+	        		generator.generatePlantUMLForFile(input.getPath(), basePackageName, output.getPath());
+	        	}
+			} catch (Exception e) {
+				this.getLog().error(e.getMessage(),e);
+			}
+        }
     }
 
     protected boolean checkFile(String filePath) throws MojoExecutionException {
