@@ -1,0 +1,26 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package composition {
+	class	TestComposition {
+		void testComposition1()
+		void testComposition2()
+	}
+	class	Compose {
+	}
+	class	Composed1 {
+		attr1 : Compose
+		attr1b : Compose
+	}
+	class	Composed3 {
+		attr1 : List
+	}
+	class	Composed2 {
+		attr2 : Compose
+	}
+}
+@enduml

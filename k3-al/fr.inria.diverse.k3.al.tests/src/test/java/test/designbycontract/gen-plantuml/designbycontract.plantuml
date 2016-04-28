@@ -1,0 +1,73 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package designbycontract {
+	class	TestCase {
+		 testPre()
+		void testInv()
+		void testPost()
+		void testPreInheritance()
+		void testPreInheritance1()
+		void testInvInheritance()
+		void testPostInheritance()
+		void testPostInheritance1()
+	}
+	class	RewriteMe {
+		void foo()
+		boolean preFoo()
+	}
+	class	RewriteMe1 {
+		boolean inv1()
+		void foo()
+	}
+	class	RewriteMe2 {
+		void foo()
+		boolean postFoo()
+	}
+	abstract	ADbc {
+		name : String
+		boolean preFoo()
+		void foo()
+		boolean preBar()
+		void bar()
+	}
+	class	BDbc {
+		name : String
+		void foo()
+		boolean preFoo()
+		boolean preBar()
+		void bar()
+	}
+	abstract	ADbc1 {
+		name : String
+		boolean inv1()
+		void foo()
+	}
+	class	BDbc1 {
+		name : String
+		boolean inv2()
+		void foo()
+	}
+	abstract	ADbc2 {
+		name : String
+		void bar()
+		boolean postBar()
+		void foo()
+		boolean postFoo()
+	}
+	class	BDbc2 {
+		name : String
+		void bar()
+		boolean postBar()
+		void foo()
+		boolean postFoo()
+	}
+}
+ADbc <|-- BDbc      
+ADbc1 <|-- BDbc1      
+ADbc2 <|-- BDbc2      
+@enduml

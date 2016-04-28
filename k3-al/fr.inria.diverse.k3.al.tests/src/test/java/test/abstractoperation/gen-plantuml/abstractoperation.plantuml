@@ -1,0 +1,50 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package abstractoperation {
+	class	TestA {
+		void test_ABC_Inheritance()
+	}
+	class	A_A {
+	}
+	class	B_A {
+	}
+	class	C_A {
+	}
+	class	D_A {
+	}
+	class	E_A {
+	}
+	class	AAspect_A << (@,#FF7700) Aspect >> {
+		String foooo()
+	}
+	class	BAspect_A << (@,#FF7700) Aspect >> {
+		String foooo()
+	}
+	class	CAspect_A << (@,#FF7700) Aspect >> {
+		String foooo()
+	}
+	abstract	DAspect_A << (@,#FF7700) Aspect >> {
+	}
+	class	EAspect_A << (@,#FF7700) Aspect >> {
+		String foooo()
+	}
+}
+A_A <|-- B_A      
+B_A <|-- C_A      
+A_A <|-- D_A      
+D_A <|-- E_A      
+A_A .. AAspect_A : <      
+AAspect_A <|-- BAspect_A      
+B_A .. BAspect_A : <      
+BAspect_A <|-- CAspect_A      
+C_A .. CAspect_A : <      
+AAspect_A <|-- DAspect_A      
+D_A .. DAspect_A : <      
+DAspect_A <|-- EAspect_A      
+E_A .. EAspect_A : <      
+@enduml

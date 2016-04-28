@@ -1,0 +1,29 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package generics {
+	class	TestGenerics {
+		void main(args : String[])
+	}
+	interface	FooGenerics {
+		T getget()
+	}
+	class	AAAA {
+		 getget()
+	}
+	class	FooFooGenerics2 << (@,#FF7700) Aspect >> {
+		void aa_FooFooGenerics2()
+	}
+	class	FooGenericsAspect << (@,#FF7700) Aspect >> {
+		void testets(obj : String)
+		void foo()
+	}
+}
+FooGenerics <|.. AAAA      
+Object .. FooFooGenerics2 : <      
+FooGenerics .. FooGenericsAspect : <      
+@enduml

@@ -1,5 +1,5 @@
 
-package test
+package test.abstractoperation
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
@@ -7,7 +7,7 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension test.AAspect_A.*
+import static extension test.abstractoperation.AAspect_A.*
 
 class TestA {
 	@Test

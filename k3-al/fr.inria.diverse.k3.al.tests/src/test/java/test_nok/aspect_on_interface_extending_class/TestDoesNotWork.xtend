@@ -1,4 +1,4 @@
-package test
+package test_nok.aspect_on_interface_extending_class
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
 import fr.inria.diverse.k3.al.annotationprocessor.OverrideAspectMethod
@@ -7,7 +7,7 @@ class TestDoesNotWork {
 
 	def static void main(String[] args) {
 		val l = new FooImpl
-		//l.fooOp1
+//		l.fooOp1
 	}
 
 

@@ -1,7 +1,7 @@
-package test
+package test.generics
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
-import static extension test.FooGenericsAspect.*
+import static extension test.generics.FooGenericsAspect.*
 
 public class TestGenerics{
 	def static void main(String[] args) {

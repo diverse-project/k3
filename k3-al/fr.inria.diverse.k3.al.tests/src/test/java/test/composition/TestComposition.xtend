@@ -1,4 +1,4 @@
-package test
+package test.composition
 
 import fr.inria.diverse.k3.al.annotationprocessor.Composition
 import java.util.List

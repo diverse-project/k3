@@ -1,0 +1,56 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package opposite {
+	class	OpA {
+		b : OpB
+		bb : OpB
+		c : OpC
+	}
+	class	OpB {
+		a : OpA
+		aa : OpA
+	}
+	class	OpC {
+		a : OpA
+	}
+	class	OpD {
+		d1 : OpD
+		d2 : OpD
+	}
+	class	OpE {
+	}
+	class	TestOpposite {
+		a1 : OpA
+		a2 : OpA
+		b1 : OpB
+		b2 : OpB
+		c1 : OpC
+		d1 : OpD
+		d2 : OpD
+		e1 : OpE
+		void setUp()
+		void testOneToOneInitialization()
+		void testOneToOneSimple()
+		void testOneToOneOnSelf1()
+		void testOneToOneOnSelf2()
+		void testOneToOneSelf3()
+		void testOneToOneNullify1()
+		void testOneToOneNullify2()
+		void testOneToOneUpdate1()
+		void testOneToOneUpdate2()
+		void testOneToOneUpdate3()
+		void testOneToOneMultiple()
+		void testOneToOneMultipleSameClass()
+		void testOneToOneMultipleNullify()
+		void testOneToOneInheritance()
+		void testOneToOneMultipleInheritance()
+	}
+}
+OpA <|-- OpD      
+OpB <|-- OpE      
+@enduml

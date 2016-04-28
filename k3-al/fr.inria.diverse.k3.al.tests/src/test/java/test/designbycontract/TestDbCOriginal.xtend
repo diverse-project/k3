@@ -1,4 +1,4 @@
-package test
+package test.designbycontract
 
 import fr.inria.diverse.k3.al.annotationprocessor.Contracted
 

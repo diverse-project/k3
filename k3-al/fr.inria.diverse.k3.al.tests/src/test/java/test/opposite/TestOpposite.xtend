@@ -1,4 +1,4 @@
-package test
+package test.opposite
 
 import fr.inria.diverse.k3.al.annotationprocessor.Opposite
 import org.junit.Before

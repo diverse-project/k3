@@ -1,0 +1,29 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package test_nok.aspect_on_interface_extending_class {
+	class	TestDoesNotWork {
+		void main(args : String[])
+	}
+	interface	FooInterface {
+		void fooOp()
+	}
+	class	FooImpl {
+		void fooOp()
+	}
+	abstract	FooAbsClass << (@,#FF7700) Aspect >> {
+		void fooOp1()
+	}
+	class	FooAspect << (@,#FF7700) Aspect >> {
+		void fooOp1()
+	}
+}
+FooInterface <|.. FooImpl      
+Object .. FooAbsClass : <      
+FooAbsClass <|-- FooAspect      
+FooInterface .. FooAspect : <      
+@enduml

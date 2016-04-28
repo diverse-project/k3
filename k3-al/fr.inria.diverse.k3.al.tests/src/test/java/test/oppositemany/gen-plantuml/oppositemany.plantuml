@@ -1,0 +1,41 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package oppositemany {
+	class	AA {
+		bb : List
+		cc : List
+	}
+	class	BB {
+		aa : AA
+	}
+	class	CC {
+		aa : List
+	}
+	class	DD {
+		dda : List
+		ddb : List
+	}
+	class	TestOppositeMany {
+		aa1 : AA
+		aa2 : AA
+		bb1 : BB
+		bb2 : BB
+		void setUp()
+		void testInitialization()
+		void testOneToManySimple()
+		void testManyToOneSimple()
+		void testManyToOneRemove()
+		void testOneToManyRemove()
+		void testManyToManySimple()
+		void testManyToManyRemove()
+		void testOneToManyInheritance()
+		void testManyToManySameClass()
+	}
+}
+BB <|-- DD      
+@enduml

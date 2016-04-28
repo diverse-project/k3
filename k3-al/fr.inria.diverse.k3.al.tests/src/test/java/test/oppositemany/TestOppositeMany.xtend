@@ -1,4 +1,4 @@
-package test
+package test.oppositemany
 
 import fr.inria.diverse.k3.al.annotationprocessor.Opposite
 import java.util.List

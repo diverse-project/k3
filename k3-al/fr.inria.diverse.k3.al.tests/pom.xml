@@ -46,12 +46,23 @@
 					<execution>
 						<phase>generate-resources</phase>
 						<goals><goal>generate</goal></goals>
-						<id>TestSimple.plantuml</id>
+						<id>test_2_plantuml</id>
 						<configuration>
 							<input>${basedir}/src/test/java/test</input>
 							<basePackageName>test.</basePackageName>
 							<processIndividually>true</processIndividually>
 							<output>${basedir}/src/test/java/test</output>
+							
+						</configuration>
+					</execution>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals><goal>generate</goal></goals>
+						<id>test_nok_2_plantuml</id>
+						<configuration>
+							<input>${basedir}/src/test/java/test_nok</input>
+							<processIndividually>true</processIndividually>
+							<output>${basedir}/src/test/java/test_nok</output>
 							
 						</configuration>
 					</execution>
