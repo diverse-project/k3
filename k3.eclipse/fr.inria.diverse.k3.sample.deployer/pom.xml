@@ -30,16 +30,16 @@
 								<mkdir dir="${basedir}/zips" />
 								<!-- simple projects -->
 								<zip destfile="${basedir}/zips/k3.sample.plugin.hello_ecore.zip">
-									<fileset dir="${basedir}/../../k3-sample/k3.sample.plugin.hello_ecore/" />
+									<fileset dir="${basedir}/../../k3-samples-deployed/k3.sample.plugin.hello_ecore/" />
 								</zip>
 								
 								<!-- samples requiring several projects -->
 								<mkdir dir="${basedir}/zips/logo" />
 								<zip destfile="${basedir}/zips/logo/k3.sample.maven.logo.zip">
-									<fileset dir="${basedir}/../../k3-sample/logo/k3.sample.maven.logo/" />
+									<fileset dir="${basedir}/../../k3-samples-deployed/logo/k3.sample.maven.logo/" />
 								</zip>
 								<zip destfile="${basedir}/zips/logo/k3.sample.maven.logo.model.zip">
-									<fileset dir="${basedir}/../../k3-sample/logo/k3.sample.maven.logo.model/" />
+									<fileset dir="${basedir}/../../k3-samples-deployed/logo/k3.sample.maven.logo.model/" />
 								</zip>
 																
 							</tasks>
