@@ -1,3 +1,3 @@
-## Test composition
+## Test designbycontract
 
-![composition.png](gen-plantuml/composition.png)
+![designbycontract.png](gen-plantuml/designbycontract.png)
