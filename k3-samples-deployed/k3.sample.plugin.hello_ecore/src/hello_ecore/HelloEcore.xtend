@@ -14,7 +14,38 @@ import org.eclipse.emf.ecore.EcoreFactory
 
 class HelloEcore{ 
 
+	def static void main(String[] args) {
+		println('Hello Kermeta on top of Xtend!')
+		new HelloEcore().run("sample_models/fsm.ecore")
+		
+	}
+
 	public def run(String modelPath) {
+		//Load Ecore Model
+		val EPackage p = loadModel(modelPath)
+		
+		// call features defined on the aspects
+		p.start(1)
+		p.sayHello()		 
+
+		for (var i = 0 ; i < 2 ; i++) {
+			// create a new EPackage
+			val p2 = EcoreFactory.eINSTANCE.createEPackage
+			p2.name = "NewPackage_"+i
+			p2.start(1)	
+			p2.sayHello()
+			// modify initial model
+			p.ESubpackages.add(p2)
+		}
+		
+		println("number of call of start() = "+EPackageAspect::i)
+		
+		// demonstrates string template use
+		val String s = '''package «p.name» {«FOR elem : p.ESubpackages SEPARATOR ', '»«elem.name»«ENDFOR»} '''
+		println(s)
+	}
+	
+	def EPackage loadModel(String modelPath){
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {
@@ -25,23 +56,9 @@ class HelloEcore{
 		var uri = URI.createURI(modelPath);
 		var res = rs.getResource(uri, true);
 
+		// get first element of the Resource, we consider only the first EPackage 
 		var EPackage p = res.contents.get(0) as EPackage
-		//properties are shared between instances
-		//Add the expected behavior
-		p.start(1)
-		p.sayHello()		 
-
-		// create a new EPackage
-		p = EcoreFactory.eINSTANCE.createEPackage
-		p.name = "New Package"
-		p.start(1)	
-		p.sayHello()
-	}
-
-	def static void main(String[] args) {
-		println('Hello Kermeta on top of Xtend!')
-		new HelloEcore().run("sample_models/fsm.ecore")
-		val String s = '''  '''
+		return p
 	}
 }
 
@@ -49,14 +66,14 @@ class HelloEcore{
 class EPackageAspect { 
 	
 	//i has a value persistence is static
-	static int i = 0;
+	public static int i = 0;
 	
 	//j is local
-	int j;
+	public int j;
 
 	public def void start(int increment) {
-		_self.i= _self.i + increment
-		println("i="+_self.i)
+		i= i + increment
+		println("i="+ i)
 		_self.j = _self.j + increment;
 		println("j="+_self.j)
 		
