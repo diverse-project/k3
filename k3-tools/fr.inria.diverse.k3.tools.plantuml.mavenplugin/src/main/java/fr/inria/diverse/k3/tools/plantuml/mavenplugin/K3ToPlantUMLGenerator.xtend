@@ -43,6 +43,14 @@ class K3ToPlantUMLGenerator {
 	protected HashMap<String, List<String>> packagesTypes = new HashMap<String, List<String>>()
 	protected List<String> links = new ArrayList<String>()
 	
+	public ResourceSetImpl resourseSet
+	
+	new(){
+		XtendStandaloneSetup::doSetup
+		resourseSet = new ResourceSetImpl
+		
+	}
+	
 	
 	public def void generatePlantUMLForFile(String inputFilePath, String plantUmlFilePath){
 		generatePlantUMLForFile(inputFilePath, "", plantUmlFilePath)
@@ -65,6 +73,7 @@ class K3ToPlantUMLGenerator {
 	
 	public def void generateForFolder(String inputFolderPath, String basePackage){
 		val folderFile = new File(inputFolderPath)
+		preloadXtendFiles(folderFile)
 		folderFile.listFiles.forEach[folderContent |
 			//println(folderContent.path) 
 			switch folderContent{
@@ -80,18 +89,31 @@ class K3ToPlantUMLGenerator {
 		]
 	}
 	
+	private def void preloadXtendFiles(File f){
+		if(f.isDirectory){
+			f.listFiles.forEach[folderContent |
+				preloadXtendFiles(folderContent)
+			]
+		} else if(f.name.endsWith(".xtend")){
+			val fileUri = URI::createFileURI(f.path)
+			val res = resourseSet.getResource(fileUri, true)			
+			val ast = res.contents.head as XtendFile
+		}
+	}
+	
 	public def void generateForFile(String inputFilePath, String basePackage){
-		XtendStandaloneSetup::doSetup
-		val rs = new ResourceSetImpl
+		//XtendStandaloneSetup::doSetup
 		val fileUri = URI::createFileURI(inputFilePath)
-		val res = rs.getResource(fileUri, true)
+		val res = resourseSet.getResource(fileUri, true)
 		val ast = res.contents.head as XtendFile
 		
 		val currentPackageName = if(!basePackage.isNullOrEmpty && ast.package.startsWith(basePackage)){
 			ast.package.replaceFirst(basePackage, "")
 		} else ast.package
-		val packageTypes = new ArrayList<String>
-		packagesTypes.put(currentPackageName,packageTypes)
+		if(packagesTypes.get(currentPackageName) == null){
+			val packageTypes = new ArrayList<String>	
+			packagesTypes.put(currentPackageName,packageTypes)	
+		}
 
 		ast.xtendTypes.forEach[	t|
 			
@@ -130,6 +152,9 @@ class K3ToPlantUMLGenerator {
 				}
 				XtendClass:{
 					if(t.extends != null){
+						val texdtends = t.extends
+						//texte
+						val sname = t.extends.simpleName
 						links.add('''«t.extends.simpleName» <|-- «t.name»''')
 					}
 					t.implements.forEach[ extendedInterface |
