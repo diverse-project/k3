@@ -15,6 +15,30 @@ package parentonlyaspects {
 		void testCallParentLevel2Aspects()
 	}
 }
+package parentonlyaspects.aspects {
+	class	Top1Aspect << (@,#FF7700) Aspect >> {
+		String doTop1Aspect()
+	}
+	class	Top2Aspect << (@,#FF7700) Aspect >> {
+		String doTop2Aspect()
+	}
+	class	Top3Aspect << (@,#FF7700) Aspect >> {
+		String doTop3Aspect()
+	}
+	class	Top4Aspect << (@,#FF7700) Aspect >> {
+		String doTop4Aspect()
+	}
+	class	Middle1Aspect << (@,#FF7700) Aspect >> {
+		String doMiddle1Aspect()
+	}
+	class	Middle2Aspect << (@,#FF7700) Aspect >> {
+		String doMiddle2Aspect()
+	}
+	class	Bottom1Aspect << (@,#FF7700) Aspect >> {
+		String callParentLevel1Aspects()
+		String callParentLevel2Aspects()
+	}
+}
 package parentonlyaspects.base {
 	interface	Top1 {
 	}
@@ -46,29 +70,20 @@ package parentonlyaspects.base {
 	}
 	class	Bottom1Impl {
 	}
-	class	Top1Aspect << (@,#FF7700) Aspect >> {
-		String doTop1Aspect()
-	}
-	class	Top2Aspect << (@,#FF7700) Aspect >> {
-		String doTop2Aspect()
-	}
-	class	Top3Aspect << (@,#FF7700) Aspect >> {
-		String doTop3Aspect()
-	}
-	class	Top4Aspect << (@,#FF7700) Aspect >> {
-		String doTop4Aspect()
-	}
-	class	Middle1Aspect << (@,#FF7700) Aspect >> {
-		String doMiddle1Aspect()
-	}
-	class	Middle2Aspect << (@,#FF7700) Aspect >> {
-		String doMiddle2Aspect()
-	}
-	class	Bottom1Aspect << (@,#FF7700) Aspect >> {
-		String callParentLevel1Aspects()
-		String callParentLevel2Aspects()
-	}
 }
+Top1 .. Top1Aspect : <      
+Top2 .. Top2Aspect : <      
+Top3 .. Top3Aspect : <      
+Top4 .. Top4Aspect : <      
+Top1Aspect <|-- Middle1Aspect      
+Middle1 .. Middle1Aspect : <      
+Top2Aspect <|.. Middle1Aspect      
+Top3Aspect <|-- Middle2Aspect      
+Middle2 .. Middle2Aspect : <      
+Top4Aspect <|.. Middle2Aspect      
+Middle1Aspect <|-- Bottom1Aspect      
+Bottom1 .. Bottom1Aspect : <      
+Middle2Aspect <|.. Bottom1Aspect      
 Top1 <|-- Middle1      
 Top2 <|-- Middle1      
 Top3 <|-- Middle2      
@@ -83,17 +98,4 @@ Top4 <|.. Top4Impl
 Middle1 <|.. Middle1Impl      
 Middle2 <|.. Middle2Impl      
 Bottom1 <|.. Bottom1Impl      
-Top1 .. Top1Aspect : <      
-Top2 .. Top2Aspect : <      
-Top3 .. Top3Aspect : <      
-Top4 .. Top4Aspect : <      
-Top1Aspect <|-- Middle1Aspect      
-Middle1 .. Middle1Aspect : <      
-Top2Aspect <|.. Middle1Aspect      
-Top3Aspect <|-- Middle2Aspect      
-Middle2 .. Middle2Aspect : <      
-Top4Aspect <|.. Middle2Aspect      
-Middle1Aspect <|-- Bottom1Aspect      
-Bottom1 .. Bottom1Aspect : <      
-Middle2Aspect <|.. Bottom1Aspect      
 @enduml

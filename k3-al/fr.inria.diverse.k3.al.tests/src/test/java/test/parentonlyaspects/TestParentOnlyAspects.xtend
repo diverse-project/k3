@@ -5,9 +5,9 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
-import static extension test.parentonlyaspects.base.Top1Aspect.*
-import static extension test.parentonlyaspects.base.Top2Aspect.*
-import static extension test.parentonlyaspects.base.Bottom1Aspect.*
+import static extension test.parentonlyaspects.aspects.Top1Aspect.*
+//import static extension test.parentonlyaspects.aspects.Top2Aspect.*
+import static extension test.parentonlyaspects.aspects.Bottom1Aspect.*
 import test.parentonlyaspects.base.Middle1
 import test.parentonlyaspects.base.Bottom1Impl
 import test.parentonlyaspects.base.Bottom1
