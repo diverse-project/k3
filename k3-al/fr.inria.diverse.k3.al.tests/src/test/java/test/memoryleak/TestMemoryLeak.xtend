@@ -54,6 +54,9 @@ class TestMemoryLeak {
 	@Test
 	def void testAspectPropertiesMemoryLeak() {
 		val memTester = new TestMemoryLeak
+		// ask garbage collect, this isn't garanteed but this helps
+		System.gc()
+		Thread.sleep(500)
 		// do a first call, for reference, actually the weakHahsMap will get its definitive size, after this
 		memTester.testBaseMemoryLeakIntenal()
 		memTester.printUsedMemory("[BEGIN]")
@@ -110,7 +113,7 @@ class TestMemoryLeak {
 	public def long printUsedMemory(String msg){
 		// ask garbage collect, this isn't garanteed but this helps
 		System.gc()
-		Thread.sleep(100)
+		Thread.sleep(150)
 		
 		val Runtime rt = Runtime.getRuntime();
 		val long memory = rt.totalMemory() - rt.freeMemory();
