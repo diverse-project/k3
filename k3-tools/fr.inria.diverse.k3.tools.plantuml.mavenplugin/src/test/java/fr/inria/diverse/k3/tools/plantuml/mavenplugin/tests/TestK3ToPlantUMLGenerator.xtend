@@ -29,6 +29,8 @@ class TestK3ToPlantUMLGenerator {
 		assertTrue(fileContent.contains("class	TestSimple {"))
 		assertTrue(fileContent.contains("class	B {"))
 		assertTrue(fileContent.contains("class	AspectB << (@,#FF7700) Aspect >>"))
+		assertFalse(fileContent.contains("void .."))
+		assertFalse(fileContent.contains("void <|--"))
 	}
 	
 	@Test
@@ -43,6 +45,8 @@ class TestK3ToPlantUMLGenerator {
 		assertTrue(fileContent.contains("class	AImpl {"))
 		assertTrue(fileContent.contains("interface	B {"))
 		assertTrue(fileContent.contains("class	AAspect << (@,#FF7700) Aspect >>"))
+		assertFalse(fileContent.contains("void .."))
+		assertFalse(fileContent.contains("void <|--"))
 	}
 	
 	
@@ -59,6 +63,8 @@ class TestK3ToPlantUMLGenerator {
 		assertTrue(fileContent.contains("class	B {"))
 		assertTrue(fileContent.contains("class	AspectB << (@,#FF7700) Aspect >>"))
 		assertTrue(fileContent.contains("class	X8Aspect << (@,#FF7700) Aspect >>"))
+		assertFalse(fileContent.contains("void .."))
+		assertFalse(fileContent.contains("void <|--"))
 		
 	}
 	
@@ -78,7 +84,28 @@ class TestK3ToPlantUMLGenerator {
 		assertTrue(fileContent.contains("class	TestParentOnlyAspects {"))
 		assertTrue(fileContent.contains("class	Top1Aspect << (@,#FF7700) Aspect >>"))
 		assertTrue(fileContent.contains("Top1 .. Top1Aspect : <"))
+		assertFalse(fileContent.contains("void .."))
+		assertFalse(fileContent.contains("void <|--"))
     	
+	}
+	
+	
+	@Test
+	def void testK3FolderMultiFiles() {
+		val K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator() 
+		val plantumlFileName = "target/test-output/TestK3FolderMultiFiles.plantuml"
+		
+		generator.generatePlantUMLForFolder("src/test/resources/test_multifiles", "test.", plantumlFileName)
+		
+		val fileContent = Files.readFileIntoString(plantumlFileName)
+		
+//		assertTrue(fileContent.contains("class	TestSimple {"))
+//		assertTrue(fileContent.contains("class	B {"))
+//		assertTrue(fileContent.contains("class	AspectB << (@,#FF7700) Aspect >>"))
+//		assertTrue(fileContent.contains("class	X8Aspect << (@,#FF7700) Aspect >>"))
+		assertFalse(fileContent.contains("void .."))
+//		assertFalse(fileContent.contains("void <|--"))
+		
 	}
 }
  
