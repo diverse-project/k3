@@ -6,6 +6,20 @@ skinparam class {
 	BorderColor Black
 }
 package dynamic_dispatch_multifile {
+	class	TestDynamicDispatchMultifile {
+		void testDynamicDispatchWithAspectInSeveralFiles()
+	}
+	class	Parent {
+		name : String
+	}
+	class	ChildA {
+	}
+	class	ParentAspect << (@,#FF7700) Aspect >> {
+		String myOperation()
+	}
+	class	ChildAAspect << (@,#FF7700) Aspect >> {
+		String myOperation()
+	}
 	class	ChildB {
 	}
 	class	ChildBAspect << (@,#FF7700) Aspect >> {

@@ -6,6 +6,11 @@ skinparam class {
 	BorderColor Black
 }
 package methodoveride_methodreplace {
+	class	TestMethodOverrideMethodReplace {
+		void testAspectMethodReplacement()
+		void testAspectReplaceAspectMethod()
+		void testAbstractMethodOnAspect()
+	}
 	class	MOMR_A {
 		boolean testReplacement()
 	}

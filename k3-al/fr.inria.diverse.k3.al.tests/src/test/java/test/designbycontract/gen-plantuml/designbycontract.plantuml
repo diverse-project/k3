@@ -6,6 +6,71 @@ skinparam class {
 	BorderColor Black
 }
 package designbycontract {
+	class	TestDbC {
+		 testOkInv()
+		 testNOKInv()
+		 testOKPrePost()
+		 testOKAll()
+		 testNOKPreCond()
+		 testNOKPostCondition()
+		 testOKInvNOKPre()
+		 testOKInvNOKPost()
+		 testNOKInvOKPre()
+		 testNOKInvOKPost()
+		 testInvBrokenByFoo()
+	}
+	class	SimpleOKInv {
+		boolean inv()
+		void foo()
+	}
+	class	SimpleNOKInv {
+		boolean inv()
+		void foo()
+	}
+	class	SimpleOKPrePost {
+		boolean preFoo()
+		boolean postFoo()
+		void foo()
+	}
+	class	SimpleOKAll {
+		boolean inv()
+		boolean preFoo()
+		boolean postFoo()
+		void foo()
+	}
+	class	SimpleNOKPreCond {
+		boolean preFoo()
+		void foo()
+	}
+	class	SimpleNOKPostCond {
+		boolean postFoo()
+		void foo()
+	}
+	class	SimpleOKInvNOKPre {
+		boolean inv()
+		boolean preFoo()
+		void foo()
+	}
+	class	SimpleOKInvNOKPost {
+		boolean inv()
+		boolean postFoo()
+		void foo()
+	}
+	class	SimpleNOKInvOKPre {
+		boolean inv()
+		boolean preFoo()
+		void foo()
+	}
+	class	SimpleNOKInvOKPost {
+		boolean inv()
+		boolean postFoo()
+		void foo()
+	}
+	class	SimpleInvBrokenByFoo {
+		i : int
+		boolean inv()
+		void foo()
+	}
 	class	TestCase {
 		 testPre()
 		void testInv()
