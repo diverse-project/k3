@@ -1,0 +1,101 @@
+@startuml
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+}
+package parentonlyaspects {
+	class	TestParentOnlyAspects {
+		void testCallFirstParentAspects()
+		void testCallSecondParentAspects()
+		void testCallLevel2FirstParentAspects()
+		void testCallLevel2SecondParentAspects()
+		void testCallParentLevel1Aspects()
+		void testCallParentLevel2Aspects()
+	}
+}
+package parentonlyaspects.aspects {
+	class	Top1Aspect << (@,#FF7700) Aspect >> {
+		String doTop1Aspect()
+	}
+	class	Top2Aspect << (@,#FF7700) Aspect >> {
+		String doTop2Aspect()
+	}
+	class	Top3Aspect << (@,#FF7700) Aspect >> {
+		String doTop3Aspect()
+	}
+	class	Top4Aspect << (@,#FF7700) Aspect >> {
+		String doTop4Aspect()
+	}
+	class	Middle1Aspect << (@,#FF7700) Aspect >> {
+		String doMiddle1Aspect()
+	}
+	class	Middle2Aspect << (@,#FF7700) Aspect >> {
+		String doMiddle2Aspect()
+	}
+	class	Bottom1Aspect << (@,#FF7700) Aspect >> {
+		String callParentLevel1Aspects()
+		String callParentLevel2Aspects()
+	}
+}
+package parentonlyaspects.base {
+	interface	Top1 {
+	}
+	interface	Top2 {
+	}
+	interface	Top3 {
+	}
+	interface	Top4 {
+	}
+	interface	Middle1 {
+	}
+	interface	Middle2 {
+	}
+	interface	Bottom1 {
+	}
+	interface	Bottom2 {
+	}
+	class	Top1Impl {
+	}
+	class	Top2Impl {
+	}
+	class	Top3Impl {
+	}
+	class	Top4Impl {
+	}
+	class	Middle1Impl {
+	}
+	class	Middle2Impl {
+	}
+	class	Bottom1Impl {
+	}
+}
+void .. Top1Aspect : <      
+void .. Top2Aspect : <      
+void .. Top3Aspect : <      
+void .. Top4Aspect : <      
+Top1Aspect <|-- Middle1Aspect      
+void .. Middle1Aspect : <      
+Top2Aspect <|.. Middle1Aspect      
+Top3Aspect <|-- Middle2Aspect      
+void .. Middle2Aspect : <      
+Top4Aspect <|.. Middle2Aspect      
+Middle1Aspect <|-- Bottom1Aspect      
+void .. Bottom1Aspect : <      
+Middle2Aspect <|.. Bottom1Aspect      
+Top1 <|-- Middle1      
+Top2 <|-- Middle1      
+Top3 <|-- Middle2      
+Top4 <|-- Middle2      
+Middle1 <|-- Bottom1      
+Middle2 <|-- Bottom1      
+Middle1 <|-- Bottom2      
+Top1 <|.. Top1Impl      
+Top2 <|.. Top2Impl      
+Top3 <|.. Top3Impl      
+Top4 <|.. Top4Impl      
+Middle1 <|.. Middle1Impl      
+Middle2 <|.. Middle2Impl      
+Bottom1 <|.. Bottom1Impl      
+@enduml

@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -64,11 +65,19 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
     protected MavenProject project;
     /**
      * Input K3 file or folder containing K3 files
-     * if 
      * @parameter
      * @required
      */
     private File input;
+    
+    /**
+     * Input xtend file or folder containing xtend files that are used as base for K3 aspects
+     * if processIndividually is set to true, a matching based on name will be applied to associate the content from  input and inputCompanionBase.
+     * works only if input and inputCompanionBase are folders.
+     * @parameter
+     */
+    private File inputCompanionBase;
+    
     /**
      * Output plantuml file
      * if not set, will compute a name from input name
@@ -88,7 +97,6 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
     private boolean processIndividually;
 
     /**
-     * base package name
      * base package name will be removed from generated diagram
      * Default is ""
      *
@@ -122,7 +130,19 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
         			K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
         			String outputPathForItem =output.getPath() +File.separator;
         			if(f.isDirectory()){
-    	        		generator.generatePlantUMLForFolder(f.getPath(), 
+        				List<String> inputFolderPathes = new ArrayList<String>();
+        				inputFolderPathes.add(f.getPath());
+        				if(inputCompanionBase != null && inputCompanionBase.isDirectory()){
+        					// look for a possible companion folder
+        					for(File companionFile : inputCompanionBase.listFiles()){
+        						if(companionFile.getName().equals(f.getName())){
+        							this.getLog().info("Found companion folder "+companionFile.getAbsolutePath());
+        							inputFolderPathes.add(companionFile.getPath());
+        							break;
+        						}
+        					}
+        				} 
+    	        		generator.generatePlantUMLForFolders(inputFolderPathes, 
     	        				basePackageName, 
     	        				outputPathForItem + f.getName() + File.separator + genSubFolder + File.separator + f.getName() +".plantuml");
     	        	} else if(f.getName().endsWith(".xtend")){
@@ -141,7 +161,19 @@ public class K3ToPlantUMLMojo extends AbstractMojo {
 	        	K3ToPlantUMLGenerator generator = new K3ToPlantUMLGenerator();
 	        	
 	        	if(input.isDirectory()){
-	        		generator.generatePlantUMLForFolder(input.getPath(), basePackageName, output.getPath());
+	        		List<String> inputFolderPathes = new ArrayList<String>();
+    				inputFolderPathes.add(input.getPath());
+	        		if(inputCompanionBase != null && inputCompanionBase.isDirectory()){
+    					// look for a possible companion folder
+    					for(File companionFile : inputCompanionBase.listFiles()){
+    						if(companionFile.getName().equals(input.getName())){
+    							this.getLog().info("Found companion folder "+companionFile.getAbsolutePath());
+    							inputFolderPathes.add(companionFile.getPath());
+    							break;
+    						}
+    					}
+    				}
+	        		generator.generatePlantUMLForFolders(inputFolderPathes, basePackageName, output.getPath());
 	        	} else {
 	        		generator.generatePlantUMLForFile(input.getPath(), basePackageName, output.getPath());
 	        	}

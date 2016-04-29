@@ -53,6 +53,11 @@ class K3ToPlantUMLGenerator {
 		writeResultToPlantUMlFile(plantUmlFilePath)
 	}
 	
+	public def void generatePlantUMLForFolders(List<String> inputFolderPaths, String basePackage, String plantUmlFilePath){
+		inputFolderPaths.forEach[inputFolderPath | generateForFolder(inputFolderPath, basePackage)]
+		writeResultToPlantUMlFile(plantUmlFilePath)
+	}
+	
 	public def void generatePlantUMLForFolder(String inputFolderPath, String basePackage, String plantUmlFilePath){
 		generateForFolder(inputFolderPath, basePackage)
 		writeResultToPlantUMlFile(plantUmlFilePath)
@@ -172,7 +177,9 @@ class K3ToPlantUMLGenerator {
 				val feature = aspClassName.values?.head as XAbstractFeatureCall
 				feature.feature.qualifiedName
 			}
-			XFeatureCall: 
+			XFeatureCall case aspClassName.feature.eIsProxy: 
+				aspClassName.concreteSyntaxFeatureName
+			XFeatureCall:
 				aspClassName.feature.qualifiedName
 			XTypeLiteral:
 				aspClassName.type.qualifiedName				
