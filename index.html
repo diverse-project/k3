@@ -40,8 +40,9 @@
 
 # K3
 
-Kermeta 3 (K3) is an action language built on top of the Xtend programming language and mainly used to implement the execution semantics of Ecore metamodels.
+Kermeta 3 (K3) is an action language built on top of the [Xtend](http://www.eclipse.org/xtend/) programming language and mainly used to implement the execution semantics of Ecore metamodels.
 Concretely, K3 allows to "re-open" the classes generated from an Ecore metamodel using simple annotations in order to weave new features and operations.
+
 Main features of K3 include:
 
 * **Executable metamodeling**: Using K3, one can insert new methods in existing Ecore meta-classes, with their implementation. These methods define the execution semantics of the corresponding metamodel in the form of an interpreter;
@@ -54,8 +55,9 @@ Kermeta make it easy to address a wide range of activities related to model elem
 This includes activites such as:
 
 *    weaving operational semantics in metamodel definition,
-*    defining model-to-model transformations, or
-*    defining model-to-text transformations.
+*    defining model checkers,
+*    defining *model-to-model transformations*, or
+*    defining *model-to-text transformations*.
 
 ## Open-class mechanism
 In a nutshell, the open-class mechanism of K3 allows to "re-open" existing meta-classes of an Ecore metamodel to insert new features such as attributes, references, or operations.
