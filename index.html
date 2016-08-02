@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>K3 - Executable Meta-Modeling</title>
+  <title>Kermeta 3 - Executable Meta-Modeling</title>
   <meta name="description" content="Documentation of the Kermeta 3 (K3) language" />
 </head>
 
@@ -23,7 +23,13 @@
 	<item><a href="download.html">Download</a></item>
 <!-- 	<toc>Table of Content</toc> --> 
 	<item><a href="https://github.com/diverse-project/k3">Fork on Github</a></item>
-	<!-- <item><small>(Powered by <a href="http://strapdownjs.com/">StrapDown.js</a>)</small></item>-->
+	<menu name="Older versions">
+		<item><a href="http://www.kermeta.org/index_k1_k2.html">Kermeta 1 & 2 - Web site</a></item>
+		<item></item> <!-- add a divider -->
+		<item><a href="http://www.kermeta.org/documents/">Kermeta 1 & 2 - Documentation</a></item>	
+		<item><a href="http://kermeta.org/mdk/">Kermeta 1 & 2 - Model Development Kit</a></item>
+		<item><a href="http://kermeta.org/download/">Kermeta 1 & 2 - Download</a></item></a></item>
+	</menu
 </topbar>
 
 
@@ -34,13 +40,22 @@
 
 # K3
 
-K3 is an action language built on top of the Xtend programming language and mainly used to implement the execution semantics of Ecore metamodels.
+Kermeta 3 (K3) is an action language built on top of the Xtend programming language and mainly used to implement the execution semantics of Ecore metamodels.
 Concretely, K3 allows to "re-open" the classes generated from an Ecore metamodel using simple annotations in order to weave new features and operations.
 Main features of K3 include:
 
 * **Executable metamodeling**: Using K3, one can insert new methods in existing Ecore meta-classes, with their implementation. These methods define the execution semantics of the corresponding metamodel in the form of an interpreter;
 * **Metamodel extension**: The very same mechanism can be used to extend existing Ecore metamodels and insert new features (eg. attributes) in a non-intrusive way;
 * **Full Java compatibility**: K3 files are plain Xtend files. As such, K3 files are ultimately compiled as plain Java code. This means that Java code and API can be used in K3 files and *vice versa*.
+
+# Breathe life into you metamodel
+
+Kermeta features make it easy to address a wide range of activities related to model element manipulation. 
+This includes activites such as:
+
+*    weaving operational semantics in metamodel definition
+*    defining model-to-model transformations
+*    defining model-to-text transformations
 
 ## Open-class mechanism
 In a nutshell, the open-class mechanism of K3 allows to "re-open" existing meta-classes of an Ecore metamodel to insert new features such as attributes, references, or operations.
