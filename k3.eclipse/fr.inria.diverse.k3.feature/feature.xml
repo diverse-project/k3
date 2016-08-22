@@ -17,10 +17,6 @@ This feature offers various tools for developping projects with Kermeta 3
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="fr.inria.diverse.k3.al.feature"
-         version="0.0.0"/>
-
    <plugin
          id="fr.inria.diverse.k3.sample.deployer"
          download-size="0"
@@ -40,5 +36,12 @@ This feature offers various tools for developping projects with Kermeta 3
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="fr.inria.diverse.k3.al.annotationprocessor.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

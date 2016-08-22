@@ -10,6 +10,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<!-- <module>../fr.inria.diverse.k3.eclipse.core.plugin</module> -->
+		<module>../fr.inria.diverse.k3.al.annotationprocessor.plugin</module>
 		<module>../fr.inria.diverse.k3.ui</module>
 		<module>../fr.inria.diverse.k3.ui.templates</module>
 		<module>../fr.inria.diverse.k3.sample.deployer</module>
