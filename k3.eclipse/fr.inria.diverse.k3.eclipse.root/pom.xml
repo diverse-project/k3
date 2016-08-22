@@ -36,17 +36,35 @@
 	
 		<!-- Repositories for Tycho -->
 		<!-- Update site  general repo for K3 except the currently build one (ie. k3-eclipse) -->	
-		<repository>
+		<!-- <repository>
                 <id>K3-except-k3-eclipse</id>
                 <layout>p2</layout>
                 <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3${nightly.modifier}.composite.updatesite/update/all-except-k3/</url>
-		</repository>
+		</repository>-->
 		
 		<!-- Update site Repo for thirdparty Dependencies -->
         <repository>
-                <id>platform</id>
+            <id>Mars release</id>
+            <layout>p2</layout>
+            <url>http://download.eclipse.org/releases/mars/201602261000</url>
+        </repository>
+		
+		<repository>
+                <id>emf-releases</id>
                 <layout>p2</layout>
-                <url>https://ci.inria.fr/k3al/job/k3-composite_updatesite/lastSuccessfulBuild/artifact/k3-composite_updatesite/k3.platform.composite.updatesite/update/</url>
+                <url>http://download.eclipse.org/modeling/emf/emf/updates/releases/</url>
+		</repository>
+		
+		<repository>
+                <id>xtext</id>
+                <layout>p2</layout>
+                <url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
+		</repository>
+		
+		<repository>
+                <id>diverse-commons</id>
+                <layout>p2</layout>
+                <url>https://ci.inria.fr/diverse-commons/job/diverse-commons.eclipse.root/lastSuccessfulBuild/artifact/commons-eclipse/fr.inria.diverse.commons.eclipse.root/p2updatesite/target/repository/</url>
 		</repository>
 
 		<!-- repository for pure maven artefacts -->
