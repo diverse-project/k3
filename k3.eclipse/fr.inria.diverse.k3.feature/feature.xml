@@ -35,7 +35,8 @@ This feature offers various tools for developping projects with Kermeta 3
          id="fr.inria.diverse.k3.ui.templates"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="fr.inria.diverse.k3.al.annotationprocessor.plugin"
