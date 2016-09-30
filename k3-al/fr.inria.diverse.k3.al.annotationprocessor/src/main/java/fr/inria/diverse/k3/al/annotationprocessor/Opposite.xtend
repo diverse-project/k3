@@ -29,8 +29,8 @@ import com.google.common.collect.ImmutableList
 /**
  * Opposite annotation declaration
  */
-@Target(ElementType::FIELD)
-@Active(OppositeProcessor)
+@Target(ElementType::FIELD, ElementType::METHOD)
+//@Active(OppositeProcessor)
 @Retention(RetentionPolicy.SOURCE)
 public annotation Opposite
 {
