@@ -45,6 +45,7 @@ public annotation SynchroField {
 }
 
 /** Step annotation is used by GEMOC to produce StepCommands */
+@Retention(RetentionPolicy::RUNTIME)
 public annotation Step{}
 
 /** Main annotation is used by GEMOC to tag aspect methods to be the main entry point of a sequential model execution */
