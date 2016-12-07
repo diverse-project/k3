@@ -1,14 +1,14 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
-import org.eclipse.xtend.lib.macro.CodeGenerationContext
+import java.io.IOException
+import java.util.ArrayList
 import java.util.List
 import java.util.Map
-import org.eclipse.xtend.lib.macro.file.Path
 import java.util.Properties
+import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
-import java.util.ArrayList
-import java.io.IOException
+import org.eclipse.xtend.lib.macro.file.Path
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -17,8 +17,7 @@ import java.io.IOException
  */
 class AspectMappingBuilder {
 
-
-	// list of annoted classes
+	// list of annotated classes
 	var List<? extends MutableClassDeclaration> classes;
 
 	// destination properties file
@@ -118,5 +117,4 @@ class AspectMappingBuilder {
 			existingListForAspectizedElement.add(aspectClassName)
 		}
 	}
-
 }

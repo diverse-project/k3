@@ -32,7 +32,11 @@ public annotation Aspect {
 	Class<?> className;
 	Class<?>[] with = #[];
 }
- 
+
+@Target(ElementType.TYPE_USE)
+public annotation PreCondition {
+}
+
 public annotation OverrideAspectMethod {
 }
 
@@ -46,18 +50,19 @@ public annotation SynchroField {
 
 /** Step annotation is used by GEMOC to produce StepCommands */
 @Retention(RetentionPolicy::RUNTIME)
-public annotation Step{}
+public annotation Step{
+	boolean eventTriggerable = false;
+}
 
 /** Main annotation is used by GEMOC to tag aspect methods to be the main entry point of a sequential model execution */
 @Target(#[ElementType::METHOD])
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Main{}
 
-/** Main annotation is used by GEMOC to tag aspect methods to be an initialization method before a  model execution */
+/** InitializeModel annotation is used by GEMOC to tag aspect methods to be an initialization method before a model execution */
 @Target(#[ElementType::METHOD])
 @Retention(RetentionPolicy::RUNTIME)
 public annotation InitializeModel{}
-	 
 
 /**
  * Used to tag a k3 operation as abstract as initially defined.
@@ -73,7 +78,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	// builder for mapping.properties file
 	val aspectMappingBuilder = new AspectMappingBuilder()
-
+	
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
 	public static final String OVERRIDE_METHOD = OverrideAspectMethod.simpleName
@@ -138,12 +143,12 @@ public class AspectProcessor extends AbstractClassProcessor {
 			}
 		}
 
-		// prepare an AspectMApping properties file
+		// prepare an AspectMapping properties file
 		// it is partly done in this context and partly done in the generate code context
 		// (allows to get writing abilities and notification to Eclipse)
 		aspectMappingBuilder.readCurrentMapping(classes, context)
 		aspectMappingBuilder.cleanUnusedMapping(context)
-
+		
 		aspectMappingBuilder.addMappingForAnnotatedSourceElements()
 	}
 
@@ -379,7 +384,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			val resultVar = "result"
 			val StringBuilder sb = new StringBuilder
 			for (dt : declTypes) {
-				var String call = "" 
+				var String call = ""
 				
 				if (m.declaringType.equals(dt)) {
 					
@@ -453,10 +458,14 @@ public class AspectProcessor extends AbstractClassProcessor {
 						«ENDIF»
 					}
 				};
-				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager manager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
-				if (manager != null) {
-					manager.executeStep(_self,command,"«className»","«methodName»");
+				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
+				if (stepManager != null) {
+					stepManager.executeStep(_self,command,"«className»","«methodName»");
 				} else {
+					fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IEventManager eventManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.EventManagerRegistry.getInstance().findEventManager(_self);
+					if (eventManager != null) {
+						eventManager.manageEvents();
+					}
 					command.execute();
 				}
 				«IF hasReturn»
@@ -547,7 +556,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 				Map<MutableMethodDeclaration, String> bodies,
 				Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
 				String aspectizedClassName) {
+				
 				for (m : clazz.declaredMethods) {
+					
 					if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
 						
 						m.removeAnnotation(m.annotations.findFirst[an | an.annotationTypeDeclaration.qualifiedName=="java.lang.Override"])
@@ -573,7 +584,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				}
 				val supers = Helper::getDirectSuperClasses(clazz, cxt)
 				if (supers.empty) {
-					cxt.addError(clazz, "pass par la")
+					cxt.addError(clazz, "passe par la")
 					return false
 				}
 
