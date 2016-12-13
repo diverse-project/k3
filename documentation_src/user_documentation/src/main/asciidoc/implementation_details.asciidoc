@@ -1,4 +1,4 @@
-== Implentation details
+== Implementation details
 
 This section presents how K3 is implemented and which compiling scheme it follows. 
 
