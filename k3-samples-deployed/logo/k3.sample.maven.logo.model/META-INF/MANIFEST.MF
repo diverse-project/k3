@@ -11,7 +11,10 @@ Export-Package: kmLogo,
  kmLogo.ASM,
  kmLogo.ASM.impl,
  kmLogo.ASM.util,
- kmLogo.impl
+ kmLogo.impl,
+ vmlogo,
+ vmlogo.impl,
+ vmlogo.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport
 Bundle-ActivationPolicy: lazy

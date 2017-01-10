@@ -22,4 +22,12 @@
             genModel="model/ASMLogo.genmodel"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated VMLogo -->
+      <package
+            uri="http://vmlogo/"
+            class="vmlogo.VmlogoPackage"
+            genModel="model/VMLogo.genmodel"/>
+   </extension>
+
 </plugin>
