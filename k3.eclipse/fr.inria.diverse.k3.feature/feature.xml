@@ -2,7 +2,8 @@
 <feature
       id="fr.inria.diverse.k3.feature"
       label="K3 feature"
-      version="3.2.1.qualifier">
+      version="3.2.1.qualifier"
+      provider-name="Inria DiverSE">
 
    <description url="http://www.kermeta.org/k3/update/">
       K3 Project

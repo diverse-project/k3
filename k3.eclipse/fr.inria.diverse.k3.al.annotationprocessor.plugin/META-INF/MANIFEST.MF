@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: K3 Action Language Annotation Processor Plugin
+Bundle-Name: K3 Annotation Processor
 Bundle-SymbolicName: fr.inria.diverse.k3.al.annotationprocessor.plugin
 Bundle-Version: 3.2.1.qualifier
 Bundle-Activator: fr.inria.diverse.k3.al.annotationprocessor.plugin.Activator
-Bundle-Vendor: INRIA
+Bundle-Vendor: Inria DiverSE
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtend.lib;bundle-version="2.6.0";visibility:=reexport,
  org.eclipse.emf.ecore;bundle-version="2.7.0"
