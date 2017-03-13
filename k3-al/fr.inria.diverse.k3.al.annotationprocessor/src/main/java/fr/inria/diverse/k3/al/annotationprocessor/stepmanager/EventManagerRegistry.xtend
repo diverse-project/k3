@@ -29,8 +29,8 @@ class EventManagerRegistry {
 			registeredManagers.remove(manager)
 	}
 	
-	public def IEventManager findEventManager(Object caller) {
-		return registeredManagers.findFirst[m|true];
+	public def IEventManager findEventManager() {
+		return registeredManagers.findFirst[true];
 	}
 
 }

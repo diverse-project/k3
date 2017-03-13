@@ -52,6 +52,7 @@ public annotation SynchroField {
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Step{
 	boolean eventTriggerable = false;
+	String precondition = "";
 }
 
 /** Main annotation is used by GEMOC to tag aspect methods to be the main entry point of a sequential model execution */
@@ -413,197 +414,229 @@ public class AspectProcessor extends AbstractClassProcessor {
 			return sb.toString
 		}
 
-		private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-			String parameters, boolean isStep, String className) {
-			val hasReturn = hasReturnType(declaration, cxt)
-			val resultVar = "result"
-						
-			var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
-			
-			if (isStep)
-				call = surroundWithStepCommandExecution(className, declaration.simpleName , call, hasReturn, resultVar)
-			else if (hasReturn)
-				call = '''«resultVar» = «call»'''
-			
-			return call + ";"
-		}
-
-		private def getReturnInstruction(MutableMethodDeclaration declaration, extension TransformationContext cxt) {
-			var ret = ""
-			if (hasReturnType(declaration, cxt)) {
-					if (! declaration.returnType.inferred) {
-						ret = "return (" + declaration.returnType.name + ")result;"
-					} else {
-						cxt.addError(declaration,
-							"Cannot infer return type. Please specify the return type of this method.")
-						// TODO DVK. I think we can relax this restriction in this case by changing the generated code in order to directly assign the private method to the result without using an intermediate variable 
-						// not inferred, so cannot call its name there
-						ret = "return result;"
-					}
-			} else {
-				ret = ""
-			}
-			return ret
-		}
+	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
+		String parameters, boolean isStep, String className) {
+		val hasReturn = hasReturnType(declaration, cxt)
+		val resultVar = "result"
+					
+		var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
 		
-		private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar) {
-			return '''
-				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
-					@Override
-					public void execute() {
-						«IF hasReturn»
-						addToResult(«code»);
-						«ELSE»
-						«code»;
-						«ENDIF»
-					}
-				};
-				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
-				if (stepManager != null) {
-					stepManager.executeStep(_self,command,"«className»","«methodName»");
+		if (isStep)
+			call = surroundWithStepCommandExecution(className, declaration.simpleName , call, hasReturn, resultVar)
+		else if (hasReturn)
+			call = '''«resultVar» = «call»'''
+		
+		return call + ";"
+	}
+
+	private def getReturnInstruction(MutableMethodDeclaration declaration, extension TransformationContext cxt) {
+		var ret = ""
+		if (hasReturnType(declaration, cxt)) {
+				if (! declaration.returnType.inferred) {
+					ret = "return (" + declaration.returnType.name + ")result;"
 				} else {
-					fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IEventManager eventManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.EventManagerRegistry.getInstance().findEventManager(_self);
-					if (eventManager != null) {
-						eventManager.manageEvents();
-					}
-					command.execute();
+					cxt.addError(declaration,
+						"Cannot infer return type. Please specify the return type of this method.")
+					// TODO DVK. I think we can relax this restriction in this case by changing the generated code in order to directly assign the private method to the result without using an intermediate variable 
+					// not inferred, so cannot call its name there
+					ret = "return result;"
 				}
-				«IF hasReturn»
-				«resultVar» = command.getResult();
-				«ENDIF»
-				'''
+		} else {
+			ret = ""
+		}
+		return ret
+	}
+
+	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar) {
+		return '''
+			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
+				@Override
+				public void execute() {
+					«IF hasReturn»
+					addToResult(«code»);
+					«ELSE»
+					«code»;
+					«ENDIF»
+				}
+			};
+			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
+			if (stepManager != null) {
+				stepManager.executeStep(_self,command,"«className»","«methodName»");
+			} else {
+				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IEventManager eventManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.EventManagerRegistry.getInstance().findEventManager();
+				if (eventManager != null) {
+					eventManager.manageEvents();
+				}
+				command.execute();
+			}
+			«IF hasReturn»
+			«resultVar» = command.getResult();
+			«ENDIF»
+		'''
+	}
+		
+	private def CharSequence getBody(MutableClassDeclaration clazz, String className,
+		String call, String returnStatement) {
+
+		return '''
+		final «clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
+		«IF returnStatement.contains("return")»
+			Object result = null;
+		«ENDIF»
+		«call.toString»;
+		«returnStatement»'''
+	}
+
+	/**
+	 * In the case of multi-inheritance, operations of the aspects that cannot be classically extended must be added
+	 * to the class.
+	 */
+	private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz, String identifier,
+		extension TransformationContext cxt) {
+		val superClasses = Helper::getAnnotationWithType(clazz).filter[cl|cl != clazz.extendedClass].map [cl |
+			cxt.findClass(cl.name)
+		].filterNull
+		val Set<MutableClassDeclaration> scs = newHashSet
+		superClasses.forEach[sc|Helper::getSuperClasses(sc, scs, cxt)]
+
+		scs.forEach [ sc |
+			// Only non-private methods which does not already exist in the aspect class are considered.
+			sc.declaredMethods.filter [dm |
+				dm.visibility != Visibility::PRIVATE && !dm.simpleName.startsWith(PRIV_PREFIX) &&
+					!clazz.declaredMethods.exists[dm2|Helper::isSamePrototype(dm, dm2, true)]
+			].forEach [ dm |
+				// Adding a new proxy method in the aspect class.
+				val me = clazz.addMethod(dm.simpleName) [
+					primarySourceElement = dm
+					visibility = dm.visibility
+					static = true
+					final = false
+					abstract = false
+					returnType = dm.returnType
+					addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
+					dm.parameters.drop(1).forEach[par|addParameter(par.simpleName, par.type)]
+				]
+
+				// This new method must be transformed like the other ones.
+				methodProcessingAddSelfStatic(me, identifier, cxt)
+				// The proxy consists of calling the corresponding operation in the targeted aspect class.
+				val params = me.parameters.map[simpleName].join(',')
+				me.body = [
+					'''«IF me.returnType === null || me.returnType.simpleName == 'void'»«ELSE»return «ENDIF»«sc.simpleName».«dm.simpleName»(«params»);'''
+				]
+			]
+
+			sc.declaredFields.filter[simpleName != PROP_VAR_NAME].forEach [ fi |
+				val clName = fi.declaringType.simpleName
+
+				clazz.addMethod(fi.simpleName) [
+					primarySourceElement = fi
+					static = true
+					returnType = fi.type
+					addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
+					body = ['''return «clName».«fi.simpleName»(«SELF_VAR_NAME»);''']
+				]
+
+				if (!fi.final)
+					clazz.addMethod(fi.simpleName) [
+						primarySourceElement = fi
+						static = true
+						returnType = cxt.newTypeReference("void")
+						addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
+						addParameter(fi.simpleName, fi.type)
+						body = ['''«clName».«fi.simpleName»(«SELF_VAR_NAME», «fi.simpleName»);''']
+					]
+			]
+		]
+	}
+
+	private def methodsProcessing(MutableClassDeclaration clazz, TransformationContext cxt, String identifier,
+		Map<MutableMethodDeclaration, String> bodies,
+		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
+		String aspectizedClassName) {
+		
+		for (m : clazz.declaredMethods) {
+			
+			if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
+				
+				m.removeAnnotation(m.annotations.findFirst[an | an.annotationTypeDeclaration.qualifiedName=="java.lang.Override"])
+				
+				methodProcessingAddSelfStatic(m, identifier, cxt)
+				methodProcessingAddSuper(m, clazz, aspectizedClassName, cxt)
+				methodProcessingAddHidden(m, identifier, cxt)
+				methodProcessingAddPriv(m, clazz, aspectizedClassName, bodies, cxt)
+				methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, aspectizedClassName)
+			} else
+				cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 		}
 		
+		methodProcessingCheckPreconditions(clazz, cxt)
 		
+		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
+	}
 
-
-			private def CharSequence getBody(MutableClassDeclaration clazz, String className,
-				String call, String returnStatement) {
-
-				return '''
-				final «clazz.qualifiedName + className + PROP_NAME» «PROP_VAR_NAME» = «clazz.qualifiedName + className + CTX_NAME».getSelf(«SELF_VAR_NAME»);
-				«IF returnStatement.contains("return")»
-					Object result = null;
-				«ENDIF»
-				«call.toString»;
-				«returnStatement»'''
-			}
-
-			/**
-			 * In the case of multi-inheritance, operations of the aspects that cannot be classically extended must be added
-			 * to the class.
-			 */
-			private def methodProcessingAddMultiInheritMeth(MutableClassDeclaration clazz, String identifier,
-				extension TransformationContext cxt) {
-				val superClasses = Helper::getAnnotationWithType(clazz).filter[cl|cl != clazz.extendedClass].map [cl |
-					cxt.findClass(cl.name)
-				].filterNull
-				val Set<MutableClassDeclaration> scs = newHashSet
-				superClasses.forEach[sc|Helper::getSuperClasses(sc, scs, cxt)]
-
-				scs.forEach [ sc |
-					// Only non-private methods which does not already exist in the aspect class are considered.
-					sc.declaredMethods.filter [dm |
-						dm.visibility != Visibility::PRIVATE && !dm.simpleName.startsWith(PRIV_PREFIX) &&
-							!clazz.declaredMethods.exists[dm2|Helper::isSamePrototype(dm, dm2, true)]
-					].forEach [ dm |
-						// Adding a new proxy method in the aspect class.
-						val me = clazz.addMethod(dm.simpleName) [
-							primarySourceElement = dm
-							visibility = dm.visibility
-							static = true
-							final = false
-							abstract = false
-							returnType = dm.returnType
-							addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
-							dm.parameters.drop(1).forEach[par|addParameter(par.simpleName, par.type)]
-						]
-
-						// This new method must be transformed like the other ones.
-						methodProcessingAddSelfStatic(me, identifier, cxt)
-						// The proxy consists of calling the corresponding operation in the targeted aspect class.
-						val params = me.parameters.map[simpleName].join(',')
-						me.body = [
-							'''«IF me.returnType === null || me.returnType.simpleName == 'void'»«ELSE»return «ENDIF»«sc.simpleName».«dm.simpleName»(«params»);'''
-						]
-					]
-
-					sc.declaredFields.filter[simpleName != PROP_VAR_NAME].forEach [ fi |
-						val clName = fi.declaringType.simpleName
-
-						clazz.addMethod(fi.simpleName) [
-							primarySourceElement = fi
-							static = true
-							returnType = fi.type
-							addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
-							body = ['''return «clName».«fi.simpleName»(«SELF_VAR_NAME»);''']
-						]
-
-						if (!fi.final)
-							clazz.addMethod(fi.simpleName) [
-								primarySourceElement = fi
-								static = true
-								returnType = cxt.newTypeReference("void")
-								addParameter(SELF_VAR_NAME, cxt.newTypeReference(identifier))
-								addParameter(fi.simpleName, fi.type)
-								body = ['''«clName».«fi.simpleName»(«SELF_VAR_NAME», «fi.simpleName»);''']
-							]
-					]
+	private def methodProcessingCheckPreconditions(MutableClassDeclaration clazz, extension TransformationContext cxt) {
+		val steps = clazz.declaredMethods.filter[
+			annotations.exists[
+				annotationTypeDeclaration.simpleName == STEP
+			]
+		]
+		val events = steps.filter[
+			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
+					.getBooleanValue("eventTriggerable")
+		].toList
+		val preconditionedSteps = steps.filter[
+			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
+					.getStringValue("precondition") != ""
+		].toList
+		val methodsInError = new ArrayList(preconditionedSteps)
+		methodsInError.removeAll(events)
+		methodsInError.forEach[m|m.addError("Cannot declare precondition on non-event step")]
+		preconditionedSteps.removeAll(methodsInError)
+		preconditionedSteps.forEach[m|
+			val preconditionName = m.annotations.findFirst[
+				annotationTypeDeclaration.simpleName == STEP
+			].getStringValue("precondition")
+			val preconditionMethods = clazz.declaredMethods.filter[p|p.simpleName == preconditionName]
+			if (preconditionMethods.size == 0) {
+				m.addError("Cannot find associated precondition method")
+			} else if (preconditionMethods.size > 1) {
+				preconditionMethods.forEach[p|
+					p.addError("Ambiguous precondition method name")
 				]
 			}
+		]
+	}
 
-			private def methodsProcessing(MutableClassDeclaration clazz, TransformationContext cxt, String identifier,
-				Map<MutableMethodDeclaration, String> bodies,
-				Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
-				String aspectizedClassName) {
-				
-				for (m : clazz.declaredMethods) {
-					
-					if (checkAnnotationprocessorCorrect(m, clazz, cxt)) {
-						
-						m.removeAnnotation(m.annotations.findFirst[an | an.annotationTypeDeclaration.qualifiedName=="java.lang.Override"])
-						
-						methodProcessingAddSelfStatic(m, identifier, cxt)
-						methodProcessingAddSuper(m, clazz, aspectizedClassName, cxt)
-						methodProcessingAddHidden(m, identifier, cxt)
-						methodProcessingAddPriv(m, clazz, aspectizedClassName, bodies, cxt)
-						methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, aspectizedClassName)
-					} else
-						cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
-				}
+	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
+	 * checks that a super method exists in its hierarchy. */
+	private def boolean checkAnnotationprocessorCorrect(MutableMethodDeclaration m,
+		MutableClassDeclaration clazz, TransformationContext cxt) {
+		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]) {
+			return true
+		}
+		val supers = Helper::getDirectSuperClasses(clazz, cxt)
+		if (supers.empty) {
+			cxt.addError(clazz, "passe par la")
+			return false
+		}
 
-				methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
+		return supers.exists[superCl|Helper::findMethod(superCl, m, cxt) !== null]
+	}
+
+	private def constructorsProcessing(MutableClassDeclaration clazz, TransformationContext cxt,
+		String identifier, Map<MutableMethodDeclaration, String> bodies,
+		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
+		String className) {
+
+		for (c : clazz.declaredConstructors) {
+			if (c.body != null) {
+				cxt.addError(c,
+					"Constructors not supported in aspect. Please consider using the @AspectInitializer annotation instead."
+				)
 			}
-
-			/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
-			 * checks that a super method exists in its hierarchy. */
-			private def boolean checkAnnotationprocessorCorrect(MutableMethodDeclaration m,
-				MutableClassDeclaration clazz, TransformationContext cxt) {
-				if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]) {
-					return true
-				}
-				val supers = Helper::getDirectSuperClasses(clazz, cxt)
-				if (supers.empty) {
-					cxt.addError(clazz, "passe par la")
-					return false
-				}
-
-				return supers.exists[superCl|Helper::findMethod(superCl, m, cxt) !== null]
-			}
-
-			private def constructorsProcessing(MutableClassDeclaration clazz, TransformationContext cxt,
-				String identifier, Map<MutableMethodDeclaration, String> bodies,
-				Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
-				String className) {
-
-				for (c : clazz.declaredConstructors) {
-					if (c.body != null) {
-						cxt.addError(c,
-							"Constructors not supported in aspect. Please consider using the @AspectInitializer annotation instead."
-						)
-					}
-				}
-			}
+		}
+	}
 
 			/**
 			 * Create the class which link classes with their aspects
@@ -665,40 +698,40 @@ public class AspectProcessor extends AbstractClassProcessor {
 				]
 			}
 
-			/** Move non static fields */
-			private def fieldProcessingMoveField(MutableClassDeclaration clazz, List<MutableFieldDeclaration> toRemove,
-				List<MutableFieldDeclaration> propertyAspect, String className,
-				extension TransformationContext context) {
-					val c = findClass(clazz.qualifiedName + className + PROP_NAME)
-					if (c === null)
-						addError(clazz,
-							"Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects."
-						)
-					else {
-						for (f : clazz.declaredFields) {
-							if (!f.static) {
-								if (f.simpleName != PROP_VAR_NAME) {
-									toRemove.add(f)
+	/** Move non static fields */
+	private def fieldProcessingMoveField(MutableClassDeclaration clazz, List<MutableFieldDeclaration> toRemove,
+		List<MutableFieldDeclaration> propertyAspect, String className,
+		extension TransformationContext context) {
+			val c = findClass(clazz.qualifiedName + className + PROP_NAME)
+			if (c === null)
+				addError(clazz,
+					"Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects."
+				)
+			else {
+				for (f : clazz.declaredFields) {
+					if (!f.static) {
+						if (f.simpleName != PROP_VAR_NAME) {
+							toRemove.add(f)
 
-									if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
-										propertyAspect.add(f)
+							if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
+								propertyAspect.add(f)
 
-									c.addField(f.simpleName) [
-										visibility = Visibility::PUBLIC
-										static = f.static
-										final = f.final
-										type = f.type
-										if(f.initializer !== null) initializer = f.initializer
-										primarySourceElement = f
-									]
-								} else {
-									f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
-									f.static = true
-								}
-							}
+							c.addField(f.simpleName) [
+								visibility = Visibility::PUBLIC
+								static = f.static
+								final = f.final
+								type = f.type
+								if(f.initializer !== null) initializer = f.initializer
+								primarySourceElement = f
+							]
+						} else {
+							f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
+							f.static = true
 						}
 					}
 				}
+			}
+		}
 
 				private def void fieldProcessingAddField(MutableClassDeclaration clazz, String className,
 					extension TransformationContext context) {
