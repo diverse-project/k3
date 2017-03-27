@@ -772,6 +772,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 											Object ret = m.invoke(_self);
 											if (ret != null) {
 												return («f.type.type.qualifiedName») ret;
+											} else {
+												return null;
 											}
 									}
 								}
@@ -789,6 +791,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 									if (m.getName().equals("set«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»")
 											&& m.getParameterTypes().length == 1) {
 										m.invoke(_self, «f.simpleName»);
+										setterCalled = true;
 									}
 								}
 							} catch (Exception e) {
@@ -806,8 +809,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 								f.annotations.forEach[ann | addAnnotation(ann)]
 							]
 
-							bodies.put(
-								set, '''«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»; «gemocHackSetter» ''')
+							bodies.put(set, '''
+								boolean setterCalled = false;
+								«gemocHackSetter»
+								if (!setterCalled) {
+									«PROP_VAR_NAME».«f.simpleName» = «f.simpleName»;
+								}
+								''')
 						}
 					}
 				}
