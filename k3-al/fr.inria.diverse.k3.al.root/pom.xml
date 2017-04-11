@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.7.3</xtend.version>
+		<xtend.version>2.10.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>1.8</java.version>
 		<k3.version>3.2.1-SNAPSHOT</k3.version>
