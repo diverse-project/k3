@@ -20,10 +20,10 @@
 
 
 	<properties>
-		<tycho.version>0.21.0</tycho.version>
-		<tycho-extras.version>0.21.0</tycho-extras.version>
+		<tycho.version>0.26.0</tycho.version>
+		<tycho-extras.version>0.26.0</tycho-extras.version>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<kepler-repo.url>http://download.eclipse.org/releases/kepler/</kepler-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/neon/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<xtend.version>2.10.0</xtend.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->		
@@ -44,12 +44,13 @@
 		
 		<!-- Update site Repo for thirdparty Dependencies -->
         <repository>
-            <id>Mars release</id>
+            <id>Eclipse release</id>
             <layout>p2</layout>
-            <url>http://download.eclipse.org/releases/mars/201602261000</url>
+            <url>${eclipse-repo.url}</url>
         </repository>
 		
-		<repository>
+		<!-- uncomment these if you which to compile using the latest version of emf and xtext if they are not part of the current eclipse release -->
+		<!--  <repository>
                 <id>emf-releases</id>
                 <layout>p2</layout>
                 <url>http://download.eclipse.org/modeling/emf/emf/updates/releases/</url>
@@ -59,7 +60,7 @@
                 <id>xtext</id>
                 <layout>p2</layout>
                 <url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
-		</repository>
+		</repository> -->
 		
 		<repository>
                 <id>diverse-commons</id>
@@ -83,7 +84,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>kepler</id>
-			<url>${kepler-repo.url}</url>
+			<url>${eclipse-repo.url}</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -182,10 +183,7 @@
 					</environments>
 				</configuration>
 			</plugin>
-			
-			<!-- <plugin> <groupId>org.eclipse.tycho</groupId> <artifactId>tycho-source-plugin</artifactId> 
-				<executions> <execution> <id>plugin-source</id> <goals> <goal>plugin-source</goal> 
-				</goals> </execution> </executions> </plugin> -->
+
 		</plugins>
 
 		<pluginManagement>
