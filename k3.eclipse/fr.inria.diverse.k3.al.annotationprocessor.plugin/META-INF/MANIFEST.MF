@@ -8,7 +8,7 @@ Bundle-Vendor: Inria DiverSE
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtend.lib;bundle-version="2.10.0";visibility:=reexport,
  org.eclipse.emf.ecore;bundle-version="2.7.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: fr.inria.diverse.k3.al.annotationprocessor,
