@@ -14,14 +14,6 @@
 	<build>
 		
 		<plugins>
-			<plugin>
-				<groupId>org.eclipse.xtend</groupId>
-			  	<artifactId>xtend-maven-plugin</artifactId>  				
-			  	<configuration>
-			    	<!-- need to prefix by basedir to generate to currently built module -->
-			    	<outputDirectory>${basedir}/xtend-gen</outputDirectory>
-				</configuration>
-			</plugin>
 			
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
