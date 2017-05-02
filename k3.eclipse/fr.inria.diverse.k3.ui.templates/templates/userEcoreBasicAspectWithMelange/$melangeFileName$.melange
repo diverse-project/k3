@@ -1,12 +1,13 @@
 package $packageName$
 
-import static extension fr.inria.diverse.melange.lib.MetamodelExtensions.*
 
-metamodel $metamodelName$ {
-	ecore "platform:/resource/$ecoreFilePath$"
-	exactType $metamodelName$MT
+external language $metamodelName$ {
+	syntax "platform:/resource/$ecoreFilePath$"
 }
-
+// note: the language is "external" because the k3 aspect and melange are in the same project
+// the k3 should not modify the ecore signature and only implement the operations
+// if the k3 modifies the ecore signature, the melange and k3 files should be in separate projects 
+// and the language will no longer be external.
 
 transformation execute($metamodelName$MT mymodel) {
 	val root = mymodel.contents.head as $metamodelName$
@@ -17,7 +18,7 @@ transformation execute($metamodelName$MT mymodel) {
 
 @Main
 transformation main() {
-	val m1 = $metamodelName$.load("input/Simple.xmi",      $metamodelName$MT)
+	val m1 = $metamodelName$.load("input/Simple.xmi").to$metamodelName$MT
 	
 	execute.call(m1)
 }
