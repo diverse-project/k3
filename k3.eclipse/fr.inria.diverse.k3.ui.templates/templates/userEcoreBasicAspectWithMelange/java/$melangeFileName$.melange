@@ -18,7 +18,8 @@ transformation execute($metamodelName$MT mymodel) {
 
 @Main
 transformation main() {
-	val m1 = $metamodelName$.load("input/Simple.xmi").to$metamodelName$MT
+	val m1 = $metamodelName$.load("input/Simple.xmi") // .to$metamodelName$MT
+		// conversion to model type not required because in external languages, MT ecore is equal to the language ecore
 	
 	execute.call(m1)
 }

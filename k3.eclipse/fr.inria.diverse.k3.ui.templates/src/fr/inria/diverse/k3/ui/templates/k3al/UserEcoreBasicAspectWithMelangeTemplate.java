@@ -14,13 +14,17 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.osgi.framework.BundleException;
 
+import fr.inria.diverse.commons.eclipse.pde.classpath.ClasspathHelper;
 import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
+import fr.inria.diverse.commons.eclipse.resources.IFolderUtils;
 import fr.inria.diverse.k3.ui.templates.Activator;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
@@ -98,6 +102,10 @@ public class UserEcoreBasicAspectWithMelangeTemplate extends UserEcoreBasicAspec
 				manifestChanger.addPluginDependency(_data.ecoreIFile.getProject().getName(), "0.0.0", false, true);
 				manifestChanger.addPluginDependency("fr.inria.diverse.melange.lib", "0.0.0", false, true);
 				manifestChanger.commit();
+				
+				IFolderUtils.createFolder("src-gen", project, monitor);
+				IJavaProject javaProject = (IJavaProject)project.getNature(JavaCore.NATURE_ID);
+				ClasspathHelper.addEntry(project, JavaCore.newSourceEntry(javaProject.getPackageFragmentRoot(project.getFolder("src-gen")).getPath()), monitor);
 			} catch (IOException | BundleException e) {
 				Activator.logErrorMessage(e.getMessage(), e);
 			}
