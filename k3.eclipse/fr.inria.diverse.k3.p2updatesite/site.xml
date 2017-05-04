@@ -3,7 +3,7 @@
    <feature url="features/fr.inria.diverse.k3.feature_3.2.1.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.2.1.qualifier">
       <category name="k3"/>
    </feature>
-   <feature url="features/fr.inria.diverse.commons.eclipse.feature_1.0.0.qualifier.jar" id="fr.inria.diverse.commons.eclipse.feature" version="1.0.0.qualifier">
+   <feature url="features/fr.inria.diverse.commons.eclipse.feature_1.0.2.qualifier.jar" id="fr.inria.diverse.commons.eclipse.feature" version="1.0.2.qualifier">
       <category name="diverse_commons"/>
    </feature>
    <feature url="features/org.eclipse.emf.ecoretools.registration.feature_0.1.2.qualifier.jar" id="org.eclipse.emf.ecoretools.registration.feature" version="0.1.2.qualifier">
