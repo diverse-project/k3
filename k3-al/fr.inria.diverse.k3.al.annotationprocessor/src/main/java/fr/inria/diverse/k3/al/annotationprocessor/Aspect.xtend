@@ -52,6 +52,8 @@ public annotation SynchroField {
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Step{
 	boolean eventTriggerable = false;
+	boolean outputEvent = false;
+	boolean waitForEvents = false;
 	String precondition = "";
 }
 
@@ -339,6 +341,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
+		val boolean isOutput = isStep && m.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("outputEvent")
 		val ret = getReturnInstruction(m, cxt)
 		val call = new StringBuilder
 
@@ -360,11 +363,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 //								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
 //						i=i+1
 //					}
-			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, className)
+			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, isOutput, className)
 			call.append(ifst).
 				append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		} else {
-			val instruction = transformNormalStatement(m, cxt, s,isStep, className)
+			val instruction = transformNormalStatement(m, cxt, s,isStep, isOutput, className)
 			call.append(instruction) // for getters & setters
 		}
 		m.abstract = false
@@ -380,7 +383,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt,
-		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, String className) {
+		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, boolean isOutput, String className) {
 			val hasReturn = returnStatement.contains("return")
 			val resultVar = "result"
 			val StringBuilder sb = new StringBuilder
@@ -393,11 +396,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 					call = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parameters.replaceFirst(SELF_VAR_NAME,
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
 				
-					if (isStep) 
-						call = surroundWithStepCommandExecution(className, m.simpleName , call, hasReturn, resultVar)
-					 else if (hasReturn) 
+				if (isStep) {
+					val waitForEvents = m.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("waitForEvents")
+					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, waitForEvents, isOutput)
+				} else if (hasReturn) 
 						call = '''«resultVar» = «call»'''
-						
 				} else {
 					
 					// if the method is local, otherwise call the public helper for this type (this ensures that the correct XXXAspectProperties will be set
@@ -415,14 +418,16 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 
 	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-		String parameters, boolean isStep, String className) {
+		String parameters, boolean isStep, boolean isOutput, String className) {
 		val hasReturn = hasReturnType(declaration, cxt)
 		val resultVar = "result"
 					
 		var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
 		
-		if (isStep)
-			call = surroundWithStepCommandExecution(className, declaration.simpleName , call, hasReturn, resultVar)
+		if (isStep) {
+			val waitForEvents = declaration.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("waitForEvents")
+			call = surroundWithStepCommandExecution(className, declaration.simpleName, call, hasReturn, resultVar, waitForEvents, isOutput)
+		}
 		else if (hasReturn)
 			call = '''«resultVar» = «call»'''
 		
@@ -446,8 +451,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 		return ret
 	}
-
-	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar) {
+	
+	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar, boolean waitForEvents, boolean isOutput) {
 		return '''
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
 				@Override
@@ -461,10 +466,24 @@ public class AspectProcessor extends AbstractClassProcessor {
 			};
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
 			if (stepManager != null) {
-				stepManager.executeStep(_self,command,"«className»","«methodName»");
-			} else {
-				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IEventManager eventManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.EventManagerRegistry.getInstance().findEventManager();
+				«IF waitForEvents»
+				fr.inria.diverse.event.commons.model.IEventManager eventManager = fr.inria.diverse.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
 				if (eventManager != null) {
+					eventManager.waitForEvents();
+				}
+				«ENDIF»
+				«IF isOutput»
+				stepManager.executeStep(_self,command,"«className»","«methodName»", true);
+				«ELSE»
+				stepManager.executeStep(_self,command,"«className»","«methodName»");
+				«ENDIF»
+			} else {
+				fr.inria.diverse.event.commons.model.IEventManager eventManager = fr.inria.diverse.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
+				if (eventManager != null) {
+					«IF waitForEvents»
+					eventManager.waitForEvents();
+					«ENDIF»
+				
 					eventManager.manageEvents();
 				}
 				command.execute();
@@ -581,7 +600,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				annotationTypeDeclaration.simpleName == STEP
 			]
 		]
-		val events = steps.filter[
+		val inputEvents = steps.filter[
 			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
 					.getBooleanValue("eventTriggerable")
 		].toList
@@ -590,7 +609,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 					.getStringValue("precondition") != ""
 		].toList
 		val methodsInError = new ArrayList(preconditionedSteps)
-		methodsInError.removeAll(events)
+		methodsInError.removeAll(inputEvents)
 		methodsInError.forEach[m|m.addError("Cannot declare precondition on non-event step")]
 		preconditionedSteps.removeAll(methodsInError)
 		preconditionedSteps.forEach[m|
@@ -604,6 +623,23 @@ public class AspectProcessor extends AbstractClassProcessor {
 				preconditionMethods.forEach[p|
 					p.addError("Ambiguous precondition method name")
 				]
+			} else {
+				val precondition = preconditionMethods.head
+				val preconditionParameters = precondition.parameters
+				val eventParameters = m.parameters
+				if (preconditionParameters.size != eventParameters.size) {
+					precondition.addError("Precondition method parameters do not match event method parameters")
+				} else {
+					val preIt = preconditionParameters.iterator
+					val eventIt = eventParameters.iterator
+					var matching = true
+					while (matching && preIt.hasNext) {
+						matching = preIt.next.type.name == eventIt.next.type.name
+					}
+					if (!matching) {
+						precondition.addError("Precondition method parameters do not match event method parameters")
+					}
+				}
 			}
 		]
 	}
@@ -772,9 +808,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 											Object ret = m.invoke(_self);
 											if (ret != null) {
 												return («f.type.type.qualifiedName») ret;
-											} else {
+											}«IF !f.type.primitive» else {
 												return null;
 											}
+											«ENDIF»
 									}
 								}
 							} catch (Exception e) {
