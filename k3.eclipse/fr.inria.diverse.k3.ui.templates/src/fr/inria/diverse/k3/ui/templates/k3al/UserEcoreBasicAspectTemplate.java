@@ -87,11 +87,24 @@ public class UserEcoreBasicAspectTemplate extends K3TemplateSection {
 
 	protected void createOptions() {
 		//addOption(KEY_PACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_packageName, (String) null, 0);
-		addOption(KEY_ASPECTBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectBasePackageName, ASPECTBASEPACKAGE_NAME, 0).setRequired(false);
-		addOption(KEY_ASPECTPACKAGE_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectPackagePostfix, ASPECTPACKAGE_POSTFIX, 0).setRequired(false);
-		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, ASPECTFILE_NAME, 0);
-		addOption(KEY_ASPECTCLASS_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfix, ASPECTCLASS_POSTFIX, 0);
-		addOption(KEY_ECOREBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreBasePackageName, null, 0).setRequired(false);
+		addBlankField(0).setLabel(K3TemplateMessages.UserEcoreBasicAspectTemplate_desc_complement_part1);
+		addBlankField(0).setLabel(K3TemplateMessages.UserEcoreBasicAspectTemplate_desc_complement_part2);
+		addOption(KEY_ASPECTBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectBasePackageName,
+				K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectBasePackageNameToolTip,
+				ASPECTBASEPACKAGE_NAME, 0).setRequired(false);
+		addOption(KEY_ASPECTPACKAGE_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectPackagePostfix, 
+				K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectPackagePostfixToolTip,
+				ASPECTPACKAGE_POSTFIX, 0).setRequired(false);
+		addOption(KEY_ASPECTFILE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileName, 
+				K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectFileNameToolTip,
+				ASPECTFILE_NAME, 0);
+		addOption(KEY_ASPECTCLASS_POSTFIX, K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfix, 
+				K3TemplateMessages.UserEcoreBasicAspectTemplate_aspectClassPostfixToolTip, 
+				ASPECTCLASS_POSTFIX, 0);
+		addBlankField(0);
+		addOption(KEY_ECOREBASEPACKAGE_NAME, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreBasePackageName,
+				K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreBasePackageNameToolTip,
+				null, 0).setRequired(false);
 		//addOption(KEY_ECOREFILE_LOCATION, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFileLocation, (String) null, 0);
 		TemplateOption ecoreLocationOption  = new AbstractStringWithButtonOption(this, KEY_ECOREFILE_PATH, K3TemplateMessages.UserEcoreBasicAspectTemplate_ecoreFilePath) {
 			@Override

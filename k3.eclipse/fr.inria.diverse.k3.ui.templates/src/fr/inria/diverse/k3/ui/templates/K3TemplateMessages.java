@@ -41,13 +41,20 @@ public class K3TemplateMessages extends NLS {
 	// UserEcoreBasicAspect constants
 	public static String UserEcoreBasicAspectTemplate_packageName;
 	public static String UserEcoreBasicAspectTemplate_aspectBasePackageName;
+	public static String UserEcoreBasicAspectTemplate_aspectBasePackageNameToolTip;
 	public static String UserEcoreBasicAspectTemplate_aspectPackagePostfix;
+	public static String UserEcoreBasicAspectTemplate_aspectPackagePostfixToolTip;
 	public static String UserEcoreBasicAspectTemplate_aspectFileName;
+	public static String UserEcoreBasicAspectTemplate_aspectFileNameToolTip;
 	public static String UserEcoreBasicAspectTemplate_aspectClassPostfix;
+	public static String UserEcoreBasicAspectTemplate_aspectClassPostfixToolTip;
 	public static String UserEcoreBasicAspectTemplate_ecoreBasePackageName;
+	public static String UserEcoreBasicAspectTemplate_ecoreBasePackageNameToolTip;
 	public static String UserEcoreBasicAspectTemplate_ecoreFilePath;
 	public static String UserEcoreBasicAspectTemplate_title;
 	public static String UserEcoreBasicAspectTemplate_desc;
+	public static String UserEcoreBasicAspectTemplate_desc_complement_part1;
+	public static String UserEcoreBasicAspectTemplate_desc_complement_part2;
 	public static String UserEcoreBasicAspectTemplate_wtitle;
 	
 	// UserEcoreBasicAspectWithMelange constants
