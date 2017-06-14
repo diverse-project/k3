@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.osgi.framework.BundleException;
 
-import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
-import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerExportPackage;
-import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChangerPluginDependency;
+import org.gemoc.commons.eclipse.pde.manifest.ManifestChanger;
+import org.gemoc.commons.eclipse.pde.manifest.ManifestChangerExportPackage;
+import org.gemoc.commons.eclipse.pde.manifest.ManifestChangerPluginDependency;
 import fr.inria.diverse.k3.ui.Activator;
 
 

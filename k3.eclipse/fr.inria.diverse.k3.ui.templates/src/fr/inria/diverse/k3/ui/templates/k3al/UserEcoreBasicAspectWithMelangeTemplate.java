@@ -20,11 +20,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.osgi.framework.BundleException;
 
-import fr.inria.diverse.commons.eclipse.pde.classpath.ClasspathHelper;
-import fr.inria.diverse.commons.eclipse.pde.manifest.ManifestChanger;
-import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
-import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
-import fr.inria.diverse.commons.eclipse.resources.IFolderUtils;
+import org.gemoc.commons.eclipse.pde.classpath.ClasspathHelper;
+import org.gemoc.commons.eclipse.pde.manifest.ManifestChanger;
+import org.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
+import org.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
+import org.gemoc.commons.eclipse.core.resources.IFolderUtils;
 import fr.inria.diverse.k3.ui.templates.Activator;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;

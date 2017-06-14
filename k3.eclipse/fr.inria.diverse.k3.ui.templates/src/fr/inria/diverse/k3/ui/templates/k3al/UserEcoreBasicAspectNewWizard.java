@@ -12,9 +12,9 @@
 package fr.inria.diverse.k3.ui.templates.k3al;
 
 
-import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
-import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.ITemplateSection;
-import fr.inria.diverse.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
+import org.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
+import org.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.templates.ITemplateSection;
+import org.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.templates.NewProjectTemplateWizard;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
 
 public class UserEcoreBasicAspectNewWizard extends NewProjectTemplateWizard {
