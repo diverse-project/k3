@@ -13,7 +13,7 @@ package fr.inria.diverse.k3.ui.templates.k3al;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
-import org.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
+import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 import fr.inria.diverse.k3.ui.templates.IHelpContextIds;
 import fr.inria.diverse.k3.ui.templates.K3TemplateMessages;
 import fr.inria.diverse.k3.ui.templates.K3TemplateSection;
