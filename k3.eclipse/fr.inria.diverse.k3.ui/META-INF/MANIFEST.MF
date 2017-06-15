@@ -34,7 +34,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.equinox.bidi,
  org.eclipse.pde.ui;bundle-version="3.8.0";visibility:=reexport,
  org.eclipse.gemoc.commons.eclipse.pde;bundle-version="1.0.0";visibility:=reexport,
- org.gemoc.commons.eclipse;visibility:=reexport
+ org.eclipse.gemoc.commons.eclipse;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.core.resources,
