@@ -36,4 +36,17 @@
 			<url>http://maven.inria.fr/artifactory/public-release</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<!-- repository for pure maven artefacts -->
+		<pluginRepository>
+		     <id>mavenInriaSnapshot</id>
+		     <name>http://maven.inria.fr-snapshots</name>
+		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
+		     <id>mavenInriaRelease</id>
+		     <name>http://maven.inria.fr-releases</name>
+		     <url>http://maven.inria.fr/artifactory/public-release</url>
+		 </pluginRepository>
+	</pluginRepositories>
 </project> 
