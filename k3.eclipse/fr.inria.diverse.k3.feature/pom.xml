@@ -17,7 +17,7 @@
 		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
 		<groupId>fr.inria.diverse.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.2.2-SNAPSHOT</version>
 	</parent>
   <artifactId>fr.inria.diverse.k3.feature</artifactId>
   <packaging>eclipse-feature</packaging>

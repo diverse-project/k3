@@ -11,7 +11,7 @@
  -->
 
 <site>
-   <feature url="features/fr.inria.diverse.k3.feature_3.2.1.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.2.1.qualifier">
+   <feature url="features/fr.inria.diverse.k3.feature_3.2.2.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.2.2.qualifier">
       <category name="k3"/>
    </feature>
    <category-def name="k3" label="Kermeta3"/>
