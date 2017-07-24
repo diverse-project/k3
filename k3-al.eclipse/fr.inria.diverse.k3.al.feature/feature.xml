@@ -2,7 +2,7 @@
 <feature
       id="fr.inria.diverse.k3.al.feature"
       label="K3 AL feature"
-      version="3.2.1.qualifier"
+      version="3.2.2.qualifier"
       provider-name="Inria DiverSE">
 
    <description url="https://github.com/barais/k3/">

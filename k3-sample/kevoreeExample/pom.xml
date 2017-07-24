@@ -8,7 +8,7 @@
 	<name>Kevoree Example with K3</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.4.3</xtend.version>
+		<xtend.version>2.10.0</xtend.version>
 		<kevoree.version>2.0.0-SNAPSHOT</kevoree.version>
 		<xtendGenDirectory>src/main/generated-sources/xtend</xtendGenDirectory>
 	</properties>

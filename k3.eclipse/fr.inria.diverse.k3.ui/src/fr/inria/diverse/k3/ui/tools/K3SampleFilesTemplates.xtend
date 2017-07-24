@@ -307,7 +307,7 @@ transformation main() {
 	<name>«nameProject»</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.4.3-SNAPSHOT</xtend.version>
+		<xtend.version>2.10.0</xtend.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -367,7 +367,7 @@ transformation main() {
 	<name>«nameProject»</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.6.0</xtend.version>
+		<xtend.version>2.10.0</xtend.version>
 	</properties>
 	<build>
 		<plugins>

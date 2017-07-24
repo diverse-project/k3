@@ -1,4 +1,4 @@
-/* $Id: KermetaExampleWizard.java,v 1.2 2008-10-30 16:45:57 dvojtise Exp $
+/* $Id: KermetaExampleWizard.java,v 1.2 2008, 2014-10-30 16:45:57 dvojtise Exp $
  * Project    : fr.irisa.triskell.kermeta
  * File       : KermetaExampleWizard.java
  * License    : EPL

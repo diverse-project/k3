@@ -1,0 +1,25 @@
+package $packageName$
+
+
+external language $metamodelName$ {
+	syntax "platform:/resource/$ecoreFilePath$"
+}
+// note: the language is "external" because the k3 aspect and melange are in the same project
+// the k3 should not modify the ecore signature and only implement the operations
+// if the k3 modifies the ecore signature, the melange and k3 files should be in separate projects 
+// and the language will no longer be external.
+
+transformation execute($metamodelName$MT mymodel) {
+	val root = mymodel.contents.head as $metamodelName$
+
+	print("root: ")
+	println(root)
+}
+
+@Main
+transformation main() {
+	val m1 = $metamodelName$.load("input/Simple.xmi") // .to$metamodelName$MT
+		// conversion to model type not required because in external languages, MT ecore is equal to the language ecore
+	
+	execute.call(m1)
+}

@@ -16,3 +16,12 @@ Other folders contain pure maven projects.
 All root folders contains a *.root project that allows to build all the project in one maven command.
 
 The documentation is in the gh-pages branch.
+
+
+Development
+------------------------
+
+Continuous integration : https://ci.inria.fr/k3al/
+
+Current status: ![Current status](https://ci.inria.fr/k3al/buildStatus/icon?job=k3.eclipse)
+

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2017 Inria and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        Inria - initial API and implementation
+ -->
+
 <site>
-   <feature url="features/fr.inria.diverse.k3.feature_3.2.1.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.2.1.qualifier">
+   <feature url="features/fr.inria.diverse.k3.feature_3.2.2.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.2.2.qualifier">
       <category name="k3"/>
    </feature>
-   <feature url="features/fr.inria.diverse.commons.eclipse.feature_1.0.0.qualifier.jar" id="fr.inria.diverse.commons.eclipse.feature" version="1.0.0.qualifier">
-      <category name="diverse_commons"/>
-   </feature>
-   <feature url="features/org.eclipse.emf.ecoretools.registration.feature_0.1.2.qualifier.jar" id="org.eclipse.emf.ecoretools.registration.feature" version="0.1.2.qualifier">
-      <category name="diverse_commons"/>
-   </feature>
    <category-def name="k3" label="Kermeta3"/>
-   <category-def name="diverse_commons" label="DiverSE Commons"/>
 </site>

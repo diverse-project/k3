@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  	<xtend.version>2.4.3</xtend.version>
+  	<xtend.version>2.10.0</xtend.version>
   </properties>
   
   <dependencies>

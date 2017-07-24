@@ -1,13 +1,13 @@
-/* $Id: AbstractExampleWizard.java,v 1.3 2008-08-07 09:39:21 dvojtise Exp $
- * Project    : org.kermeta.kmlogo.tutorial
- * File       : AbstractExampleWizard.java
- * License    : EPL
- * Copyright  : IRISA / INRIA
- * -------------------------------------------------------------------
- * Creation date : May 29, 2006
- * Authors : 
- *    Cyril Faucher
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2017 Inria and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Inria - initial API and implementation
+ *******************************************************************************/
 package fr.inria.diverse.k3.sample.deployer.wizards;
 
 import java.io.File;

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.inria.diverse.k3.al</groupId>
 	<artifactId>fr.inria.diverse.k3.al.eclipse.root</artifactId>
-	<version>3.2.1-SNAPSHOT</version>
+	<version>3.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>../fr.inria.diverse.k3.al.annotationprocessor.plugin</module>
@@ -18,7 +18,7 @@
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler/</kepler-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
-		<xtend.version>2.7.3</xtend.version>
+		<xtend.version>2.10.0</xtend.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->
 	</properties>
 
@@ -75,7 +75,17 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-
+		<!-- repository for pure maven artefacts -->
+		<pluginRepository>
+		     <id>mavenInriaSnapshot</id>
+		     <name>http://maven.inria.fr-snapshots</name>
+		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
+		     <id>mavenInriaRelease</id>
+		     <name>http://maven.inria.fr-releases</name>
+		     <url>http://maven.inria.fr/artifactory/public-release</url>
+		 </pluginRepository>
 	</pluginRepositories>
 
 	<build>

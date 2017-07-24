@@ -13,13 +13,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/luna/</eclipse-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/neon/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.7.3</xtend.version>
+		<xtend.version>2.10.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>1.7</java.version>
-		<k3.version>3.2.0-SNAPSHOT</k3.version>
+		<k3.version>3.2.1-SNAPSHOT</k3.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
@@ -121,6 +121,17 @@
 			<url>${xtend-repo.url}</url>
 			<layout>p2</layout>
 		</repository>
+		<!-- repository for pure maven artefacts -->
+		<repository>
+		     <id>mavenInriaSnapshot</id>
+		     <name>http://maven.inria.fr-snapshots</name>
+		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
+		 </repository>
+		<repository>
+		     <id>mavenInriaRelease</id>
+		     <name>http://maven.inria.fr-releases</name>
+		     <url>http://maven.inria.fr/artifactory/public-release</url>
+		 </repository>
 	</repositories>
 	
 	<distributionManagement>
