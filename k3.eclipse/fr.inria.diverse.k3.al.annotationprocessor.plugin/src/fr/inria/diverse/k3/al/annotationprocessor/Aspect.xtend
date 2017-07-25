@@ -477,7 +477,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
 			if (stepManager != null) {
 				«IF waitForEvents»
-				fr.inria.diverse.event.commons.model.IEventManager eventManager = fr.inria.diverse.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
+				org.eclipse.gemoc.event.commons.model.IEventManager eventManager = org.eclipse.gemoc.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
 				if (eventManager != null) {
 					eventManager.waitForEvents();
 				}
@@ -488,7 +488,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				stepManager.executeStep(_self,command,"«className»","«methodName»");
 				«ENDIF»
 			} else {
-				fr.inria.diverse.event.commons.model.IEventManager eventManager = fr.inria.diverse.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
+				org.eclipse.gemoc.event.commons.model.IEventManager eventManager = org.eclipse.gemoc.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
 				if (eventManager != null) {
 					«IF waitForEvents»
 					eventManager.waitForEvents();
