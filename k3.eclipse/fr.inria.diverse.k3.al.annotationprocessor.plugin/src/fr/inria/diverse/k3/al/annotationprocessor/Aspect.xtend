@@ -61,8 +61,8 @@ public annotation SynchroField {
 /** Step annotation is used by GEMOC to produce StepCommands */
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Step{
-	boolean eventTriggerable = false;
-	boolean outputEvent = false;
+	boolean eventHandler = false;
+	boolean eventEmitter = false;
 	boolean waitForEvents = false;
 	String precondition = "";
 }
@@ -351,7 +351,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
 		val s = m.parameters.map[simpleName].join(',')
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
-		val boolean isOutput = isStep && m.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("outputEvent")
 		val ret = getReturnInstruction(m, cxt)
 		val call = new StringBuilder
 
@@ -373,11 +372,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 //								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
 //						i=i+1
 //					}
-			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, isOutput, className)
+			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, className)
 			call.append(ifst).
 				append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
 		} else {
-			val instruction = transformNormalStatement(m, cxt, s,isStep, isOutput, className)
+			val instruction = transformNormalStatement(m, cxt, s,isStep, className)
 			call.append(instruction) // for getters & setters
 		}
 		m.abstract = false
@@ -393,7 +392,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt,
-		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, boolean isOutput, String className) {
+		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, String className) {
 			val hasReturn = returnStatement.contains("return")
 			val resultVar = "result"
 			val StringBuilder sb = new StringBuilder
@@ -408,7 +407,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				
 				if (isStep) {
 					val waitForEvents = m.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("waitForEvents")
-					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, waitForEvents, isOutput)
+					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, waitForEvents)
 				} else if (hasReturn) 
 						call = '''«resultVar» = «call»'''
 				} else {
@@ -428,7 +427,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 
 	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-		String parameters, boolean isStep, boolean isOutput, String className) {
+		String parameters, boolean isStep, String className) {
 		val hasReturn = hasReturnType(declaration, cxt)
 		val resultVar = "result"
 					
@@ -436,7 +435,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		
 		if (isStep) {
 			val waitForEvents = declaration.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("waitForEvents")
-			call = surroundWithStepCommandExecution(className, declaration.simpleName, call, hasReturn, resultVar, waitForEvents, isOutput)
+			call = surroundWithStepCommandExecution(className, declaration.simpleName, call, hasReturn, resultVar, waitForEvents)
 		}
 		else if (hasReturn)
 			call = '''«resultVar» = «call»'''
@@ -462,7 +461,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		return ret
 	}
 	
-	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar, boolean waitForEvents, boolean isOutput) {
+	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar, boolean waitForEvents) {
 		return '''
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
 				@Override
@@ -482,18 +481,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 					eventManager.waitForEvents();
 				}
 				«ENDIF»
-				«IF isOutput»
-				stepManager.executeStep(_self,command,"«className»","«methodName»", true);
-				«ELSE»
 				stepManager.executeStep(_self,command,"«className»","«methodName»");
-				«ENDIF»
 			} else {
 				org.eclipse.gemoc.event.commons.model.IEventManager eventManager = org.eclipse.gemoc.event.commons.model.EventManagerRegistry.getInstance().findEventManager();
 				if (eventManager != null) {
 					«IF waitForEvents»
 					eventManager.waitForEvents();
 					«ENDIF»
-				
 					eventManager.manageEvents();
 				}
 				command.execute();
@@ -610,16 +604,16 @@ public class AspectProcessor extends AbstractClassProcessor {
 				annotationTypeDeclaration.simpleName == STEP
 			]
 		]
-		val inputEvents = steps.filter[
+		val eventHandlers = steps.filter[
 			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
-					.getBooleanValue("eventTriggerable")
+					.getBooleanValue("eventHandler")
 		].toList
 		val preconditionedSteps = steps.filter[
 			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
 					.getStringValue("precondition") != ""
 		].toList
 		val methodsInError = new ArrayList(preconditionedSteps)
-		methodsInError.removeAll(inputEvents)
+		methodsInError.removeAll(eventHandlers)
 		methodsInError.forEach[m|m.addError("Cannot declare precondition on non-event step")]
 		preconditionedSteps.removeAll(methodsInError)
 		preconditionedSteps.forEach[m|
@@ -813,7 +807,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 						val gemocHackGetter = '''
 							try {
 								for (java.lang.reflect.Method m : _self.getClass().getMethods()) {
-									if (m.getName().equals("get«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»") &&
+									if (m.getName().equals("«IF f.type.simpleName == "boolean" || f.type.simpleName == "Boolean"»is«ELSE»get«ENDIF»«f.simpleName.substring(0,1).toUpperCase() + f.simpleName.substring(1)»") &&
 										m.getParameterTypes().length == 0) {
 											Object ret = m.invoke(_self);
 											if (ret != null) {
