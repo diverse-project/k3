@@ -11,13 +11,13 @@
         Inria - initial API and implementation
  -->
 <plugin>
-  <extension point="fr.inria.diverse.commons.eclipse.pde.templates">
+  <extension point="org.eclipse.gemoc.commons.eclipse.pde.templates">
     <template class="fr.inria.diverse.k3.ui.templates.k3al.MiniAspectSampleTemplate" contributingId="fr.inria.diverse.k3.ui.templates.template1" id="fr.inria.diverse.k3.ui.templates.mini_aspect_sample_template" name="Mini Aspect Sample"/>
     <template class="fr.inria.diverse.k3.ui.templates.k3al.MiniEcoreAspectSampleTemplate" contributingId="fr.inria.diverse.k3.ui.templates.template1" id="fr.inria.diverse.k3.ui.templates.mini_ecore_aspect_sample_template" name="Mini Ecore Aspect Sample"/>
     <template class="fr.inria.diverse.k3.ui.templates.k3al.UserEcoreBasicAspectTemplate" contributingId="fr.inria.diverse.k3.ui.templates.template1" id="fr.inria.diverse.k3.ui.templates.user_ecore_basic_aspects_template" name="User Ecore Basic Aspects"/>
     <template class="fr.inria.diverse.k3.ui.templates.k3al.UserEcoreBasicAspectWithMelangeTemplate" contributingId="fr.inria.diverse.k3.ui.templates.template1" id="fr.inria.diverse.k3.ui.templates.user_ecore_basic_aspects_with_melange_template" name="User Ecore Basic Aspects with Melange"/>
   </extension>
-  <extension point="fr.inria.diverse.commons.eclipse.pde.projectContent">
+  <extension point="org.eclipse.gemoc.commons.eclipse.pde.projectContent">
     <wizard class="fr.inria.diverse.k3.ui.templates.k3al.MiniAspectSampleNewWizard" id="fr.inria.diverse.k3.ui.templates.projectContent.MiniAspectSample" name="Mini Aspect Sample" targetPluginId="fr.inria.diverse.k3.ui">
       <description>
             This template will generate a sample aspect class on top of a standard java class (java.io.File) and  generate a main class using this aspect.
