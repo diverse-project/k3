@@ -81,7 +81,7 @@
 		<repository>
                 <id>gemoc-commons</id>
                 <layout>p2</layout>
-                <url>https://ci.inria.fr/gemoc/job/gemoc-studio_commons/lastSuccessfulBuild/artifact/commons/releng/org.eclipse.gemoc.commons.repository/target/repository/</url>
+                <url>https://ci.eclipse.org/gemoc/job/gemoc-studio/job/master/lastSuccessfulBuild/artifact/gemoc-studio/gemoc_studio/releng/org.eclipse.gemoc.gemoc_studio.updatesite/target/repository/</url>
 		</repository>
 
 		<!-- repository for pure maven artefacts -->
