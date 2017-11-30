@@ -346,10 +346,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		extension TransformationContext cxt, Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod,
 		List<String> inheritList, String className) {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
-		var s = ""//m.parameters.map[simpleName].join(',')
-		for (MutableParameterDeclaration p : m.parameters) {
-			s = s + p.simpleName
-		}
+		var s = m.parameters.map[simpleName].join(',')
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
 		val ret = getReturnInstruction(m, cxt)
 		val call = new StringBuilder
@@ -406,7 +403,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
 				
 				if (isStep) {
-					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, parameters.substring(parameters.indexOf(',')))
+					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, parameters.substring(parameters.indexOf(',') + 1))
 				} else if (hasReturn) 
 						call = '''«resultVar» = «call»'''
 				} else {
