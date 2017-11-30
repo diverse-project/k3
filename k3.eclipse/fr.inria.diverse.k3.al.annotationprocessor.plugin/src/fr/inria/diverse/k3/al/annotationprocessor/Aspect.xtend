@@ -61,10 +61,6 @@ public annotation SynchroField {
 /** Step annotation is used by GEMOC to produce StepCommands */
 @Retention(RetentionPolicy::RUNTIME)
 public annotation Step{
-	boolean eventHandler = false;
-	boolean eventEmitter = false;
-	boolean waitForEvents = false;
-	String precondition = "";
 }
 
 /** Main annotation is used by GEMOC to tag aspect methods to be the main entry point of a sequential model execution */
@@ -406,8 +402,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
 				
 				if (isStep) {
-					val waitForEvents = m.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("waitForEvents")
-					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, waitForEvents)
+					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, parameters.substring(parameters.indexOf(',')))
 				} else if (hasReturn) 
 						call = '''«resultVar» = «call»'''
 				} else {
@@ -434,8 +429,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
 		
 		if (isStep) {
-			val waitForEvents = declaration.annotations.findFirst[annotationTypeDeclaration.simpleName == STEP].getBooleanValue("waitForEvents")
-			call = surroundWithStepCommandExecution(className, declaration.simpleName, call, hasReturn, resultVar, waitForEvents)
+			call = surroundWithStepCommandExecution(className, declaration.simpleName, call, hasReturn, resultVar, parameters.substring(parameters.indexOf(',') + 1))
 		}
 		else if (hasReturn)
 			call = '''«resultVar» = «call»'''
@@ -461,7 +455,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		return ret
 	}
 	
-	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar, boolean waitForEvents) {
+	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar, String parameters) {
 		return '''
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
 				@Override
@@ -475,13 +469,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 			};
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
 			if (stepManager != null) {
-«««				«IF waitForEvents»
-«««				org.eclipse.gemoc.event.commons.interpreter.IEventInterpreter eventInterpreter = org.eclipse.gemoc.event.commons.interpreter.EventInterpreterRegistry.getInstance().findEventInterpreter();
-«««				if (eventInterpreter != null) {
-«««					eventInterpreter.waitForEvents();
-«««				}
-«««				«ENDIF»
-				stepManager.executeStep(_self,command,"«className»","«methodName»");
+				stepManager.executeStep(_self, new Object[] {«parameters»}, command, "«className»", "«methodName»");
 			} else {
 				command.execute();
 			}
@@ -586,60 +574,60 @@ public class AspectProcessor extends AbstractClassProcessor {
 				cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 		}
 		
-		methodProcessingCheckPreconditions(clazz, cxt)
+//		methodProcessingCheckPreconditions(clazz, cxt)
 		
 		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
 	}
 
-	private def methodProcessingCheckPreconditions(MutableClassDeclaration clazz, extension TransformationContext cxt) {
-		val steps = clazz.declaredMethods.filter[
-			annotations.exists[
-				annotationTypeDeclaration.simpleName == STEP
-			]
-		]
-		val eventHandlers = steps.filter[
-			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
-					.getBooleanValue("eventHandler")
-		].toList
-		val preconditionedSteps = steps.filter[
-			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
-					.getStringValue("precondition") != ""
-		].toList
-		val methodsInError = new ArrayList(preconditionedSteps)
-		methodsInError.removeAll(eventHandlers)
-		methodsInError.forEach[m|m.addError("Cannot declare precondition on non-event step")]
-		preconditionedSteps.removeAll(methodsInError)
-		preconditionedSteps.forEach[m|
-			val preconditionName = m.annotations.findFirst[
-				annotationTypeDeclaration.simpleName == STEP
-			].getStringValue("precondition")
-			val preconditionMethods = clazz.declaredMethods.filter[p|p.simpleName == preconditionName]
-			if (preconditionMethods.size == 0) {
-				m.addError("Cannot find associated precondition method")
-			} else if (preconditionMethods.size > 1) {
-				preconditionMethods.forEach[p|
-					p.addError("Ambiguous precondition method name")
-				]
-			} else {
-				val precondition = preconditionMethods.head
-				val preconditionParameters = precondition.parameters
-				val eventParameters = m.parameters
-				if (preconditionParameters.size != eventParameters.size) {
-					precondition.addError("Precondition method parameters do not match event method parameters")
-				} else {
-					val preIt = preconditionParameters.iterator
-					val eventIt = eventParameters.iterator
-					var matching = true
-					while (matching && preIt.hasNext) {
-						matching = preIt.next.type.name == eventIt.next.type.name
-					}
-					if (!matching) {
-						precondition.addError("Precondition method parameters do not match event method parameters")
-					}
-				}
-			}
-		]
-	}
+//	private def methodProcessingCheckPreconditions(MutableClassDeclaration clazz, extension TransformationContext cxt) {
+//		val steps = clazz.declaredMethods.filter[
+//			annotations.exists[
+//				annotationTypeDeclaration.simpleName == STEP
+//			]
+//		]
+//		val eventHandlers = steps.filter[
+//			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
+//					.getBooleanValue("eventHandler")
+//		].toList
+//		val preconditionedSteps = steps.filter[
+//			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
+//					.getStringValue("precondition") != ""
+//		].toList
+//		val methodsInError = new ArrayList(preconditionedSteps)
+//		methodsInError.removeAll(eventHandlers)
+//		methodsInError.forEach[m|m.addError("Cannot declare precondition on non-event step")]
+//		preconditionedSteps.removeAll(methodsInError)
+//		preconditionedSteps.forEach[m|
+//			val preconditionName = m.annotations.findFirst[
+//				annotationTypeDeclaration.simpleName == STEP
+//			].getStringValue("precondition")
+//			val preconditionMethods = clazz.declaredMethods.filter[p|p.simpleName == preconditionName]
+//			if (preconditionMethods.size == 0) {
+//				m.addError("Cannot find associated precondition method")
+//			} else if (preconditionMethods.size > 1) {
+//				preconditionMethods.forEach[p|
+//					p.addError("Ambiguous precondition method name")
+//				]
+//			} else {
+//				val precondition = preconditionMethods.head
+//				val preconditionParameters = precondition.parameters
+//				val eventParameters = m.parameters
+//				if (preconditionParameters.size != eventParameters.size) {
+//					precondition.addError("Precondition method parameters do not match event method parameters")
+//				} else {
+//					val preIt = preconditionParameters.iterator
+//					val eventIt = eventParameters.iterator
+//					var matching = true
+//					while (matching && preIt.hasNext) {
+//						matching = preIt.next.type.name == eventIt.next.type.name
+//					}
+//					if (!matching) {
+//						precondition.addError("Precondition method parameters do not match event method parameters")
+//					}
+//				}
+//			}
+//		]
+//	}
 
 	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
 	 * checks that a super method exists in its hierarchy. */
