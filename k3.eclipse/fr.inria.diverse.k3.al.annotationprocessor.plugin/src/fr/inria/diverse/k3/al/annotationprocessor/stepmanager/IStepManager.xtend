@@ -12,9 +12,7 @@
 
 interface IStepManager {
 
-	def void executeStep(Object caller, StepCommand command, String className, String methodName) {
-		executeStep(caller, #[], command, className, methodName)
-	}
+	def void executeStep(Object caller, StepCommand command, String className, String methodName)
 	
 	def void executeStep(Object caller, Object[] parameters, StepCommand command, String className, String methodName)
 
