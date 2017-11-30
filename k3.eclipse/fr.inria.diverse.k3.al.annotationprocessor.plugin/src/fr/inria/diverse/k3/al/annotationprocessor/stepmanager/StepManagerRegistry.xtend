@@ -24,18 +24,18 @@ class StepManagerRegistry {
 	}
 
 	public static def StepManagerRegistry getInstance() {
-		if(instance == null)
+		if(instance === null)
 			instance = new StepManagerRegistry()
 		return instance
 	}
 
 	public def void registerManager(IStepManager manager) {
-		if(manager != null)
+		if(manager !== null)
 			registeredManagers.add(manager)
 	}
 	
 	public def void unregisterManager(IStepManager manager) {
-		if(manager != null)
+		if(manager !== null)
 			registeredManagers.remove(manager)
 	}
 	
