@@ -131,7 +131,7 @@ class EPackageAspect {
 	}
 	
 	def public String getEPackageQualifiedName(Context context){
-		if(_self.ESuperPackage != null){
+		if(_self.ESuperPackage !== null){
 			return _self.ESuperPackage.getEPackageQualifiedName(context)+"."+_self.name
 		}
 		else {
@@ -177,7 +177,7 @@ class EClassAspect {
 		def public void generateAspect(Context context) {
 			
 			_self.writeOpenClass(context)
-			if(context.nameOperation != null) {
+			if(context.nameOperation !== null) {
 				_self.writeOperation(context)
 			}
 			_self.writeCloseClass(context)

@@ -34,6 +34,7 @@ import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
+import org.eclipse.xtend.lib.macro.declaration.MutableParameterDeclaration
 
 @Retention(RetentionPolicy::RUNTIME)
 @Active(typeof(AspectProcessor)) 
@@ -345,7 +346,10 @@ public class AspectProcessor extends AbstractClassProcessor {
 		extension TransformationContext cxt, Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod,
 		List<String> inheritList, String className) {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
-		val s = m.parameters.map[simpleName].join(',')
+		var s = ""//m.parameters.map[simpleName].join(',')
+		for (MutableParameterDeclaration p : m.parameters) {
+			s = s + p.simpleName
+		}
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
 		val ret = getReturnInstruction(m, cxt)
 		val call = new StringBuilder
