@@ -1,7 +1,7 @@
 package fr.inria.diverse.k3.al.annotationprocessor.stepmanager;
 
 public interface IStepManager {
-	
+
 	default void executeStep(Object caller, StepCommand command, String className, String methodName) {
 		executeStep(caller, new Object[] {}, command, className, methodName);
 	};
