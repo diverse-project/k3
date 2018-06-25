@@ -393,8 +393,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 					call = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parameters.replaceFirst(SELF_VAR_NAME,
 				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
 				
+					val List<String> paramList =  new ArrayList(parameters.split(","))
+					paramList.remove("_self")
+				
 					if (isStep) 
-						call = surroundWithStepCommandExecution(className, m.simpleName , call, hasReturn, resultVar)
+						call = surroundWithStepCommandExecution(className, m.simpleName , call, hasReturn, resultVar, paramList)
 					 else if (hasReturn) 
 						call = '''«resultVar» = «call»'''
 						
@@ -421,8 +424,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 					
 		var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
 		
+		val List<String> paramList = new ArrayList(parameters.split(","))
+		paramList.remove("_self")
+		
 		if (isStep)
-			call = surroundWithStepCommandExecution(className, declaration.simpleName , call, hasReturn, resultVar)
+			call = surroundWithStepCommandExecution(className, declaration.simpleName , call, hasReturn, resultVar, paramList)
 		else if (hasReturn)
 			call = '''«resultVar» = «call»'''
 		
@@ -447,7 +453,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		return ret
 	}
 
-	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar) {
+	private def String surroundWithStepCommandExecution(String className, String methodName, String code, boolean hasReturn, String resultVar, List<String> paramList) {
 		return '''
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand command = new fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepCommand() {
 				@Override
@@ -461,7 +467,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 			};
 			fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager stepManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.StepManagerRegistry.getInstance().findStepManager(_self);
 			if (stepManager != null) {
-				stepManager.executeStep(_self,command,"«className»","«methodName»");
+				java.util.List<Object> params = java.util.Arrays.asList(«paramList.join(',')»);
+				stepManager.executeStep(_self,command,"«className»","«methodName»", params);
 			} else {
 				fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IEventManager eventManager = fr.inria.diverse.k3.al.annotationprocessor.stepmanager.EventManagerRegistry.getInstance().findEventManager();
 				if (eventManager != null) {
