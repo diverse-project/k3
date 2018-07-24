@@ -166,8 +166,7 @@ public class SampleXMLFileAspect {
 <3> real getter code in the _privk3_ method
 <4> real setter code in the _privk3_ method
 
-[source,java]
-----
+```java
 public class SampleXMLFileAspectFileAspectContext {
   public final static SampleXMLFileAspectFileAspectContext INSTANCE = new SampleXMLFileAspectFileAspectContext();
   
@@ -176,11 +175,12 @@ public class SampleXMLFileAspectFileAspectContext {
     			INSTANCE.map.put(_self, new k3project.SampleXMLFileAspectFileAspectProperties());
     		return INSTANCE.map.get(_self);
   }
-  private Map<File, ModuleAspectFileAspectProperties> map = new java.util.WeakHashMap<java.io.File, k3project.ModuleAspectFileAspectProperties>();
+  private Map<File, ModuleAspectFileAspectProperties > map = 
+  	new java.util.WeakHashMap<java.io.File, k3project.ModuleAspectFileAspectProperties > ();
   
   public Map<File, ModuleAspectFileAspectProperties> getMap() {
     return map;
   }
   
 }
-----
+```
