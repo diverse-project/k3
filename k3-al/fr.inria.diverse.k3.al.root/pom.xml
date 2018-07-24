@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.10.0</xtend.version>
+		<xtend.version>2.14.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>1.8</java.version>
 		<k3.version>3.2.2-SNAPSHOT</k3.version>
@@ -49,4 +49,49 @@
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
 		 </pluginRepository>
 	</pluginRepositories>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.xtend</groupId>
+					<artifactId>xtend-maven-plugin</artifactId>
+					<version>${xtend.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<!-- <goal>testCompile</goal> -->
+								<goal>xtend-install-debug-info</goal>
+								<!-- <goal>xtend-test-install-debug-info</goal> -->
+							</goals>
+							<!-- optionnaly output dir matches default eclipse configuration -->
+							<configuration>
+								<outputDirectory>src/main/xtend-gen</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+					<!-- workaround  https://github.com/eclipse/xtext/issues/1231
+					may be removed when fixed later-->
+					<dependencies>
+						<dependency>
+							<groupId>org.eclipse.jdt</groupId>
+							<artifactId>org.eclipse.jdt.core</artifactId>
+							<version>3.12.2</version>
+						</dependency>
+						<dependency>
+							<groupId>org.eclipse.platform</groupId>
+							<artifactId>org.eclipse.core.runtime</artifactId>
+							<version>3.12.0</version>
+						</dependency>
+						<dependency>
+							<groupId>org.eclipse.platform</groupId>
+							<artifactId>org.eclipse.equinox.common</artifactId>
+							<version>3.8.0</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	
 </project> 
