@@ -4,7 +4,7 @@
 
 	<groupId>fr.inria.diverse.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.tools.plantuml.mavenplugin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>fr.inria.diverse.k3.tools.plantuml.mavenplugin</name>
@@ -13,15 +13,14 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/neon/</eclipse-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/photon/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.10.0</xtend.version>
+		<xtend.version>2.14.0</xtend.version>
 		<junit.version>4.11</junit.version>
-		<java.version>1.7</java.version>
-		<k3.version>3.2.1-SNAPSHOT</k3.version>
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
-		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
+		<java.version>1.8</java.version>
+		<k3.version>3.2.2-SNAPSHOT</k3.version>
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 	</properties>
 
@@ -41,6 +40,25 @@
 						</goals>
 					</execution>
 				</executions>
+				<!-- workaround  https://github.com/eclipse/xtext/issues/1231
+				may be removed when fixed later-->
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.jdt</groupId>
+						<artifactId>org.eclipse.jdt.core</artifactId>
+						<version>3.12.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.platform</groupId>
+						<artifactId>org.eclipse.core.runtime</artifactId>
+						<version>3.12.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.platform</groupId>
+						<artifactId>org.eclipse.equinox.common</artifactId>
+						<version>3.8.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -50,6 +68,16 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-plugin-plugin</artifactId>
+		        <version>3.5.2</version>
+		        <configuration>
+		          <mojoDependencies>
+		            <param>fr.inria.diverse.k3:fr.inria.diverse.k3.tools.plantuml.mavenplugin</param>
+		          </mojoDependencies>
+		        </configuration>
+		    </plugin>
 		</plugins>
 	</build>
 
@@ -91,13 +119,19 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.0.3</version>
+			<version>3.5.4</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
+	      <groupId>org.apache.maven.plugin-tools</groupId>
+	      <artifactId>maven-plugin-annotations</artifactId>
+	      <version>3.5.2</version>
+	      <scope>provided</scope>
+	    </dependency>
+		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-core</artifactId>
-			<version>3.0.3</version>
+			<version>3.5.4</version>
 		</dependency>
 		
 		<!-- test dependencies -->

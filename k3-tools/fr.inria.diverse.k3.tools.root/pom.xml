@@ -16,13 +16,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</modules>
 
         <properties>
-		<tycho.version>0.21.0</tycho.version>
-		<tycho-extras.version>0.21.0</tycho-extras.version>
+		<tycho.version>1.0.0</tycho.version>
+		<tycho-extras.version>1.0.0</tycho-extras.version>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/neon/</eclipse-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/photon/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.10.0</xtend.version>
+		<xtend.version>2.14.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>1.8</java.version>
 		<k3.version>3.2.2-SNAPSHOT</k3.version>
@@ -37,11 +37,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<url>${eclipse-repo.url}</url>
 			<layout>p2</layout>
 		</repository>
-		<repository>
+		<!-- <repository>
 			<id>xtend</id>
 			<url>${xtend-repo.url}</url>
 			<layout>p2</layout>
-		</repository>
+		</repository> -->
 		<!-- repository for pure maven artefacts -->
 		<repository>
 		     <id>mavenInriaSnapshot</id>
@@ -77,6 +77,25 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                 <configuration>
                                         <outputDirectory>src/main/xtend-gen</outputDirectory>
                                 </configuration>
+				<!-- workaround  https://github.com/eclipse/xtext/issues/1231
+				may be removed when fixed later-->
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.jdt</groupId>
+						<artifactId>org.eclipse.jdt.core</artifactId>
+						<version>3.12.2</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.platform</groupId>
+						<artifactId>org.eclipse.core.runtime</artifactId>
+						<version>3.12.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.platform</groupId>
+						<artifactId>org.eclipse.equinox.common</artifactId>
+						<version>3.8.0</version>
+					</dependency>
+				</dependencies>
                         </plugin>
 		</plugins>
 	</build>

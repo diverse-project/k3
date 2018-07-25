@@ -8,109 +8,97 @@
  */
 package fr.inria.diverse.k3.tools.plantuml.mavenplugin;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * This class implement a maven plugin that generate a plantuml file for a given K3/xtend file
+ * This class implements a maven plugin that generates a plantuml file for a given K3/xtend file
  *  
- * @goal generate
- * @phase generate-sources
- * @author <a href="mailto:didier.vojtisek@inria.fr">Didier Vojtisek</a>
- * @version $Id$
- *
  */
+// @goal generate
+// @phase generate-sources
+// @author <a href="mailto:didier.vojtisek@inria.fr">Didier Vojtisek</a>
+// @version $Id$
+@Mojo(  name = "generate",
+		defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class K3ToPlantUMLMojo extends AbstractMojo {
 
     /**
      * List of Remote Repositories used by the resolver
-     *
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     * @readonly
-     * @required
      */
+	@Parameter( defaultValue = "${project.remoteArtifactRepositories}", 
+			readonly = true, 
+			required = true  )
     protected java.util.List remoteRepos;
-    /**
+    
+	/**
      * Location of the local repository.
-     *
-     * @parameter expression="${localRepository}"
-     * @readonly
-     * @required
      */
+	@Parameter( defaultValue = "${localRepository}", 
+			readonly = true, 
+			required = true  )
     protected org.apache.maven.artifact.repository.ArtifactRepository local;
-    /**
+    
+	/**
      * POM
-     *
-     * @parameter expression="${project}"
-     * @readonly
-     * @required
      */
+	@Parameter( defaultValue = "${project}", 
+			readonly = true, 
+			required = true  )
     protected MavenProject project;
+	
     /**
      * Input K3 file or folder containing K3 files
-     * @parameter
-     * @required
      */
+	@Parameter( required = true  )
     private File input;
     
     /**
      * Input xtend file or folder containing xtend files that are used as base for K3 aspects
      * if processIndividually is set to true, a matching based on name will be applied to associate the content from  input and inputCompanionBase.
      * works only if input and inputCompanionBase are folders.
-     * @parameter
      */
+	@Parameter
     private File inputCompanionBase;
     
     /**
      * Output plantuml file
      * if not set, will compute a name from input name
-     * @parameter
-     * @required
      */
+	@Parameter( required = true  )
     private File output;
 
     /**
      * if set to true, and if the input is a folder, all the content of the folder will be process individually
      * in that case the output must be a folder, the plantuml file names will be computed from folder content name and genSubFolder parameter
      * Default is "false"
-     *
-     * @parameter expression="false"
-     * @required
      */
+	@Parameter( defaultValue = "false", 
+			required = true  )
     private boolean processIndividually;
 
     /**
      * base package name will be removed from generated diagram
      * Default is ""
-     *
-     * @parameter default-value=""
      */
+	@Parameter( defaultValue = "" )
     private String basePackageName;
     
     /**
      * genSubFolder
      * if processIndividually is set to true the plantuml file will be generated in a sub folder 
      * Default is "gen-plantuml"
-     *
-     * @parameter default-value="gen-plantuml"
      */
+	@Parameter( defaultValue = "gen-plantuml" )
     private String genSubFolder;
     
     

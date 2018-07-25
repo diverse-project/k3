@@ -1,32 +1,29 @@
 package fr.inria.diverse.k3.tools.plantuml.mavenplugin
 
+import com.google.common.base.Charsets
+import com.google.common.io.Files
+import java.io.File
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.xtend.core.XtendStandaloneSetup
+import org.eclipse.xtend.core.xtend.XtendClass
 import org.eclipse.xtend.core.xtend.XtendField
 import org.eclipse.xtend.core.xtend.XtendFile
-import com.google.common.io.Files
-import java.io.File
-import com.google.inject.Inject
-import com.google.common.base.Charsets
-import java.util.List
-import java.util.ArrayList
-import java.util.HashMap
 import org.eclipse.xtend.core.xtend.XtendFunction
-import fr.inria.diverse.k3.al.annotationprocessor.Aspect
-import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtend.core.xtend.XtendInterface
+import org.eclipse.xtend.core.xtend.XtendTypeDeclaration
+import org.eclipse.xtext.common.types.JvmCustomAnnotationValue
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmTypeAnnotationValue
+import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.xbase.XAbstractFeatureCall
-import org.eclipse.xtext.common.types.JvmCustomAnnotationValue
-import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.xbase.XFeatureCall
-import org.eclipse.xtend.core.xtend.XtendTypeDeclaration
-import org.eclipse.xtext.xbase.XbaseQualifiedNameConverter
-import org.eclipse.xtend.core.xtend.XtendInterface
-import org.eclipse.xtend.core.xtend.XtendClass
 import org.eclipse.xtext.xbase.XListLiteral
 import org.eclipse.xtext.xbase.XTypeLiteral
+import org.eclipse.xtext.xbase.XbaseQualifiedNameConverter
 
 /**
  * Current limitations: use simpleName instead of identity, this means that in case of several classes with the same name but in different packages will produce a correct output
@@ -52,26 +49,26 @@ class K3ToPlantUMLGenerator {
 	}
 	
 	
-	public def void generatePlantUMLForFile(String inputFilePath, String plantUmlFilePath){
+	def void generatePlantUMLForFile(String inputFilePath, String plantUmlFilePath){
 		generatePlantUMLForFile(inputFilePath, "", plantUmlFilePath)
 	}
 	
-	public def void generatePlantUMLForFile(String inputFilePath, String basePackage, String plantUmlFilePath){
+	def void generatePlantUMLForFile(String inputFilePath, String basePackage, String plantUmlFilePath){
 		generateForFile(inputFilePath, basePackage)
 		writeResultToPlantUMlFile(plantUmlFilePath)
 	}
 	
-	public def void generatePlantUMLForFolders(List<String> inputFolderPaths, String basePackage, String plantUmlFilePath){
+	def void generatePlantUMLForFolders(List<String> inputFolderPaths, String basePackage, String plantUmlFilePath){
 		inputFolderPaths.forEach[inputFolderPath | generateForFolder(inputFolderPath, basePackage)]
 		writeResultToPlantUMlFile(plantUmlFilePath)
 	}
 	
-	public def void generatePlantUMLForFolder(String inputFolderPath, String basePackage, String plantUmlFilePath){
+	def void generatePlantUMLForFolder(String inputFolderPath, String basePackage, String plantUmlFilePath){
 		generateForFolder(inputFolderPath, basePackage)
 		writeResultToPlantUMlFile(plantUmlFilePath)
 	}
 	
-	public def void generateForFolder(String inputFolderPath, String basePackage){
+	def void generateForFolder(String inputFolderPath, String basePackage){
 		val folderFile = new File(inputFolderPath)
 		preloadXtendFiles(folderFile)
 		folderFile.listFiles.forEach[folderContent |
@@ -97,11 +94,11 @@ class K3ToPlantUMLGenerator {
 		} else if(f.name.endsWith(".xtend")){
 			val fileUri = URI::createFileURI(f.path)
 			val res = resourseSet.getResource(fileUri, true)			
-			val ast = res.contents.head as XtendFile
+			/*val ast =*/ res.contents.head as XtendFile
 		}
 	}
 	
-	public def void generateForFile(String inputFilePath, String basePackage){
+	def void generateForFile(String inputFilePath, String basePackage){
 		//XtendStandaloneSetup::doSetup
 		val fileUri = URI::createFileURI(inputFilePath)
 		val res = resourseSet.getResource(fileUri, true)
@@ -110,7 +107,7 @@ class K3ToPlantUMLGenerator {
 		val currentPackageName = if(!basePackage.isNullOrEmpty && ast.package.startsWith(basePackage)){
 			ast.package.replaceFirst(basePackage, "")
 		} else ast.package
-		if(packagesTypes.get(currentPackageName) == null){
+		if(packagesTypes.get(currentPackageName) === null){
 			val packageTypes = new ArrayList<String>	
 			packagesTypes.put(currentPackageName,packageTypes)	
 		}
@@ -136,8 +133,8 @@ class K3ToPlantUMLGenerator {
 		«member.name» : «member.type.type.simpleName»
 	«ENDFOR»
 	«FOR func : t.members.filter(XtendFunction)»
-		«IF func.returnType != null»«func.returnType.type.simpleName»«ENDIF» «func.name»(«FOR param : func.parameters 
-			SEPARATOR ', '»«param.name» : «IF param.parameterType != null»«param.parameterType.type.simpleName»«ENDIF»«ENDFOR»)
+		«IF func.returnType !== null»«func.returnType.type.simpleName»«ENDIF» «func.name»(«FOR param : func.parameters 
+			SEPARATOR ', '»«param.name» : «IF param.parameterType !== null»«param.parameterType.type.simpleName»«ENDIF»«ENDFOR»)
 	«ENDFOR»				
 }'''
 			packagesTypes.get(currentPackageName).add(typePlantUMlString)	
@@ -151,11 +148,10 @@ class K3ToPlantUMLGenerator {
 					]
 				}
 				XtendClass:{
-					if(t.extends != null){
-						val texdtends = t.extends
+					if(t.extends !== null){
 						//texte
 						val sname = t.extends.simpleName
-						links.add('''«t.extends.simpleName» <|-- «t.name»''')
+						links.add('''«sname» <|-- «t.name»''')
 					}
 					t.implements.forEach[ extendedInterface |
 						links.add('''«extendedInterface.simpleName» <|.. «t.name»''')	
