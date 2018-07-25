@@ -12,6 +12,7 @@
 	</parent>
 
 	<build>
+		<sourceDirectory>${basedir}/target/generated-sources</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -38,7 +39,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>1.7</version>
@@ -52,15 +53,15 @@
 						<configuration>
 							<sources>
 								<source>${basedir}/target/generated-sources</source>
+								<source>${basedir}/src/main/xtend-gen</source>
 							</sources>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
-				<version>${xtend.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -71,6 +72,7 @@
 						</goals>
 						<!-- optionnaly output dir matches default eclipse configuration -->
 						<configuration>
+							<javaSourceVersion>1.8</javaSourceVersion>
 							<outputDirectory>src/main/xtend-gen</outputDirectory>
 						</configuration>
 					</execution>
