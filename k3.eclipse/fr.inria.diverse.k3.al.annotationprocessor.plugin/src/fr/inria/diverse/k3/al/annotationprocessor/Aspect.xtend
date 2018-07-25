@@ -34,7 +34,6 @@ import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
-import org.eclipse.xtend.lib.macro.declaration.MutableParameterDeclaration
 
 @Retention(RetentionPolicy::RUNTIME)
 @Active(typeof(AspectProcessor)) 
@@ -216,9 +215,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 		} 
 			stAspectJ.append("\n}\n")
 			val filePath = clazz.compilationUnit.filePath
-			var Path targetFilePathFolder = filePath.targetFolder.append(
-				typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")).toString.replace(".",/*File.separatorChar.toString*/"/" ) )
-			targetFilePathFolder.mkdir
 			var Path targetFilePath = filePath.targetFolder.append(
 				typeRef.name.subSequence(0, typeRef.name.lastIndexOf(".")).toString.replace(".",/*File.separatorChar.toString*/"/" ) + "/AspectJ" + typeRef.simpleName + ".aj")
 				
@@ -652,7 +648,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		String className) {
 
 		for (c : clazz.declaredConstructors) {
-			if (c.body != null) {
+			if (c.body !== null) {
 				cxt.addError(c,
 					"Constructors not supported in aspect. Please consider using the @AspectInitializer annotation instead."
 				)

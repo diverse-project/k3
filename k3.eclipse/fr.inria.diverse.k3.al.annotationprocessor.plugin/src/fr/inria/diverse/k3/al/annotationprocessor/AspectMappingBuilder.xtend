@@ -91,7 +91,7 @@ class AspectMappingBuilder {
 
 	public def void writePropertyFile(extension CodeGenerationContext context){
 		// classes can be null in case of syntax or compilation error in the file, the doTransform isn't processed but doGenerateCode will be called anyway 
-		if (classes != null && classes.size > 0) {
+		if (classes !== null && classes.size > 0) {
 			var buf = ''''''
 			for (entrySet : mapping.entrySet) {
 				buf = '''«buf.toString»
