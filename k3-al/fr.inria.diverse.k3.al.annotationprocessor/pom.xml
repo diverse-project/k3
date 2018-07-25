@@ -27,7 +27,7 @@
 							<outputDirectory>${basedir}/target/generated-sources</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/../../k3.eclipse/fr.inria.diverse.k3.al.annotationprocessor.plugin/src/main/java</directory>
+									<directory>${basedir}/../../k3.eclipse/fr.inria.diverse.k3.al.annotationprocessor.plugin/src</directory>
 									<excludes>
 										<exclude>**/plugin/**</exclude>
 									</excludes>
