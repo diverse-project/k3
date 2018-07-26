@@ -1,9 +1,9 @@
-# Using the `@Step` annotation
+# Using the @Step annotation
 
 The `@Step` annotation can be used to delegate the execution of a K3AL operation to some other external component.
 More precisely, the generated code will create a `StepCommand` object whose `execute` method contains all the code, an pass it to this component.
 
-# Implementing the`IStepManager` interface
+# Implementing the IStepManager interface
 
 Such external component must implements the `IStepManager` interface, which consists of two operations:
 
@@ -12,7 +12,7 @@ what was the `methodName` called;
 - `canHandle(Object caller)`, to tell whether or not the manager can handle the execution of an operation called by this object.
 
 Example of a `IStepManager` implementation that only manages instances of classes whose names begin with `Toto`, and that prints messages when steps are executed:
-~~~~
+```java
 package my.pkg.toto;
 
 import fr.inria.diverse.k3.al.annotationprocessor.stepmanager.IStepManager;
@@ -33,7 +33,7 @@ public class MyStepManager implements IStepManager {
 	}
 
 }
-~~~~
+```
 
 # Using `StepManagerRegistry` to register managers
 
