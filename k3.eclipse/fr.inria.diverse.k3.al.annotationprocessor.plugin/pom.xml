@@ -20,6 +20,7 @@
   	<artifactId>fr.inria.diverse.k3.al.annotationprocessor.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
   	
+  	
 	<build>
 		<plugins>
 			<plugin>
@@ -43,6 +44,38 @@
 					</filesets>
 				</configuration>
 			</plugin>
+			<!-- generate the images from plantUMl -->
+			<plugin>
+				<groupId>com.github.jeluard</groupId>
+				<artifactId>plantuml-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>output-plantuml</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputInSourceDirectory>true</outputInSourceDirectory>
+					<verbose>true</verbose>
+					<sourceFiles>
+						<directory>${basedir}</directory>
+						<includes>
+							<include>**/*.plantuml</include>
+						</includes>
+					</sourceFiles>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sourceforge.plantuml</groupId>
+						<artifactId>plantuml</artifactId>
+						<version>8054</version>
+					</dependency>
+				</dependencies>
+			</plugin>  
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -67,6 +100,25 @@
 										</versionRange>
 										<goals>
 											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.github.jeluard
+										</groupId>
+										<artifactId>
+											plantuml-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.2,)
+										</versionRange>
+										<goals>
+											<goal>generate</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

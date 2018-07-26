@@ -1,0 +1,65 @@
+@startuml
+
+participant XtendCompiler as XtendCompiler
+participant AspectProcessor as Processor
+participant RegisterGlobalsContext
+participant aspectMappingBuilder
+
+note over of Processor
+	Applies to classes with @Aspect annotation
+end note
+
+activate Processor
+
+XtendCompiler -> Processor: doRegisterGlobals
+Processor -> RegisterGlobalsContext: registerClass
+XtendCompiler <-- Processor
+
+XtendCompiler -> Processor: doTransform
+Processor -> Processor: initSuperclass
+Processor -> Processor: initDispatchmethod
+group for classes with Aspect annotation
+	Processor -> Processor: fieldsProcessing
+	activate Processor
+		Processor -> Processor: fieldProcessingMoveField
+		Processor -> Processor: fieldProcessingAddGetterSetter
+		Processor --> Processor
+		note right
+			remove processed fields
+		end note
+	deactivate Processor
+	Processor -> Processor: methodsProcessing
+	activate Processor
+		group for declaredMethods in class
+			Processor -> Processor: checkAnnotationprocessorCorrect
+			Processor -> Processor: methodProcessingAddSelfStatic
+			Processor -> Processor: methodProcessingAddSuper
+			Processor -> Processor: methodProcessingAddHidden
+			Processor -> Processor: methodProcessingAddPriv
+			Processor -> Processor: methodProcessingChangeBody
+		end
+		Processor -> Processor: methodProcessingAddMultiInheritMeth
+		Processor --> Processor
+	deactivate Processor
+	Processor -> Processor: constructorsProcessing
+	Processor -> Processor: aspectContextMaker
+end
+Processor -> aspectMappingBuilder: readCurrentMapping
+Processor -> aspectMappingBuilder: cleanUnusedMapping
+Processor -> aspectMappingBuilder: addMappingForAnnotatedSourceElements
+XtendCompiler <-- Processor
+
+XtendCompiler --> XtendCompiler: doValidate
+
+XtendCompiler -> Processor: doGenerateCode
+Processor -> aspectMappingBuilder: writePropertyFile
+Processor -> Processor
+note right
+	if has method with ReplaceAspectMethod 
+	  or atribute with  SynchroField
+	generate aspectJ file
+end note
+XtendCompiler <-- Processor
+
+deactivate Processor
+@enduml

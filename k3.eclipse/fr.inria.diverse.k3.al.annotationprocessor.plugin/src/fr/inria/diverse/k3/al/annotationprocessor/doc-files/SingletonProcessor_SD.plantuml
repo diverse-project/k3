@@ -1,0 +1,22 @@
+@startuml
+
+participant XtendCompiler as XtendCompiler
+participant SingletonProcessor as Processor
+
+note over of Processor
+	Applies to classes with @Singleton annotation
+end note
+
+activate Processor
+
+XtendCompiler --> XtendCompiler: doRegisterGlobals
+
+XtendCompiler -> Processor: doTransform
+XtendCompiler <-- Processor
+
+XtendCompiler --> XtendCompiler: doValidate
+
+XtendCompiler --> XtendCompiler: doGenerateCode
+
+deactivate Processor
+@enduml

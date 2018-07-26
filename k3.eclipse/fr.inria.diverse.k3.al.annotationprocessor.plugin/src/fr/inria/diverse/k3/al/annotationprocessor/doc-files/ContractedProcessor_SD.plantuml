@@ -1,0 +1,28 @@
+@startuml
+
+participant XtendCompiler as XtendCompiler
+participant ContractedProcessor as Processor
+
+note over of Processor
+	Applies to classes with @Aspect annotation
+end note
+
+activate Processor
+
+XtendCompiler --> XtendCompiler: doRegisterGlobals
+
+XtendCompiler -> Processor: doTransform
+Processor -> Processor: getAllInvs
+Processor -> Processor: check
+group for declaredMethods
+	Processor -> Processor: getAllPre
+	Processor -> Processor: getAllPost
+end
+XtendCompiler <-- Processor
+
+XtendCompiler --> XtendCompiler: doValidate
+
+XtendCompiler --> XtendCompiler: doGenerateCode
+
+deactivate Processor
+@enduml

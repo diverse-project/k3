@@ -1,0 +1,27 @@
+@startuml
+
+participant XtendCompiler as XtendCompiler
+participant OppositeProcessor as Processor
+
+activate Processor
+
+note over of Processor
+	Applies to fields with @Opposite annotation
+end note
+XtendCompiler --> XtendCompiler: doRegisterGlobals
+
+XtendCompiler -> Processor: doTransform
+		Processor -> Processor: check
+		Processor -> Processor: generateInitializer
+		Processor -> Processor: generateGetterMethod
+		Processor -> Processor: generateSetterProxyMethod
+		Processor -> Processor: generateResetMethod
+		Processor -> Processor: generateSetMethod
+XtendCompiler <-- Processor
+
+XtendCompiler --> XtendCompiler: doValidate
+
+XtendCompiler --> XtendCompiler: doGenerateCode
+
+deactivate Processor
+@enduml
