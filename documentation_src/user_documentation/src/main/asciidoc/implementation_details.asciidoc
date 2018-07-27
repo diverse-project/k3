@@ -13,7 +13,7 @@ Basically, K3 works by combining 2 mains Xtend mecanisms :
 * http://www.eclipse.org/xtend/documentation/204_activeannotations.html[Active annotations].
 
 
-
+[[ImportStaticExtensionWithWildcard]]
 === Import static extension with wildcard
 
 In  Java, **https://en.wikipedia.org/wiki/Static_import[Static import]** is a feature  that allows members (fields and methods) defined in a class as ``public static`` to be used in Java code without specifying the class in which the field is defined. The wildcard allow to access all the static members of a class.
