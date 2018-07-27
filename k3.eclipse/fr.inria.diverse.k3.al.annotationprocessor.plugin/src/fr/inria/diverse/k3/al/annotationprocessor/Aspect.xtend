@@ -35,6 +35,27 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 
+/**
+ * Indicates that this class is an aspect on top of another base class.
+ * <br>
+ * Minimal example: 
+ * <pre>
+ * {@code
+ * @Aspect(className=XYZ)
+ * class XYZAspect {}
+ * }
+ * </pre>
+ 
+ * The <i>with</i> attribute is used in in case of multiple inherance in the base classes/aspect:
+ * <pre>
+ * {@code
+ * @Aspect(className=Child, with=#[ParentAspect2, ParentAspect3] ) 
+ * class ChildAspect extends Parent1Aspect{ }
+ * }
+ * </pre>
+ * @see <a href="http://diverse-project.github.io/k3/publish/user_documentation/html_single/user_documentation.html#_creating_an_aspect_on_a_class">Creating an aspect class section in the documentation</a>
+ * @see <a href="http://diverse-project.github.io/k3/publish/user_documentation/html_single/user_documentation.html#_extending_an_aspect_multi_inheritance">Extending an aspect (multi inheritance) section in the documentation</a>
+ */
 @Retention(RetentionPolicy::RUNTIME)
 @Active(typeof(AspectProcessor)) 
 @Target(ElementType.TYPE)
@@ -47,14 +68,32 @@ public annotation Aspect {
 public annotation PreCondition {
 }
 
+/**
+ * Allows to override a method when an aspect class inherits 
+ * from another aspect class and on of its methods is refined.
+ * <b>This is equivalent to the <i>override</i> keyword but to be used in aspect classes.
+ */
 public annotation OverrideAspectMethod {
 }
 
 public annotation NotAspectProperty {
 }
 
+/**
+ * Allows to replace a method that is defined in the base class.
+ * <br>Note: In some situations, this annotation implementation 
+ * relies on AspectJ code for intercepting some calls.
+ */
 public annotation ReplaceAspectMethod {
 }
+
+/**
+ * When a field exists both in the base class and in the 
+ * aspect (same name and type), this annotation makes sure 
+ * to synchronize their values when assigning one of the fields.
+ * <br>Note: The field must be <i>public</i>
+ * <br>Note: In some situations, this annotation implementation relies on AspectJ code for intercepting some calls.
+ */
 public annotation SynchroField {
 }
 
