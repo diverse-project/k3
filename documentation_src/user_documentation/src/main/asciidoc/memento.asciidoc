@@ -25,6 +25,8 @@ All K3 annotations are defined in the package `fr.inria.diverse.k3.al.annotation
 @Aspect(className=XYZ)
 class XYZAspect {}
 ----
+
+In additon to the mandatory **className** attribute, an optionnal **with** attribute can be used in case of multiple inheritance.
 | @OverrideAspectMethod | Method | Allows to override a method when an aspect class inherits from another aspect class.
 | @ReplaceAspectMethod |  Method | Allows to replace a method that is defined in the base class.
 | @SynchroField | Field | When a field exists both in the base class and in the aspect (same name and type), this annotation make sure to synchronize their values when assigning one of the fields.
