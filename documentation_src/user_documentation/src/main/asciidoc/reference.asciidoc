@@ -56,7 +56,7 @@ class BlogAspect {
 }
 ----
 
-<1> this attrbute exists only in the aspect
+<1> this attribute exists only in the aspect
 <2> in aspect, attribute defined on aspect is accessed via **_self**
 <3> in aspect, attribute defined on the base class is accessed via **_self**
 
