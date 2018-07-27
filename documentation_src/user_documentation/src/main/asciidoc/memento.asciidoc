@@ -8,7 +8,7 @@ This section present a brief overview of the keywords, annotations and syntax el
 |====================
 | keyword/syntax  |  Short description
 | _self |   In an Aspect, **_self** is a reference to the current object.
-| import static extension XYZAspect.* |  makes all all features defined on XYZAspect available in the current compilation unit (xtend file).
+| import static extension XYZAspect.* |  Makes all features defined on XYZAspect available in the current compilation unit (xtend file). This allows for natural writing using Object Oriented syntax.  (see <<ImportStaticExtensionWithWildcard>>)
 |====================
 
 === Main annotations for K3.
@@ -18,16 +18,16 @@ All K3 annotations are defined in the package `fr.inria.diverse.k3.al.annotation
 [width="100%",options="header", cols="1s,1m,5a"]
 |====================
 | Annotation  | Applies to | Short description
-| @Aspect |  Class | Indicates that the class is an aspect on top of another class.
+| @Aspect |  Class | Indicates that the class is an aspect on top of another base class.
 
 [source,k3]
 ----
 @Aspect(className=XYZ)
 class XYZAspect {}
 ----
-| @OverrideAspectMethod | Method | allows to override a method when an aspect class inherits from another aspect class.
-| @ReplaceAspectMethod |  Method | allows to replace a method that is defined in the base class.
-| @SynchroField | Field | When a field exists both in the base class and in the aspect, this annotation make sure to synchronize their values when assigning one of the fields.
+| @OverrideAspectMethod | Method | Allows to override a method when an aspect class inherits from another aspect class.
+| @ReplaceAspectMethod |  Method | Allows to replace a method that is defined in the base class.
+| @SynchroField | Field | When a field exists both in the base class and in the aspect (same name and type), this annotation make sure to synchronize their values when assigning one of the fields.
 | @Abstract |  Method | Used to tag a k3 operation as abstract when initially defined.  
 | @Singleton | Class | The fields defined in the aspect are shared by all instances of the base class.
 |====================
