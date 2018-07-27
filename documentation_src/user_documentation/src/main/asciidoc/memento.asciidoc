@@ -29,7 +29,11 @@ class XYZAspect {}
 In additon to the mandatory **className** attribute, an optionnal **with** attribute can be used in case of multiple inheritance.
 | @OverrideAspectMethod | Method | Allows to override a method when an aspect class inherits from another aspect class.
 | @ReplaceAspectMethod |  Method | Allows to replace a method that is defined in the base class.
-| @SynchroField | Field | When a field exists both in the base class and in the aspect (same name and type), this annotation make sure to synchronize their values when assigning one of the fields.
+| @SynchroField | Field | When a field exists both in the base class and in the aspect (same name and type), this annotation makes sure to synchronize their values when assigning one of the fields.
+
+Note: The field must be __public__
+
+Note: In some situations, this annotation implementation relies on AspectJ code for intercepting some calls.
 | @Abstract |  Method | Used to tag a k3 operation as abstract when initially defined.  
 | @Singleton | Class | The fields defined in the aspect are shared by all instances of the base class.
 |====================
