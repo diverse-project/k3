@@ -51,7 +51,8 @@ class EClass$aspectClassPostfix$ extends EClassifier$aspectClassPostfix${
 /** Build a String with all superclasses of this class */
 	public def String flat(String tabStr){
 		// use a template String
-val returnedString = '''«tabStr»class «_self.name» : «FOR eSuperClass : _self.ESuperTypes»«eSuperClass.flat( tabStr + "\t")»«ENDFOR»'''
+		// note: in case of strange characters here, make sure to configure your project to use utf8
+val returnedString = '''Â«tabStrÂ»class Â«_self.nameÂ» : Â«FOR eSuperClass : _self.ESuperTypesÂ»Â«eSuperClass.flat( tabStr + "\t")Â»Â«ENDFORÂ»'''
 				return returnedString.toString
 	}
 }
