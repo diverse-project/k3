@@ -4,7 +4,7 @@ This section presents how K3 is implemented and which compiling scheme it follow
 
 [NOTE]
 ====
-Most K3 users would probably not need to read this section. However, understanding this compilation scheme should help integrating K3 code in a larger applications.
+Understanding how K3 use Xtend syntax and how K3 compilation scheme changes xtend java code generation should help understand  some issues or help integrating K3 code in larger applications.
 ====
 
 Basically, K3 works by combining 2 mains Xtend mecanisms :
@@ -19,7 +19,7 @@ Basically, K3 works by combining 2 mains Xtend mecanisms :
 In  Java, **https://en.wikipedia.org/wiki/Static_import[Static import]** is a feature  that allows members (fields and methods) defined in a class as ``public static`` to be used in Java code without specifying the class in which the field is defined. The wildcard allow to access all the static members of a class.
 
 
-In Xtend, http://www.eclipse.org/xtend/documentation/202_xtend_classes_members.html#extension-methods[extension methods] allow to add new methods to existing types without modifying them.
+Similarily, in Xtend, http://www.eclipse.org/xtend/documentation/202_xtend_classes_members.html#extension-methods[extension methods] allow to add new methods to existing types without modifying them.
 They are based on a simple syntactic trick: Instead of passing the first
  argument of an extension method inside the parentheses of a method 
 invocation, the method can be called with the first argument as its 
