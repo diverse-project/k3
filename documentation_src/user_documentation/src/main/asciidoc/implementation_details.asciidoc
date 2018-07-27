@@ -50,7 +50,7 @@ f1.max(f2) <3>
 <3> is allowed by Xtend's `extension`. This pointed notation gives the feeling to call the `max` method as if it was defined on `double`.
 
 
-K3 use this mecanism extensively.
+K3 use this mecanism extensively in order to provide the feeling of writing object oriented call on methods and attributes on aspects which are actually static methods..
 
 
 === K3 Active annotations
