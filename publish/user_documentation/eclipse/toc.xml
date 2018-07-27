@@ -39,7 +39,7 @@
       <topic label="New Example wizard" href="ch04s02.html"/>
    </topic>
    <topic label="Implementation details" href="ch05.html">
-      <topic label="Import static extension with wildcard" href="ch05.html#_import_static_extension_with_wildcard"/>
+      <topic label="Import static extension with wildcard" href="ch05.html#ImportStaticExtensionWithWildcard"/>
       <topic label="K3 Active annotations" href="ch05s02.html">
          <topic label="K3 Active annotations compilation example" href="ch05s02.html#_k3_active_annotations_compilation_example"/>
       </topic>
