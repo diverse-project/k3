@@ -37,6 +37,20 @@ group for classes with Aspect annotation
 			Processor -> Processor: methodProcessingAddHidden
 			Processor -> Processor: methodProcessingAddPriv
 			Processor -> Processor: methodProcessingChangeBody
+			activate Processor
+				Processor -> Processor: transformIfStatements
+				activate Processor
+					Processor -> Processor: surroundWithStepCommandExecution					
+					Processor --> Processor
+				deactivate Processor
+				Processor -> Processor: transformNormalStatement
+				activate Processor
+					Processor -> Processor: surroundWithStepCommandExecution					
+					Processor --> Processor
+				deactivate Processor
+				Processor -> Processor: getBody
+				Processor --> Processor
+			deactivate Processor
 		end
 		Processor -> Processor: methodProcessingAddMultiInheritMeth
 		Processor --> Processor
@@ -53,12 +67,7 @@ XtendCompiler --> XtendCompiler: doValidate
 
 XtendCompiler -> Processor: doGenerateCode
 Processor -> aspectMappingBuilder: writePropertyFile
-Processor -> Processor
-note right
-	if has method with ReplaceAspectMethod 
-	  or atribute with  SynchroField
-	generate aspectJ file
-end note
+Processor -> Processor: generateAspectJCodeForClass
 XtendCompiler <-- Processor
 
 deactivate Processor

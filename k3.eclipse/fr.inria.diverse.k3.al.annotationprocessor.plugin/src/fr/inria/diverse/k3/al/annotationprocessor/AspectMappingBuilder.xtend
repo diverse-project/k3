@@ -37,7 +37,10 @@ class AspectMappingBuilder {
 	private val Map<String, List<String>> mapping = newHashMap
 
 
-	/** Rebuild mapping from existing property file*/
+	/** Rebuild mapping from existing property file
+	 * @param classes classes
+	 * @param context transformation context
+	 * */
 	public def void readCurrentMapping(List<? extends MutableClassDeclaration> classes, extension TransformationContext context){
 		this.classes = classes
 		//this.context = context
@@ -61,7 +64,10 @@ class AspectMappingBuilder {
 		}
 	}
 
-	/** try to clean unused mappings */
+	/** 
+	 * try to clean unused mappings
+	 * @param context transformation context
+	 */
 	public def void cleanUnusedMapping(extension TransformationContext context){
 		if (classes.size > 0) {
 
@@ -89,6 +95,10 @@ class AspectMappingBuilder {
 
 	}
 
+	/**
+	 * @param context code generation context
+	 * 
+	 */
 	public def void writePropertyFile(extension CodeGenerationContext context){
 		// classes can be null in case of syntax or compilation error in the file, the doTransform isn't processed but doGenerateCode will be called anyway 
 		if (classes !== null && classes.size > 0) {

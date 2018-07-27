@@ -41,6 +41,9 @@ abstract class Helper {
 	/**
 	 * Sorts the given classes following the inheritance order. Top classes are sorted at the end and
 	 * down classes are sorted the beginning.
+	 * 
+	 * @param classes classes
+	 * @param ctx transformation context
 	 */
 	static def void sortClasses(List<MutableClassDeclaration> classes, TransformationContext ctx) {
 		if(classes===null || classes.size<2) return;
@@ -102,6 +105,10 @@ abstract class Helper {
 
 	/**
 	 * Completes the list 'res' with all the super types of the given class 'clazz'.
+	 * 
+	 * @param clazz class declaration
+	 * @param ctx transformation context
+	 * @return a set of class declaration
 	 */
 	static def Set<ClassDeclaration> getDirectSuperClasses(ClassDeclaration clazz, TransformationContext ctx) {
 		val Set<ClassDeclaration> res = newHashSet
@@ -121,6 +128,10 @@ abstract class Helper {
 
 	/**
 	 * Completes the list 'res' with all the super types of the given class 'clazz'.
+	 * 
+	 * @param clazz class declaration
+	 * @param res returned list of super types of clazz
+	 * @param ctx transformation context
 	 */
 	static def void getSuperClasses(MutableClassDeclaration clazz, Set<MutableClassDeclaration> res, extension TransformationContext ctx) {
 		if(res.contains(clazz)) return;
@@ -170,7 +181,11 @@ abstract class Helper {
 	}
 
 
-		/** Computes the names of the classes provided by the parameter 'with' of the annotation 'aspect'. */
+	/** Computes the names of the classes provided by the parameter 'with' of the annotation 'aspect'. 
+	 * @param clazz aspect class
+	 * @param context transformation context
+	 * @return a list of names
+	 * */
 	static def List<String> getWithClassNames(TypeDeclaration clazz, extension TransformationContext context) {
 		return getAnnotationWithType(clazz).map[name]
 	}
@@ -179,6 +194,8 @@ abstract class Helper {
 	/**
 	 * Getting the classes identified by the parameter 'with'.
 	 * The returned list is never null but can be empty.
+	 * @param cl type declaration
+	 * @return list of type reference
 	 */
 	static def List<TypeReference> getAnnotationWithType(TypeDeclaration cl) {
 		if(cl===null || cl.annotations===null) return Collections.emptyList
@@ -199,7 +216,11 @@ abstract class Helper {
 		}catch(NullPointerException ex){ return null }
 	}
 
-	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. */
+	/** Computes the name of the class to aspectize identified by the annotation 'aspect'. 
+	 * 
+	 * @param clazz type declaration
+	 * @return the name of the aspectized class
+	 */
 	static def String getAspectedClassName(TypeDeclaration clazz) {
 		val type = getAnnotationAspectType(clazz)
 		if(type===null)return ""
@@ -215,6 +236,11 @@ abstract class Helper {
 	/**
 	 * Fill s with super classes of c, ordered by hierarchy
 	 * (the first element is the direct super type of c)
+	 
+	 * @param s list of class declarations
+	 
+	 * @param c class declaration
+	 * @param context transformation context
 	 */
 	static def void getSuperClass(List<ClassDeclaration> s, ClassDeclaration c, extension TransformationContext context) {
 		if (c.extendedClass !== null) {
@@ -249,8 +275,10 @@ abstract class Helper {
 
 	/**
 	 * Find first method with the same name in super classes hierarchy
-	 * @clazz This class and super classes are the search area
-	 * @methodName Method to find
+	 * @param clazz This class and super classes are the search area
+	 * @param methodName Method to find
+	 * @param context transformation context
+	 * @return first method declaration with the same name asmethodName in super classes hierarchy, or null if none found
 	 */
 	static def MethodDeclaration findMethod(ClassDeclaration clazz,
 		MutableMethodDeclaration methodName, extension TransformationContext context) {
@@ -272,8 +300,11 @@ abstract class Helper {
 
 	/**
 	 * Compare the prototype of the two given methods.
+	 * @param m1 first method declaration
+	 * @param m2 second method declaration
 	 * @param alsoCheckFirstArgSelf If true, it checks that m2 equals m1 (respec. m1 equals m2) after being transformed for k3. More precisely, it checks
 	 * whether the first argument of m2 (respec. m1) is _self to then compare the two prototypes.
+	 * @return true if the 2 methods have similar signature
 	 */
 	static def boolean isSamePrototype(MutableMethodDeclaration m1, MutableMethodDeclaration m2, boolean alsoCheckFirstArgSelf) {
 		val nameOk = m1!==null && m2!==null && m1.simpleName==m2.simpleName
@@ -291,7 +322,11 @@ abstract class Helper {
 	}
 
 	/**
-	 * Returns the adapter standing between a metaclass in a sub-metamodel
+	 * 
+	 * @param cls type declaration
+	 * @param ctx transformation context
+	 * 
+	 * @return the adapter standing between a metaclass in a sub-metamodel 
 	 * and its corresponding metaclass in a super-metamodel
 	 */
 	static def String getAdapterClassName(MutableTypeDeclaration cls, extension TransformationContext ctx) {

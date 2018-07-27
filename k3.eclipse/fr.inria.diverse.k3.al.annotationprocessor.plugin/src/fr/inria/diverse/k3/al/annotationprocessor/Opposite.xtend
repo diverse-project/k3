@@ -238,6 +238,7 @@ class OppositeProcessor extends AbstractFieldProcessor
 	/**
 	 * Checks whether the opposite references
 	 * are properly defined
+	 * @return true if the opposite references are properly defined
 	 */
 	protected def boolean check() {
 		// No primitive types
@@ -293,6 +294,8 @@ class OppositeProcessor extends AbstractFieldProcessor
 	/**
 	 * Checks whether the specified TypeReference refers
 	 * to a collection
+	 * @param type type reference
+	 * @return true if the type is a collection
 	 */
 	protected def boolean isCollection(TypeReference type)
 	{
