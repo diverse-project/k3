@@ -172,7 +172,7 @@ When using EMF, it is legal to inherit from several class. The underlying framew
 }
 
 <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: darkred">@Aspect(className=Child, with=#[ParentAspect2, ParentAspect3] )</b> <a name="CO7-2"></a><span><img src="gfx/callouts/2.gif" alt="2" border="0"></span>
-<b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">class</b> PostAspect <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">extends</b> Parent1Aspect{ <a name="CO7-3"></a><span><img src="gfx/callouts/3.gif" alt="3" border="0"></span>
+<b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">class</b> ChildAspect <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">extends</b> Parent1Aspect{ <a name="CO7-3"></a><span><img src="gfx/callouts/3.gif" alt="3" border="0"></span>
    <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">def</b> <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">void</b> someMethod(){
       <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">_self</b>.someParent1Method()
       <b xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color:darkblue">_self</b>.someParent2Method()
