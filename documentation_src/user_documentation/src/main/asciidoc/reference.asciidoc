@@ -275,7 +275,7 @@ class Parent3Aspect {
 }
 
 @Aspect(className=Child, with=#[ParentAspect2, ParentAspect3] ) <2>
-class PostAspect extends Parent1Aspect{ <3>
+class ChildAspect extends Parent1Aspect{ <3>
    def void someMethod(){
       _self.someParent1Method()
       _self.someParent2Method()
