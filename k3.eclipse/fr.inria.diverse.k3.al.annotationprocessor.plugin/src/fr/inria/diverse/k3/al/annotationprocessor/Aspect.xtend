@@ -34,6 +34,13 @@ import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
+import java.util.HashSet
+import org.eclipse.xtend.lib.macro.services.TypeLookup
+import java.util.regex.Pattern
+import java.util.regex.Matcher
+import java.io.File
+import java.io.FileWriter
+import java.io.BufferedWriter
 
 /**
  * Indicates that this class is an aspect on top of another base class.
@@ -142,6 +149,9 @@ public class AspectProcessor extends AbstractClassProcessor {
 	public static final String SELF_VAR_NAME = "_self"
 	public static final String PRIV_PREFIX = "_privk3_"
 	public static final String PRIV_CONSTRUCTOR_POSTFIX = "_constructor_initializer"
+	public static final String RESULT_VAR = "result"
+	public static final String DISPATCH_POINTCUT_KEY = "#DispatchPointCut_before#"
+	public static Boolean lock = false
 
 	/**
 	 * Phase 1: Register properties and context helpers
@@ -156,14 +166,15 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	List<? extends MutableClassDeclaration> mclasses = null
+	Map<MutableClassDeclaration, List<ClassDeclaration>> superclass = newHashMap
+	Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod = newHashMap
+	
 
 	/**
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		val Map<MutableClassDeclaration, List<ClassDeclaration>> superclass = newHashMap
-		val Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod = newHashMap
-
+		
 		mclasses = classes
 
 		// context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
@@ -208,7 +219,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	/**
-	 * Phase 3: use an additional code generator to produce some additional files:
+	 * Phase 4: use an additional code generator to produce some additional files:
 	 * - generates the .k3_aspect_mapping.properties file that can be used later by other tool to inspect aspects
 	 * - generates the AspectJ file needed to bypass some limitations; 
 	 */
@@ -218,32 +229,43 @@ public class AspectProcessor extends AbstractClassProcessor {
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
 		aspectMappingBuilder.writePropertyFile(context)
 
-		// 
-		for (clazz : annotatedSourceElements) {
- 			generateAspectJCodeForClass(clazz, context)
-			
+		// generate aspectJ code if required
+		for (classDecl : annotatedSourceElements) {
+ 			generateAspectJCodeForClass(classDecl, context)
 		}
 
+		// deal with dispatch methods of classes that are in the current project
+		for (classDecl : annotatedSourceElements) {
+			injectDispatchInParentAspects(classDecl, context)
+		}
 	}
 
+	/**
+	 * Change the signature of the original method to makes it static
+	 * -	add _self parameter
+	 * -	makes it static
+	 * -	deal with the @Abstract annotation 
+	 */
 	private def methodProcessingAddSelfStatic(MutableMethodDeclaration m, String identifier,
 		extension TransformationContext cxt) {
 		// In not visited method, add _self as first parameter and set it static
 		// also add _self_ as second parameter
 		if (m.parameters.empty || m.parameters.head.simpleName != SELF_VAR_NAME) {
+			// save original list of parameters in l
 			val l = new ArrayList<Pair<String, TypeReference>>
 			for (p1 : m.parameters)
 				l.add(new Pair(p1.simpleName, p1.type))
 
-			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
-			if (m.abstract)
-				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))
-
 			m.parameters.toList.clear
+			// reset parameters and add _self as first parameter
 			m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 
 			for (param : l)
 				m.addParameter(param.key, param.value)
+				
+			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
+			if (m.abstract)
+				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))
 		}
 
 		m.setStatic(true)
@@ -354,11 +376,18 @@ public class AspectProcessor extends AbstractClassProcessor {
 		extension TransformationContext cxt, Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod,
 		List<String> inheritList, String className) {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
-		var s = m.parameters.map[simpleName].join(',')
+		
+		val dt = m.declaringType
+		var parametersString = m.parameters.map[simpleName].join(',')
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
-		val ret = getReturnInstruction(m, cxt)
-		val call = new StringBuilder
+		val returnInstruction = getReturnInstruction(m, cxt)
+		val hasReturn = returnInstruction.contains("return")
+		val callSB = new StringBuilder
+		
+		val resultVar = "result"
 
+
+/* 
 		// cxt.addError(m, ""+ dispatchmethod.size)
 		if (dispatchmethod.get(m) !== null) {
 			val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
@@ -377,20 +406,41 @@ public class AspectProcessor extends AbstractClassProcessor {
 //								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
 //						i=i+1
 //					}
-			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, className)
+			val ifst = transformIfStatements(m, cxt, declTypes, parametersString, ret,isStep, className)
+			call.append("// Start Aspect dispatch\n")
 			call.append(ifst)
 			call.append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
+			call.append("\n// End Aspect dispatch start\n")
 		} else {
-			val instruction = transformNormalStatement(m, cxt, s,isStep, className)
+			val instruction = transformNormalStatement(m, cxt, parametersString,isStep, className)
+			call.append("// No Aspect dispatch detected at compile time\n")
 			call.append(instruction) // for getters & setters
 		}
+		
+		*/
+		
+		
+		var String privcall = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parametersString.replaceFirst(SELF_VAR_NAME,
+							"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
+		if (isStep) {
+			privcall = surroundWithStepCommandExecution(className, m.simpleName, privcall, hasReturn, resultVar,
+				parametersString.substring(parametersString.indexOf(',') + 1))
+		} else if (hasReturn)
+			privcall = '''«resultVar» = «privcall»'''
+		
+		callSB.append('''// «DISPATCH_POINTCUT_KEY» «Helper::initialMethodSignature(m)»
+if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+	«privcall»;
+}''')
+
 		m.abstract = false
 
-		
 		m.body = [
-			getBody(clazz, className, call.toString, ret)
+			getBody(clazz, className, callSB.toString, returnInstruction)
 		]
 	}
+
+	
 
 	private def hasReturnType(MutableMethodDeclaration declaration, extension TransformationContext cxt) {
 		return ( declaration.returnType != newTypeReference("void") )
@@ -399,7 +449,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt,
 		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, String className) {
 			val hasReturn = returnStatement.contains("return")
-			val resultVar = "result"
+			val resultVar = RESULT_VAR
 			val StringBuilder sb = new StringBuilder
 			for (dt : declTypes) {
 				var String call = ""
@@ -433,7 +483,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
 		String parameters, boolean isStep, String className) {
 		val hasReturn = hasReturnType(declaration, cxt)
-		val resultVar = "result"
+		val resultVar = RESULT_VAR
 					
 		var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
 		
@@ -653,7 +703,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]) {
 			return true
 		}
-		val supers = Helper::getDirectSuperClasses(clazz, cxt)
+		val supers = Helper::getDirectPrimaryAndSecondarySuperClasses(clazz, cxt)
 		if (supers.empty) {
 			cxt.addError(clazz, "passe par la")
 			return false
@@ -878,14 +928,14 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	/**
-	 * Each aspect method is associatated with the lists of all methods with the
+	 * Each aspect method is associated with the lists of all methods with the
 	 * same signature (name + number of args) of parents classes and children classes.
-	 * @superclass All aspects associated with their superclasses
-	 * @dispatchmethod Associations computed
-	 * @context
+	 * @param superclass All aspects associated with their superclasses
+	 * @param dispatchmethod Associations computed
+	 * @param context TransformationContext
 	 */
 	private def initDispatchmethod(Map<MutableClassDeclaration, List<ClassDeclaration>> superclass,
-		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, TransformationContext context) {
+		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, TypeLookup context) {
 		var i = 0
 		for (cl : superclass.keySet) {
 			// Regroup methods of the class hierarchy by name+number of parameters
@@ -943,7 +993,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * @context
 	 */
 	private def initSuperclass(List<? extends MutableClassDeclaration> annotedClasses,
-		TransformationContext context, Map<MutableClassDeclaration, List<ClassDeclaration>> superclass) {
+		TypeLookup context, Map<MutableClassDeclaration, List<ClassDeclaration>> superclass) {
 		// Add super classes for all annotated classes
 		for (clazz : annotedClasses) {
 			val ext = new ArrayList<ClassDeclaration>
@@ -1023,15 +1073,104 @@ public class AspectProcessor extends AbstractClassProcessor {
 		if (doGenerate)
 			targetFilePath.contents = contents
 	}
+	
+	/**
+	 * Change the generated java code of parent aspects of this class (only in the same project) in order
+	 * to inject the dispatch code to this child classDecl 
+	 */
+	private def injectDispatchInParentAspects(ClassDeclaration classDecl, extension CodeGenerationContext context) {
+		// deal with dispatch methods of parent classes that are in the current project
+
+		val allSuperClasses = newArrayList 
+		Helper.getAllPrimaryAndSecondarySuperClasses(allSuperClasses, classDecl, context)
+
+		// for all methods declared in the class, look for the same method in the superclasses and inject dispatch code
+		val Set<String> dispatchStaticInjection = newHashSet
+		 
+		for (m : classDecl.declaredMethods) {
+			val methodSignature = Helper::initialMethodSignature(m) 
+			for(superclass : allSuperClasses) {
+				if(superclass.declaredMethods.exists[supermethod |  methodSignature == Helper::initialMethodSignature(supermethod)]) {
+					
+					//val String dispatchInjectCodeForSuper
+					
+					// search the Pointcut for this method and add a call to the child aspect
+					val superclassfilePath = superclass.compilationUnit.filePath
+					val superclassjavafile = superclassfilePath.targetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
+					// due to parallel jobs, the file may not exist yet
+					// or may be currently being written
+					waitForFileContent(superclassjavafile, context)		 			
+					synchronized(lock){
+						superclassjavafile.contents.length
+						val aspectJavaFileContent = superclassjavafile.contents.toString
+						
+						
+						val hasReturn = m.returnType.name != "void"
+						// call the public helper for this type (this ensures correct dispatch)
+						val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
+							else '''"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»,«m.parameters.map[simpleName].join(',')»'''
+						var call = '''«classDecl.qualifiedName».«m.simpleName»(«parametersString»);'''
+						if (hasReturn) 
+							call = '''«RESULT_VAR» = «call»'''
+						
+						val pointcutString = "// "+DISPATCH_POINTCUT_KEY+" "+Helper::initialMethodSignature(m)
+						val pointcutReplacement = '''if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(classDecl)»){
+		«call»
+	} else
+	// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
+									
+						println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
+						val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
+						superclassjavafile.contents = newContent
+						// wait for complete writing before releasing lock, due to the async writing of xtend
+    					do {
+        					Thread.sleep(100);
+    					} while (superclassjavafile.contents.toString != newContent)
+						//println(superclassjavafile.contents)	
+					}
+				}
+			}		
+		}
+
+
+		val parentClassTRef = classDecl.extendedClass
+		if(parentClassTRef !== null ){
+			val parentClass = context.findTypeGlobally(parentClassTRef.name)
+			if(parentClass instanceof ClassDeclaration){
+				
+				
+				
+				for (m : classDecl.declaredMethods) {
+					
+				}
+				
+				
+			}
+		}
+		
+	}
+	
+	private def waitForFileContent(Path file,extension CodeGenerationContext context){
+		var timeout = 20		// due to parallel jobs, the file may not exist yet 			
+		while(!file.exists && timeout > 0){
+			Thread.sleep(100)
+			timeout--
+		}
+		timeout = 20
+		while(file.contents.length === 0 && timeout > 0){
+			Thread.sleep(100)
+			timeout--
+		}
+	}
 }
 
 /**
  * Comparator for MethodDeclaration
  */
 class SortMethod implements Comparator<MethodDeclaration> {
-	TransformationContext context
+	TypeLookup context
 
-	new(TransformationContext context) {
+	new(TypeLookup context) {
 		this.context = context
 	}
 

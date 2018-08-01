@@ -24,6 +24,8 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
+import org.eclipse.xtend.lib.macro.services.TypeLookup
+import org.eclipse.xtend.lib.macro.services.GlobalTypeLookup
 
 /**
  * A tool class containing helper operations for k3.
@@ -45,7 +47,7 @@ abstract class Helper {
 	 * @param classes classes
 	 * @param ctx transformation context
 	 */
-	static def void sortClasses(List<MutableClassDeclaration> classes, TransformationContext ctx) {
+	static def void sortClasses(List<MutableClassDeclaration> classes, TypeLookup ctx) {
 		if(classes===null || classes.size<2) return;
 		val size = classes.size
 		var firstPosModif = -1
@@ -104,14 +106,20 @@ abstract class Helper {
 
 
 	/**
-	 * Completes the list 'res' with all the super types of the given class 'clazz'.
+	 * 
+	 * On an aspect class, find its direct "super" aspect classes following either the traditional "extends"
+	 * or following the "with" attribute of the aspect annotation
+	 * 
+	 * It works by looking for types in the compilation unit classpath 
+	 * 
+	 * primary extends, comes first, then the secondary "with" in order of appearance in the declaration
 	 * 
 	 * @param clazz class declaration
-	 * @param ctx transformation context
-	 * @return a set of class declaration
+	 * @param ctx transformation context (used for type lookup)
+	 * @return a set of class declarations that are either 
 	 */
-	static def Set<ClassDeclaration> getDirectSuperClasses(ClassDeclaration clazz, TransformationContext ctx) {
-		val Set<ClassDeclaration> res = newHashSet
+	static def List<ClassDeclaration> getDirectPrimaryAndSecondarySuperClasses(ClassDeclaration clazz, GlobalTypeLookup ctx) {
+		val List<ClassDeclaration> res = newArrayList
 		if(clazz.extendedClass!==null) {
 			val l = ctx.findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration
 
@@ -121,32 +129,50 @@ abstract class Helper {
 
 			if(l!==null) res.add(l)
 		}
-		res.addAll(getWithClassNames(clazz, ctx).map[n | ctx.findTypeGlobally(n) as ClassDeclaration].filterNull)
+		res.addAll(getWithClassNames(clazz).map[n | ctx.findTypeGlobally(n) as ClassDeclaration].filterNull)
 		return res
 	}
 
+	/**
+	 * Fill superClasses with all super classes of classDecl 
+	 * Applied on a normal class, will return full hierarchy of java extends only
+	 * Applied on an aspect class, it returns the hierarchy following both the java extends, and the <i>with</i> 
+	 * attribute of the @aspect annotation
+	 */
+	static def void getAllPrimaryAndSecondarySuperClasses(List<ClassDeclaration> superClasses,
+		ClassDeclaration classDecl, extension GlobalTypeLookup context) {
+			
+		val directSuperClasses = getDirectPrimaryAndSecondarySuperClasses(classDecl, context)
+									.filter[directsuperclass | !superClasses.contains(directsuperclass)]
+		superClasses.addAll(directSuperClasses)
+		directSuperClasses.forEach[directsuperclass | 
+			getAllPrimaryAndSecondarySuperClasses(superClasses, directsuperclass, context)
+		]
+	}
 
 	/**
 	 * Completes the list 'res' with all the super types of the given class 'clazz'.
+	 * 
+	 * Will look only in types in the current Compilation Unit
 	 * 
 	 * @param clazz class declaration
 	 * @param res returned list of super types of clazz
 	 * @param ctx transformation context
 	 */
-	static def void getSuperClasses(MutableClassDeclaration clazz, Set<MutableClassDeclaration> res, extension TransformationContext ctx) {
+	static def void getSuperClasses(MutableClassDeclaration clazz, Set<MutableClassDeclaration> res, extension TypeLookup ctx) {
 		if(res.contains(clazz)) return;
 		res.add(clazz)
 		if(clazz.extendedClass!==null) {
 			val l = findClass(clazz.extendedClass.name)
 			if(l!==null)
 				getSuperClasses(l,res,ctx)
-			getWithClassNames(clazz, ctx).map[n | findClass(n)].forEach[cl| if(cl!==null) getSuperClasses(cl, res, ctx)]
+			getWithClassNames(clazz).map[n | findClass(n)].forEach[cl| if(cl!==null) getSuperClasses(cl, res, ctx)]
 		}
 	}
 
 
 	static def List<MutableClassDeclaration> sortByClassInheritance(MutableClassDeclaration clazz, List<? extends MutableClassDeclaration> classes,
-								extension TransformationContext context) {
+								extension TypeLookup context) {
 		val Set<MutableClassDeclaration> listTmp = new HashSet
 		val Set<MutableClassDeclaration> listRes = new HashSet
 
@@ -183,10 +209,9 @@ abstract class Helper {
 
 	/** Computes the names of the classes provided by the parameter 'with' of the annotation 'aspect'. 
 	 * @param clazz aspect class
-	 * @param context transformation context
 	 * @return a list of names
 	 * */
-	static def List<String> getWithClassNames(TypeDeclaration clazz, extension TransformationContext context) {
+	static def List<String> getWithClassNames(TypeDeclaration clazz) {
 		return getAnnotationWithType(clazz).map[name]
 	}
 
@@ -242,13 +267,13 @@ abstract class Helper {
 	 * @param c class declaration
 	 * @param context transformation context
 	 */
-	static def void getSuperClass(List<ClassDeclaration> s, ClassDeclaration c, extension TransformationContext context) {
+	static def void getSuperClass(List<ClassDeclaration> s, ClassDeclaration c, extension TypeLookup context) {
 		if (c.extendedClass !== null) {
 
 
 			val l = findTypeGlobally(c.extendedClass.name) as ClassDeclaration
 			if(l==c) {
-				context.addError(c, "Its super class is itself?! " + c.extendedClass.name)
+				//context.addError(c, "Its super class is itself?! " + c.extendedClass.name)
 				return;
 			}
 			if(l!==null) {
@@ -257,6 +282,8 @@ abstract class Helper {
 			}
 		}
 	}
+	
+
 
 
 	static def String mkstring(List<TypeReference> list, String delimiter, String before, String after ){
@@ -288,13 +315,12 @@ abstract class Helper {
 		if (m === null) {
 			if (clazz.extendedClass === null)
 				return null
-			else if (findClass(clazz.extendedClass.name) === null)
-				return null
+			else if (context.findTypeGlobally(clazz.extendedClass.name) === null)
+				return null				
 			else
 				return findMethod(context.findTypeGlobally(clazz.extendedClass.name) as ClassDeclaration, methodName, context)
 		} else
 			return m
-//			return null
 	}
 
 
@@ -333,5 +359,24 @@ abstract class Helper {
 		val ann = cls.annotations.findFirst[getValue("adapter") !== null]
 
 		return if (ann !== null) ann.getValue("adapter") as String else ""
+	}
+	
+	/** simple method signature */
+	static def String methodSignature(MethodDeclaration m) {
+		return '''«m.returnType.simpleName» «m.simpleName»(«m.parameters.map[p|p.type.simpleName].join(',')»)'''
+	}
+	
+	/**
+	 * similar to methodSignature but makes sure to have the signature from the original xtend
+	 * Ie. optionnaly removes the _self parameter introduced by {@link AspectProcessor#methodProcessingAddSelfStatic(MutableTypeDeclaration) }
+	 * This can be useful when mixing method declaration from both java and currently processed compilation unit
+	 */
+	static def String initialMethodSignature(MethodDeclaration m) {
+		if(m.parameters.empty || m.parameters.head.simpleName != AspectProcessor.SELF_VAR_NAME) {
+			return '''«m.returnType.simpleName» «m.simpleName»(«m.parameters.map[p|p.type.simpleName].join(',')»)'''
+		} else {
+			val parameters = m.parameters.drop(1)
+			return '''«m.returnType.simpleName» «m.simpleName»(«parameters.map[p|p.type.simpleName].join(',')»)'''
+		}
 	}
 }
