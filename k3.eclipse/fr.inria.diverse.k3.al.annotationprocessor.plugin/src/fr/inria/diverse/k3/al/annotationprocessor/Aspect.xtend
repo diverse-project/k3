@@ -1098,7 +1098,10 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		for (m : classDecl.declaredMethods) {
 			val methodSignature = Helper::initialMethodSignature(m) 
 			for(superclass : allSuperClasses) {
-				if(superclass.declaredMethods.exists[supermethod |  methodSignature == Helper::initialMethodSignature(supermethod)]) {
+				// staticdispatch works only in a hierarchy of classes with @Aspect annotation
+				if( superclass.annotations.exists[annotationTypeDeclaration.simpleName == Aspect.simpleName] &&
+					superclass.declaredMethods.exists[supermethod |  methodSignature == Helper::initialMethodSignature(supermethod)]
+				) {
 										
 					// search the Pointcut for this method and add a call to the child aspect
 					val superclassfilePath = superclass.compilationUnit.filePath

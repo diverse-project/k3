@@ -142,8 +142,8 @@ abstract class Helper {
 	static def void getAllPrimaryAndSecondarySuperClasses(List<ClassDeclaration> superClasses,
 		ClassDeclaration classDecl, extension GlobalTypeLookup context) {
 			
-		val directSuperClasses = getDirectPrimaryAndSecondarySuperClasses(classDecl, context)
-									.filter[directsuperclass | !superClasses.contains(directsuperclass)]
+		val List<ClassDeclaration> directSuperClasses = getDirectPrimaryAndSecondarySuperClasses(classDecl, context)
+									.filter[directsuperclass | !superClasses.contains(directsuperclass)].toList
 		superClasses.addAll(directSuperClasses)
 		directSuperClasses.forEach[directsuperclass | 
 			getAllPrimaryAndSecondarySuperClasses(superClasses, directsuperclass, context)
