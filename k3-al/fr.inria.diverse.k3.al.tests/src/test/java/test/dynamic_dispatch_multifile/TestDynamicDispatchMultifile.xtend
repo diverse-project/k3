@@ -107,7 +107,7 @@ class TestDynamicDispatchMultifile {
 	@Test
 	def void testDynamicDispatch_myOperation4_WithAspectInSingleFile() {
 		val a = new ChildA("A1")
-		assertEquals("myOperation4 ChildASubAspect(A1)", a.myOperation4) 	
+		assertEquals("myOperation4 ChildASubSubAspect(A1)", a.myOperation4) 	
 	}
 	/**
 	 * checks with a SubSubAspect of the ChildAspect (not related to a new sub class in the base model)
@@ -126,7 +126,7 @@ class TestDynamicDispatchMultifile {
 	@Test
 	def void testDynamicDispatch_myOperation5_WithAspectInSingleFile() {
 		val a = new ChildA("A1")
-		assertEquals("myOperation5 ChildASubAspect(A1)", a.myOperation5) 	
+		assertEquals("myOperation5 ChildASubSubAspect(A1)", a.myOperation5) 	
 	}
 	/**
 	 * checks with a SubSubAspect of the ChildAspect (not related to a new sub class in the base model)
