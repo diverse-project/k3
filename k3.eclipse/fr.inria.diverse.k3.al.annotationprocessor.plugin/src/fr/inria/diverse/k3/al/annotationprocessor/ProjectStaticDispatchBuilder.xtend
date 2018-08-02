@@ -28,9 +28,11 @@ class ProjectStaticDispatchBuilder {
 	 * 
 	 */
 	public def void writeTempStaticDispatchFile(ClassDeclaration classDecl, extension CodeGenerationContext context){
+		val fileRelativePath = classDecl.compilationUnit.filePath.relativize(classDecl.compilationUnit.filePath.sourceFolder)
+		val destFileName = fileRelativePath.toString.replaceAll("/",".")
 		var Path targetFilePath = classDecl.compilationUnit.filePath.projectFolder.append(
 			"/"+STATICDISPATCH_GENFOLDER+"/"+
-			classDecl.qualifiedName 
+			destFileName 
 			+ "."+ INCREMENTALSTATICDISPATCH_FILEEXT)
 		if(!dispatchStaticInjection.empty) {
 			targetFilePath.contents = dispatchStaticInjection.join("\n")		

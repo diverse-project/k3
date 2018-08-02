@@ -417,6 +417,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 		*/
 		
 		
+		// takes care of return 
+		// takes care of @Step annotation
 		var String privcall = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parametersString.replaceFirst(SELF_VAR_NAME,
 							"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
 		if (isStep) {
@@ -432,6 +434,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 			''')
 		]
 		
+		// add call to private method
+		// note: only this call will take care of the @Step annotation
 		callSB.append('''// «DISPATCH_POINTCUT_KEY» «Helper::initialMethodSignature(m)»
 if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 	«privcall»;
