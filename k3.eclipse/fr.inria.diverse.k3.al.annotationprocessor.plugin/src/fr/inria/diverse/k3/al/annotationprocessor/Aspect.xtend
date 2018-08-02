@@ -34,13 +34,7 @@ import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
-import java.util.HashSet
 import org.eclipse.xtend.lib.macro.services.TypeLookup
-import java.util.regex.Pattern
-import java.util.regex.Matcher
-import java.io.File
-import java.io.FileWriter
-import java.io.BufferedWriter
 
 /**
  * Indicates that this class is an aspect on top of another base class.
@@ -140,6 +134,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	// builder for mapping.properties file
 	val aspectMappingBuilder = new AspectMappingBuilder()
+	val projectStaticDispatchBuilder = new ProjectStaticDispatchBuilder()
 	
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
@@ -157,6 +152,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 1: Register properties and context helpers
 	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
+		println(this +"doRegisterGlobals on "+annotatedClass.qualifiedName)
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if (type !== null) {
 			val className = type.simpleName
@@ -174,7 +170,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		
+		println(this +"doTransform on "+classes.map[qualifiedName].join(" "))
 		mclasses = classes
 
 		// context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
@@ -226,6 +222,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements,
 		extension CodeGenerationContext context) {
 
+		println(this +"doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
 		aspectMappingBuilder.writePropertyFile(context)
 
@@ -427,6 +424,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 				parametersString.substring(parametersString.indexOf(',') + 1))
 		} else if (hasReturn)
 			privcall = '''«resultVar» = «privcall»'''
+		
+		// add existing dispatch code for this method
+		// this may occurs in case of incremental build		
+		projectStaticDispatchBuilder.findExistingDispatchCalls(m, cxt).forEach[dpc|
+			callSB.append('''«dpc»
+			''')
+		]
 		
 		callSB.append('''// «DISPATCH_POINTCUT_KEY» «Helper::initialMethodSignature(m)»
 if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
@@ -1085,25 +1089,20 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		Helper.getAllPrimaryAndSecondarySuperClasses(allSuperClasses, classDecl, context)
 
 		// for all methods declared in the class, look for the same method in the superclasses and inject dispatch code
-		val Set<String> dispatchStaticInjection = newHashSet
+		//val Set<String> dispatchStaticInjection = newHashSet
 		 
 		for (m : classDecl.declaredMethods) {
 			val methodSignature = Helper::initialMethodSignature(m) 
 			for(superclass : allSuperClasses) {
 				if(superclass.declaredMethods.exists[supermethod |  methodSignature == Helper::initialMethodSignature(supermethod)]) {
-					
-					//val String dispatchInjectCodeForSuper
-					
+										
 					// search the Pointcut for this method and add a call to the child aspect
 					val superclassfilePath = superclass.compilationUnit.filePath
 					val superclassjavafile = superclassfilePath.targetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
 					// due to parallel jobs, the file may not exist yet
 					// or may be currently being written
 					waitForFileContent(superclassjavafile, context)		 			
-					synchronized(lock){
-						superclassjavafile.contents.length
-						val aspectJavaFileContent = superclassjavafile.contents.toString
-						
+					synchronized(lock){						
 						
 						val hasReturn = m.returnType.name != "void"
 						// call the public helper for this type (this ensures correct dispatch)
@@ -1113,40 +1112,42 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 						if (hasReturn) 
 							call = '''«RESULT_VAR» = «call»'''
 						
-						val pointcutString = "// "+DISPATCH_POINTCUT_KEY+" "+Helper::initialMethodSignature(m)
-						val pointcutReplacement = '''if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(classDecl)»){
+						val String 	dispatchInjectKey = '''// BeginInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''					
+						val String dispatchInjectCodeForParent = '''	«dispatchInjectKey»
+	if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(classDecl)»){
 		«call»
 	} else
-	// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
-									
-						println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
-						val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
-						superclassjavafile.contents = newContent
-						// wait for complete writing before releasing lock, due to the async writing of xtend
-    					do {
-        					Thread.sleep(100);
-    					} while (superclassjavafile.contents.toString != newContent)
-						//println(superclassjavafile.contents)	
+	// EndInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''
+						projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
+						
+						
+						val aspectJavaFileContent = superclassjavafile.contents.toString
+						if(!aspectJavaFileContent.contains(dispatchInjectKey)){
+							// the parent does not already has this dispatch
+							// add it above the pointcut 
+						
+							val pointcutString = "// "+DISPATCH_POINTCUT_KEY+" "+Helper::initialMethodSignature(m)
+							val pointcutReplacement ='''
+		«dispatchInjectCodeForParent»
+		// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
+							
+							println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
+							val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
+							superclassjavafile.contents = newContent
+							// wait for complete writing before releasing lock, due to the async writing of xtend
+							var timeout = 40
+	    					do {
+	        					Thread.sleep(100);
+	        					timeout--
+	    					} while (superclassjavafile.contents.toString != newContent && timeout > 0)
+						}
 					}
 				}
 			}		
 		}
 
-
-		val parentClassTRef = classDecl.extendedClass
-		if(parentClassTRef !== null ){
-			val parentClass = context.findTypeGlobally(parentClassTRef.name)
-			if(parentClass instanceof ClassDeclaration){
-				
-				
-				
-				for (m : classDecl.declaredMethods) {
-					
-				}
-				
-				
-			}
-		}
+		// save dispatchStaticInjection into a file for proper reuse by other parallel or incremental jobs
+		projectStaticDispatchBuilder.writeTempStaticDispatchFile(classDecl, context)
 		
 	}
 	
