@@ -911,8 +911,9 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 				}
 			}		
 		}
-	
 		
+		projectStaticDispatchBuilder.cleanDeprecatedDispatchFiles(classDecl.compilationUnit, context)
+	
 	}
 	
 	/**

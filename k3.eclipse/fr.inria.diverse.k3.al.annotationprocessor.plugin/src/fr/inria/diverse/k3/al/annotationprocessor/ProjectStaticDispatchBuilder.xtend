@@ -42,6 +42,30 @@ class ProjectStaticDispatchBuilder {
 		}
 	}
 	
+	/**
+	 * remove dispatch file that looks to be irrelevant for the build due to missing equivalent xtend files
+	 */
+	public def void cleanDeprecatedDispatchFiles(CompilationUnit compilationUnit, extension CodeGenerationContext context){
+		// check that the files have their xtend equivalent in the src folder
+			// if not delete them
+			var Path folderPath = compilationUnit.filePath.projectFolder.append("/"+STATICDISPATCH_GENFOLDER)
+			
+			 val childWithCorrectExtension = folderPath.children.filter[f | f.fileExtension !== null && f.fileExtension == INCREMENTALSTATICDISPATCH_FILEEXT]
+			
+			val sourceFolders = compilationUnit.compilationUnit.filePath.projectSourceFolders
+			childWithCorrectExtension.forEach[f| 
+				val intermediate = f.lastSegment.toString.replaceAll("\\.","/")
+				if(intermediate.endsWith("/xtend/"+INCREMENTALSTATICDISPATCH_FILEEXT)){
+					val srcXtendFile = intermediate.substring(0, intermediate.lastIndexOf("/xtend/"+INCREMENTALSTATICDISPATCH_FILEEXT)) + ".xtend"
+					//sourceFolders.forEach[sfolder | println("looking for " +sfolder.append(srcXtendFile)+ " "+sfolder.append(srcXtendFile).exists)]
+					if( !sourceFolders.exists[ sfolder | sfolder.append(srcXtendFile).exists] ) {
+						// delete the file 
+						f.delete
+					}
+				}
+			]
+	}
+	
 	def add(String dispatchInjectCodeForParent) {
 		dispatchStaticInjection.add(dispatchInjectCodeForParent)
 	}
@@ -56,7 +80,9 @@ class ProjectStaticDispatchBuilder {
 		if(dispatchCodeForClass.empty){
 			// create an entry and fill it from data in saved files
 			var Path folderPath = methodDecl.compilationUnit.filePath.projectFolder.append("/"+STATICDISPATCH_GENFOLDER)
-			var validChild = folderPath.children.filter[f | f.fileExtension !== null && f.fileExtension == INCREMENTALSTATICDISPATCH_FILEEXT]
+			val validChild = folderPath.children.filter[f | f.fileExtension !== null && f.fileExtension == INCREMENTALSTATICDISPATCH_FILEEXT]
+			
+			// use the rest as input for dispatch injection
 			validChild.forEach[f|
 					//println("reading "+f.lastSegment + " for "+targetClassQName + " by "+ this)
 					parseAndCacheDispatchStaticInjection(f.contents.toString)
