@@ -153,7 +153,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 1: Register properties and context helpers
 	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-		println(this +" doRegisterGlobals on "+annotatedClass.qualifiedName)
+		// println(this +" doRegisterGlobals on "+annotatedClass.qualifiedName)
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if (type !== null) {
 			val className = type.simpleName
@@ -169,7 +169,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		println(this +"doTransform on "+classes.map[qualifiedName].join(" "))
+		// println(this +" doTransform on "+classes.map[qualifiedName].join(" "))
 		mclasses = classes
 
 		// context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
@@ -222,7 +222,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements,
 		extension CodeGenerationContext context) {
 
-		println(this +"doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
+		// println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
 	    aspectMappingBuilder.writePropertyFile(context)
 

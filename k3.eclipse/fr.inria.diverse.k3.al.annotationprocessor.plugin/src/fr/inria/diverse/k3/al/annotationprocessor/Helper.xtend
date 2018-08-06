@@ -237,7 +237,10 @@ abstract class Helper {
 	static def TypeReference getAnnotationAspectType(TypeDeclaration cl) {
 		if(cl===null || cl.annotations===null) return null;
 		try{
-			val annot = cl.annotations.findFirst[getClassValue(annotationName) !== null]
+			val annot = cl.annotations.findFirst[a|
+				a.annotationTypeDeclaration.simpleName == Aspect.simpleName
+				&& a.getClassValue(annotationName) !== null
+			]
 			if(annot===null) return null
 			return annot.getClassValue(annotationName)
 		}catch(NullPointerException ex){ return null }
