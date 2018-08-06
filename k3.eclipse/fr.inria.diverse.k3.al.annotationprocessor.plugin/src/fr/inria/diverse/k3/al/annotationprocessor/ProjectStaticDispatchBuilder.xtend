@@ -1,5 +1,6 @@
 package fr.inria.diverse.k3.al.annotationprocessor
 
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import java.util.Scanner
@@ -8,10 +9,9 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.TransformationContext
-import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
+import org.eclipse.xtend.lib.macro.declaration.CompilationUnit
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.file.Path
-import java.util.ArrayList
 
 /**
  * Provides methods for managing the generation of the static dispatch in the current project
@@ -27,15 +27,16 @@ class ProjectStaticDispatchBuilder {
 	 * @param context code generation context
 	 * 
 	 */
-	public def void writeTempStaticDispatchFile(ClassDeclaration classDecl, extension CodeGenerationContext context){
-		val fileRelativePath = classDecl.compilationUnit.filePath.relativize(classDecl.compilationUnit.filePath.sourceFolder)
+	public def void writeTempStaticDispatchFile(CompilationUnit compilationUnit, extension CodeGenerationContext context){
+		val fileRelativePath = compilationUnit.filePath.relativize(compilationUnit.filePath.sourceFolder)
 		val destFileName = fileRelativePath.toString.replaceAll("/",".")
-		var Path targetFilePath = classDecl.compilationUnit.filePath.projectFolder.append(
+		var Path targetFilePath = compilationUnit.filePath.projectFolder.append(
 			"/"+STATICDISPATCH_GENFOLDER+"/"+
 			destFileName 
 			+ "."+ INCREMENTALSTATICDISPATCH_FILEEXT)
 		if(!dispatchStaticInjection.empty) {
-			targetFilePath.contents = dispatchStaticInjection.join("\n")		
+			val contents = dispatchStaticInjection.join("\n")
+			Helper::writeContentsIfNew(targetFilePath, contents, context)	
 		} else if(targetFilePath.exists) {
 			targetFilePath.delete
 		}
@@ -57,12 +58,12 @@ class ProjectStaticDispatchBuilder {
 			var Path folderPath = methodDecl.compilationUnit.filePath.projectFolder.append("/"+STATICDISPATCH_GENFOLDER)
 			var validChild = folderPath.children.filter[f | f.fileExtension !== null && f.fileExtension == INCREMENTALSTATICDISPATCH_FILEEXT]
 			validChild.forEach[f|
-					println("reading "+f.lastSegment + " for "+targetClassQName + " by "+ this)
+					//println("reading "+f.lastSegment + " for "+targetClassQName + " by "+ this)
 					parseAndCacheDispatchStaticInjection(f.contents.toString)
 				]
-		} else {
+		} /* else {
 			println("not reading files for "+targetClassQName)
-		}
+		}*/
 		if(dispatchCodeForClass.get(targetClassQName) === null){
 			return #[]
 		}

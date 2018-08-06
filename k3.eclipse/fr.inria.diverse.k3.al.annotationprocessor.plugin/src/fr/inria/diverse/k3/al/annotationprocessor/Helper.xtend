@@ -26,6 +26,8 @@ import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.services.TypeLookup
 import org.eclipse.xtend.lib.macro.services.GlobalTypeLookup
+import org.eclipse.xtend.lib.macro.file.Path
+import org.eclipse.xtend.lib.macro.CodeGenerationContext
 
 /**
  * A tool class containing helper operations for k3.
@@ -379,4 +381,21 @@ abstract class Helper {
 			return '''«m.returnType.simpleName» «m.simpleName»(«parameters.map[p|p.type.simpleName].join(',')»)'''
 		}
 	}
+	static def void writeContentsIfNew(Path targetFilePath,String newContent, extension CodeGenerationContext context) {
+		var write = false
+		if (!targetFilePath.exists) {
+			println("will write "+targetFilePath + " due to not existing file")
+			write = true
+		}
+		else if (targetFilePath.contents != newContent) {// compare new contents and old contents before file is written	
+			println("will write "+targetFilePath + " due to != contents")			
+			write = true	
+		}
+		if (write) {
+			println("writing "+targetFilePath)
+			targetFilePath.contents = newContent 	
+		} else 
+			println("not writing "+targetFilePath)
+	}
+	
 }

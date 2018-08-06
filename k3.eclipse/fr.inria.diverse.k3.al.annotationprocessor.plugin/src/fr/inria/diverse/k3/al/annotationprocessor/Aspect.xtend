@@ -33,6 +33,9 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 import org.eclipse.xtend.lib.macro.services.TypeLookup
+import java.io.File
+import java.io.BufferedReader
+import java.io.FileReader
 
 /**
  * Indicates that this class is an aspect on top of another base class.
@@ -150,7 +153,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 1: Register properties and context helpers
 	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-		println(this +"doRegisterGlobals on "+annotatedClass.qualifiedName)
+		println(this +" doRegisterGlobals on "+annotatedClass.qualifiedName)
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if (type !== null) {
 			val className = type.simpleName
@@ -218,7 +221,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 		println(this +"doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
-		aspectMappingBuilder.writePropertyFile(context)
+	    aspectMappingBuilder.writePropertyFile(context)
 
 		// generate aspectJ code if required
 		for (classDecl : annotatedSourceElements) {
@@ -226,9 +229,15 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 
 		// deal with dispatch methods of classes that are in the current project
-		for (classDecl : annotatedSourceElements) {
+	 	for (classDecl : annotatedSourceElements) {
 			injectDispatchInParentAspects(classDecl, context)
-		}
+		} 
+		
+		
+		annotatedSourceElements.map[classDecl | classDecl.compilationUnit].forEach[cu |
+			// save dispatchStaticInjection into a file for proper reuse by other parallel or incremental jobs
+			projectStaticDispatchBuilder.writeTempStaticDispatchFile(cu, context)
+		]
 	}
 
 	/**
@@ -826,8 +835,9 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 			
 		val contents = '''// AspectJ classes that have been aspectized and name
 «stAspectJ.toString»'''
-		if (doGenerate)
-			targetFilePath.contents = contents
+		if (doGenerate) {
+			Helper::writeContentsIfNew(targetFilePath, contents, context)
+		}
 	}
 	
 	/**
@@ -837,12 +847,12 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 	private def injectDispatchInParentAspects(ClassDeclaration classDecl, extension CodeGenerationContext context) {
 		// deal with dispatch methods of parent classes that are in the current project
 
-		val allSuperClasses = newArrayList 
+		val List<ClassDeclaration> allSuperClasses = newArrayList 
 		Helper.getAllPrimaryAndSecondarySuperClasses(allSuperClasses, classDecl, context)
 
 		// for all methods declared in the class, look for the same method in the superclasses and inject dispatch code
 		//val Set<String> dispatchStaticInjection = newHashSet
-		 
+ 		 
 		for (m : classDecl.declaredMethods) {
 			val methodSignature = Helper::initialMethodSignature(m) 
 			for(superclass : allSuperClasses) {
@@ -858,7 +868,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 					// or may be currently being written
 					waitForFileContent(superclassjavafile, context)		 			
 					synchronized(lock){						
-						
+					 	
 						val hasReturn = m.returnType.name != "void"
 						// call the public helper for this type (this ensures correct dispatch)
 						val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
@@ -873,11 +883,12 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		«call»
 	} else
 	// EndInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''
-						projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
+					 	projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
 						
+			 			
+						val aspectJavaFileContent = readFileContents(superclassjavafile, context) //superclassjavafile.contents.toString
 						
-						val aspectJavaFileContent = superclassjavafile.contents.toString
-						if(!aspectJavaFileContent.contains(dispatchInjectKey)){
+			 			if(!aspectJavaFileContent.contains(dispatchInjectKey)){
 							// the parent does not already has this dispatch
 							// add it above the pointcut 
 						
@@ -890,7 +901,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 							val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
 							superclassjavafile.contents = newContent
 							// wait for complete writing before releasing lock, due to the async writing of xtend
-							var timeout = 40
+			 				var timeout = 40
 	    					do {
 	        					Thread.sleep(100);
 	        					timeout--
@@ -900,23 +911,43 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 				}
 			}		
 		}
-
-		// save dispatchStaticInjection into a file for proper reuse by other parallel or incremental jobs
-		projectStaticDispatchBuilder.writeTempStaticDispatchFile(classDecl, context)
+	
 		
 	}
 	
-	private def waitForFileContent(Path file,extension CodeGenerationContext context){
-		var timeout = 20		// due to parallel jobs, the file may not exist yet 			
-		while(!file.exists && timeout > 0){
+	/**
+	 * wait a little for content 
+	 * timeout after 2 seconds
+	 * does NOT use org.eclipse.xtend.lib.macro.file.Path.getContents() because it seems to trigger events that reschedules some build phase 
+	 */
+	private def waitForFileContent(Path file, extension CodeGenerationContext context){
+		var timeout = 20		// due to parallel jobs, the file may not exist yet 
+		val File f = new File (file.toURI.path)	// do not use xtend Path.getContents because it seems to trigger additional build phases		
+		while(!f.exists && timeout > 0){
 			Thread.sleep(100)
 			timeout--
 		}
 		timeout = 20
-		while(file.contents.length === 0 && timeout > 0){
+		while(f.length === 0 && timeout > 0){
 			Thread.sleep(100)
 			timeout--
 		}
+	}
+	/**
+	* read the content of the given file
+	* does NOT use org.eclipse.xtend.lib.macro.file.Path.getContents() because it seems to trigger events that reschedules some build phase
+	* -> do it using plain java so it doesn't trigger eclipse event
+	*/	
+	private def String readFileContents(Path file, extension CodeGenerationContext context){
+		val BufferedReader br = new BufferedReader(new FileReader(file.toURI.path))	// do not use xtend Path.getContents because it seems to trigger additional build phases		
+		val sb = new StringBuilder
+		var String line = br.readLine();
+	    while (line !== null) {
+	        sb.append(line);
+	        sb.append(System.lineSeparator());
+	        line = br.readLine();
+	    }
+		return sb.toString
 	}
 }
 
