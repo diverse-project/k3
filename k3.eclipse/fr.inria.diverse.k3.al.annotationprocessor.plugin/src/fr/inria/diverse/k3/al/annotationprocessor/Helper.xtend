@@ -384,18 +384,18 @@ abstract class Helper {
 	static def void writeContentsIfNew(Path targetFilePath,String newContent, extension CodeGenerationContext context) {
 		var write = false
 		if (!targetFilePath.exists) {
-			println("will write "+targetFilePath + " due to not existing file")
+			// println("will write "+targetFilePath + " due to not existing file")
 			write = true
 		}
 		else if (targetFilePath.contents != newContent) {// compare new contents and old contents before file is written	
-			println("will write "+targetFilePath + " due to != contents")			
+			// println("will write "+targetFilePath + " due to != contents")			
 			write = true	
 		}
 		if (write) {
-			println("writing "+targetFilePath)
+			// println("writing "+targetFilePath)
 			targetFilePath.contents = newContent 	
-		} else 
-			println("not writing "+targetFilePath)
+		} /* else 
+			println("not writing "+targetFilePath) */
 	}
 	
 }
