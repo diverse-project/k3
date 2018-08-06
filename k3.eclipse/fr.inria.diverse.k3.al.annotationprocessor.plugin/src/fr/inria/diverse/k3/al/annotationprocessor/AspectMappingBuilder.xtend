@@ -11,7 +11,9 @@
  package fr.inria.diverse.k3.al.annotationprocessor
 
 import java.io.IOException
+import java.lang.ref.WeakReference
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
 import java.util.Map
 import java.util.Properties
@@ -22,16 +24,51 @@ import org.eclipse.xtend.lib.macro.file.Path
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
- * It mus tbe called within the doGenerateCode() of the ClassProcessor
+ * It must be called within the doGenerateCode() of the ClassProcessor
  * This builder will do nothing if called without annotated element
+ * 
+ * This builder used a map with weak reference in order to be able to  use a single instance for a given project
+ * see getAspectMappingBuilder() to get the instance
+ * 
+ * This allows to collect work done in several doTransform of several parallel jobs and assemble them when doing the doGenerateCode (ie. when calling the writeProperty)
+ * once the writeProperty has been called once, the map is reset to null in order to restart from scratch when calling the readCurrentMapping again
  */
 class AspectMappingBuilder {
+
+	public static String ASPECTMAPPING_FOLDER = "META-INF/xtend-gen"
 
 	// list of annotated classes
 	var List<? extends MutableClassDeclaration> classes;
 
 	// destination properties file
 	var Path targetFilePath
+	
+	var String projectName
+
+
+	/**
+	 * 
+	 * main key: project name
+	 * 
+	 */
+	private static Map<String, WeakReference<AspectMappingBuilder>> projectsAspectMappingBuilder =  new HashMap<String, WeakReference<AspectMappingBuilder>>
+
+	/** use getAspectMappingBuilder() in order to get an instance associated to the project */
+	private new (String projectName){
+		this.projectName = projectName
+	}
+	
+	public static def AspectMappingBuilder getAspectMappingBuilder(String projectName) {
+		val weakRef = projectsAspectMappingBuilder.get(projectName)
+		if(weakRef !== null && weakRef.get !== null ) return weakRef.get
+		else {
+			// never used or garbage collected
+			// create a new one
+			val result = new AspectMappingBuilder(projectName)
+			projectsAspectMappingBuilder.put(projectName, new WeakReference(result))
+			return result
+		}
+	}
 
 	/** internal map */
 	private val Map<String, List<String>> mapping = newHashMap
@@ -46,7 +83,7 @@ class AspectMappingBuilder {
 		//this.context = context
 		if (classes.size > 0) {
 			val filePath = classes.head.compilationUnit.filePath
-			targetFilePath = filePath.projectFolder.append('''/META-INF/xtend-gen/«filePath.projectFolder.lastSegment».k3_aspect_mapping.properties''')
+			targetFilePath = filePath.projectFolder.append('''/«ASPECTMAPPING_FOLDER»/«filePath.projectFolder.lastSegment».k3_aspect_mapping.properties''')
 		}
 		if (classes.size > 0) {
 			val Properties properties = new Properties();
@@ -125,4 +162,6 @@ class AspectMappingBuilder {
 			existingListForAspectizedElement.add(aspectClassName)
 		}
 	}
+	
+	
 }

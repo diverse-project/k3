@@ -134,7 +134,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	Map<MutableClassDeclaration, List<MutableClassDeclaration>> listResMap = newHashMap
 
 	// builder for mapping.properties file
-	val aspectMappingBuilder = new AspectMappingBuilder()
+	var AspectMappingBuilder aspectMappingBuilder
 	val projectStaticDispatchBuilder = new ProjectStaticDispatchBuilder()
 	
 	public static final String CTX_NAME = "AspectContext"
@@ -200,11 +200,14 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 				aspectContextMaker(context, clazz, className, identifier)
 			}
+			
 		}
 
 		// prepare an AspectMapping properties file
 		// it is partly done in this context and partly done in the generate code context
 		// (allows to get writing abilities and notification to Eclipse)
+		
+		aspectMappingBuilder = AspectMappingBuilder::getAspectMappingBuilder(classes.head.compilationUnit.filePath.projectFolder.toString)
 		aspectMappingBuilder.readCurrentMapping(classes, context)
 		aspectMappingBuilder.cleanUnusedMapping(context)
 		
