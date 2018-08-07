@@ -9,11 +9,10 @@
     Contributors:
         Inria - initial API and implementation
  -->
-
 <feature
       id="fr.inria.diverse.k3.feature"
       label="K3 feature"
-      version="3.2.2.qualifier"
+      version="3.2.3.qualifier"
       provider-name="Inria DiverSE">
 
    <description url="http://www.kermeta.org/k3/update/">
@@ -28,7 +27,7 @@ are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
 Contibutors:
-	Inria : Initial API and implementation
+ Inria : Initial API and implementation
    </copyright>
 
    <license url="%licenseURL">

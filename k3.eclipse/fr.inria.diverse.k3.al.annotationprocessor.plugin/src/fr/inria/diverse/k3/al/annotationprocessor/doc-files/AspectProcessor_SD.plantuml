@@ -2,8 +2,9 @@
 
 participant XtendCompiler as XtendCompiler
 participant AspectProcessor as Processor
+participant ProjectStaticDispatchBuilder
+participant AspectMappingBuilder
 participant RegisterGlobalsContext
-participant aspectMappingBuilder
 
 note over of Processor
 	Applies to classes with @Aspect annotation
@@ -38,16 +39,8 @@ group for classes with Aspect annotation
 			Processor -> Processor: methodProcessingAddPriv
 			Processor -> Processor: methodProcessingChangeBody
 			activate Processor
-				Processor -> Processor: transformIfStatements
-				activate Processor
-					Processor -> Processor: surroundWithStepCommandExecution					
-					Processor --> Processor
-				deactivate Processor
-				Processor -> Processor: transformNormalStatement
-				activate Processor
-					Processor -> Processor: surroundWithStepCommandExecution					
-					Processor --> Processor
-				deactivate Processor
+				Processor -> Processor: surroundWithStepCommandExecution
+				Processor -> ProjectStaticDispatchBuilder : findExistingDispatchCalls					
 				Processor -> Processor: getBody
 				Processor --> Processor
 			deactivate Processor
@@ -58,16 +51,32 @@ group for classes with Aspect annotation
 	Processor -> Processor: constructorsProcessing
 	Processor -> Processor: aspectContextMaker
 end
-Processor -> aspectMappingBuilder: readCurrentMapping
-Processor -> aspectMappingBuilder: cleanUnusedMapping
-Processor -> aspectMappingBuilder: addMappingForAnnotatedSourceElements
+
+note over AspectMappingBuilder
+	The AspectMappingBuilder instance 
+	is shared between jobs working 
+	on the same eclipse project
+end note
+Processor -> AspectMappingBuilder: getAspectMappingBuilder
+activate AspectMappingBuilder
+Processor -> AspectMappingBuilder: readCurrentMapping
+Processor -> AspectMappingBuilder: cleanUnusedMapping
+Processor -> AspectMappingBuilder: addMappingForAnnotatedSourceElements
 XtendCompiler <-- Processor
 
 XtendCompiler --> XtendCompiler: doValidate
 
 XtendCompiler -> Processor: doGenerateCode
-Processor -> aspectMappingBuilder: writePropertyFile
+Processor -> AspectMappingBuilder: writePropertyFile
+deactivate AspectMappingBuilder
 Processor -> Processor: generateAspectJCodeForClass
+Processor -> Processor: injectDispatchInParentAspects
+activate Processor
+Processor -> ProjectStaticDispatchBuilder : add
+Processor -> ProjectStaticDispatchBuilder : cleanDeprecatedDispatchFiles
+Processor --> Processor
+deactivate Processor
+Processor -> ProjectStaticDispatchBuilder : writeTempStaticDispatchFile
 XtendCompiler <-- Processor
 
 deactivate Processor

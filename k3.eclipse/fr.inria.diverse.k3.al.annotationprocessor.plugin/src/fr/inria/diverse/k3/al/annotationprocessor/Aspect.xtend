@@ -16,7 +16,6 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 import java.util.ArrayList
 import java.util.Comparator
-import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
 import java.util.Set
@@ -30,10 +29,13 @@ import org.eclipse.xtend.lib.macro.declaration.MethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableFieldDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
-import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
+import org.eclipse.xtend.lib.macro.services.TypeLookup
+import java.io.File
+import java.io.BufferedReader
+import java.io.FileReader
 
 /**
  * Indicates that this class is an aspect on top of another base class.
@@ -132,7 +134,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 	Map<MutableClassDeclaration, List<MutableClassDeclaration>> listResMap = newHashMap
 
 	// builder for mapping.properties file
-	val aspectMappingBuilder = new AspectMappingBuilder()
+	var AspectMappingBuilder aspectMappingBuilder
+	val projectStaticDispatchBuilder = new ProjectStaticDispatchBuilder()
 	
 	public static final String CTX_NAME = "AspectContext"
 	public static final String PROP_NAME = "AspectProperties"
@@ -142,11 +145,15 @@ public class AspectProcessor extends AbstractClassProcessor {
 	public static final String SELF_VAR_NAME = "_self"
 	public static final String PRIV_PREFIX = "_privk3_"
 	public static final String PRIV_CONSTRUCTOR_POSTFIX = "_constructor_initializer"
+	public static final String RESULT_VAR = "result"
+	public static final String DISPATCH_POINTCUT_KEY = "#DispatchPointCut_before#"
+	public static Boolean lock = false
 
 	/**
 	 * Phase 1: Register properties and context helpers
 	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
+		// println(this +" doRegisterGlobals on "+annotatedClass.qualifiedName)
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if (type !== null) {
 			val className = type.simpleName
@@ -156,19 +163,16 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	List<? extends MutableClassDeclaration> mclasses = null
+	
 
 	/**
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		val Map<MutableClassDeclaration, List<ClassDeclaration>> superclass = newHashMap
-		val Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod = newHashMap
-
+		// println(this +" doTransform on "+classes.map[qualifiedName].join(" "))
 		mclasses = classes
 
 		// context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
-		initSuperclass(classes, context, superclass)
-		initDispatchmethod(superclass, dispatchmethod, context)
 
 		for (clazz : classes) {
 			
@@ -189,18 +193,21 @@ public class AspectProcessor extends AbstractClassProcessor {
 				fieldsProcessing(context, clazz, className, identifier, bodies)
 
 				// Transform methods to static
-				methodsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
+				methodsProcessing(clazz, context, identifier, bodies, inheritList, className)
 
 				// constructor are currently not allowed, report error if there are some.
-				constructorsProcessing(clazz, context, identifier, bodies, dispatchmethod, inheritList, className)
+				constructorsProcessing(clazz, context, identifier, bodies, className)
 
 				aspectContextMaker(context, clazz, className, identifier)
 			}
+			
 		}
 
 		// prepare an AspectMapping properties file
 		// it is partly done in this context and partly done in the generate code context
 		// (allows to get writing abilities and notification to Eclipse)
+		
+		aspectMappingBuilder = AspectMappingBuilder::getAspectMappingBuilder(classes.head.compilationUnit.filePath.projectFolder.toString)
 		aspectMappingBuilder.readCurrentMapping(classes, context)
 		aspectMappingBuilder.cleanUnusedMapping(context)
 		
@@ -208,42 +215,60 @@ public class AspectProcessor extends AbstractClassProcessor {
 	}
 
 	/**
-	 * Phase 3: use an additional code generator to produce some additional files:
+	 * Phase 4: use an additional code generator to produce some additional files:
 	 * - generates the .k3_aspect_mapping.properties file that can be used later by other tool to inspect aspects
 	 * - generates the AspectJ file needed to bypass some limitations; 
 	 */
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements,
 		extension CodeGenerationContext context) {
 
+		// println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
-		aspectMappingBuilder.writePropertyFile(context)
+	    aspectMappingBuilder.writePropertyFile(context)
 
-		// 
-		for (clazz : annotatedSourceElements) {
- 			generateAspectJCodeForClass(clazz, context)
-			
+		// generate aspectJ code if required
+		for (classDecl : annotatedSourceElements) {
+ 			generateAspectJCodeForClass(classDecl, context)
 		}
 
+		// deal with dispatch methods of classes that are in the current project
+	 	for (classDecl : annotatedSourceElements) {
+			injectDispatchInParentAspects(classDecl, context)
+		} 
+		
+		
+		annotatedSourceElements.map[classDecl | classDecl.compilationUnit].forEach[cu |
+			// save dispatchStaticInjection into a file for proper reuse by other parallel or incremental jobs
+			projectStaticDispatchBuilder.writeTempStaticDispatchFile(cu, context)
+		]
 	}
 
+	/**
+	 * Change the signature of the original method to makes it static
+	 * -	add _self parameter
+	 * -	makes it static
+	 * -	deal with the @Abstract annotation 
+	 */
 	private def methodProcessingAddSelfStatic(MutableMethodDeclaration m, String identifier,
 		extension TransformationContext cxt) {
 		// In not visited method, add _self as first parameter and set it static
 		// also add _self_ as second parameter
 		if (m.parameters.empty || m.parameters.head.simpleName != SELF_VAR_NAME) {
+			// save original list of parameters in l
 			val l = new ArrayList<Pair<String, TypeReference>>
 			for (p1 : m.parameters)
 				l.add(new Pair(p1.simpleName, p1.type))
 
-			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
-			if (m.abstract)
-				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))
-
 			m.parameters.toList.clear
+			// reset parameters and add _self as first parameter
 			m.addParameter(SELF_VAR_NAME, newTypeReference(identifier))
 
 			for (param : l)
 				m.addParameter(param.key, param.value)
+				
+			// If the initial operation is abstract, the new static one must be tagged as abstract to perform some computations afterward.
+			if (m.abstract)
+				m.addAnnotation(newAnnotationReference(typeof(Abstract).findTypeGlobally))
 		}
 
 		m.setStatic(true)
@@ -351,99 +376,52 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Ie. does a dispatch that search in the aspect hierarchy the method that need to be called 
 	 */
 	private def methodProcessingChangeBody(MutableMethodDeclaration m, MutableClassDeclaration clazz,
-		extension TransformationContext cxt, Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod,
+		extension TransformationContext cxt, /*Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod,*/
 		List<String> inheritList, String className) {
 		// Change the body of the method to call the closest method PRIV_PREFIX+methodName in the aspect hierarchy
-		var s = m.parameters.map[simpleName].join(',')
+		
+		val dt = m.declaringType
+		var parametersString = m.parameters.map[simpleName].join(',')
 		val boolean isStep = m.annotations.exists[annotationTypeDeclaration.simpleName == STEP]
-		val ret = getReturnInstruction(m, cxt)
-		val call = new StringBuilder
+		val returnInstruction = getReturnInstruction(m, cxt)
+		val hasReturn = returnInstruction.contains("return")
+		val callSB = new StringBuilder
+		
+		val resultVar = "result"
 
-		// cxt.addError(m, ""+ dispatchmethod.size)
-		if (dispatchmethod.get(m) !== null) {
-			val listmethod = Helper::sortByMethodInheritance(dispatchmethod.get(m), inheritList)
-			// cxt.addError(m, ""+listmethod.size)
-			val declTypes = listmethod.map[declaringType]
+		// takes care of return 
+		// takes care of @Step annotation
+		var String privcall = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parametersString.replaceFirst(SELF_VAR_NAME,
+							"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
+		if (isStep) {
+			privcall = surroundWithStepCommandExecution(className, m.simpleName, privcall, hasReturn, resultVar,
+				parametersString.substring(parametersString.indexOf(',') + 1))
+		} else if (hasReturn)
+			privcall = '''«resultVar» = «privcall»'''
+		
+		// add existing dispatch code for this method
+		// this may occurs in case of incremental build		
+		projectStaticDispatchBuilder.findExistingDispatchCalls(m, cxt).forEach[dpc|
+			callSB.append('''«dpc»
+			''')
+		]
+		
+		// add call to private method
+		// note: only this call will take care of the @Step annotation
+		callSB.append('''// «DISPATCH_POINTCUT_KEY» «Helper::initialMethodSignature(m)»
+if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
+	«privcall»;
+}''')
 
-			// A time-consuming check to be used for debugging only.
-			// Looks for any problem in the order of the classes.
-//					val declTypes = new ArrayList(listmethod.map[declaringType])
-//					val size = declTypes.size
-//					var i=1
-//
-//					for(type : declTypes) {
-//						for(pos : i..<size)
-//							if(type.isAssignableFrom(declTypes.get(pos)))
-//								addError(clazz, "The generated factory does not have a correct hierarchy: " + type.simpleName + ", " + declTypes.get(pos).simpleName)
-//						i=i+1
-//					}
-			val ifst = transformIfStatements(m, cxt, declTypes, s, ret,isStep, className)
-			call.append(ifst)
-			call.append(''' { throw new IllegalArgumentException("Unhandled parameter types: " + java.util.Arrays.<Object>asList(«SELF_VAR_NAME»).toString()); }''')
-		} else {
-			val instruction = transformNormalStatement(m, cxt, s,isStep, className)
-			call.append(instruction) // for getters & setters
-		}
 		m.abstract = false
 
-		
 		m.body = [
-			getBody(clazz, className, call.toString, ret)
+			getBody(clazz, className, callSB.toString, returnInstruction)
 		]
 	}
 
 	private def hasReturnType(MutableMethodDeclaration declaration, extension TransformationContext cxt) {
 		return ( declaration.returnType != newTypeReference("void") )
-	}
-
-	private def transformIfStatements(MutableMethodDeclaration m, extension TransformationContext cxt,
-		List<TypeDeclaration> declTypes, String parameters, String returnStatement, boolean isStep, String className) {
-			val hasReturn = returnStatement.contains("return")
-			val resultVar = "result"
-			val StringBuilder sb = new StringBuilder
-			for (dt : declTypes) {
-				var String call = ""
-				
-				if (m.declaringType.equals(dt)) {
-					
-					// if the method is local, call it
-					call = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parameters.replaceFirst(SELF_VAR_NAME,
-				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
-				
-				if (isStep) {
-					call = surroundWithStepCommandExecution(className, m.simpleName, call, hasReturn, resultVar, parameters.substring(parameters.indexOf(',') + 1))
-				} else if (hasReturn) 
-						call = '''«resultVar» = «call»'''
-				} else {
-					
-					// if the method is local, otherwise call the public helper for this type (this ensures that the correct XXXAspectProperties will be set
-					call = '''«dt.newTypeReference.name».«m.simpleName»(«parameters.replaceFirst(SELF_VAR_NAME,
-				"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
-					if (hasReturn) 
-						call = '''«resultVar» = «call»'''
-				}
-				
-				sb.append(''' if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
-					«call»;
-} else ''')
-			}
-			return sb.toString
-		}
-
-	private def transformNormalStatement(MutableMethodDeclaration declaration, extension TransformationContext cxt,
-		String parameters, boolean isStep, String className) {
-		val hasReturn = hasReturnType(declaration, cxt)
-		val resultVar = "result"
-					
-		var String call = '''«PRIV_PREFIX+declaration.simpleName»(_self_, «parameters»)'''
-		
-		if (isStep) {
-			call = surroundWithStepCommandExecution(className, declaration.simpleName, call, hasReturn, resultVar, parameters.substring(parameters.indexOf(',') + 1))
-		}
-		else if (hasReturn)
-			call = '''«resultVar» = «call»'''
-		
-		return call + ";"
 	}
 
 	private def getReturnInstruction(MutableMethodDeclaration declaration, extension TransformationContext cxt) {
@@ -573,7 +551,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	private def methodsProcessing(MutableClassDeclaration clazz, TransformationContext cxt, String identifier,
 		Map<MutableMethodDeclaration, String> bodies,
-		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
+		List<String> inheritList,
 		String aspectizedClassName) {
 		
 		for (m : clazz.declaredMethods) {
@@ -586,65 +564,13 @@ public class AspectProcessor extends AbstractClassProcessor {
 				methodProcessingAddSuper(m, clazz, aspectizedClassName, cxt)
 				methodProcessingAddHidden(m, identifier, cxt)
 				methodProcessingAddPriv(m, clazz, aspectizedClassName, bodies, cxt)
-				methodProcessingChangeBody(m, clazz, cxt, dispatchmethod, inheritList, aspectizedClassName)
+				methodProcessingChangeBody(m, clazz, cxt, inheritList, aspectizedClassName)
 			} else
 				cxt.addError(m, "Cannot find a super method in the aspect hierarchy.")
 		}
 		
-//		methodProcessingCheckPreconditions(clazz, cxt)
-		
 		methodProcessingAddMultiInheritMeth(clazz, identifier, cxt)
 	}
-
-//	private def methodProcessingCheckPreconditions(MutableClassDeclaration clazz, extension TransformationContext cxt) {
-//		val steps = clazz.declaredMethods.filter[
-//			annotations.exists[
-//				annotationTypeDeclaration.simpleName == STEP
-//			]
-//		]
-//		val eventHandlers = steps.filter[
-//			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
-//					.getBooleanValue("eventHandler")
-//		].toList
-//		val preconditionedSteps = steps.filter[
-//			annotations.findFirst[annotationTypeDeclaration.simpleName == STEP]
-//					.getStringValue("precondition") != ""
-//		].toList
-//		val methodsInError = new ArrayList(preconditionedSteps)
-//		methodsInError.removeAll(eventHandlers)
-//		methodsInError.forEach[m|m.addError("Cannot declare precondition on non-event step")]
-//		preconditionedSteps.removeAll(methodsInError)
-//		preconditionedSteps.forEach[m|
-//			val preconditionName = m.annotations.findFirst[
-//				annotationTypeDeclaration.simpleName == STEP
-//			].getStringValue("precondition")
-//			val preconditionMethods = clazz.declaredMethods.filter[p|p.simpleName == preconditionName]
-//			if (preconditionMethods.size == 0) {
-//				m.addError("Cannot find associated precondition method")
-//			} else if (preconditionMethods.size > 1) {
-//				preconditionMethods.forEach[p|
-//					p.addError("Ambiguous precondition method name")
-//				]
-//			} else {
-//				val precondition = preconditionMethods.head
-//				val preconditionParameters = precondition.parameters
-//				val eventParameters = m.parameters
-//				if (preconditionParameters.size != eventParameters.size) {
-//					precondition.addError("Precondition method parameters do not match event method parameters")
-//				} else {
-//					val preIt = preconditionParameters.iterator
-//					val eventIt = eventParameters.iterator
-//					var matching = true
-//					while (matching && preIt.hasNext) {
-//						matching = preIt.next.type.name == eventIt.next.type.name
-//					}
-//					if (!matching) {
-//						precondition.addError("Precondition method parameters do not match event method parameters")
-//					}
-//				}
-//			}
-//		]
-//	}
 
 	/** Checks that the given method of the given class is correctly tagged with the annotation OverrideAspectMethod, i.e.
 	 * checks that a super method exists in its hierarchy. */
@@ -653,7 +579,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 		if (!m.annotations.exists[annotationTypeDeclaration.simpleName == OVERRIDE_METHOD]) {
 			return true
 		}
-		val supers = Helper::getDirectSuperClasses(clazz, cxt)
+		val supers = Helper::getDirectPrimaryAndSecondarySuperClasses(clazz, cxt)
 		if (supers.empty) {
 			cxt.addError(clazz, "passe par la")
 			return false
@@ -664,7 +590,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 
 	private def constructorsProcessing(MutableClassDeclaration clazz, TransformationContext cxt,
 		String identifier, Map<MutableMethodDeclaration, String> bodies,
-		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, List<String> inheritList,
 		String className) {
 
 		for (c : clazz.declaredConstructors) {
@@ -676,65 +601,65 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 	}
 
-			/**
-			 * Create the class which link classes with their aspects
-			 */
-			private def aspectContextMaker(extension TransformationContext context, MutableClassDeclaration clazz,
-				String className, String identifier) {
-				val holderClass = findClass(clazz.qualifiedName + className + CTX_NAME)
+	/**
+	 * Create the class which links classes with their aspects
+	 */
+	private def aspectContextMaker(extension TransformationContext context, MutableClassDeclaration clazz,
+		String className, String identifier) {
+		val holderClass = findClass(clazz.qualifiedName + className + CTX_NAME)
 
-				if (holderClass === null)
-					return;
+		if (holderClass === null)
+			return;
 
-				holderClass.primarySourceElement = clazz
-				holderClass.visibility = Visibility::PUBLIC
-				holderClass.addConstructor [
-					visibility = Visibility::PRIVATE
-					primarySourceElement = clazz
-				]
+		holderClass.primarySourceElement = clazz
+		holderClass.visibility = Visibility::PUBLIC
+		holderClass.addConstructor [
+			visibility = Visibility::PRIVATE
+			primarySourceElement = clazz
+		]
 
-				holderClass.addField('INSTANCE') [
-					visibility = Visibility::PUBLIC
-					static = true
-					final = true
-					type = holderClass.newTypeReference
-					initializer = ['''new «holderClass.simpleName»()''']
-					primarySourceElement = clazz
-				]
+		holderClass.addField('INSTANCE') [
+			visibility = Visibility::PUBLIC
+			static = true
+			final = true
+			type = holderClass.newTypeReference
+			initializer = ['''new «holderClass.simpleName»()''']
+			primarySourceElement = clazz
+		]
 
-				holderClass.addMethod('getSelf') [
-					visibility = Visibility::PUBLIC
-					static = true
-					addParameter("_self", newTypeReference(identifier))
-					returnType = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
-					body = [
+		holderClass.addMethod('getSelf') [
+			visibility = Visibility::PUBLIC
+			static = true
+			addParameter("_self", newTypeReference(identifier))
+			returnType = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
+			body = [
 						'''		if (!INSTANCE.map.containsKey(_self))
 			INSTANCE.map.put(_self, new «clazz.qualifiedName + className + PROP_NAME»());
 		return INSTANCE.map.get(_self);'''
-					]
-					primarySourceElement = clazz
-				]
+			]
+			primarySourceElement = clazz
+		]
 
-				holderClass.addField('map') [
-					visibility = Visibility::PRIVATE
-					static = false
-					type = newTypeReference("java.util.Map", newTypeReference(identifier),
-						findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
-					initializer = [
-						'''new java.util.WeakHashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()'''
-					]
-					primarySourceElement = clazz
-				]
+		holderClass.addField('map') [
+			visibility = Visibility::PRIVATE
+			static = false
+			type = newTypeReference("java.util.Map", newTypeReference(identifier),
+				findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
+			initializer = [
+				'''new java.util.WeakHashMap<«identifier + Helper::mkstring(newTypeReference(identifier).actualTypeArguments,",","<",">")», «clazz.qualifiedName + className + PROP_NAME»>()'''
+			]
+			primarySourceElement = clazz
+		]
 
-				holderClass.addMethod('getMap') [
-					visibility = Visibility::PUBLIC
-					static = false
-					returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
-						findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
-					body = ['''return map;''']
-					primarySourceElement = clazz
-				]
-			}
+		holderClass.addMethod('getMap') [
+			visibility = Visibility::PUBLIC
+			static = false
+			returnType = newTypeReference("java.util.Map", newTypeReference(identifier),
+				findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference)
+			body = ['''return map;''']
+			primarySourceElement = clazz
+		]
+	}
 
 	/** Move non static fields */
 	private def fieldProcessingMoveField(MutableClassDeclaration clazz, 
@@ -770,25 +695,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 					}
 				}
 			}
-		}
-	}
-
-	private def void fieldProcessingAddField(MutableClassDeclaration clazz, String className,
-		extension TransformationContext context) {
-		if (!clazz.declaredFields.exists[simpleName == PROP_VAR_NAME]) {
-			val clazzProp = findClass(clazz.qualifiedName + className + PROP_NAME)
-
-			if (clazzProp === null)
-				addError(clazz,
-					"Cannot resolve the class to aspectise. Check that the classes to aspectise are not in the same project that your aspects."
-				)
-			else
-				clazz.addField(PROP_VAR_NAME) [
-					type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
-					static = true
-					visibility = Visibility::PUBLIC
-					primarySourceElement = clazz
-				]
 		}
 	}
 
@@ -876,94 +782,6 @@ public class AspectProcessor extends AbstractClassProcessor {
 		for (f : toRemove)
 			f.remove
 	}
-
-	/**
-	 * Each aspect method is associatated with the lists of all methods with the
-	 * same signature (name + number of args) of parents classes and children classes.
-	 * @superclass All aspects associated with their superclasses
-	 * @dispatchmethod Associations computed
-	 * @context
-	 */
-	private def initDispatchmethod(Map<MutableClassDeclaration, List<ClassDeclaration>> superclass,
-		Map<MethodDeclaration, Set<MethodDeclaration>> dispatchmethod, TransformationContext context) {
-		var i = 0
-		for (cl : superclass.keySet) {
-			// Regroup methods of the class hierarchy by name+number of parameters
-			val clazzes = new ArrayList<ClassDeclaration>
-			clazzes.add(cl)
-			clazzes.addAll(superclass.get(cl))
-
-			val Map<String, Set<MethodDeclaration>> dispatchs = newHashMap
-			for (clazz : clazzes) {
-				for (m : clazz.declaredMethods) {
-					val mname = m.simpleName + "__" + m.parameters.size
-					var v = dispatchs.get(mname)
-					if (v === null) {
-						v = new LinkedHashSet<MethodDeclaration>()
-						dispatchs.put(mname, v)
-					}
-					v.add(m)
-				}
-			}
-
-			for (key : dispatchs.keySet) {
-				val res = dispatchs.get(key)
-				if (res.size > 1) {
-					i = i + res.size
-					for (m : res) {
-						if (dispatchmethod.get(m) === null)
-							dispatchmethod.put(m, res)
-						else
-							dispatchmethod.get(m).addAll(res)
-					}
-				}
-			}
-
-		}
-
-		// Sort Dispatchmethod entries values by hierarchy of their containing classes
-		for (m : dispatchmethod.keySet) {
-			val l = dispatchmethod.get(m).sortWith(new SortMethod(context))
-			
-			dispatchmethod.get(m).clear
-			dispatchmethod.get(m).addAll(l)
-			//dispatchmethod.class
-//					val buf = new StringBuffer
-//					dispatchmethod.keySet.forEach[m1 | buf.append("\n"+m1.simpleName + " " + m1.declaringType.simpleName + ": ") dispatchmethod.get(m1).forEach[m2 | buf.append(m2.simpleName + " " + m2.declaringType.simpleName + ", ")]    ]					
-//					context.addWarning(mclasses.get(0),buf.toString)
-		}
-	}
-
-	/**
-	 * For each annotated class store his super classes hierarchy.
-	 * An annotated class which is a parent of an other annotated
-	 * class is not in the final result.
-	 * @annotedClasses All aspects
-	 * @superclass Mapping computed between class and list of his super classes
-	 * @context
-	 */
-	private def initSuperclass(List<? extends MutableClassDeclaration> annotedClasses,
-		TransformationContext context, Map<MutableClassDeclaration, List<ClassDeclaration>> superclass) {
-		// Add super classes for all annotated classes
-		for (clazz : annotedClasses) {
-			val ext = new ArrayList<ClassDeclaration>
-			Helper::getSuperClass(ext, clazz, context)
-//			context.addError(clazz,""+ext.size)
-			if (ext.size > 0)
-				superclass.put(clazz, ext)
-		}
-
-		// Get all super classes
-		val allparent = new LinkedHashSet<ClassDeclaration>
-		for (child : superclass.keySet) {
-			allparent.addAll(superclass.get(child))
-		}
-
-		// Remove super classes which are annotated
-		for (p : allparent) {
-			superclass.remove(p)
-		}
-	}
 				
 	/**
 	 * Generate the code and file for a ClassDeclaration
@@ -1020,8 +838,120 @@ public class AspectProcessor extends AbstractClassProcessor {
 			
 		val contents = '''// AspectJ classes that have been aspectized and name
 «stAspectJ.toString»'''
-		if (doGenerate)
-			targetFilePath.contents = contents
+		if (doGenerate) {
+			Helper::writeContentsIfNew(targetFilePath, contents, context)
+		}
+	}
+	
+	/**
+	 * Change the generated java code of parent aspects of this class (only in the same project) in order
+	 * to inject the dispatch code to this child classDecl 
+	 */
+	private def injectDispatchInParentAspects(ClassDeclaration classDecl, extension CodeGenerationContext context) {
+		// deal with dispatch methods of parent classes that are in the current project
+
+		val List<ClassDeclaration> allSuperClasses = newArrayList 
+		Helper.getAllPrimaryAndSecondarySuperClasses(allSuperClasses, classDecl, context)
+
+		// for all methods declared in the class, look for the same method in the superclasses and inject dispatch code
+		//val Set<String> dispatchStaticInjection = newHashSet
+ 		 
+		for (m : classDecl.declaredMethods) {
+			val methodSignature = Helper::initialMethodSignature(m) 
+			for(superclass : allSuperClasses) {
+				// staticdispatch works only in a hierarchy of classes with @Aspect annotation
+				if( superclass.annotations.exists[annotationTypeDeclaration.simpleName == Aspect.simpleName] &&
+					superclass.declaredMethods.exists[supermethod |  methodSignature == Helper::initialMethodSignature(supermethod)]
+				) {
+										
+					// search the Pointcut for this method and add a call to the child aspect
+					val superclassfilePath = superclass.compilationUnit.filePath
+					val superclassjavafile = superclassfilePath.targetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
+					// due to parallel jobs, the file may not exist yet
+					// or may be currently being written
+					waitForFileContent(superclassjavafile, context)		 			
+					synchronized(lock){						
+					 	
+						val hasReturn = m.returnType.name != "void"
+						// call the public helper for this type (this ensures correct dispatch)
+						val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
+							else '''"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»,«m.parameters.map[simpleName].join(',')»'''
+						var call = '''«classDecl.qualifiedName».«m.simpleName»(«parametersString»);'''
+						if (hasReturn) 
+							call = '''«RESULT_VAR» = «call»'''
+						
+						val String 	dispatchInjectKey = '''// BeginInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''					
+						val String dispatchInjectCodeForParent = '''	«dispatchInjectKey»
+	if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(classDecl)»){
+		«call»
+	} else
+	// EndInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''
+					 	projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
+						
+			 			
+						val aspectJavaFileContent = readFileContents(superclassjavafile, context) //superclassjavafile.contents.toString
+						
+			 			if(!aspectJavaFileContent.contains(dispatchInjectKey)){
+							// the parent does not already has this dispatch
+							// add it above the pointcut 
+						
+							val pointcutString = "// "+DISPATCH_POINTCUT_KEY+" "+Helper::initialMethodSignature(m)
+							val pointcutReplacement ='''
+		«dispatchInjectCodeForParent»
+		// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
+							
+							println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
+							val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
+							superclassjavafile.contents = newContent
+							// wait for complete writing before releasing lock, due to the async writing of xtend
+			 				var timeout = 40
+	    					do {
+	        					Thread.sleep(100);
+	        					timeout--
+	    					} while (superclassjavafile.contents.toString != newContent && timeout > 0)
+						}
+					}
+				}
+			}		
+		}
+		
+		projectStaticDispatchBuilder.cleanDeprecatedDispatchFiles(classDecl.compilationUnit, context)
+	
+	}
+	
+	/**
+	 * wait a little for content 
+	 * timeout after 2 seconds
+	 * does NOT use org.eclipse.xtend.lib.macro.file.Path.getContents() because it seems to trigger events that reschedules some build phase 
+	 */
+	private def waitForFileContent(Path file, extension CodeGenerationContext context){
+		var timeout = 20		// due to parallel jobs, the file may not exist yet 
+		val File f = new File (file.toURI.path)	// do not use xtend Path.getContents because it seems to trigger additional build phases		
+		while(!f.exists && timeout > 0){
+			Thread.sleep(100)
+			timeout--
+		}
+		timeout = 20
+		while(f.length === 0 && timeout > 0){
+			Thread.sleep(100)
+			timeout--
+		}
+	}
+	/**
+	* read the content of the given file
+	* does NOT use org.eclipse.xtend.lib.macro.file.Path.getContents() because it seems to trigger events that reschedules some build phase
+	* -> do it using plain java so it doesn't trigger eclipse event
+	*/	
+	private def String readFileContents(Path file, extension CodeGenerationContext context){
+		val BufferedReader br = new BufferedReader(new FileReader(file.toURI.path))	// do not use xtend Path.getContents because it seems to trigger additional build phases		
+		val sb = new StringBuilder
+		var String line = br.readLine();
+	    while (line !== null) {
+	        sb.append(line);
+	        sb.append(System.lineSeparator());
+	        line = br.readLine();
+	    }
+		return sb.toString
 	}
 }
 
@@ -1029,9 +959,9 @@ public class AspectProcessor extends AbstractClassProcessor {
  * Comparator for MethodDeclaration
  */
 class SortMethod implements Comparator<MethodDeclaration> {
-	TransformationContext context
+	TypeLookup context
 
-	new(TransformationContext context) {
+	new(TypeLookup context) {
 		this.context = context
 	}
 

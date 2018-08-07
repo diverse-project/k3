@@ -6,8 +6,37 @@ skinparam class {
 	BorderColor Black
 }
 package dynamic_dispatch_multifile {
+	class	ChildB {
+	}
+	class	ChildBAspect << (@,#FF7700) Aspect >> {
+		String myOperation()
+		String myOperationInParentAndBOnly()
+		String myOperation2()
+		String myOperation3()
+		String myOperation4()
+	}
+	class	ChildBSubAspect << (@,#FF7700) Aspect >> {
+		String myOperation3()
+	}
+	class	ChildBSubSubAspect << (@,#FF7700) Aspect >> {
+		String myOperation4()
+		String myOperation5()
+	}
 	class	TestDynamicDispatchMultifile {
-		void testDynamicDispatchWithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperation_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperation_WithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperationInParentAndAOnly_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperationInParentAndAOnly_WithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperationInParentAndBOnly_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperationInParentAndBOnly_WithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperation2_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperation2_WithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperation3_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperation3_WithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperation4_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperation4_WithAspectInSeveralFiles()
+		void testDynamicDispatch_myOperation5_WithAspectInSingleFile()
+		void testDynamicDispatch_myOperation5_WithAspectInSeveralFiles()
 	}
 	class	Parent {
 		name : String
@@ -16,21 +45,41 @@ package dynamic_dispatch_multifile {
 	}
 	class	ParentAspect << (@,#FF7700) Aspect >> {
 		String myOperation()
+		String myOperationInParentAndAOnly()
+		String myOperationInParentAndBOnly()
+		String myOperation2()
+		String myOperation3()
+		String myOperation4()
+		String myOperation5()
 	}
 	class	ChildAAspect << (@,#FF7700) Aspect >> {
 		String myOperation()
+		String myOperationInParentAndAOnly()
+		String myOperation2()
+		String myOperation3()
+		String myOperation4()
 	}
-	class	ChildB {
+	class	ChildASubAspect << (@,#FF7700) Aspect >> {
+		String myOperation3()
 	}
-	class	ChildBAspect << (@,#FF7700) Aspect >> {
-		String myOperation()
+	class	ChildASubSubAspect << (@,#FF7700) Aspect >> {
+		String myOperation4()
+		String myOperation5()
 	}
 }
+void <|-- ChildB      
+void <|-- ChildBAspect      
+ChildB .. ChildBAspect : <      
+ChildBAspect <|-- ChildBSubAspect      
+ChildB .. ChildBSubAspect : <      
+ChildBSubAspect <|-- ChildBSubSubAspect      
+ChildB .. ChildBSubSubAspect : <      
 Parent <|-- ChildA      
 Parent .. ParentAspect : <      
 ParentAspect <|-- ChildAAspect      
 ChildA .. ChildAAspect : <      
-void <|-- ChildB      
-void <|-- ChildBAspect      
-ChildB .. ChildBAspect : <      
+ChildAAspect <|-- ChildASubAspect      
+ChildA .. ChildASubAspect : <      
+ChildASubAspect <|-- ChildASubSubAspect      
+ChildA .. ChildASubSubAspect : <      
 @enduml
