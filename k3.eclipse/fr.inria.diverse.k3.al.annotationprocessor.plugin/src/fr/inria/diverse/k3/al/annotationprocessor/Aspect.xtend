@@ -66,10 +66,6 @@ public annotation Aspect {
 	Class<?>[] with = #[];
 }
 
-@Target(ElementType.TYPE_USE)
-public annotation PreCondition {
-}
-
 /**
  * Allows to override a method when an aspect class inherits 
  * from another aspect class and on of its methods is refined.
