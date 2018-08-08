@@ -75,7 +75,35 @@
 						<version>8054</version>
 					</dependency>
 				</dependencies>
-			</plugin>  
+			</plugin> 
+            <plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-document-bundle-plugin</artifactId>
+				<version>1.2.0</version>
+				<executions>
+					<execution>
+						<id>eclipse-javadoc</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/</outputDirectory>
+							<cleanFirst>false</cleanFirst>
+							<tocOptions>
+							 <mainLabel>K3 API</mainLabel>
+							</tocOptions>
+							<javadocOptions>
+							 <additionalArguments>
+							  <additionalArgument>-sourcepath ${project.basedir}/xtend-gen</additionalArgument>
+							  <additionalArgument>fr.inria.diverse.k3.al.annotationprocessor</additionalArgument>
+							  <additionalArgument>-public</additionalArgument>
+							 </additionalArguments>
+							</javadocOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -119,6 +147,25 @@
 										</versionRange>
 										<goals>
 											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.eclipse.tycho.extras
+										</groupId>
+										<artifactId>
+											tycho-document-bundle-plugin
+										</artifactId>
+										<versionRange>
+											[1.2.0,)
+										</versionRange>
+										<goals>
+											<goal>javadoc</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

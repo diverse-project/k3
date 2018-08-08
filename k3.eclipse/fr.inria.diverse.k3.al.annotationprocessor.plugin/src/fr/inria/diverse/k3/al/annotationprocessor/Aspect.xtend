@@ -42,18 +42,14 @@ import java.io.FileReader
  * <br>
  * Minimal example: 
  * <pre>
- * {@code
- * @Aspect(className=XYZ)
+ *{@literal @}Aspect(className=XYZ)
  * class XYZAspect {}
- * }
  * </pre>
  
- * The <i>with</i> attribute is used in in case of multiple inherance in the base classes/aspect:
+ * The <i>with</i> attribute is used in in case of multiple inheritance in the base classes/aspect:
  * <pre>
- * {@code
- * @Aspect(className=Child, with=#[ParentAspect2, ParentAspect3] ) 
+ *{@literal @}Aspect(className=Child, with=#[ParentAspect2, ParentAspect3] ) 
  * class ChildAspect extends Parent1Aspect{ }
- * }
  * </pre>
  * @see <a href="http://diverse-project.github.io/k3/publish/user_documentation/html_single/user_documentation.html#_creating_an_aspect_on_a_class">Creating an aspect class section in the documentation</a>
  * @see <a href="http://diverse-project.github.io/k3/publish/user_documentation/html_single/user_documentation.html#_extending_an_aspect_multi_inheritance">Extending an aspect (multi inheritance) section in the documentation</a>
