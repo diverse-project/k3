@@ -892,7 +892,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		«dispatchInjectCodeForParent»
 		// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
 							
-							println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
+							// println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
 							val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
 							superclassjavafile.contents = newContent
 							// wait for complete writing before releasing lock, due to the async writing of xtend
