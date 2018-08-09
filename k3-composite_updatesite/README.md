@@ -1,4 +1,0 @@
-This is the list of the update sites used to build K3 components. This is useful for cross references between components.
-- k3.platform.composite, contains the updates sites of the platform (eclipse, thirdparty tools) they are supposed to point to stable versions.
-- k3.nightly.composite, contains the update sites of the possibly UNSTABLE versions of the components. They are used to be able to work wich the very latest version of each component in a nightly build.
-- k3.composite, contains the update sites of the STABLE versions of the components. Components referenced here must have been promoted and archived for traceability (tagged in git, etc).
