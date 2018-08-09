@@ -10,14 +10,14 @@
         Inria - initial API and implementation
  -->
 <feature
-      id="fr.inria.diverse.k3.feature"
-      label="K3 feature"
+      id="fr.inria.diverse.k3.runtime.feature"
+      label="K3 Runtime feature"
       version="3.2.3.qualifier"
       provider-name="Inria DiverSE">
 
    <description url="http://www.kermeta.org/k3/update/">
       K3 Project
-This feature offers various tools for developping projects with Kermeta 3
+This feature deploys the minimal runtime required to run code developped with Kermeta 3 (i.e. only the annotation processor)
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">
@@ -35,38 +35,10 @@ Contibutors:
    </license>
 
    <plugin
-         id="fr.inria.diverse.k3.sample.deployer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="fr.inria.diverse.k3.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="fr.inria.diverse.k3.ui.templates"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="fr.inria.diverse.k3.al.annotationprocessor.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
-   <plugin
-         id="fr.inria.diverse.k3.al.annotationprocessor.plugin.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-         
+
 </feature>

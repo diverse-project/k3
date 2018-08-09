@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2017 Inria and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        Inria - initial API and implementation
+ -->
+
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
+		<groupId>fr.inria.diverse.k3</groupId>
+		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
+		<version>3.2.3-SNAPSHOT</version>
+	</parent>
+  <artifactId>fr.inria.diverse.k3.runtime.feature</artifactId>
+  <packaging>eclipse-feature</packaging>
+</project> 
+

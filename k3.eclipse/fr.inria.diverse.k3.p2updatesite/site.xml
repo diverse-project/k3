@@ -14,5 +14,8 @@
    <feature url="features/fr.inria.diverse.k3.feature_3.2.3.qualifier.jar" id="fr.inria.diverse.k3.feature" version="3.2.3.qualifier">
       <category name="k3"/>
    </feature>
+   <feature url="features/fr.inria.diverse.k3.runtime.feature_3.2.3.qualifier.jar" id="fr.inria.diverse.k3.runtime.feature" version="3.2.3.qualifier">
+      <category name="k3"/>
+   </feature>
    <category-def name="k3" label="Kermeta3"/>
 </site>

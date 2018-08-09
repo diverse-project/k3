@@ -120,7 +120,7 @@ annotation Abstract {
  * 
  * <img src="doc-files/AspectProcessor_SD.png" width="500" alt="AspectProcessor Sequence Diagram">
  * 
- * See <a href="https://www.eclipse.org/xtend/documentation/204_activeannotations.html">xtend annotation processor documentation</a>
+ * <br>See <a href="https://www.eclipse.org/xtend/documentation/204_activeannotations.html">xtend annotation processor documentation</a>
  */
 public class AspectProcessor extends AbstractClassProcessor {
 	Map<MutableClassDeclaration, List<MutableClassDeclaration>> listResMap = newHashMap
