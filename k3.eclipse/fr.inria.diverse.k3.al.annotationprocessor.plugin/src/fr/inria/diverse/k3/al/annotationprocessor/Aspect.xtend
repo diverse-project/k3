@@ -867,7 +867,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 						val hasReturn = m.returnType.name != "void"
 						// call the public helper for this type (this ensures correct dispatch)
 						val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
-							else '''"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»,«m.parameters.map[simpleName].join(',')»'''
+							else '''(«Helper::getAspectedClassName(classDecl)»)«SELF_VAR_NAME»,«m.parameters.map[simpleName].join(',')»'''
 						var call = '''«classDecl.qualifiedName».«m.simpleName»(«parametersString»);'''
 						if (hasReturn) 
 							call = '''«RESULT_VAR» = «call»'''
