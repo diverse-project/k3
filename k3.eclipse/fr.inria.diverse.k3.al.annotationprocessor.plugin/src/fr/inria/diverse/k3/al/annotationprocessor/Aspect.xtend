@@ -10,6 +10,9 @@
  *******************************************************************************/
  package fr.inria.diverse.k3.al.annotationprocessor
 
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
 import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
@@ -33,9 +36,6 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 import org.eclipse.xtend.lib.macro.services.TypeLookup
-import java.io.File
-import java.io.BufferedReader
-import java.io.FileReader
 
 /**
  * Indicates that this class is an aspect on top of another base class.
@@ -214,7 +214,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements,
 		extension CodeGenerationContext context) {
 
-		// println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
+		println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
 	    aspectMappingBuilder.writePropertyFile(context)
 
@@ -223,9 +223,9 @@ public class AspectProcessor extends AbstractClassProcessor {
  			generateAspectJCodeForClass(classDecl, context)
 		}
 
-		// deal with dispatch methods of classes that are in the current project
+		// deal with dispatch methods of classes that are in the current project		
 	 	for (classDecl : annotatedSourceElements) {
-			injectDispatchInParentAspects(classDecl, context)
+	 		injectDispatchInParentAspects(classDecl, context)
 		} 
 		
 		
@@ -858,10 +858,26 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 										
 					// search the Pointcut for this method and add a call to the child aspect
 					val superclassfilePath = superclass.compilationUnit.filePath
-					val superclassjavafile = superclassfilePath.targetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
+					val Path superclasstargetFolder =
+					if ((superclassfilePath.sourceFolder.relativize(superclassfilePath.projectFolder).segments.length > 1) &&
+						superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).segments.length == 1
+						) {
+							// suspicious target folder due to bug in xtend superclassfilePath.targetFolder
+						// in case of /src/main/java it returns /xtend-gen instead of /src/main/xtend-gen as it is configured in eclipse 
+						// when using xtend-gen as output without specifying "allow output directory per source folder" (actually, I'm not sure this behavior is correct) 
+						// applying workaround
+						superclassfilePath.sourceFolder.parent.append(
+								superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).toString)
+					} else {
+						superclassfilePath.targetFolder
+					}
+					var superclassjavafile = superclasstargetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
 					// due to parallel jobs, the file may not exist yet
 					// or may be currently being written
-					waitForFileContent(superclassjavafile, context)		 			
+					if(!waitForFileContent(superclassjavafile, context)){
+						// timeout occured
+						println(this+" timeout occurred while waiting for "+superclassjavafile)
+					}		 			
 					synchronized(lock){						
 					 	
 						val hasReturn = m.returnType.name != "void"
@@ -880,7 +896,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 	// EndInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''
 					 	projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
 						
-			 			
+			 			//waitForFileContent(superclassjavafile, context)	
 						val aspectJavaFileContent = readFileContents(superclassjavafile, context) //superclassjavafile.contents.toString
 						
 			 			if(!aspectJavaFileContent.contains(dispatchInjectKey)){
@@ -915,8 +931,9 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 	 * wait a little for content 
 	 * timeout after 2 seconds
 	 * does NOT use org.eclipse.xtend.lib.macro.file.Path.getContents() because it seems to trigger events that reschedules some build phase 
+	 * @return true if content has been retreived or false if timeout occured
 	 */
-	private def waitForFileContent(Path file, extension CodeGenerationContext context){
+	private def boolean waitForFileContent(Path file, extension CodeGenerationContext context){
 		var timeout = 20		// due to parallel jobs, the file may not exist yet 
 		val File f = new File (file.toURI.path)	// do not use xtend Path.getContents because it seems to trigger additional build phases		
 		while(!f.exists && timeout > 0){
@@ -928,6 +945,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 			Thread.sleep(100)
 			timeout--
 		}
+		return (timeout !== 0)
 	}
 	/**
 	* read the content of the given file
