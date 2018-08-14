@@ -101,6 +101,17 @@ class AspectMappingBuilder {
 		}
 	}
 
+	/**
+	 * returns the list of all declared aspects
+	 * If called during the codeGeneration phase it contains
+	 * all aspect classesof the current project
+	 */
+	public def List<String> getAllDeclaredAspects(){
+		val List<String> result = newArrayList
+		mapping.values.forall[l | result.addAll(l)]
+		return result
+	}
+
 	/** 
 	 * try to clean unused mappings
 	 * @param context transformation context

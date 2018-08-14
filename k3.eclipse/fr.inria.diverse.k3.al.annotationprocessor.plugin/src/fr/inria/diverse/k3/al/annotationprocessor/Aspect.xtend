@@ -214,7 +214,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements,
 		extension CodeGenerationContext context) {
 
-		println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
+		// println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
 	    aspectMappingBuilder.writePropertyFile(context)
 
@@ -857,66 +857,70 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 				) {
 										
 					// search the Pointcut for this method and add a call to the child aspect
-					val superclassfilePath = superclass.compilationUnit.filePath
-					val Path superclasstargetFolder =
-					if ((superclassfilePath.sourceFolder.relativize(superclassfilePath.projectFolder).segments.length > 1) &&
-						superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).segments.length == 1
-						) {
-							// suspicious target folder due to bug in xtend superclassfilePath.targetFolder
-						// in case of /src/main/java it returns /xtend-gen instead of /src/main/xtend-gen as it is configured in eclipse 
-						// when using xtend-gen as output without specifying "allow output directory per source folder" (actually, I'm not sure this behavior is correct) 
-						// applying workaround
-						superclassfilePath.sourceFolder.parent.append(
-								superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).toString)
-					} else {
-						superclassfilePath.targetFolder
-					}
-					var superclassjavafile = superclasstargetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
-					// due to parallel jobs, the file may not exist yet
-					// or may be currently being written
-					if(!waitForFileContent(superclassjavafile, context)){
-						// timeout occured
-						println(this+" timeout occurred while waiting for "+superclassjavafile)
-					}		 			
-					synchronized(lock){						
-					 	
-						val hasReturn = m.returnType.name != "void"
-						// call the public helper for this type (this ensures correct dispatch)
-						val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
-							else '''(«Helper::getAspectedClassName(classDecl)»)«SELF_VAR_NAME»,«m.parameters.map[simpleName].join(',')»'''
-						var call = '''«classDecl.qualifiedName».«m.simpleName»(«parametersString»);'''
-						if (hasReturn) 
-							call = '''«RESULT_VAR» = «call»'''
-						
-						val String 	dispatchInjectKey = '''// BeginInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''					
-						val String dispatchInjectCodeForParent = '''	«dispatchInjectKey»
-	if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(classDecl)»){
-		«call»
-	} else
-	// EndInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''
-					 	projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
-						
-			 			//waitForFileContent(superclassjavafile, context)	
-						val aspectJavaFileContent = readFileContents(superclassjavafile, context) //superclassjavafile.contents.toString
-						
-			 			if(!aspectJavaFileContent.contains(dispatchInjectKey)){
-							// the parent does not already has this dispatch
-							// add it above the pointcut 
-						
-							val pointcutString = "// "+DISPATCH_POINTCUT_KEY+" "+Helper::initialMethodSignature(m)
-							val pointcutReplacement ='''
-		«dispatchInjectCodeForParent»
-		// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
+					// superclass.compilationUnit.filePath may return a path to the current compilation unit instead of the real java file
+					// uses aspectMappingBuilder to make sure to process only classes in the current project 
+					val isSuperClassInProject = this.aspectMappingBuilder.allDeclaredAspects.contains(superclass.qualifiedName)
+					if(isSuperClassInProject) {
+						val superclassfilePath = superclass.compilationUnit.filePath					
+						val Path superclasstargetFolder =
+						if ((superclassfilePath.sourceFolder.relativize(superclassfilePath.projectFolder).segments.length > 1) &&
+							superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).segments.length == 1
+							) {
+								// suspicious target folder due to bug in xtend superclassfilePath.targetFolder
+							// in case of /src/main/java it returns /xtend-gen instead of /src/main/xtend-gen as it is configured in eclipse 
+							// when using xtend-gen as output without specifying "allow output directory per source folder" (actually, I'm not sure this behavior is correct) 
+							// applying workaround
+							superclassfilePath.sourceFolder.parent.append(
+									superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).toString)
+						} else {
+							superclassfilePath.targetFolder
+						}
+						var superclassjavafile = superclasstargetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
+						// due to parallel jobs, the file may not exist yet
+						// or may be currently being written
+						if(!waitForFileContent(superclassjavafile, context)){
+							// timeout occured
+							println(this+" timeout occurred while waiting for "+superclassjavafile)
+						} else synchronized(lock){						
+						 	
+							val hasReturn = m.returnType.name != "void"
+							// call the public helper for this type (this ensures correct dispatch)
+							val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
+								else '''(«Helper::getAspectedClassName(classDecl)»)«SELF_VAR_NAME»,«m.parameters.map[simpleName].join(',')»'''
+							var call = '''«classDecl.qualifiedName».«m.simpleName»(«parametersString»);'''
+							if (hasReturn) 
+								call = '''«RESULT_VAR» = «call»'''
 							
-							// println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
-							val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
-							superclassjavafile.contents = newContent
-							// wait for complete writing before releasing lock, due to the async writing of xtend
-			 				var timeout = 40
-	    					do {
-	        					Thread.sleep(100);
-	        					timeout--
-	    					} while (superclassjavafile.contents.toString != newContent && timeout > 0)
+							val String 	dispatchInjectKey = '''// BeginInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''					
+							val String dispatchInjectCodeForParent = '''	«dispatchInjectKey»
+		if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(classDecl)»){
+			«call»
+		} else
+		// EndInjectInto «superclass.qualifiedName»#«Helper::methodSignature(m)» from «classDecl.qualifiedName»'''
+						 	projectStaticDispatchBuilder.add(dispatchInjectCodeForParent)
+							
+				 			//waitForFileContent(superclassjavafile, context)	
+							val aspectJavaFileContent = readFileContents(superclassjavafile, context) //superclassjavafile.contents.toString
+							
+				 			if(!aspectJavaFileContent.contains(dispatchInjectKey)){
+								// the parent does not already has this dispatch
+								// add it above the pointcut 
+							
+								val pointcutString = "// "+DISPATCH_POINTCUT_KEY+" "+Helper::initialMethodSignature(m)
+								val pointcutReplacement ='''
+			«dispatchInjectCodeForParent»
+			// «DISPATCH_POINTCUT_KEY» «Helper::methodSignature(m)»'''
+								
+								// println("----- Contributing dispatch for "+pointcutString+" in "+superclassjavafile +" found="+aspectJavaFileContent.contains(pointcutString))
+								val newContent = aspectJavaFileContent.replace(pointcutString, pointcutReplacement)
+								superclassjavafile.contents = newContent
+								// wait for complete writing before releasing lock, due to the async writing of xtend
+				 				var timeout = 40
+		    					do {
+		        					Thread.sleep(100);
+		        					timeout--
+		    					} while (superclassjavafile.contents.toString != newContent && timeout > 0)
+							}
 						}
 					}
 				}
