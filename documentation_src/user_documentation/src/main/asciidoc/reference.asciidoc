@@ -318,6 +318,7 @@ image::images/replaceaspectmethod_mm.png[]
 
 
 Then, if in your code you wish to refine it in an aspect, you probably expect to be able to call it like this:
+
 .Base class method call problem
 image::images/replaceaspectmethod_call_problem.png[]
 
