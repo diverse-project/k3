@@ -20,7 +20,7 @@
       <topic label="Basic" href="ch03.html#_basic">
          <topic label="Creating an aspect on a class" href="ch03.html#_creating_an_aspect_on_a_class"/>
          <topic label="Using aspect from another k3/xTend program" href="ch03.html#_using_aspect_from_another_k3_xtend_program">
-            <topic label="Disambiguisation" href="ch03.html#_disambiguisation"/>
+            <topic label="Disambiguation" href="ch03.html#Disambiguation"/>
          </topic>
          <topic label="Aspect inheritance (simple inheritance)" href="ch03.html#_aspect_inheritance_simple_inheritance"/>
          <topic label="Calling a super operation" href="ch03.html#_calling_a_super_operation"/>
