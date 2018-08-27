@@ -104,15 +104,16 @@ operations defined on BlogAspect.
 <2> method display() is visible thanks to the __import 
 static extension BlogAspect.*__
 
-===== Disambiguisation
+[[Disambiguation]]
+===== Disambiguation
 
 If several operations or attributes have similar names, xTend may not find the 
-expected feature. In that case you need to disambiguise the call by accessing 
+expected feature. In that case you need to disambiguate the call by accessing 
 the underlying helper class.
 
 [NOTE]
 ====
-To have more details about the precise mecanism of this helper class 
+To have more details about the precise mechanism of this helper class 
 please refer to the chapter at the end of this document.
 ====
 
@@ -305,4 +306,36 @@ When an ecore model defines an inheritance structure, the best practice is to fu
 
 === Replacing a method of the base class
 
-K3 uses the **@ReplaceAspectMethod** annotation to replace a method that is defined in the base class by a method in the aspect.
+Sometimes the base class already declares some methods but you need to redefine it in your aspects.
+For this, K3 uses the **@ReplaceAspectMethod** annotation to provide a replacement method to be used instead of a method 
+defined in the base class.
+
+A typical use case is a method declared in the ecore metamodel like in the following example.
+In this example, the *System* class defines a *run* method. However, by default in ecore, it has no implementation. (It throws a ``UnsupportedOperationException``)
+
+.Base class with methods
+image::images/replaceaspectmethod_mm.png[]
+
+
+Then, if in your code you wish to refine it in an aspect, you probably expect to be able to call it like this:
+.Base class method call problem
+image::images/replaceaspectmethod_call_problem.png[]
+
+Unfortunately, even with the _import static extension_ declaration, using this syntax (``sm.run``), java/xtend will still 
+call the method declared on the base class.
+
+To have the desired behavior, two solutions: 
+
+- use a non ambiguous syntax for the call: ``FSMAspect.run(sm)`` (see <<Disambiguation>>); but this must be done on every call to the run method.
+- use the **@ReplaceAspectMethod** annotation on the _FSMAspect.run() method_. This makes sure that the replacement method will be called everywhere instead
+of the method on the base class. 
+
+[NOTE]
+====
+Internally, this annotation indicates to create and use an aspectJ pointcut that replaces the calls to the base class method and replace it by a call to the corresponding method in the K3 aspect class. 
+====
+  
+
+
+
+
