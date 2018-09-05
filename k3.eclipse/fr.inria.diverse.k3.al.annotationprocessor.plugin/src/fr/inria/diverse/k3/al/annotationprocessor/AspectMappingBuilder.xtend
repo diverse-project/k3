@@ -130,7 +130,9 @@ class AspectMappingBuilder {
 						keytoRemove.add(key)
 					}
 				]
-				keytoRemove.forEach[key | mapping.remove(key)]
+				for (key : keytoRemove) {
+					mapping.remove(key)
+				}
 			}
 		}
 	}
