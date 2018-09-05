@@ -58,7 +58,7 @@ class AspectMappingBuilder {
 		this.projectName = projectName
 	}
 	
-	public static def AspectMappingBuilder getAspectMappingBuilder(String projectName) {
+	static def AspectMappingBuilder getAspectMappingBuilder(String projectName) {
 		val weakRef = projectsAspectMappingBuilder.get(projectName)
 		if(weakRef !== null && weakRef.get !== null ) return weakRef.get
 		else {
@@ -78,7 +78,7 @@ class AspectMappingBuilder {
 	 * @param classes classes
 	 * @param context transformation context
 	 * */
-	public def void readCurrentMapping(List<? extends MutableClassDeclaration> classes, extension TransformationContext context){
+	def void readCurrentMapping(List<? extends MutableClassDeclaration> classes, extension TransformationContext context){
 		this.classes = classes
 		//this.context = context
 		if (classes.size > 0) {
@@ -106,9 +106,11 @@ class AspectMappingBuilder {
 	 * If called during the codeGeneration phase it contains
 	 * all aspect classesof the current project
 	 */
-	public def List<String> getAllDeclaredAspects(){
+	def List<String> getAllDeclaredAspects(){
 		val List<String> result = newArrayList
-		mapping.values.forall[l | result.addAll(l)]
+		synchronized(mapping) {
+			mapping.values.forall[l | result.addAll(l)]
+		}
 		return result
 	}
 
@@ -116,23 +118,24 @@ class AspectMappingBuilder {
 	 * try to clean unused mappings
 	 * @param context transformation context
 	 */
-	public def void cleanUnusedMapping(extension TransformationContext context){
-		if (classes.size > 0) {
-
-			val List<String> keytoRemove = new ArrayList<String>
-			mapping.forEach[key, valueList|
-				// recompute a value list that contains only types that are found in the classpath
-				val List<String> newValueList = valueList.filter[value | findTypeGlobally(value)!==null].toList
-				mapping.put(key, newValueList)
-				if(newValueList.size == 0){
-					keytoRemove.add(key)
-				}
-			]
-			keytoRemove.forEach[key | mapping.remove(key)]
+	def void cleanUnusedMapping(extension TransformationContext context){
+		synchronized(mapping) {		
+			if (classes.size > 0) {
+				val List<String> keytoRemove = new ArrayList<String>
+				mapping.forEach[key, valueList|
+					// recompute a value list that contains only types that are found in the classpath
+					val List<String> newValueList = valueList.filter[value | findTypeGlobally(value)!==null].toList
+					mapping.put(key, newValueList)
+					if(newValueList.size == 0){
+						keytoRemove.add(key)
+					}
+				]
+				keytoRemove.forEach[key | mapping.remove(key)]
+			}
 		}
 	}
 
-	public def void addMappingForAnnotatedSourceElements(){
+	def void addMappingForAnnotatedSourceElements(){
 		for (annotatedSourceElement : classes) {
 			val aspectizedClassType = Helper::getAnnotationAspectType(annotatedSourceElement)
 
@@ -147,15 +150,16 @@ class AspectMappingBuilder {
 	 * @param context code generation context
 	 * 
 	 */
-	public def void writePropertyFile(extension CodeGenerationContext context){
+	def void writePropertyFile(extension CodeGenerationContext context){
 		// classes can be null in case of syntax or compilation error in the file, the doTransform isn't processed but doGenerateCode will be called anyway 
 		if (classes !== null && classes.size > 0) {
 			var buf = ''''''
-			for (entrySet : mapping.entrySet) {
-				buf = '''«buf.toString»
+			synchronized(mapping) {
+				for (entrySet : mapping.entrySet) {
+					buf = '''«buf.toString»
 «entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
+				}
 			}
-
 			val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
 	«buf.toString»'''
 			Helper::writeContentsIfNew(targetFilePath, contents, context)
@@ -163,14 +167,16 @@ class AspectMappingBuilder {
 	}
 
 	private def void addMapping(String aspectizedClassName, String aspectClassName){
-		var existingListForAspectizedElement = mapping.get(aspectizedClassName)
-
-		if (existingListForAspectizedElement === null) {
-			existingListForAspectizedElement = newArrayList
-			mapping.put(aspectizedClassName, existingListForAspectizedElement)
-		}
-		if(!existingListForAspectizedElement.contains(aspectClassName)){
-			existingListForAspectizedElement.add(aspectClassName)
+		synchronized(mapping) {
+			var existingListForAspectizedElement = mapping.get(aspectizedClassName)
+	
+			if (existingListForAspectizedElement === null) {
+				existingListForAspectizedElement = newArrayList
+				mapping.put(aspectizedClassName, existingListForAspectizedElement)
+			}
+			if(!existingListForAspectizedElement.contains(aspectClassName)){
+				existingListForAspectizedElement.add(aspectClassName)
+			}
 		}
 	}
 	
