@@ -14,3 +14,4 @@ Bundle-ClassPath: .
 Export-Package: fr.inria.diverse.k3.al.annotationprocessor,
  fr.inria.diverse.k3.al.annotationprocessor.plugin,
  fr.inria.diverse.k3.al.annotationprocessor.stepmanager
+Automatic-Module-Name: fr.inria.diverse.k3.al.annotationprocessor.plugin
