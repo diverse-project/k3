@@ -39,7 +39,7 @@
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<xtend.version>2.12.0</xtend.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->		
-		<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>
 	</properties>
 
@@ -82,7 +82,7 @@
 		<repository>
                 <id>gemoc-commons</id>
                 <layout>p2</layout>
-                <url>https://ci.eclipse.org/gemoc/job/gemoc-studio/job/master/lastSuccessfulBuild/artifact/gemoc-studio/gemoc_studio/releng/org.eclipse.gemoc.gemoc_studio.updatesite/target/repository/</url>
+                <url>http://download.eclipse.org/gemoc/updates/nightly</url>
 		</repository>
 
 		<!-- repository for pure maven artefacts -->
