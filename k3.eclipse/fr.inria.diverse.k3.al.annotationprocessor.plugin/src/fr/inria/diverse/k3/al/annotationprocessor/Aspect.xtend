@@ -673,7 +673,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 						if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
 							propertyAspect.add(f)
 
-						c.addField(f.simpleName) [
+						val newField = c.addField(f.simpleName) [
 							visibility = Visibility::PUBLIC
 							static = f.static
 							final = f.final
@@ -681,6 +681,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 							if(f.initializer !== null) initializer = f.initializer
 							primarySourceElement = f
 						]
+						f.annotations.forEach[an | newField.addAnnotation(an)]
 					} else {
 						f.type = findClass(clazz.qualifiedName + className + PROP_NAME).newTypeReference
 						f.static = true
