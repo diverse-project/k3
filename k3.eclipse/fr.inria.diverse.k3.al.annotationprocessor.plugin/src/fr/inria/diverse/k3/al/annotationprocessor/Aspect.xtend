@@ -882,7 +882,6 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 						if(!waitForFileContent(superclassjavafile, context)){
 							// timeout occured
 							println('''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
-//							println(this+" timeout occurred while waiting for "+superclassjavafile)
 						} else synchronized(lock){						
 						 	
 							val hasReturn = m.returnType.name != "void"
