@@ -23,5 +23,5 @@ Development
 
 Continuous integration : https://ci.inria.fr/k3al/
 
-Current status: ![Current status](https://ci.inria.fr/k3al/buildStatus/icon?job=k3.eclipse)
+Current status: [![Build Status](https://ci.inria.fr/k3al/buildStatus/icon?job=k3-al)](https://ci.inria.fr/k3al/job/k3-al/)
 
