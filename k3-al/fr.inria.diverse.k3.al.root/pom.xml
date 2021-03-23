@@ -13,7 +13,7 @@
 		<junit.version>4.11</junit.version>
 		<java.version>11</java.version>
 		<k3.version>3.3.0-SNAPSHOT</k3.version>
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.1.0</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 	</properties>
