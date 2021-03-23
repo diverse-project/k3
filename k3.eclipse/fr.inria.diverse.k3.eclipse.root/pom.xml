@@ -17,7 +17,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.inria.diverse.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-	<version>3.2.3-SNAPSHOT</version>
+	<version>3.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- <module>../fr.inria.diverse.k3.eclipse.core.plugin</module> -->
@@ -32,12 +32,12 @@
 
 
 	<properties>
-		<tycho.version>1.2.0</tycho.version>
-		<tycho-extras.version>1.2.0</tycho-extras.version>
+		<tycho.version>2.2.0</tycho.version>
+		<tycho-extras.version>2.2.0</tycho-extras.version>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/oxygen/</eclipse-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/2020-12/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
-		<xtend.version>2.14.0</xtend.version>
+		<xtend.version>2.24.0</xtend.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>
@@ -100,7 +100,7 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>kepler</id>
+			<id>Eclipse</id>
 			<url>${eclipse-repo.url}</url>
 			<releases>
 				<enabled>false</enabled>
@@ -200,10 +200,10 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 			<plugin>

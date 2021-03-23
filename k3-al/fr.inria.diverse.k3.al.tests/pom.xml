@@ -7,7 +7,7 @@
     <parent>
         <groupId>fr.inria.diverse.k3.al</groupId>
         <artifactId>fr.inria.diverse.k3.al.root</artifactId>
-        <version>3.2.3-SNAPSHOT</version>
+        <version>3.3.0-SNAPSHOT</version>
 	<relativePath>../fr.inria.diverse.k3.al.root/pom.xml</relativePath>
     </parent>
 
@@ -38,7 +38,7 @@
 			</plugin>
 			
 			<!-- generate plantuml from test folders -->
-	        <plugin>
+	       <!--  <plugin>
 	        	<groupId>fr.inria.diverse.k3</groupId>
 				<artifactId>fr.inria.diverse.k3.tools.plantuml.mavenplugin</artifactId>
 				<version>0.0.2-SNAPSHOT</version>
@@ -68,7 +68,7 @@
 						</configuration>
 					</execution>
 				</executions>
-	        </plugin>	    
+	        </plugin>	-->    
 			
 			<!-- generate the images from plantUMl -->
             <plugin>

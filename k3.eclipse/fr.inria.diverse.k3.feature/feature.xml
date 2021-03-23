@@ -12,7 +12,7 @@
 <feature
       id="fr.inria.diverse.k3.feature"
       label="K3 feature"
-      version="3.2.3.qualifier"
+      version="3.3.0.qualifier"
       provider-name="Inria DiverSE">
 
    <description url="http://www.kermeta.org/k3/update/">
@@ -61,12 +61,12 @@ Contibutors:
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="fr.inria.diverse.k3.al.annotationprocessor.plugin.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
 </feature>
