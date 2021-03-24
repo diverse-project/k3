@@ -1,9 +1,9 @@
 package test.dynamicbinding_properties
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 import static extension test.dynamicbinding_properties.AspectX1.*
 import static extension test.dynamicbinding_properties.AspectX2.*

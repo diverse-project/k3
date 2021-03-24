@@ -152,23 +152,18 @@
 			<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
 			<version>${k3.version}</version>
 		</dependency>
-		
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- <dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
+			<!--  version is managed by xtext-dev-bom -->
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
-		</dependency> -->
+			<!--  version is managed by xtext-dev-bom -->
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
@@ -189,7 +184,7 @@
 		<dependency>
 			<groupId>fr.inria.diverse.k3.al</groupId>
 			<artifactId>fr.inria.diverse.k3.al.tests.base</artifactId>
-			<version>3.3.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -10,14 +10,14 @@ import fr.inria.diverse.k3.al.annotationprocessor.ContractViolationException
 import fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException
 import fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestDbC
 {
 	@Test
-	def testOkInv() {
+	def void testOkInv() {
 		try {
 			new SimpleOKInv().foo
 		} catch (ContractViolationException e) {
@@ -26,13 +26,15 @@ class TestDbC
 	}
 
 	// Should actually throw an InvariantViolationException, see issue #18
-	@Test(expected = PreConditionViolationException)
-	def testNOKInv() {
-		new SimpleNOKInv().foo
+	@Test
+	def void testNOKInv() {
+		assertThrows(PreConditionViolationException, [
+			new SimpleNOKInv().foo
+		]) 
 	}
 
 	@Test
-	def testOKPrePost() {
+	def void testOKPrePost() {
 		try {
 			new SimpleOKPrePost().foo
 		} catch (ContractViolationException e) {
@@ -41,7 +43,7 @@ class TestDbC
 	}
 
 	@Test
-	def testOKAll() {
+	def void testOKAll() {
 		try {
 			new SimpleOKAll().foo
 		} catch (ContractViolationException e) {
@@ -49,42 +51,53 @@ class TestDbC
 		}
 	}
 
-	@Test(expected = PreConditionViolationException)
-	def testNOKPreCond() {
-		new SimpleNOKPreCond().foo
+	@Test
+	def void testNOKPreCond() {
+		assertThrows(PreConditionViolationException, [
+			new SimpleNOKPreCond().foo
+		])
 	}
 
-	@Test(expected = PostConditionViolationException)
-	def testNOKPostCondition() {
-		new SimpleNOKPostCond().foo
+	@Test
+	def void testNOKPostCondition() {
+		assertThrows(PostConditionViolationException, [
+			new SimpleNOKPostCond().foo
+		])
 	}
 
-	@Test(expected = PreConditionViolationException)
-	def testOKInvNOKPre () {
-		new SimpleOKInvNOKPre().foo
+	@Test
+	def void testOKInvNOKPre () {
+		assertThrows(PreConditionViolationException, [
+			new SimpleOKInvNOKPre().foo
+		])
 	}
 
-	@Test(expected = PostConditionViolationException)
-	def testOKInvNOKPost () {
-		new SimpleOKInvNOKPost().foo
-	}
-
-	// Should actually throw an InvariantViolationException, see issue #18
-	@Test(expected = PreConditionViolationException)
-	def testNOKInvOKPre() {
-		new SimpleNOKInvOKPre().foo
-	}
-
-	// Should actually throw an InvariantViolationException, see issue #18
-	@Test(expected = PreConditionViolationException)
-	def testNOKInvOKPost() {
-		new SimpleNOKInvOKPost().foo
+	@Test
+	def void testOKInvNOKPost () {
+		assertThrows(PostConditionViolationException, [
+			new SimpleOKInvNOKPost().foo
+		])
 	}
 
 	// Should actually throw an InvariantViolationException, see issue #18
-	@Test(expected = PostConditionViolationException)
-	def testInvBrokenByFoo() {
-		new SimpleInvBrokenByFoo().foo
+	@Test
+	def void testNOKInvOKPre() {
+		assertThrows(PreConditionViolationException, [
+			new SimpleNOKInvOKPre().foo])
+	}
+
+	// Should actually throw an InvariantViolationException, see issue #18
+	@Test
+	def void testNOKInvOKPost() {
+		assertThrows(PreConditionViolationException, [
+			new SimpleNOKInvOKPost().foo])
+	}
+
+	// Should actually throw an InvariantViolationException, see issue #18
+	@Test
+	def void testInvBrokenByFoo() {
+		assertThrows(PostConditionViolationException, [
+			new SimpleInvBrokenByFoo().foo])
 	}
 }
 

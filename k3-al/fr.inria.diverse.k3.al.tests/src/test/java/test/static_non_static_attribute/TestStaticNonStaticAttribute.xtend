@@ -1,9 +1,9 @@
 package test.static_non_static_attribute
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 import static extension test.static_non_static_attribute.AspectB.*
 

@@ -2,9 +2,9 @@ package test.memoryleak
 
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 import static extension test.memoryleak.AspectMemLeakB.*
 import java.util.ArrayList
@@ -26,11 +26,11 @@ class TestMemoryLeak {
 		for(i : 1.. 10){ 
 			memTester.testBaseMemoryLeakIntenal()
 			usedMemory=toMB(memTester.printUsedMemory("[B INTERMEDIATE]"))
-			assertEquals("Used memory isn't the same as reference memory (in MB)", referenceUsedMemory, usedMemory)
+			assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
 		}
 		memTester.testBaseMemoryLeakIntenal()
 		usedMemory=toMB(memTester.printUsedMemory("[B END]"))
-		assertEquals("Used memory isn't the same as reference memory (in MB)", referenceUsedMemory, usedMemory)
+		assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
 	} 
 	
 	def void testBaseMemoryLeakIntenal() {			
@@ -67,11 +67,11 @@ class TestMemoryLeak {
 		for(i : 1.. 10){ 
 			memTester.testAspectPropertiesMemoryLeakIntenal()
 			usedMemory=toMB(memTester.printUsedMemory("[INTERMEDIATE]"))
-			assertEquals("Used memory isn't the same as reference memory (in MB)", referenceUsedMemory, usedMemory)
+			assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
 		}
 		memTester.testAspectPropertiesMemoryLeakIntenal()
 		usedMemory=toMB(memTester.printUsedMemory("[END]"))
-		assertEquals("Used memory isn't the same as reference memory (in MB)", referenceUsedMemory, usedMemory)
+		assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
 	} 
 	
 	def void testAspectPropertiesMemoryLeakIntenal() {			

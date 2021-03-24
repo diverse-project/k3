@@ -1,9 +1,9 @@
 package test.parentonlyaspects
 
 import test.parentonlyaspects.base.Middle1Impl
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 import static extension test.parentonlyaspects.aspects.Top1Aspect.*
 //import static extension test.parentonlyaspects.aspects.Top2Aspect.*

@@ -1,8 +1,8 @@
 package test.dynamic_dispatch_multifile
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 import static extension test.dynamic_dispatch_multifile.ParentAspect.*
 

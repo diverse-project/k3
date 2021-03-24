@@ -1,10 +1,11 @@
 package test.opposite
 
 import fr.inria.diverse.k3.al.annotationprocessor.Opposite
-import org.junit.Before
-import org.junit.Test
 
-import static org.junit.Assert.*
+import org.junit.jupiter.api.Test
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach
 
 /*
  * +-----------+
@@ -87,9 +88,10 @@ class TestOpposite {
 	OpD d2
 	OpE e1
 
-	@Before
+	@BeforeEach
 	def void setUp()
 	{
+		println('TestOpposite.setUp()')
 		a1 = new OpA
 		a2 = new OpA
 		b1 = new OpB
@@ -103,6 +105,7 @@ class TestOpposite {
 	@Test
 	def void testOneToOneInitialization()
 	{
+		println('TestOpposite.testOneToOneInitialization()')
 		assertNull(a1.b)
 		assertNull(a1.bb)
 		assertNull(a1.c)

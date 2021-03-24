@@ -9,28 +9,34 @@ import fr.inria.diverse.k3.al.annotationprocessor.Post
 import fr.inria.diverse.k3.al.annotationprocessor.PreConditionViolationException
 import fr.inria.diverse.k3.al.annotationprocessor.PostConditionViolationException
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestCase
 {
-	@Test(expected = PreConditionViolationException)
-	def testPre() {
-		val l = new RewriteMe
-		l.foo
+	@Test
+	def void testPre() {
+		assertThrows(PreConditionViolationException, [
+			val l = new RewriteMe
+			l.foo
+		])
 	}
 
-	@Test(expected = PreConditionViolationException)
+	@Test
 	def void testInv() {
-		val l = new RewriteMe1
-		l.foo
+		assertThrows(PreConditionViolationException, [
+			val l = new RewriteMe1
+			l.foo
+		])
 	}
 
-	@Test(expected = PostConditionViolationException)
+	@Test
 	def void testPost() {
-		val l = new RewriteMe2
-		l.foo
+		assertThrows(PostConditionViolationException, [
+			val l = new RewriteMe2
+			l.foo
+		])
 	}
 
 	@Test
@@ -43,28 +49,36 @@ class TestCase
 		}
 	}
 
-	@Test(expected = PreConditionViolationException)
+	@Test
 	def void testPreInheritance1() {
-		val l = new BDbc
-		l.bar
+		assertThrows(PreConditionViolationException, [
+			val l = new BDbc
+			l.bar
+		])
 	}
 
-	@Test(expected = PreConditionViolationException)
+	@Test
 	def void testInvInheritance() {
-		val l = new BDbc1
-		l.foo
+		assertThrows(PreConditionViolationException, [
+			val l = new BDbc1
+			l.foo
+		])
 	}
 
-	@Test(expected = PostConditionViolationException)
+	@Test
 	def void testPostInheritance() {
-		val l = new BDbc2
-		l.bar
+		assertThrows(PostConditionViolationException, [
+			val l = new BDbc2
+			l.bar
+		])
 	}
 
-	@Test(expected = PostConditionViolationException)
+	@Test
 	def void testPostInheritance1() {
-		val l = new BDbc2
-		l.bar
+		assertThrows(PostConditionViolationException, [
+			val l = new BDbc2
+			l.bar
+		])
 	}
 }
 

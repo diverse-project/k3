@@ -2,10 +2,10 @@ package test.oppositemany
 
 import fr.inria.diverse.k3.al.annotationprocessor.Opposite
 import java.util.List
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
-import static org.junit.Assert.*
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach
 
 class AA
 {
@@ -44,9 +44,10 @@ class TestOppositeMany
 	BB bb1
 	BB bb2
 
-	@Before
+	@BeforeEach
 	def void setUp()
 	{
+		println('TestOppositeMany.setUp()')
 		aa1 = new AA
 		aa2 = new AA
 		bb1 = new BB

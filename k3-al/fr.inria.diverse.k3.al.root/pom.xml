@@ -12,7 +12,6 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<xtend.version>2.24.0</xtend.version>
-		<junit.version>4.11</junit.version>
 		<java.version>11</java.version>
 		<k3.version>3.3.0-SNAPSHOT</k3.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -85,6 +84,15 @@
 						</execution>
 					</executions>
 				</plugin>
+				<!-- need 2.22.x minimum to correctly run junit 5 tests -->
+				<plugin>
+		            <artifactId>maven-surefire-plugin</artifactId>
+		            <version>2.22.2</version>
+		        </plugin>
+		        <plugin>
+		            <artifactId>maven-failsafe-plugin</artifactId>
+		            <version>2.22.2</version>
+		        </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
