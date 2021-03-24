@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
+
+	<parent>
+		<groupId>fr.inria.diverse.k3.al</groupId>
+		<artifactId>fr.inria.diverse.k3.al.root</artifactId>
+		<version>3.3.0-SNAPSHOT</version>
+		<relativePath>../fr.inria.diverse.k3.al.root/pom.xml</relativePath>
+	</parent>
+
+	<build>
+		<sourceDirectory>${basedir}/target/generated-sources</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/generated-sources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../../k3.eclipse/fr.inria.diverse.k3.al.annotationprocessor.plugin/src</directory>
+									<excludes>
+										<exclude>**/plugin/**</exclude>
+									</excludes>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${basedir}/target/generated-sources</source>
+								<source>${basedir}/src/main/xtend-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin> -->
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<!-- <goal>testCompile</goal> -->
+							<goal>xtend-install-debug-info</goal>
+							<!-- <goal>xtend-test-install-debug-info</goal> -->
+						</goals>
+						<!-- optionnaly output dir matches default eclipse configuration -->
+						<configuration>
+							<javaSourceVersion>1.8</javaSourceVersion>
+							<outputDirectory>src/main/xtend-gen</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${maven-dependency-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin> -->
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.8,)
+										</versionRange>
+										<goals>
+											<goal>
+												copy-dependencies
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<version>${xtend.version}</version>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>junit</groupId> -->
+		<!-- <artifactId>junit</artifactId> -->
+		<!-- <version>4.10</version> -->
+		<!-- <scope>test</scope> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>${emf.version}</version>
+		</dependency>
+		<!-- <dependency> <groupId>org.eclipse.emf</groupId> <artifactId>org.eclipse.emf.common</artifactId> 
+			<version>2.8.0-v20120911-0500</version> </dependency> <dependency> <groupId>org.eclipse.emf</groupId> 
+			<artifactId>org.eclipse.emf.ecore.xmi</artifactId> <version>2.8.0-v20120911-0500</version> 
+			</dependency> -->
+
+	</dependencies>
+	<!-- <repositories> <repository> <id>xtext.snapshots</id> <url>http://dev.nightlabs.org/maven-repository/repo/</url> 
+		</repository> </repositories> <pluginRepositories> <pluginRepository> <id>xtext.oss.snapshots</id> 
+		<url>http://dev.nightlabs.org/maven-repository/repo/</url> </pluginRepository> 
+		</pluginRepositories> -->
+	<!-- <distributionManagement> -->
+	<!-- <snapshotRepository> -->
+	<!-- <id>k3.snapshots</id> -->
+	<!-- <url>http://kloud.kevoree.org/archiva/repository/snapshots/</url> -->
+	<!-- </snapshotRepository> -->
+	<!-- <repository> -->
+	<!-- <id>k3.internal</id> -->
+	<!-- <url>http://kloud.kevoree.org/archiva/repository/internal/</url> -->
+	<!-- </repository> -->
+	<!-- </distributionManagement> -->
+
+</project>

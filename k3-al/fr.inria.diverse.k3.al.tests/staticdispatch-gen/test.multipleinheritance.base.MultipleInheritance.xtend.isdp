@@ -1,0 +1,25 @@
+	// BeginInjectInto test.multipleinheritance.base.CAspect#StringBuilder visit() from test.multipleinheritance.base.AAspect
+		if (_self instanceof test.multipleinheritance.base.A){
+			result = test.multipleinheritance.base.AAspect.visit((test.multipleinheritance.base.A)_self);
+		} else
+		// EndInjectInto test.multipleinheritance.base.CAspect#StringBuilder visit() from test.multipleinheritance.base.AAspect
+	// BeginInjectInto test.multipleinheritance.base.VisitorAspect#StringBuilder visit() from test.multipleinheritance.base.BAspect
+		if (_self instanceof test.multipleinheritance.base.B){
+			result = test.multipleinheritance.base.BAspect.visit((test.multipleinheritance.base.B)_self);
+		} else
+		// EndInjectInto test.multipleinheritance.base.VisitorAspect#StringBuilder visit() from test.multipleinheritance.base.BAspect
+	// BeginInjectInto test.multipleinheritance.base.VisitorAspect#StringBuilder visit() from test.multipleinheritance.base.AAspect
+		if (_self instanceof test.multipleinheritance.base.A){
+			result = test.multipleinheritance.base.AAspect.visit((test.multipleinheritance.base.A)_self);
+		} else
+		// EndInjectInto test.multipleinheritance.base.VisitorAspect#StringBuilder visit() from test.multipleinheritance.base.AAspect
+	// BeginInjectInto test.multipleinheritance.base.BAspect#StringBuilder visit() from test.multipleinheritance.base.AAspect
+		if (_self instanceof test.multipleinheritance.base.A){
+			result = test.multipleinheritance.base.AAspect.visit((test.multipleinheritance.base.A)_self);
+		} else
+		// EndInjectInto test.multipleinheritance.base.BAspect#StringBuilder visit() from test.multipleinheritance.base.AAspect
+	// BeginInjectInto test.multipleinheritance.base.VisitorAspect#StringBuilder visit() from test.multipleinheritance.base.CAspect
+		if (_self instanceof test.multipleinheritance.base.C){
+			result = test.multipleinheritance.base.CAspect.visit((test.multipleinheritance.base.C)_self);
+		} else
+		// EndInjectInto test.multipleinheritance.base.VisitorAspect#StringBuilder visit() from test.multipleinheritance.base.CAspect

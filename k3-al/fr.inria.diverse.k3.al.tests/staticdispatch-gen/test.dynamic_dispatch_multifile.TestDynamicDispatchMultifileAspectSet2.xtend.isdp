@@ -1,0 +1,50 @@
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation3() from test.dynamic_dispatch_multifile.ChildBAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBAspect.myOperation3((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation3() from test.dynamic_dispatch_multifile.ChildBAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation3() from test.dynamic_dispatch_multifile.ChildBSubAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBSubAspect.myOperation3((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation3() from test.dynamic_dispatch_multifile.ChildBSubAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ChildBAspect#String myOperation4() from test.dynamic_dispatch_multifile.ChildBSubSubAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBSubSubAspect.myOperation4((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ChildBAspect#String myOperation4() from test.dynamic_dispatch_multifile.ChildBSubSubAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation5() from test.dynamic_dispatch_multifile.ChildBSubSubAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBSubSubAspect.myOperation5((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation5() from test.dynamic_dispatch_multifile.ChildBSubSubAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation4() from test.dynamic_dispatch_multifile.ChildBAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBAspect.myOperation4((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation4() from test.dynamic_dispatch_multifile.ChildBAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation4() from test.dynamic_dispatch_multifile.ChildBSubSubAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBSubSubAspect.myOperation4((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation4() from test.dynamic_dispatch_multifile.ChildBSubSubAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ChildBAspect#String myOperation3() from test.dynamic_dispatch_multifile.ChildBSubAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBSubAspect.myOperation3((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ChildBAspect#String myOperation3() from test.dynamic_dispatch_multifile.ChildBSubAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation2() from test.dynamic_dispatch_multifile.ChildBAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBAspect.myOperation2((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation2() from test.dynamic_dispatch_multifile.ChildBAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation() from test.dynamic_dispatch_multifile.ChildBAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBAspect.myOperation((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperation() from test.dynamic_dispatch_multifile.ChildBAspect
+	// BeginInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperationInParentAndBOnly() from test.dynamic_dispatch_multifile.ChildBAspect
+		if (_self instanceof test.dynamic_dispatch_multifile.ChildB){
+			result = test.dynamic_dispatch_multifile.ChildBAspect.myOperationInParentAndBOnly((test.dynamic_dispatch_multifile.ChildB)_self);
+		} else
+		// EndInjectInto test.dynamic_dispatch_multifile.ParentAspect#String myOperationInParentAndBOnly() from test.dynamic_dispatch_multifile.ChildBAspect

@@ -1,0 +1,30 @@
+	// BeginInjectInto test.methodoveride_methodreplace.AspectB#String foofoo() from test.methodoveride_methodreplace.AspectC
+		if (_self instanceof test.methodoveride_methodreplace.MOMR_C){
+			result = test.methodoveride_methodreplace.AspectC.foofoo((test.methodoveride_methodreplace.MOMR_C)_self);
+		} else
+		// EndInjectInto test.methodoveride_methodreplace.AspectB#String foofoo() from test.methodoveride_methodreplace.AspectC
+	// BeginInjectInto test.methodoveride_methodreplace.AspectA#String foofoo() from test.methodoveride_methodreplace.AspectC
+		if (_self instanceof test.methodoveride_methodreplace.MOMR_C){
+			result = test.methodoveride_methodreplace.AspectC.foofoo((test.methodoveride_methodreplace.MOMR_C)_self);
+		} else
+		// EndInjectInto test.methodoveride_methodreplace.AspectA#String foofoo() from test.methodoveride_methodreplace.AspectC
+	// BeginInjectInto test.methodoveride_methodreplace.AspectA#String foofoo() from test.methodoveride_methodreplace.AspectB
+		if (_self instanceof test.methodoveride_methodreplace.MOMR_B){
+			result = test.methodoveride_methodreplace.AspectB.foofoo((test.methodoveride_methodreplace.MOMR_B)_self);
+		} else
+		// EndInjectInto test.methodoveride_methodreplace.AspectA#String foofoo() from test.methodoveride_methodreplace.AspectB
+	// BeginInjectInto test.methodoveride_methodreplace.AspectB#String foo() from test.methodoveride_methodreplace.AspectC
+		if (_self instanceof test.methodoveride_methodreplace.MOMR_C){
+			result = test.methodoveride_methodreplace.AspectC.foo((test.methodoveride_methodreplace.MOMR_C)_self);
+		} else
+		// EndInjectInto test.methodoveride_methodreplace.AspectB#String foo() from test.methodoveride_methodreplace.AspectC
+	// BeginInjectInto test.methodoveride_methodreplace.AspectA#String foo() from test.methodoveride_methodreplace.AspectC
+		if (_self instanceof test.methodoveride_methodreplace.MOMR_C){
+			result = test.methodoveride_methodreplace.AspectC.foo((test.methodoveride_methodreplace.MOMR_C)_self);
+		} else
+		// EndInjectInto test.methodoveride_methodreplace.AspectA#String foo() from test.methodoveride_methodreplace.AspectC
+	// BeginInjectInto test.methodoveride_methodreplace.AspectA#String foo() from test.methodoveride_methodreplace.AspectB
+		if (_self instanceof test.methodoveride_methodreplace.MOMR_B){
+			result = test.methodoveride_methodreplace.AspectB.foo((test.methodoveride_methodreplace.MOMR_B)_self);
+		} else
+		// EndInjectInto test.methodoveride_methodreplace.AspectA#String foo() from test.methodoveride_methodreplace.AspectB

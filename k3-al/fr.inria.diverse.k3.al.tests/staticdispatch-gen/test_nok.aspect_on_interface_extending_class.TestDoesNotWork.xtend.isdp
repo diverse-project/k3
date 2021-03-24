@@ -1,0 +1,5 @@
+	// BeginInjectInto test_nok.aspect_on_interface_extending_class.FooAbsClass#void fooOp1() from test_nok.aspect_on_interface_extending_class.FooAspect
+		if (_self instanceof test_nok.aspect_on_interface_extending_class.FooInterface){
+			test_nok.aspect_on_interface_extending_class.FooAspect.fooOp1((test_nok.aspect_on_interface_extending_class.FooInterface)_self);
+		} else
+		// EndInjectInto test_nok.aspect_on_interface_extending_class.FooAbsClass#void fooOp1() from test_nok.aspect_on_interface_extending_class.FooAspect

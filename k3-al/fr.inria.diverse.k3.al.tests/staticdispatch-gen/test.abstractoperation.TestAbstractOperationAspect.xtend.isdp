@@ -1,0 +1,20 @@
+	// BeginInjectInto test.abstractoperation.AAspect_A#String foooo() from test.abstractoperation.BAspect_A
+		if (_self instanceof test.abstractoperation.B_A){
+			result = test.abstractoperation.BAspect_A.foooo((test.abstractoperation.B_A)_self);
+		} else
+		// EndInjectInto test.abstractoperation.AAspect_A#String foooo() from test.abstractoperation.BAspect_A
+	// BeginInjectInto test.abstractoperation.AAspect_A#String foooo() from test.abstractoperation.CAspect_A
+		if (_self instanceof test.abstractoperation.C_A){
+			result = test.abstractoperation.CAspect_A.foooo((test.abstractoperation.C_A)_self);
+		} else
+		// EndInjectInto test.abstractoperation.AAspect_A#String foooo() from test.abstractoperation.CAspect_A
+	// BeginInjectInto test.abstractoperation.BAspect_A#String foooo() from test.abstractoperation.CAspect_A
+		if (_self instanceof test.abstractoperation.C_A){
+			result = test.abstractoperation.CAspect_A.foooo((test.abstractoperation.C_A)_self);
+		} else
+		// EndInjectInto test.abstractoperation.BAspect_A#String foooo() from test.abstractoperation.CAspect_A
+	// BeginInjectInto test.abstractoperation.AAspect_A#String foooo() from test.abstractoperation.EAspect_A
+		if (_self instanceof test.abstractoperation.E_A){
+			result = test.abstractoperation.EAspect_A.foooo((test.abstractoperation.E_A)_self);
+		} else
+		// EndInjectInto test.abstractoperation.AAspect_A#String foooo() from test.abstractoperation.EAspect_A

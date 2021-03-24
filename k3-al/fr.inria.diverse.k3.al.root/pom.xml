@@ -9,6 +9,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<xtend.version>2.24.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>11</java.version>
@@ -24,8 +26,19 @@
 		<module>../fr.inria.diverse.k3.al.tests</module>
 	</modules>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.eclipse.xtext</groupId>
+				<artifactId>xtext-dev-bom</artifactId>
+				<version>${xtend.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<repositories>
-		<repository>
+		<!-- <repository>
 			<id>mavenInriaSnapshot</id>
 			<name>http://maven.inria.fr-snapshots</name>
 			<url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -34,11 +47,11 @@
 			<id>mavenInriaRelease</id>
 			<name>http://maven.inria.fr-releases</name>
 			<url>http://maven.inria.fr/artifactory/public-release</url>
-		</repository>
+		</repository> -->
 	</repositories>
 	<pluginRepositories>
 		<!-- repository for pure maven artefacts -->
-		<pluginRepository>
+		<!-- <pluginRepository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -47,7 +60,7 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </pluginRepository>
+		 </pluginRepository> -->
 	</pluginRepositories>
 	<build>
 		<pluginManagement>
@@ -60,35 +73,17 @@
 						<execution>
 							<goals>
 								<goal>compile</goal>
-								<!-- <goal>testCompile</goal> -->
+								<goal>testCompile</goal>
 								<goal>xtend-install-debug-info</goal>
-								<!-- <goal>xtend-test-install-debug-info</goal> -->
+								<goal>xtend-test-install-debug-info</goal>
 							</goals>
 							<!-- optionnaly output dir matches default eclipse configuration -->
 							<configuration>
-								<outputDirectory>src/main/xtend-gen</outputDirectory>
+								<outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
+								<testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
 							</configuration>
 						</execution>
 					</executions>
-					<!-- workaround  https://github.com/eclipse/xtext/issues/1231
-					may be removed when fixed later-->
-					<dependencies>
-						<dependency>
-							<groupId>org.eclipse.jdt</groupId>
-							<artifactId>org.eclipse.jdt.core</artifactId>
-							<version>3.12.2</version>
-						</dependency>
-						<dependency>
-							<groupId>org.eclipse.platform</groupId>
-							<artifactId>org.eclipse.core.runtime</artifactId>
-							<version>3.12.0</version>
-						</dependency>
-						<dependency>
-							<groupId>org.eclipse.platform</groupId>
-							<artifactId>org.eclipse.equinox.common</artifactId>
-							<version>3.8.0</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>

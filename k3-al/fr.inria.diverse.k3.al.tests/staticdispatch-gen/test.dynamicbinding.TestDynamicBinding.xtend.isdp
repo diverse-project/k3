@@ -1,0 +1,105 @@
+	// BeginInjectInto test.dynamicbinding.X4Aspect#String visit() from test.dynamicbinding.X7Aspect
+		if (_self instanceof test.dynamicbinding.X7){
+			result = test.dynamicbinding.X7Aspect.visit((test.dynamicbinding.X7)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.X4Aspect#String visit() from test.dynamicbinding.X7Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X2Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp2){
+			result = test.dynamicbinding.X2Aspect.visit((test.dynamicbinding.XSubExp2)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X2Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X1Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp1){
+			result = test.dynamicbinding.X1Aspect.visit((test.dynamicbinding.XSubExp1)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X1Aspect
+	// BeginInjectInto test.dynamicbinding.X1Aspect#String visit() from test.dynamicbinding.X6Aspect
+		if (_self instanceof test.dynamicbinding.X6){
+			result = test.dynamicbinding.X6Aspect.visit((test.dynamicbinding.X6)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.X1Aspect#String visit() from test.dynamicbinding.X6Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.XExpressionAspect
+		if (_self instanceof test.dynamicbinding.XExpression){
+			result = test.dynamicbinding.XExpressionAspect.visit((test.dynamicbinding.XExpression)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.XExpressionAspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X5Aspect
+		if (_self instanceof test.dynamicbinding.X5){
+			result = test.dynamicbinding.X5Aspect.visit((test.dynamicbinding.X5)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X5Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X1Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp1){
+			result = test.dynamicbinding.X1Aspect.visit((test.dynamicbinding.XSubExp1)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X1Aspect
+	// BeginInjectInto test.dynamicbinding.X2Aspect#String visit() from test.dynamicbinding.X8Aspect
+		if (_self instanceof test.dynamicbinding.X8){
+			result = test.dynamicbinding.X8Aspect.visit((test.dynamicbinding.X8)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.X2Aspect#String visit() from test.dynamicbinding.X8Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X4Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp4){
+			result = test.dynamicbinding.X4Aspect.visit((test.dynamicbinding.XSubExp4)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X4Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X8Aspect
+		if (_self instanceof test.dynamicbinding.X8){
+			result = test.dynamicbinding.X8Aspect.visit((test.dynamicbinding.X8)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X8Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X8Aspect
+		if (_self instanceof test.dynamicbinding.X8){
+			result = test.dynamicbinding.X8Aspect.visit((test.dynamicbinding.X8)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X8Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X5Aspect
+		if (_self instanceof test.dynamicbinding.X5){
+			result = test.dynamicbinding.X5Aspect.visit((test.dynamicbinding.X5)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X5Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X7Aspect
+		if (_self instanceof test.dynamicbinding.X7){
+			result = test.dynamicbinding.X7Aspect.visit((test.dynamicbinding.X7)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X7Aspect
+	// BeginInjectInto test.dynamicbinding.X2Aspect#String visit() from test.dynamicbinding.X5Aspect
+		if (_self instanceof test.dynamicbinding.X5){
+			result = test.dynamicbinding.X5Aspect.visit((test.dynamicbinding.X5)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.X2Aspect#String visit() from test.dynamicbinding.X5Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X3Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp3){
+			result = test.dynamicbinding.X3Aspect.visit((test.dynamicbinding.XSubExp3)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X3Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X6Aspect
+		if (_self instanceof test.dynamicbinding.X6){
+			result = test.dynamicbinding.X6Aspect.visit((test.dynamicbinding.X6)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X6Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X7Aspect
+		if (_self instanceof test.dynamicbinding.X7){
+			result = test.dynamicbinding.X7Aspect.visit((test.dynamicbinding.X7)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X7Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X3Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp3){
+			result = test.dynamicbinding.X3Aspect.visit((test.dynamicbinding.XSubExp3)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X3Aspect
+	// BeginInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X2Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp2){
+			result = test.dynamicbinding.X2Aspect.visit((test.dynamicbinding.XSubExp2)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.RootAspect#String visit() from test.dynamicbinding.X2Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X4Aspect
+		if (_self instanceof test.dynamicbinding.XSubExp4){
+			result = test.dynamicbinding.X4Aspect.visit((test.dynamicbinding.XSubExp4)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X4Aspect
+	// BeginInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X6Aspect
+		if (_self instanceof test.dynamicbinding.X6){
+			result = test.dynamicbinding.X6Aspect.visit((test.dynamicbinding.X6)_self);
+		} else
+		// EndInjectInto test.dynamicbinding.XExpressionAspect#String visit() from test.dynamicbinding.X6Aspect
