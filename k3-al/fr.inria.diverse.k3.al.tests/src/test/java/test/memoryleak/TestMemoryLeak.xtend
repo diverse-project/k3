@@ -24,6 +24,7 @@ class TestMemoryLeak {
 		val long referenceUsedMemory = toMB(memTester.printUsedMemory("[B REFERENCE]")) 
 		var long usedMemory = referenceUsedMemory
 		for(i : 1.. 10){ 
+			println('testNoAspectMemoryLeak() loop '+i)
 			memTester.testBaseMemoryLeakIntenal()
 			usedMemory=toMB(memTester.printUsedMemory("[B INTERMEDIATE]"))
 			assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
@@ -113,7 +114,7 @@ class TestMemoryLeak {
 	public def long printUsedMemory(String msg){
 		// ask garbage collect, this isn't garanteed but this helps
 		System.gc()
-		Thread.sleep(150)
+		Thread.sleep(500)
 		
 		val Runtime rt = Runtime.getRuntime();
 		val long memory = rt.totalMemory() - rt.freeMemory();
