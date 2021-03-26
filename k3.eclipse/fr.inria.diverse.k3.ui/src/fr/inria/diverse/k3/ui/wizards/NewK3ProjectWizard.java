@@ -10,10 +10,8 @@
  *******************************************************************************/
 package fr.inria.diverse.k3.ui.wizards;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -25,45 +23,28 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.pde.internal.ui.PDEPlugin;
-import org.eclipse.pde.internal.ui.elements.ElementList;
-import org.eclipse.pde.ui.IPluginContentWizard;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-
-import org.eclipse.gemoc.commons.eclipse.pde.java.JavaNameHelper;
-import org.eclipse.gemoc.commons.eclipse.pde.manifest.ManifestChanger;
-import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.AbstractNewProjectWizardWithTemplates;
-import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.TemplateListSelectionPage;
-import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.WizardElement;
-import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
-import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.IProjectContentWizard;
-import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.ProjectTemplateApplicationOperation;
 import org.eclipse.gemoc.commons.eclipse.core.resources.IFileUtils;
 import org.eclipse.gemoc.commons.eclipse.core.resources.IFolderUtils;
 import org.eclipse.gemoc.commons.eclipse.core.resources.ProjectDescriptor;
+import org.eclipse.gemoc.commons.eclipse.pde.java.JavaNameHelper;
+import org.eclipse.gemoc.commons.eclipse.pde.manifest.ManifestChanger;
+import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.AbstractNewProjectWizardWithTemplates;
+import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.IProjectContentWizard;
+import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.ProjectTemplateApplicationOperation;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+
 import fr.inria.diverse.k3.ui.Activator;
-import fr.inria.diverse.k3.ui.tools.GenerateGenModelCode;
 import fr.inria.diverse.k3.ui.tools.K3FileTemplates;
 import fr.inria.diverse.k3.ui.tools.K3SampleFilesTemplates;
-import fr.inria.diverse.k3.ui.tools.ToolsString;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspath;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathMaven;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathPlugin;
 import fr.inria.diverse.k3.ui.tools.classpath.ManageClasspathStandAlone;
 import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardFields;
-import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectCustomWizardPage;
 import fr.inria.diverse.k3.ui.wizards.pages.NewK3ProjectWizardPage;
 
 public class NewK3ProjectWizard extends AbstractNewProjectWizardWithTemplates implements INewWizard {

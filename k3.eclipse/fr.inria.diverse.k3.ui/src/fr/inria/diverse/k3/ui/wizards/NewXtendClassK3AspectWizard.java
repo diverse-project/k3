@@ -10,9 +10,7 @@
  *******************************************************************************/
 package fr.inria.diverse.k3.ui.wizards;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.xtend.ide.wizards.AbstractNewXtendElementWizard;
 import org.eclipse.xtext.ui.IImageHelper.IImageDescriptorHelper;
 
