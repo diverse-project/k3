@@ -37,7 +37,16 @@
 		</dependencies>
 	</dependencyManagement>
 	<repositories>
-		<!-- <repository>
+		<repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+		<repository>
 			<id>mavenInriaSnapshot</id>
 			<name>http://maven.inria.fr-snapshots</name>
 			<url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -46,11 +55,23 @@
 			<id>mavenInriaRelease</id>
 			<name>http://maven.inria.fr-releases</name>
 			<url>http://maven.inria.fr/artifactory/public-release</url>
-		</repository> -->
+		</repository>
 	</repositories>
 	<pluginRepositories>
+		<pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
 		<!-- repository for pure maven artefacts -->
-		<!-- <pluginRepository>
+		<pluginRepository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -59,7 +80,7 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </pluginRepository> -->
+		 </pluginRepository>
 	</pluginRepositories>
 	<build>
 		<pluginManagement>
