@@ -40,25 +40,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<!-- workaround  https://github.com/eclipse/xtext/issues/1231
-				may be removed when fixed later-->
-				<!--<dependencies>
-					<dependency>
-						<groupId>org.eclipse.jdt</groupId>
-						<artifactId>org.eclipse.jdt.core</artifactId>
-						<version>3.12.2</version>
-					</dependency>
-					<dependency>
-						<groupId>org.eclipse.platform</groupId>
-						<artifactId>org.eclipse.core.runtime</artifactId>
-						<version>3.12.0</version>
-					</dependency>
-					<dependency>
-						<groupId>org.eclipse.platform</groupId>
-						<artifactId>org.eclipse.equinox.common</artifactId>
-						<version>3.8.0</version>
-					</dependency>
-				</dependencies>-->
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -145,7 +126,7 @@
 	</dependencies>
 	
 	<repositories>
-		<repository>
+		<!--<repository>
 			<id>eclipse</id>
 			<url>${eclipse-repo.url}</url>
 			<layout>p2</layout>
@@ -154,7 +135,7 @@
 			<id>xtend</id>
 			<url>${xtend-repo.url}</url>
 			<layout>p2</layout>
-		</repository>
+		</repository>-->
 		<!-- repository for pure maven artefacts -->
 		<repository>
 		     <id>mavenInriaSnapshot</id>
