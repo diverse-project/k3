@@ -62,7 +62,7 @@ jobs:
     - name: Build and Verify ⚒️🧪
       uses: GabrielBB/xvfb-action@v1
       with:
-         run: mvn -B verify --file k3.al/fr.inria.diverse.k3.al.root/pom.xml
+         run: mvn -B verify --file k3-al/fr.inria.diverse.k3.al.root/pom.xml
     
     #- name: Publish Test Report 🔍
     #  uses: mikepenz/action-junit-report@v3
@@ -91,5 +91,5 @@ jobs:
     - name: Build and Verify ⚒️🧪
       uses: GabrielBB/xvfb-action@v1
       with:
-         run: mvn -B verify --file k3.tools/fr.inria.diverse.k3.tools.root/pom.xml
+         run: mvn -B verify --file k3-tools/fr.inria.diverse.k3.tools.root/pom.xml
  
