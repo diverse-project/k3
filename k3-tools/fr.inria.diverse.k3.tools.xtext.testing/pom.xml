@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
         <packaging>eclipse-plugin</packaging>
 	<artifactId>fr.inria.diverse.k3.tools.xtext.testing</artifactId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.3.1-SNAPSHOT</version>
 	<name>XtextTestingHelpers</name>
 
 	<parent>
 		<groupId>fr.inria.diverse.k3.tools</groupId>
 		<artifactId>fr.inria.diverse.k3.tools.root</artifactId>
-		<version>3.2.2-SNAPSHOT</version>
+		<version>3.3.1-SNAPSHOT</version>
 		<relativePath>../fr.inria.diverse.k3.tools.root/pom.xml</relativePath>
 	</parent>
 

@@ -4,7 +4,7 @@
 
 	<groupId>fr.inria.diverse.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.tools.plantuml.mavenplugin</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>fr.inria.diverse.k3.tools.plantuml.mavenplugin</name>
@@ -16,10 +16,10 @@
 		<eclipse-repo.url>http://download.eclipse.org/releases/photon/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.14.0</xtend.version>
+		<xtend.version>2.25.0</xtend.version>
 		<junit.version>4.13.1</junit.version>
 		<java.version>1.8</java.version>
-		<k3.version>3.2.2-SNAPSHOT</k3.version>
+		<k3.version>3.3.1-SNAPSHOT</k3.version>
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 	</properties>
@@ -42,7 +42,7 @@
 				</executions>
 				<!-- workaround  https://github.com/eclipse/xtext/issues/1231
 				may be removed when fixed later-->
-				<dependencies>
+				<!--<dependencies>
 					<dependency>
 						<groupId>org.eclipse.jdt</groupId>
 						<artifactId>org.eclipse.jdt.core</artifactId>
@@ -58,7 +58,7 @@
 						<artifactId>org.eclipse.equinox.common</artifactId>
 						<version>3.8.0</version>
 					</dependency>
-				</dependencies>
+				</dependencies>-->
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
