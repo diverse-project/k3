@@ -117,5 +117,12 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+	<distributionManagement>
+	   <repository>
+	     <id>github</id>
+	     <name>GitHub diverse-project Apache Maven Packages</name>
+	     <url>https://maven.pkg.github.com/diverse-project/k3</url>
+	   </repository>
+	</distributionManagement>
+
 </project> 

@@ -99,5 +99,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         </plugin>
 		</plugins>
 	</build>
-
+	<distributionManagement>
+	   <repository>
+	     <id>github</id>
+	     <name>GitHub diverse-project Apache Maven Packages</name>
+	     <url>https://maven.pkg.github.com/diverse-project/k3</url>
+	   </repository>
+	</distributionManagement>
 </project> 

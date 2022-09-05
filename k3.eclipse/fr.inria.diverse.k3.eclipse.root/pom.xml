@@ -41,6 +41,8 @@
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>
+		<!-- Skip the deployment here, submodules can override this property -->
+		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
 
