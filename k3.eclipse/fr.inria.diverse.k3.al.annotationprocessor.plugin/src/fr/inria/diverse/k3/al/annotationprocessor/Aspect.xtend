@@ -37,6 +37,8 @@ import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 import org.eclipse.xtend.lib.macro.services.TypeLookup
 
+//import static extension org.eclipse.xtext.EcoreUtil2.*
+
 /**
  * Indicates that this class is an aspect on top of another base class.
  * <br>
@@ -669,6 +671,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 				if (!f.static) {
 					if (f.simpleName != PROP_VAR_NAME) {
 						toRemove.add(f)
+						
 
 						if (!f.annotations.exists[annotationTypeDeclaration.simpleName == "NotAspectProperty"])
 							propertyAspect.add(f)
@@ -772,8 +775,18 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		// DVK changing _self_ into a local variable fieldProcessingAddField(clazz, className, context)
 		fieldProcessingAddGetterSetter(clazz, propertyAspect, identifier, bodies, context)
 
-		for (f : toRemove)
-			f.remove
+//targetToSourceMap.
+
+		//context.
+		for (f : toRemove) {
+			val	field = f as MutableFieldDeclaration
+			//EcoreUtil.remove(f)
+			//val t = f.type
+			//val cUnit = f.compilationUnit as CompilationUnitImpl
+			//cUnit.jvmModelAssociator.removeAllAssociation(f)
+			field.remove
+			
+		}
 	}
 				
 	/**
