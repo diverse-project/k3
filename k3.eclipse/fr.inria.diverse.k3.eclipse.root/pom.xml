@@ -15,7 +15,7 @@
 	
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.inria.diverse.k3</groupId>
+	<groupId>io.github.diverse-project.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
 	<version>3.3.1-SNAPSHOT</version>
 	<packaging>pom</packaging>

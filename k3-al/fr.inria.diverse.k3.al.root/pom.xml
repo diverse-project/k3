@@ -2,10 +2,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.inria.diverse.k3.al</groupId>
+	<groupId>io.github.diverse-project.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.al.root</artifactId>
 	<version>3.3.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+	<url>https://kermeta.org</url>
+	<issueManagement>
+		<url>https://github.com/diverse-project/k3/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	
+	<licenses>
+		<license>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>https://www.eclipse.org/legal/epl-v10.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>https://github.com/diverse-project/k3</url>
+		<connection>scm:git:git://github.com/diverse-project/k3.git</connection>
+	</scm>
+	<developers>
+		<developer>
+			<email>didier.vojtisek@inria.fr</email>
+			<name>Didier Vojtisek</name>
+			<url>https://github.com/dvojtise/</url>
+			<id>dvojtise</id>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -86,6 +112,10 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+				<plugin>
 					<groupId>org.eclipse.xtend</groupId>
 					<artifactId>xtend-maven-plugin</artifactId>
 					<version>${xtend.version}</version>
@@ -114,15 +144,34 @@
 		            <artifactId>maven-failsafe-plugin</artifactId>
 		            <version>2.22.2</version>
 		        </plugin>
+		        
 			</plugins>
 		</pluginManagement>
 	</build>
-	<distributionManagement>
-	   <repository>
-	     <id>github</id>
-	     <name>GitHub diverse-project Apache Maven Packages</name>
-	     <url>https://maven.pkg.github.com/diverse-project/k3</url>
-	   </repository>
-	</distributionManagement>
-
+	<profiles>
+		<profile>
+			<id>github-distribution</id>
+			<distributionManagement>
+			   <repository>
+			     <id>github</id>
+			     <name>GitHub diverse-project Apache Maven Packages</name>
+			     <url>https://maven.pkg.github.com/diverse-project/k3</url>
+			   </repository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>ossrh-distribution</id>
+			<distributionManagement>
+			   <snapshotRepository>
+					<id>ossrh</id>
+					<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<name>Central Repository OSSRH</name>
+					<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 </project> 

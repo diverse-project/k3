@@ -6,7 +6,7 @@
 	<url>http://kermeta.org</url>
 
     <parent>
-        <groupId>fr.inria.diverse.k3.tools</groupId>
+        <groupId>io.github.diverse-project.k3</groupId>
         <artifactId>fr.inria.diverse.k3.tools.root</artifactId>
         <relativePath>../fr.inria.diverse.k3.tools.root/pom.xml</relativePath>
         <version>3.3.1-SNAPSHOT</version>
