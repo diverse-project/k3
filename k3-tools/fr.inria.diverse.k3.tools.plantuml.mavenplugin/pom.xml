@@ -19,7 +19,7 @@
 		<xtend.version>2.25.0</xtend.version>
 		<junit.version>4.13.1</junit.version>
 		<java.version>1.8</java.version>
-		<k3.version>3.3.1-SNAPSHOT</k3.version>
+		<k3.version>3.3.1</k3.version>
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 	</properties>
@@ -75,7 +75,7 @@
 			<version>${xtend.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.inria.diverse.k3.al</groupId>
+			<groupId>io.github.diverse-project.k3</groupId>
 			<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
 			<version>${k3.version}</version>
 		</dependency>
