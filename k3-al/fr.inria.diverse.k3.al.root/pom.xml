@@ -40,7 +40,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<xtend.version>2.25.0</xtend.version>
 		<java.version>11</java.version>
-		<k3.version>3.3.1-SNAPSHOT</k3.version>
+		<!--<k3.version>3.3.1-SNAPSHOT</k3.version>-->
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.1.0</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
