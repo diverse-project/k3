@@ -4,11 +4,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
+	<description>K3 Action Language Annotation Processor</description>
 
 	<parent>
 		<groupId>io.github.diverse-project.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.al.root</artifactId>
-		<version>3.3.1-SNAPSHOT</version>
+		<version>3.3.1</version>
 		<relativePath>../fr.inria.diverse.k3.al.root/pom.xml</relativePath>
 	</parent>
 	<build>
@@ -42,6 +43,10 @@
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
