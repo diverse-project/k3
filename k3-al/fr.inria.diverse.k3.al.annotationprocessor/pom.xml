@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
+	<name>fr.inria.diverse.k3.al.annotationprocessor</name>
 	<description>K3 Action Language Annotation Processor</description>
 
 	<parent>
