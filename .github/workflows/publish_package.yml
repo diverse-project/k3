@@ -34,6 +34,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Publish package on github registry
-        run: mvn --batch-mode deploy -P github-distribution --file k3-al/fr.inria.diverse.k3.al.root/pom.xml
+        run: mvn --batch-mode deploy -P github-distribution --file k3-al/fr.inria.diverse.k3.al.root/pom.xml -DskipTests=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
