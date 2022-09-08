@@ -52,9 +52,9 @@
 							
 							<!-- libraries is for jar needing to be deployed in standalone projects -->
 								<artifactItem>
-									<groupId>fr.inria.diverse.k3.al</groupId>
+									<groupId>io.github.diverse-project.k3</groupId>
 									<artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
-									<version>${project.version}</version>
+									<version>3.3.1</version>
 									<outputDirectory>${project.basedir}/target/libraries/k3/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
