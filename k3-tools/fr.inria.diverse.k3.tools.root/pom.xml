@@ -16,16 +16,16 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</modules>
 
         <properties>
-		<tycho.version>2.7.0</tycho.version>
-		<tycho-extras.version>2.7.0</tycho-extras.version>
-		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/photon/</eclipse-repo.url>
-		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
+		<tycho.version>2.7.5</tycho.version>
+		<tycho-extras.version>2.7.5</tycho-extras.version>
+		<!--<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>-->
+		<eclipse-repo.url>http://download.eclipse.org/releases/2022-06/</eclipse-repo.url>
+		<!--<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.25.0</xtend.version>
+		<xtend.version>2.27.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>1.8</java.version>
-		<k3.version>3.3.1</k3.version>
+		<k3.version>4.0.0-SNAPSHOT</k3.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
@@ -43,7 +43,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<layout>p2</layout>
 		</repository> -->
 		<!-- repository for pure maven artefacts -->
-		<repository>
+		<!--<repository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -52,7 +52,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </repository>
+		 </repository>-->
 	</repositories>
 
 	<build>

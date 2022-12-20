@@ -32,12 +32,12 @@
 
 
 	<properties>
-		<tycho.version>2.7.0</tycho.version>
-		<tycho-extras.version>2.7.0</tycho-extras.version>
+		<tycho.version>2.7.5</tycho.version>
+		<tycho-extras.version>2.7.5</tycho-extras.version>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
 		<eclipse-repo.url>http://download.eclipse.org/releases/2021-12/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
-		<xtend.version>2.25.0</xtend.version>
+		<xtend.version>2.27.0</xtend.version>
 		<nightly.modifier>.nightly</nightly.modifier> <!-- must be set to ".nightly" for SNAPSHOT and set to "" for release -->		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>

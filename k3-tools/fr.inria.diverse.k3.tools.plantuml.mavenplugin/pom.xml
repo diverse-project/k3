@@ -12,15 +12,15 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/photon/</eclipse-repo.url>
-		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
+		<!--<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/2022-06/</eclipse-repo.url>
+		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.25.0</xtend.version>
+		<xtend.version>2.29.0</xtend.version>
 		<junit.version>4.13.1</junit.version>
 		<java.version>1.8</java.version>
-		<k3.version>3.3.1</k3.version>
-		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<k3.version>4.0.0-SNAPSHOT</k3.version>
+		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 	</properties>
 
@@ -137,7 +137,7 @@
 			<layout>p2</layout>
 		</repository>-->
 		<!-- repository for pure maven artefacts -->
-		<repository>
+		<!--<repository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -146,11 +146,11 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </repository>
+		 </repository>-->
 	</repositories>
 	
 	<distributionManagement>
-        <repository>
+       <!-- <repository>
             <id>triskell-public-release</id>
             <name>Triskell public release repository on maven.irisa.fr</name>
             <url>http://maven.irisa.fr/artifactory/triskell-public-release</url>
@@ -161,6 +161,6 @@
             <name>Triskell public snapshot repository on maven.irisa.fr</name>
             <url>http://maven.irisa.fr/artifactory/triskell-public-snapshot</url>
             <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
+        </snapshotRepository>-->
     </distributionManagement>
 </project>
