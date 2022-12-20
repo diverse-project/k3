@@ -10,17 +10,19 @@
  *******************************************************************************/
  package fr.inria.diverse.k3.al.annotationprocessor.stepmanager
 
+import java.util.Optional
+
 abstract class StepCommand {
 
-	private Object result
+	private Optional<Object> result = Optional.empty
 
 	public def void execute() ;
 	
 	protected def void addToResult(Object o) {
-		result = o;
+		result = Optional.of(o);
 	}
 
-	public def Object getResult() {
+	public def Optional<Object> getResult() {
 		return result;
 	}
 

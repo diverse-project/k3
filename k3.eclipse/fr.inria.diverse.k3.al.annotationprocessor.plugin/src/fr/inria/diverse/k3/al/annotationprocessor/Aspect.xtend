@@ -455,7 +455,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 				command.execute();
 			}
 			«IF hasReturn»
-			«resultVar» = command.getResult();
+			«resultVar» = command.getResult().get();
 			«ENDIF»
 		'''
 	}
