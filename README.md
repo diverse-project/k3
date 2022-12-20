@@ -21,7 +21,11 @@ The documentation is in the gh-pages branch.
 Development
 ------------------------
 
-Continuous integration : https://ci.inria.fr/k3al/
+```
+mvn clean verify
+```
 
-Current status: [![Build Status](https://ci.inria.fr/k3al/buildStatus/icon?job=k3-al)](https://ci.inria.fr/k3al/job/k3-al/)
+![Build and Verify](https://github.com/diverse-project/k3/actions/workflows/verify.yml/badge.svg)
 
+
+(Deprecated: old continuous integration : https://ci.inria.fr/k3al/)

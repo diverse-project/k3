@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: XtextTestingHelpers
 Bundle-SymbolicName: fr.inria.diverse.k3.tools.xtext.testing
-Bundle-Version: 3.3.1.qualifier
+Bundle-Version: 4.0.0.qualifier
 Export-Package: fr.inria.diverse.k3.tools.xtext.testing
 Require-Bundle: org.eclipse.xtend.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
