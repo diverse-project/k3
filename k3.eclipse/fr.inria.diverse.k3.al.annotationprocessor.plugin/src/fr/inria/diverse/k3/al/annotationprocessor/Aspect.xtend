@@ -388,8 +388,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 		var String privcall = '''«dt.newTypeReference.name».«PRIV_PREFIX+m.simpleName»(_self_, «parametersString.replaceFirst(SELF_VAR_NAME,
 							"(" + Helper::getAspectedClassName(dt) + ")"+SELF_VAR_NAME)»)'''
 		if (isStep) {
-			privcall = surroundWithStepCommandExecution(className, m.simpleName, privcall, hasReturn, resultVar,
-				parametersString.substring(parametersString.indexOf(',') + 1))
+			val parametersWithoutSelf = if (parametersString.contains(',')) parametersString.substring(parametersString.indexOf(',') + 1) else "";
+			privcall = surroundWithStepCommandExecution(className, m.simpleName, privcall, hasReturn, resultVar, parametersWithoutSelf)
 		} else if (hasReturn)
 			privcall = '''«resultVar» = «privcall»'''
 		
