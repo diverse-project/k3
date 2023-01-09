@@ -33,10 +33,10 @@ jobs:
     #  with:
     #    report_paths: '**/target/surefire-reports/TEST-*.xml'
     - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action/composite@v1
+      uses: EnricoMi/publish-unit-test-result-action@v2.3.0
       if: always()  # always run even if the previous step fails
       with:
-        files: "**/target/surefire-reports/TEST-*.xml"
+        junit_files: "**/target/surefire-reports/TEST-*.xml"
     #- name: Archive logs 📦
     #  uses: actions/upload-artifact@v3
     #  if: always() # always run even if the previous step fails
