@@ -25,7 +25,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build and Verify ⚒️🧪
-      uses: GabrielBB/xvfb-action@v1
+      uses: GabrielBB/xvfb-action@v1.6
       with:
          run: mvn -B verify --file pom.xml
     
