@@ -25,9 +25,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build and Verify ⚒️🧪
-      uses: GabrielBB/xvfb-action@v1.6
-      with:
-         run: mvn -B verify --file pom.xml
+      run: xvfb-run -a mvn -B verify --file pom.xml
     
     #- name: Publish Test Report 🔍
     #  uses: mikepenz/action-junit-report@v3
