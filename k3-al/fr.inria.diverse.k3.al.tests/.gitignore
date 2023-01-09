@@ -4,3 +4,4 @@
 /META-INF
 /src/main/generated-sources
 /src/test/generated-sources
+*/gen-plantuml/*
