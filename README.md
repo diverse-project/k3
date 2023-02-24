@@ -28,4 +28,12 @@ mvn clean verify
 [![Build and Verify](https://github.com/diverse-project/k3/actions/workflows/verify.yml/badge.svg)](https://github.com/diverse-project/k3/actions)
 
 
-(Deprecated: old continuous integration : https://ci.inria.fr/k3al/)
+Tips
+------------------------
+
+The annotation processor logs some message using `java.util.logging.Logger`
+
+One may display the more informative log by setting the system propertie `java.util.logging.config.file` to point to a  logging.properties file such as 
+https://github.com/diverse-project/k3/tree/master/resources/logging.properties
+
+Ex: for maven: add `-Djava.util.logging.config.file=<locationofpropertiesfiles>`
