@@ -6,7 +6,7 @@
 	<artifactId>fr.inria.diverse.k3.al.root</artifactId>
 	<name>fr.inria.diverse.k3.al.root</name>
 	<description>K3 Action Language Root</description>
-	<version>4.0.1</version>
+	<version>4.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<url>https://kermeta.org</url>

@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-        <packaging>eclipse-plugin</packaging>
+    <packaging>eclipse-plugin</packaging>
 	<artifactId>fr.inria.diverse.k3.tools.xtext.testing</artifactId>
-        <version>4.0.1</version>
+        
 	<name>XtextTestingHelpers</name>
 
 	<parent>
 		<groupId>io.github.diverse-project.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.tools.root</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.2-SNAPSHOT</version>
 		<relativePath>../fr.inria.diverse.k3.tools.root/pom.xml</relativePath>
 	</parent>
 
