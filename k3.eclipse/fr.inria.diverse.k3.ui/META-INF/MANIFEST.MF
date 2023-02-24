@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: K3 UI
 Bundle-SymbolicName: fr.inria.diverse.k3.ui;singleton:=true
-Bundle-Version: 4.0.0.qualifier
+Bundle-Version: 4.0.1.qualifier
 Bundle-Activator: fr.inria.diverse.k3.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

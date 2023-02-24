@@ -9,7 +9,7 @@
         <groupId>io.github.diverse-project.k3</groupId>
         <artifactId>fr.inria.diverse.k3.tools.root</artifactId>
         <relativePath>../fr.inria.diverse.k3.tools.root/pom.xml</relativePath>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>4.0.1</version>
     </parent>
 
 	<build>

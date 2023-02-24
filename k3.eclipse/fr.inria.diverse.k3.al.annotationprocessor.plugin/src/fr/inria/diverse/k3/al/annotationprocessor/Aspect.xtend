@@ -912,19 +912,23 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 							// in case of /src/main/java it returns /xtend-gen instead of /src/main/xtend-gen as it is configured in eclipse 
 							// when using xtend-gen as output without specifying "allow output directory per source folder" (actually, I'm not sure this behavior is correct) 
 							// applying workaround
+							LOGGER.log(Level.FINE, '''«m.simpleName». Aspect processor is applying targetFolder workaround''')
 							superclassfilePath.sourceFolder.parent.append(
 									superclassfilePath.targetFolder.relativize(superclassfilePath.projectFolder).toString)
 						} else {
+							LOGGER.log(Level.FINE, '''«m.simpleName». Aspect processor is NOT applying targetFolder workaround''')
 							superclassfilePath.targetFolder
 						}
 						var superclassjavafile = superclasstargetFolder.append(superclass.qualifiedName.replace('.', '/') + ".java")
+						LOGGER.log(Level.FINE, '''«m.simpleName». Aspect processor is looking for «superclassjavafile» ''')
+						
 						// due to parallel jobs, the file may not exist yet
 						// or may be currently being written
 						if(!waitForFileContent(superclassjavafile, context)){
 							// timeout occured
-							LOGGER.log(Level.FINER, '''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
+							LOGGER.log(Level.SEVERE, '''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
 						
-							println('''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
+							//println('''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
 						} else synchronized(lock){						
 						 	
 							LOGGER.log(Level.FINER, '''injecting «classDecl.simpleName» dispatch code in «superclassjavafile»''');

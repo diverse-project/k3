@@ -6,7 +6,7 @@
 	<artifactId>fr.inria.diverse.k3.al.root</artifactId>
 	<name>fr.inria.diverse.k3.al.root</name>
 	<description>K3 Action Language Root</description>
-	<version>4.0.0-SNAPSHOT</version>
+	<version>4.0.1</version>
 	<packaging>pom</packaging>
 
 	<url>https://kermeta.org</url>
@@ -41,7 +41,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<xtend.version>2.27.0</xtend.version>
 		<java.version>11</java.version>
-		<!--<k3.version>4.0.0-SNAPSHOT</k3.version>-->
+		<!--<k3.version>4.0.1</k3.version>-->
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.1.0</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
