@@ -60,11 +60,12 @@ end note
 Processor -> AspectMappingBuilder: getAspectMappingBuilder
 activate AspectMappingBuilder
 Processor -> AspectMappingBuilder: readCurrentMapping
-Processor -> AspectMappingBuilder: cleanUnusedMapping
 Processor -> AspectMappingBuilder: addMappingForAnnotatedSourceElements
 XtendCompiler <-- Processor
 
-XtendCompiler --> XtendCompiler: doValidate
+XtendCompiler -> Processor: doValidate
+Processor -> AspectMappingBuilder: cleanUnusedMapping
+XtendCompiler <-- Processor
 
 XtendCompiler -> Processor: doGenerateCode
 Processor -> AspectMappingBuilder: writePropertyFile

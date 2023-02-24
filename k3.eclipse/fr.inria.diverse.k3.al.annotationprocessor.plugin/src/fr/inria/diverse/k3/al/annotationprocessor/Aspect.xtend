@@ -36,6 +36,9 @@ import org.eclipse.xtend.lib.macro.declaration.TypeReference
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.file.Path
 import org.eclipse.xtend.lib.macro.services.TypeLookup
+import java.util.logging.Logger
+import java.util.logging.Level
+import org.eclipse.xtend.lib.macro.ValidationContext
 
 //import static extension org.eclipse.xtext.EcoreUtil2.*
 
@@ -125,6 +128,9 @@ annotation Abstract {
  * <br>See <a href="https://www.eclipse.org/xtend/documentation/204_activeannotations.html">xtend annotation processor documentation</a>
  */
 public class AspectProcessor extends AbstractClassProcessor {
+	
+	static final Logger LOGGER = Logger.getLogger( AspectProcessor.getPackage().getName() );
+	
 	Map<MutableClassDeclaration, List<MutableClassDeclaration>> listResMap = newHashMap
 
 	// builder for mapping.properties file
@@ -147,7 +153,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 1: Register properties and context helpers
 	 */
 	override doRegisterGlobals(ClassDeclaration annotatedClass, RegisterGlobalsContext context) {
-		// println(this +" doRegisterGlobals on "+annotatedClass.qualifiedName)
+		LOGGER.log(Level.FINER, "Phase 1: doRegisterGlobals: "+annotatedClass.qualifiedName);
 		val type = Helper::getAnnotationAspectType(annotatedClass)
 		if (type !== null) {
 			val className = type.simpleName
@@ -156,6 +162,11 @@ public class AspectProcessor extends AbstractClassProcessor {
 		}
 	}
 
+	override doRegisterGlobals(List<? extends ClassDeclaration> annotatedClasses, extension RegisterGlobalsContext context) {
+		LOGGER.log(Level.FINE, "Phase 1: "+annotatedClasses.map[c | c.simpleName].join(", "));
+		super.doRegisterGlobals(annotatedClasses, context)
+	}
+	
 	List<? extends MutableClassDeclaration> mclasses = null
 	
 
@@ -163,7 +174,8 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 * Phase 2: Transform aspected class' fields and methods
 	 */
 	override def doTransform(List<? extends MutableClassDeclaration> classes, extension TransformationContext context) {
-		// println(this +" doTransform on "+classes.map[qualifiedName].join(" "))
+		
+		LOGGER.log(Level.FINE, "Phase 2: "+classes.map[c | c.simpleName].join(", "))
 		mclasses = classes
 
 		// context.addError(classes.get(0),"test"+classes.size + " " + classes.get(0).compilationUnit)
@@ -202,10 +214,23 @@ public class AspectProcessor extends AbstractClassProcessor {
 		// (allows to get writing abilities and notification to Eclipse)
 		
 		aspectMappingBuilder = AspectMappingBuilder::getAspectMappingBuilder(classes.head.compilationUnit.filePath.projectFolder.toString)
+		
+		LOGGER.log(Level.FINER, '''aspectMappingBuilder.allDeclaredAspects.size=«this.aspectMappingBuilder.allDeclaredAspects.size» «this.aspectMappingBuilder.allDeclaredAspects.join(", ")»''');
 		aspectMappingBuilder.readCurrentMapping(classes, context)
-		aspectMappingBuilder.cleanUnusedMapping(context)
 		
 		aspectMappingBuilder.addMappingForAnnotatedSourceElements()
+	}
+
+	/**
+	 * Phase 3: Validation
+	 * perform some cleanup
+	 */
+	override doValidate(List<? extends ClassDeclaration> annotatedClasses, extension ValidationContext context) {
+		LOGGER.log(Level.FINE, "Phase 3: "+annotatedClasses.map[c | c.simpleName].join(", "))
+		LOGGER.log(Level.FINER, '''before cleanUnusedMapping: aspectMappingBuilder.allDeclaredAspects.size=«this.aspectMappingBuilder.allDeclaredAspects.size» «this.aspectMappingBuilder.allDeclaredAspects.join(", ")»''');
+		aspectMappingBuilder.cleanUnusedMapping(context)
+		LOGGER.log(Level.FINER, '''after cleanUnusedMapping: aspectMappingBuilder.allDeclaredAspects.size=«this.aspectMappingBuilder.allDeclaredAspects.size» «this.aspectMappingBuilder.allDeclaredAspects.join(", ")»''');
+		super.doValidate(annotatedClasses, context)
 	}
 
 	/**
@@ -216,6 +241,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	override doGenerateCode(List<? extends ClassDeclaration> annotatedSourceElements,
 		extension CodeGenerationContext context) {
 
+		LOGGER.log(Level.INFO, "Phase 4: "+annotatedSourceElements.map[c | c.simpleName].join(", "))
 		// println(this +" doGenerateCode on "+annotatedSourceElements.map[qualifiedName].join(" "))
 		// generate the .k3_aspect_mapping.properties file using information collected in the previous phases
 	    aspectMappingBuilder.writePropertyFile(context)
@@ -230,7 +256,7 @@ public class AspectProcessor extends AbstractClassProcessor {
 	 		injectDispatchInParentAspects(classDecl, context)
 		} 
 		
-		
+		LOGGER.log(Level.FINE, "Phase 4: write writeTempStaticDispatchFile ("+annotatedSourceElements.map[c | c.simpleName].join(", ")+")")
 		annotatedSourceElements.map[classDecl | classDecl.compilationUnit].forEach[cu |
 			// save dispatchStaticInjection into a file for proper reuse by other parallel or incremental jobs
 			projectStaticDispatchBuilder.writeTempStaticDispatchFile(cu, context)
@@ -859,6 +885,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		val List<ClassDeclaration> allSuperClasses = newArrayList 
 		Helper.getAllPrimaryAndSecondarySuperClasses(allSuperClasses, classDecl, context)
 
+		LOGGER.log(Level.FINE, '''«classDecl.simpleName» has «allSuperClasses.size» super classes: «allSuperClasses.map[c | c.simpleName].join(",")»''');
 		// for all methods declared in the class, look for the same method in the superclasses and inject dispatch code
 		//val Set<String> dispatchStaticInjection = newHashSet
  		 
@@ -874,6 +901,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 					// superclass.compilationUnit.filePath may return a path to the current compilation unit instead of the real java file
 					// uses aspectMappingBuilder to make sure to process only classes in the current project 
 					val isSuperClassInProject = this.aspectMappingBuilder.allDeclaredAspects.contains(superclass.qualifiedName)
+					LOGGER.log(Level.FINE, '''«classDecl.simpleName» extends «superclass.simpleName» isSuperClassInProject = «isSuperClassInProject»''');
 					if(isSuperClassInProject) {
 						val superclassfilePath = superclass.compilationUnit.filePath					
 						val Path superclasstargetFolder =
@@ -894,9 +922,12 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 						// or may be currently being written
 						if(!waitForFileContent(superclassjavafile, context)){
 							// timeout occured
+							LOGGER.log(Level.FINER, '''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
+						
 							println('''[«this»] Timeout occured while processing «classDecl.qualifiedName».«m.simpleName». Aspect processor is waiting for «superclassjavafile» ''')
 						} else synchronized(lock){						
 						 	
+							LOGGER.log(Level.FINER, '''injecting «classDecl.simpleName» dispatch code in «superclassjavafile»''');
 							val hasReturn = m.returnType.name != "void"
 							// call the public helper for this type (this ensures correct dispatch)
 							val parametersString = if(m.parameters.empty) '''«"(" + Helper::getAspectedClassName(classDecl) + ")"+SELF_VAR_NAME»'''
@@ -938,6 +969,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 						}
 					}
 				}
+				
 			}		
 		}
 		
