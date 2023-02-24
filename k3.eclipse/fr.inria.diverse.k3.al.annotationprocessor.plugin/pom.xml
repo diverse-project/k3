@@ -15,7 +15,7 @@
 		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
 		<groupId>io.github.diverse-project.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.1-SNAPSHOT</version>
 	</parent>
   	<artifactId>fr.inria.diverse.k3.al.annotationprocessor.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
