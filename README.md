@@ -11,11 +11,11 @@ Please have a look to **[http://diverse-project.github.io/k3/](http://diverse-pr
 Contributing
 ------------------------
 
-Folders named *-eclipse contains Eclipse-based projects that can be built directly in eclipse or using maven/tycho.
+Folders named `*-eclipse` contains Eclipse-based projects that can be built directly in eclipse or using maven/tycho.
 Other folders contain pure maven projects.
-All root folders contains a *.root project that allows to build all the project in one maven command.
+All root folders contains a `*.root` project that allows to build all the projects in one maven command.
 
-The documentation is in the gh-pages branch.
+The documentation is in the `gh-pages` branch.
 
 
 Development
@@ -25,7 +25,7 @@ Development
 mvn clean verify
 ```
 
-![Build and Verify](https://github.com/diverse-project/k3/actions/workflows/verify.yml/badge.svg)
+[![Build and Verify](https://github.com/diverse-project/k3/actions/workflows/verify.yml/badge.svg)](https://github.com/diverse-project/k3/actions)
 
 
 (Deprecated: old continuous integration : https://ci.inria.fr/k3al/)
