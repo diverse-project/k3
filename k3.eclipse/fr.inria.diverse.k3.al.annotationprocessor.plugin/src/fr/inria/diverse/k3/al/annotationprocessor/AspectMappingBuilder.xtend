@@ -21,8 +21,7 @@ import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.file.Path
-import java.util.Set
-import java.util.Map.Entry
+import org.eclipse.xtend.lib.macro.ValidationContext
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -120,7 +119,7 @@ class AspectMappingBuilder {
 	 * try to clean unused mappings
 	 * @param context transformation context
 	 */
-	def void cleanUnusedMapping(extension TransformationContext context){
+	def void cleanUnusedMapping(extension ValidationContext context){
 		synchronized(mapping) {		
 			if (classes.size > 0) {
 				val List<String> keytoRemove = new ArrayList<String>
@@ -158,16 +157,18 @@ class AspectMappingBuilder {
 	def void writePropertyFile(extension CodeGenerationContext context){
 		// classes can be null in case of syntax or compilation error in the file, the doTransform isn't processed but doGenerateCode will be called anyway 
 		if (classes !== null && classes.size > 0) {
-			var buf = ''''''
+			
 			synchronized(mapping) {
-				for (entrySet : mapping.entrySet) {
-					buf = '''«buf.toString»
-«entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
-				}
+				var buf = ''''''
+					for (entrySet : mapping.entrySet) {
+						buf = '''«buf.toString»
+	«entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
+					}
+				
+				val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
+		«buf.toString»'''
+				Helper::writeContentsIfNew(targetFilePath, contents, context)
 			}
-			val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
-	«buf.toString»'''
-			Helper::writeContentsIfNew(targetFilePath, contents, context)
 		}
 	}
 
