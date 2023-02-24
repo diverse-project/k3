@@ -601,7 +601,7 @@ if («SELF_VAR_NAME» instanceof «Helper::getAspectedClassName(dt)»){
 		}
 		val supers = Helper::getDirectPrimaryAndSecondarySuperClasses(clazz, cxt)
 		if (supers.empty) {
-			cxt.addError(clazz, "passe par la")
+			cxt.addError(clazz, "Missing superclass: declaring the method " + m.simpleName +" with @OverrideAspectMethod implies to have at least a parent class")
 			return false
 		}
 
