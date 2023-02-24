@@ -22,6 +22,7 @@ import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.file.Path
 import org.eclipse.xtend.lib.macro.ValidationContext
+import java.util.stream.Collectors
 
 /**
  * This class is in charge of building and updating the property file that list all the Aspect classes for a given Class
@@ -52,7 +53,7 @@ class AspectMappingBuilder {
 	 * main key: project name
 	 * 
 	 */
-	private static Map<String, WeakReference<AspectMappingBuilder>> projectsAspectMappingBuilder =  new HashMap<String, WeakReference<AspectMappingBuilder>>
+	static Map<String, WeakReference<AspectMappingBuilder>> projectsAspectMappingBuilder =  new HashMap<String, WeakReference<AspectMappingBuilder>>
 
 	/** use getAspectMappingBuilder() in order to get an instance associated to the project */
 	private new (String projectName){
@@ -72,7 +73,7 @@ class AspectMappingBuilder {
 	}
 
 	/** internal map */
-	private val Map<String, List<String>> mapping = newHashMap
+	val Map<String, List<String>> mapping = newHashMap
 
 
 	/** Rebuild mapping from existing property file
@@ -160,13 +161,14 @@ class AspectMappingBuilder {
 			
 			synchronized(mapping) {
 				var buf = ''''''
-					for (entrySet : mapping.entrySet) {
-						buf = '''«buf.toString»
-	«entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
-					}
+
+				for (entrySet : mapping.entrySet.stream().sorted(Map.Entry.comparingByKey).collect(Collectors::toList)) {
+					buf = '''«buf.toString»
+«entrySet.key» = «FOR aString : entrySet.value SEPARATOR ', '»«aString»«ENDFOR»'''
+				}
 				
 				val contents = '''# List of the Java classes that have been aspectized and name of the aspect classes separated by comma
-		«buf.toString»'''
+«buf.toString»'''
 				Helper::writeContentsIfNew(targetFilePath, contents, context)
 			}
 		}
