@@ -4,7 +4,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.diverse-project.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.tools.root</artifactId>
-	<version>4.1.0</version>
+	<version>4.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -25,7 +25,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<xtend.version>2.27.0</xtend.version>
 		<junit.version>4.11</junit.version>
 		<java.version>1.8</java.version>
-		<k3.version>4.1.0</k3.version>
+		<k3.version>4.1.1-SNAPSHOT</k3.version>
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
