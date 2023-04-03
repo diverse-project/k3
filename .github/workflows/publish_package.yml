@@ -1,4 +1,4 @@
-name: Publish package to GitHub Packages
+name: Publish to GitHub Packages and maven central
 on:
   release:
     types: [created]
