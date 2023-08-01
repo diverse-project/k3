@@ -13,8 +13,8 @@ jobs:
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: MAVEN_USERNAME  # env variable for username in deploy
           server-password: MAVEN_PASSWORD # env variable for token or password in deploy
@@ -31,8 +31,8 @@ jobs:
       - name: Set up Java for publishing to GitHub Packages
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
       - name: Publish package on github registry
         run: mvn --batch-mode deploy -P github-distribution --file k3-al/fr.inria.diverse.k3.al.root/pom.xml -DskipTests=true
         env:
