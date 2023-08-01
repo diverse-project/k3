@@ -1,3 +1,3 @@
 ## Test abstractoperation
 
-![abstractoperation.png](gen-plantuml/abstractoperation.png)
+![abstractoperation.png](gen-plantuml/abstractoperation.svg)

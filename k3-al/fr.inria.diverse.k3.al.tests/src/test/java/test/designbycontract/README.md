@@ -1,3 +1,3 @@
 ## Test designbycontract
 
-![designbycontract.png](gen-plantuml/designbycontract.png)
+![designbycontract.png](gen-plantuml/designbycontract.svg)

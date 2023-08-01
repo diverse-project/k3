@@ -1,3 +1,3 @@
 ## Test dynamicbinding
 
-![dynamicbinding.png](gen-plantuml/dynamicbinding.png)
+![dynamicbinding.png](gen-plantuml/dynamicbinding.svg)
