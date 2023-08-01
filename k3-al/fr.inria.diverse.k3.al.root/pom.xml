@@ -64,7 +64,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<repositories>
+	<!-- <repositories>
 		<repository>
             <id>central</id>
             <name>Central Repository</name>
@@ -84,7 +84,7 @@
 			<name>http://maven.inria.fr-releases</name>
 			<url>http://maven.inria.fr/artifactory/public-release</url>
 		</repository>
-	</repositories>
+	</repositories> -->
 	<pluginRepositories>
 		<pluginRepository>
             <id>central</id>
@@ -99,7 +99,7 @@
             </releases>
         </pluginRepository>
 		<!-- repository for pure maven artefacts -->
-		<pluginRepository>
+		<!--<pluginRepository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -108,7 +108,7 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </pluginRepository>
+		 </pluginRepository>-->
 	</pluginRepositories>
 	<build>
 	    <plugins>

@@ -87,7 +87,7 @@
 		</repository>
 
 		<!-- repository for pure maven artefacts -->
-		<repository>
+		<!--<repository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -96,7 +96,7 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </repository>
+		 </repository> -->
 	</repositories>
 
 	<pluginRepositories>
