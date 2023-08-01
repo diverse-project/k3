@@ -17,7 +17,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.diverse-project.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-	<version>4.1.1-SNAPSHOT</version>
+	<version>4.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- <module>../fr.inria.diverse.k3.eclipse.core.plugin</module> -->
@@ -37,7 +37,7 @@
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
 		<eclipse-repo.url>http://download.eclipse.org/releases/2021-12/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
-		<xtend.version>2.27.0</xtend.version>	
+		<xtend.version>2.31.0</xtend.version>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>
 		<!-- Skip the deployment here, submodules can override this property -->
