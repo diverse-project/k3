@@ -16,8 +16,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</modules>
 
         <properties>
-		<tycho.version>2.7.5</tycho.version>
-		<tycho-extras.version>2.7.5</tycho-extras.version>
+		<tycho.version>4.0.1</tycho.version>
+		<tycho-extras.version>4.0.1</tycho-extras.version>
 		<!--<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>-->
 		<eclipse-repo.url>http://download.eclipse.org/releases/2022-06/</eclipse-repo.url>
 		<!--<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>-->
