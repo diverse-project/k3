@@ -22,7 +22,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase        
       - name: Set up Maven  🍮
         uses: stCarolas/setup-maven@v4.5
-      	with:
+        with:
           maven-version: 3.9.3
       - name: Publish to Maven Central Repository
         # working-directory: k3-al/fr.inria.diverse.k3.al.root
