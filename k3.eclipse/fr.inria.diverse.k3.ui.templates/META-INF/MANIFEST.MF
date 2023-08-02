@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gemoc.commons.eclipse.pde;bundle-version="1.0.0",
  org.eclipse.jdt.core,
  fr.inria.diverse.k3.al.annotationprocessor.plugin;bundle-version="3.2.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: fr.inria.diverse.k3.ui.templates,
