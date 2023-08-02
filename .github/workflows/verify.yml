@@ -24,6 +24,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Set up Maven  🍮
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.9.3
     - name: Build and Verify ⚒️🧪
       run: xvfb-run -a mvn -B verify --file pom.xml
     
