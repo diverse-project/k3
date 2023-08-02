@@ -34,8 +34,8 @@
 	<properties>
 		<tycho.version>4.0.1</tycho.version>
 		<tycho-extras.version>4.0.1</tycho-extras.version>
-		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/2023-06/</eclipse-repo.url>
+		<xtend-repo.url>https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
+		<eclipse-repo.url>https://download.eclipse.org/releases/2023-06/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
 		<xtend.version>2.31.0</xtend.version>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,7 +83,7 @@
 		<repository>
                 <id>gemoc-commons</id>
                 <layout>p2</layout>
-                <url>http://download.eclipse.org/gemoc/updates/nightly</url>
+                <url>https://download.eclipse.org/gemoc/updates/nightly</url>
 		</repository>
 
 		<!-- repository for pure maven artefacts -->
