@@ -15,7 +15,7 @@
 		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
 		<groupId>io.github.diverse-project.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-		<version>4.1.1-SNAPSHOT</version>
+		<version>4.2.0-SNAPSHOT</version>
 	</parent>
   	<artifactId>fr.inria.diverse.k3.al.annotationprocessor.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -46,9 +46,9 @@
 			</plugin>
 			<!-- generate the images from plantUMl -->
 			<plugin>
-				<groupId>com.github.jeluard</groupId>
+				<groupId>com.github.davidmoten</groupId>
 				<artifactId>plantuml-maven-plugin</artifactId>
-				<version>1.2</version>
+				<version>0.2.4</version>
 				<executions>
 					<execution>
 						<id>output-plantuml</id>
@@ -56,25 +56,22 @@
 						<goals>
 							<goal>generate</goal>
 						</goals>
+						<configuration>
+	                        <sources>
+	                            <directory>${basedir}</directory>
+	                            <includes>
+	                                <include>**/*.plantuml</include>
+	                            </includes>
+	                        </sources>
+	                        <outputDirectory>${basedir}</outputDirectory>
+	                        <formats>
+	                            <format>png</format>
+	                            <!--<format>svg</format>-->
+	                        </formats>
+	                        <preserveDirectoryStructure>true</preserveDirectoryStructure>
+	            		</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<outputInSourceDirectory>true</outputInSourceDirectory>
-					<verbose>true</verbose>
-					<sourceFiles>
-						<directory>${basedir}</directory>
-						<includes>
-							<include>**/*.plantuml</include>
-						</includes>
-					</sourceFiles>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>net.sourceforge.plantuml</groupId>
-						<artifactId>plantuml</artifactId>
-						<version>8054</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<!-- enable source bundle generation -->
 			<plugin>

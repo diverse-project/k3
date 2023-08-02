@@ -28,6 +28,11 @@
 	
 	<target name="upload" >
 		<echo>${TODAY_UK}</echo>
+		<echo>
+			${key.file}
+			${deploy.user}
+			${deploy.server}
+		</echo>
 		<chmod perm="g+w">
 			<fileset dir="${updatesite.repository}">
 			    <include name="**/**"/>
@@ -38,6 +43,7 @@
 				 keyfile="${key.file}"
 				 passphrase=""
 			     trust="yes"
+				 verbose="true"
 			     command="rm -Rf ${deploy.path}/update;  
 						  mkdir ${deploy.path}/update;
 						  rm -Rf ${deploy.path}/update_${TODAY_UK};

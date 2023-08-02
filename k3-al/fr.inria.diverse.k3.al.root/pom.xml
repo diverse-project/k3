@@ -6,7 +6,7 @@
 	<artifactId>fr.inria.diverse.k3.al.root</artifactId>
 	<name>fr.inria.diverse.k3.al.root</name>
 	<description>K3 Action Language Root</description>
-	<version>4.1.1-SNAPSHOT</version>
+	<version>4.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<url>https://kermeta.org</url>
@@ -39,8 +39,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<xtend.version>2.27.0</xtend.version>
-		<java.version>11</java.version>
+		<xtend.version>2.31.0</xtend.version>
+		<java.version>17</java.version>
 		<!--<k3.version>4.0.1</k3.version>-->
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.1.0</maven-dependency-plugin.version>
@@ -64,7 +64,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<repositories>
+	<!-- <repositories>
 		<repository>
             <id>central</id>
             <name>Central Repository</name>
@@ -84,7 +84,7 @@
 			<name>http://maven.inria.fr-releases</name>
 			<url>http://maven.inria.fr/artifactory/public-release</url>
 		</repository>
-	</repositories>
+	</repositories> -->
 	<pluginRepositories>
 		<pluginRepository>
             <id>central</id>
@@ -99,7 +99,7 @@
             </releases>
         </pluginRepository>
 		<!-- repository for pure maven artefacts -->
-		<pluginRepository>
+		<!--<pluginRepository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -108,7 +108,7 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </pluginRepository>
+		 </pluginRepository>-->
 	</pluginRepositories>
 	<build>
 	    <plugins>
@@ -171,11 +171,11 @@
 				<!-- need 2.22.x minimum to correctly run junit 5 tests -->
 				<plugin>
 		            <artifactId>maven-surefire-plugin</artifactId>
-		            <version>2.22.2</version>
+		            <version>3.1.2</version>
 		        </plugin>
 		        <plugin>
 		            <artifactId>maven-failsafe-plugin</artifactId>
-		            <version>2.22.2</version>
+		            <version>3.1.2</version>
 		        </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

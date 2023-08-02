@@ -1,3 +1,3 @@
 ## Test oppositemany
 
-![oppositemany.png](gen-plantuml/oppositemany.png)
+![oppositemany.png](gen-plantuml/oppositemany.svg)

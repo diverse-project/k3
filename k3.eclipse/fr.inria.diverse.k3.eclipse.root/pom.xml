@@ -17,7 +17,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.diverse-project.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-	<version>4.1.1-SNAPSHOT</version>
+	<version>4.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- <module>../fr.inria.diverse.k3.eclipse.core.plugin</module> -->
@@ -32,12 +32,12 @@
 
 
 	<properties>
-		<tycho.version>2.7.5</tycho.version>
-		<tycho-extras.version>2.7.5</tycho-extras.version>
+		<tycho.version>4.0.1</tycho.version>
+		<tycho-extras.version>4.0.1</tycho-extras.version>
 		<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>
-		<eclipse-repo.url>http://download.eclipse.org/releases/2021-12/</eclipse-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/2023-06/</eclipse-repo.url>
 		<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>
-		<xtend.version>2.27.0</xtend.version>	
+		<xtend.version>2.31.0</xtend.version>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/diverse-project/k3.git</tycho.scmUrl>
 		<!-- Skip the deployment here, submodules can override this property -->
@@ -87,7 +87,7 @@
 		</repository>
 
 		<!-- repository for pure maven artefacts -->
-		<repository>
+		<!--<repository>
 		     <id>mavenInriaSnapshot</id>
 		     <name>http://maven.inria.fr-snapshots</name>
 		     <url>http://maven.inria.fr/artifactory/public-snapshot</url>
@@ -96,7 +96,7 @@
 		     <id>mavenInriaRelease</id>
 		     <name>http://maven.inria.fr-releases</name>
 		     <url>http://maven.inria.fr/artifactory/public-release</url>
-		 </repository>
+		 </repository> -->
 	</repositories>
 
 	<pluginRepositories>
@@ -219,11 +219,11 @@
 					<artifactId>tycho-packaging-plugin</artifactId>
 					<version>${tycho.version}</version>
 					<dependencies>
-						<dependency>
+						<!--<dependency>
 							<groupId>org.eclipse.tycho.extras</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
 							<version>${tycho-extras.version}</version>
-						</dependency>
+						</dependency>-->
 						<dependency>
         					<groupId>org.eclipse.tycho.extras</groupId>
 				        	<artifactId>tycho-sourceref-jgit</artifactId>

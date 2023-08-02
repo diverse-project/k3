@@ -18,11 +18,11 @@
 		<relativePath>../fr.inria.diverse.k3.eclipse.root/pom.xml</relativePath>
 		<groupId>io.github.diverse-project.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.eclipse.root</artifactId>
-		<version>4.1.1-SNAPSHOT</version>
+		<version>4.2.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>fr.inria.diverse.k3.p2updatesite</artifactId>
-	<packaging>eclipse-update-site</packaging>
+	<packaging>eclipse-repository</packaging>
   
   	<properties>
 		<!-- deployment this module -->

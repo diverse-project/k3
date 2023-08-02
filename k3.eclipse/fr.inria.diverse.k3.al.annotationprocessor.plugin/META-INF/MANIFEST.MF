@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: K3 Annotation Processor
 Bundle-SymbolicName: fr.inria.diverse.k3.al.annotationprocessor.plugin
-Bundle-Version: 4.1.1.qualifier
+Bundle-Version: 4.2.0.qualifier
 Bundle-Activator: fr.inria.diverse.k3.al.annotationprocessor.plugin.Activator
 Bundle-Vendor: Inria DiverSE
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtend.lib;bundle-version="2.12.0";visibility:=reexport,
  org.eclipse.emf.ecore;bundle-version="2.7.0",
  org.eclipse.xtend.core;bundle-version="2.27.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: fr.inria.diverse.k3.al.annotationprocessor,

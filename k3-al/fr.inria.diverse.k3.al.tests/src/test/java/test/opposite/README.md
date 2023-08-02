@@ -1,3 +1,3 @@
 ## Test opposite
 
-![opposite.png](gen-plantuml/opposite.png)
+![opposite.png](gen-plantuml/opposite.svg)

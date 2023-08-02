@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: K3 Templates
 Bundle-SymbolicName: fr.inria.diverse.k3.ui.templates;singleton:=true
-Bundle-Version: 4.1.1.qualifier
+Bundle-Version: 4.2.0.qualifier
 Bundle-Activator: fr.inria.diverse.k3.ui.templates.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gemoc.commons.eclipse.pde;bundle-version="1.0.0",
  org.eclipse.jdt.core,
  fr.inria.diverse.k3.al.annotationprocessor.plugin;bundle-version="3.2.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: fr.inria.diverse.k3.ui.templates,

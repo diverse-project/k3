@@ -16,6 +16,7 @@ import java.util.HashMap
 import java.util.HashSet
 import java.util.List
 import java.util.Set
+import org.eclipse.xtend.lib.macro.CodeGenerationContext
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.ClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MethodDeclaration
@@ -24,10 +25,9 @@ import org.eclipse.xtend.lib.macro.declaration.MutableMethodDeclaration
 import org.eclipse.xtend.lib.macro.declaration.MutableTypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeDeclaration
 import org.eclipse.xtend.lib.macro.declaration.TypeReference
-import org.eclipse.xtend.lib.macro.services.TypeLookup
-import org.eclipse.xtend.lib.macro.services.GlobalTypeLookup
 import org.eclipse.xtend.lib.macro.file.Path
-import org.eclipse.xtend.lib.macro.CodeGenerationContext
+import org.eclipse.xtend.lib.macro.services.GlobalTypeLookup
+import org.eclipse.xtend.lib.macro.services.TypeLookup
 
 /**
  * A tool class containing helper operations for k3.

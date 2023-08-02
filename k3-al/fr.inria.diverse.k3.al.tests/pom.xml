@@ -7,7 +7,7 @@
     <parent>
 		<groupId>io.github.diverse-project.k3</groupId>
 		<artifactId>fr.inria.diverse.k3.al.root</artifactId>
-		<version>4.1.1-SNAPSHOT</version>
+		<version>4.2.0-SNAPSHOT</version>
 		<relativePath>../fr.inria.diverse.k3.al.root</relativePath>
     </parent>
 
@@ -58,37 +58,37 @@
 	        </plugin>	-->    
 			
 			<!-- generate the images from plantUMl -->
-            <plugin>
-		      <groupId>com.github.jeluard</groupId>
-		      <artifactId>plantuml-maven-plugin</artifactId>
-		      <version>7941</version>
-		      <executions>
-                    <execution>
-                        <id>output-plantuml</id>
+			<plugin>
+				<groupId>com.github.davidmoten</groupId>
+				<artifactId>plantuml-maven-plugin</artifactId>
+				<version>0.2.4</version>
+				<executions>
+					<execution>
+						<id>output-plantuml</id>
                         <phase>generate-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-              </executions>
-		      <configuration>
-		      	<!-- <outputDirectory>${basedir}/target/generated-docbook/images</outputDirectory>-->
-		      <outputInSourceDirectory>true</outputInSourceDirectory>
-		      	<sourceFiles>
-          			<directory>${basedir}</directory>
-          			<includes>
-            			<include>src/**/*.plantuml</include>
-          			</includes>
-        		</sourceFiles>
-		      </configuration>
-		      <dependencies>
-		        <dependency>
-		          <groupId>net.sourceforge.plantuml</groupId>
-		          <artifactId>plantuml</artifactId>
-		          <version>7976</version>
-		        </dependency>
-		      </dependencies>
-		    </plugin>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+	                        <sources>
+	                            <directory>${basedir}</directory>
+	                            <includes>
+	                                <include>src/**/*.plantuml</include>
+	                            </includes>
+	                            <excludes>
+	                                <exclude>**/ignore-me.puml</exclude>
+	                            </excludes>
+	                        </sources>
+	                        <outputDirectory>${basedir}</outputDirectory>
+	                        <formats>
+	                            <!--<format>png</format>-->
+	                            <format>svg</format>
+	                        </formats>
+	                        <preserveDirectoryStructure>true</preserveDirectoryStructure>
+	            		</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>

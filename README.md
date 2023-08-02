@@ -25,7 +25,8 @@ Development
 mvn clean verify
 ```
 
-[![Build and Verify](https://github.com/diverse-project/k3/actions/workflows/verify.yml/badge.svg)](https://github.com/diverse-project/k3/actions)
+[![Build and Verify](https://github.com/diverse-project/k3/actions/workflows/verify.yml/badge.svg)](https://github.com/diverse-project/k3/actions)<br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.diverse-project.k3/fr.inria.diverse.k3.al.annotationprocessor/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.github.diverse-project.k3/fr.inria.diverse.k3.al.annotationprocessor)<br/>
 
 
 Tips
