@@ -12,7 +12,7 @@ import java.util.HashMap
 
 class $className${ 
 
-	public def run(String modelPath, String resultModelPath) {
+	def run(String modelPath, String resultModelPath) {
 		//Load Ecore Model
 		var fact = new EcoreResourceFactoryImpl
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI)) {
