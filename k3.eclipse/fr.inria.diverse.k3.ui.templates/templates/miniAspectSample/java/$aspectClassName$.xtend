@@ -18,9 +18,9 @@ class $aspectClassName$ {
 		var PrintWriter writer = new PrintWriter(_self, "UTF-8");
 		// compute content String by using template
 		val content = '''<xml>
-	<«_self.contentType»s>	
-		«FOR contentItem : _self.contentArrayList »<color>«contentItem»</color> «ENDFOR»
-	</«_self.contentType»s>
+	<Â«_self.contentTypeÂ»s>	
+		Â«FOR contentItem : _self.contentArrayList Â»<color>Â«contentItemÂ»</color> Â«ENDFORÂ»
+	</Â«_self.contentTypeÂ»s>
 </xml>'''
 		writer.println(content);
 		writer.close();
