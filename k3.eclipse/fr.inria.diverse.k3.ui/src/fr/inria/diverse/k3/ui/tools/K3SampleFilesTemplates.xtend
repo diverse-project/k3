@@ -1,7 +1,7 @@
 package fr.inria.diverse.k3.ui.tools
 
 class K3SampleFilesTemplates {
-	def public static String getFileTypeK3(String namePackage, String nameClass) {
+	def static String getFileTypeK3(String namePackage, String nameClass) {
 		return '''package  «namePackage» 
 	
 	import org.eclipse.emf.ecore.EPackage
@@ -39,7 +39,7 @@ class K3SampleFilesTemplates {
 '''
 	}
 	
-	def public static String get_MiniAspectSample_SampleMain_xtend(String namePackage) {
+	def static String get_MiniAspectSample_SampleMain_xtend(String namePackage) {
 		return '''package  «namePackage»
 
 import java.io.File
@@ -67,7 +67,7 @@ class SampleMain{
 '''
 	}
 	
-	def public static String get_MiniAspectSample_SampleXMLFileAspect_xtend(String namePackage) {
+	def static String get_MiniAspectSample_SampleXMLFileAspect_xtend(String namePackage) {
 		return '''package  «namePackage»
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
@@ -101,7 +101,7 @@ class SampleXMLFileAspect {
 	}
 
 	
-	def public static String get_MiniAspectSample_SampleEcoreMain_xtend(String namePackage) {
+	def static String get_MiniAspectSample_SampleEcoreMain_xtend(String namePackage) {
 		return '''package  «namePackage»
 
 import org.eclipse.emf.ecore.EPackage
@@ -149,7 +149,7 @@ class SampleEcoreMain{
 '''
 	}
 	
-	def public static String get_MiniAspectSample_SampleAnnotateEcoreAspect_xtend(String namePackage) {
+	def static String get_MiniAspectSample_SampleAnnotateEcoreAspect_xtend(String namePackage) {
 		return '''package  «namePackage»
 
 import fr.inria.diverse.k3.al.annotationprocessor.Aspect
@@ -229,7 +229,7 @@ class EModelElementAspect{
 '''
 	}
 	
-	def public static String buildProperties () {
+	def static String buildProperties () {
 		return '''source.. = src/,\
            xtend-gen/
 output.. = bin/
@@ -240,7 +240,7 @@ bin.includes = plugin.xml,\
 	}
 
 	
-	def public static String getK3SLEStub(String pkgName, String ecoreUri, String mmName) {
+	def static String getK3SLEStub(String pkgName, String ecoreUri, String mmName) {
 		return '''package «pkgName»
 		
 metamodel «mmName» {
@@ -255,7 +255,7 @@ transformation main() {
 '''
 	}
 	
-	def public static String pomXmlMetamodel(String nameProject, String groupID, String artifactID, String version) {
+	def static String pomXmlMetamodel(String nameProject, String groupID, String artifactID, String version) {
 		return '''<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>«groupID»</groupId>
@@ -296,7 +296,7 @@ transformation main() {
 	}
 	
 	
-	def public static String pomXmlK3Ecore(String nameProject, String groupID, String artifactID, String version, String eGroupID, String eArtifactID, String eVersion) {
+	def static String pomXmlK3Ecore(String nameProject, String groupID, String artifactID, String version, String eGroupID, String eArtifactID, String eVersion) {
 		return '''<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -356,7 +356,7 @@ transformation main() {
 </project>'''
 	}
 	
-	def	public static String pomXmlK3(String nameProject, String groupID, String artifactID, String version) {
+	def	static String pomXmlK3(String nameProject, String groupID, String artifactID, String version) {
 		return '''<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -438,7 +438,7 @@ transformation main() {
 </project>'''
 	}
 	
-	def	public static String eclipseResourcePrefs() {
+	def	static String eclipseResourcePrefs() {
 		return '''eclipse.preferences.version=1
 encoding/<project>=UTF-8'''
 	}
