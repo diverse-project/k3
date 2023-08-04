@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IExecutableExtensionFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.xtend.ide.XtendExecutableExtensionFactory;
 import org.eclipse.xtend.ide.internal.XtendActivator;
 import org.osgi.framework.Bundle;
 
