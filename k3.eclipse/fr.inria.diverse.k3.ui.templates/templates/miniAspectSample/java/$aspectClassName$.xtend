@@ -10,11 +10,11 @@ import java.util.ArrayList
 @Aspect(className=java.io.File)
 class $aspectClassName$ {
 	
-	var String contentType = ""
+	public var String contentType = ""
 	
-	var ArrayList<String> contentArrayList = newArrayList("")
+	public var ArrayList<String> contentArrayList = newArrayList("")
 	
-	public def void writeXML(){		
+	def void writeXML(){		
 		var PrintWriter writer = new PrintWriter(_self, "UTF-8");
 		// compute content String by using template
 		val content = '''<xml>
