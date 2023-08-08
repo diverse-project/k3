@@ -34,7 +34,7 @@ class EPackage$aspectClassPostfix$ extends EModelElement$aspectClassPostfix${
 
 @Aspect(className=EClassifier)
 class EClassifier$aspectClassPostfix$ extends EModelElement$aspectClassPostfix${
-	public def void annotate(){
+	def void annotate(){
 		// do nothing in the general case
 	}
 }
@@ -43,13 +43,13 @@ class EClassifier$aspectClassPostfix$ extends EModelElement$aspectClassPostfix${
 class EClass$aspectClassPostfix$ extends EClassifier$aspectClassPostfix${
 	
 	@OverrideAspectMethod
-	public def void annotate(){
+	def void annotate(){
 		// compute the string for the annotation and add it to the class
 		_self.addAnnotation("http://www.eclipse.org/emf/2002/GenModel", "documentation", _self.flat(""))
 	}
 	
 /** Build a String with all superclasses of this class */
-	public def String flat(String tabStr){
+	def String flat(String tabStr){
 		// use a template String
 		// note: in case of strange characters here, make sure to configure your project to use utf8
 val returnedString = '''«tabStr»class «_self.name» : «FOR eSuperClass : _self.ESuperTypes»«eSuperClass.flat( tabStr + "\t")»«ENDFOR»'''
@@ -60,7 +60,7 @@ val returnedString = '''«tabStr»class «_self.name» : «FOR eSuperClass : _se
 
 @Aspect(className=EModelElement)
 class EModelElement$aspectClassPostfix${
-	public def EAnnotation addAnnotation(String source, String detailKey, String detailValue) {
+	def EAnnotation addAnnotation(String source, String detailKey, String detailValue) {
     	// create annotation on the model element only if not already there
 		var EAnnotation theAnnotation =	_self.EAnnotations.findFirst[annot | annot.source.equals(source)]
 		if (theAnnotation == null){

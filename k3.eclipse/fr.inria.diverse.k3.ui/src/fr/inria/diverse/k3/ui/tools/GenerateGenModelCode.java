@@ -71,7 +71,7 @@ public class GenerateGenModelCode {
 				new org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl());
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getURIConverter().getURIMap()
-		.putAll(EcorePlugin.computePlatformURIMap());
+		.putAll(EcorePlugin.computePlatformURIMap(true));
 		URI genModelURI = URI.createFileURI(genModelFile);
 		Resource resource = resourceSet.getResource(genModelURI, true);
 		GenModel eltGenModel = (GenModel)resource.getContents().get(0);
@@ -90,7 +90,7 @@ public class GenerateGenModelCode {
 		IPath ecorePath = new Path(ecorepath);
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getURIConverter().getURIMap()
-				.putAll(EcorePlugin.computePlatformURIMap());
+				.putAll(EcorePlugin.computePlatformURIMap(true));
 		URI ecoreURI = URI.createFileURI(ecorePath.toString());
 		Resource resource = resourceSet.getResource(ecoreURI, true);
 		EPackage ePackage = (EPackage) resource.getContents().get(0);

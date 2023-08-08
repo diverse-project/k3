@@ -10,12 +10,8 @@
  *******************************************************************************/
 package fr.inria.diverse.k3.ui.wizards.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-
 import org.eclipse.gemoc.commons.eclipse.pde.wizards.pages.pde.ui.BaseProjectWizardFields;
 
 public class NewK3ProjectWizardFields extends BaseProjectWizardFields {
