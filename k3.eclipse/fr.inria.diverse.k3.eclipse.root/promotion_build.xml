@@ -14,7 +14,7 @@
 	<property environment="env"/>
 
 	<property name="env.WORKSPACE" location="."/>
-	<property name="updatesite.repository" location="${env.WORKSPACE}/k3.eclipse/fr.inria.diverse.k3.p2updatesite/target/site"/>
+	<property name="updatesite.repository" location="${env.WORKSPACE}/k3.eclipse/fr.inria.diverse.k3.p2updatesite/target/repository"/>
 	<property name="deploy.server" value="kermeta.org"/>
 	<property name="deploy.user" value="web-kermeta"/>
 	<property name="deploy.path" value="/home/web/apache/sites/kermeta.org/htdocs/k3"/>

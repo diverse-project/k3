@@ -9,7 +9,7 @@ fi
 set -x
 
 WORKSPACE=$(pwd)
-UPDATESITE_REPOSITORY="${WORKSPACE}/k3.eclipse/fr.inria.diverse.k3.p2updatesite/target/site"
+UPDATESITE_REPOSITORY="${WORKSPACE}/k3.eclipse/fr.inria.diverse.k3.p2updatesite/target/repository"
 DEPLOY_SERVER="kermeta.org"
 DEPLOY_USER="web-kermeta"
 DEPLOY_PATH="/home/web/apache/sites/kermeta.org/htdocs/k3"

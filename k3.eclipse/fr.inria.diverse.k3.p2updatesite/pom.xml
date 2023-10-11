@@ -28,4 +28,15 @@
 		<!-- deployment this module -->
 		<maven.deploy.skip>false</maven.deploy.skip>
 	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project> 
