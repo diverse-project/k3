@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Activator: geometry.provider.GeometryEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: geometry.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.kermeta.language.sample.cellularautomata.geometry.model;visibility:=reexport,

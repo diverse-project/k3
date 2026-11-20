@@ -13,4 +13,4 @@ Require-Bundle: fr.inria.diverse.k3.eclipse.core.plugin;bundle-version="1.0.0",
  org.kermeta.language.sample.cellularautomata.geometry.model;bundle-version="1.0.0",
  org.kermeta.language.sample.cellularautomata.vm.model;bundle-version="1.0.0"
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-21
