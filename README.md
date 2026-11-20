@@ -18,6 +18,48 @@ All root folders contains a `*.root` project that allows to build all the projec
 The documentation is in the `gh-pages` branch.
 
 
+Using K3 from Maven
+------------------------
+
+Since version 4.3.0, the K3 maven artifacts are published on [GitHub Packages](https://github.com/orgs/diverse-project/packages?repo_name=k3) only (versions up to 4.1.0 are also available on Maven Central).
+
+GitHub Packages requires an authentication even for public packages:
+
+1. create a GitHub personal access token (classic) with the `read:packages` scope
+2. declare it in your `~/.m2/settings.xml`:
+
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>github-diverse-project-k3</id>
+      <username>YOUR_GITHUB_USERNAME</username>
+      <password>YOUR_TOKEN</password>
+    </server>
+  </servers>
+</settings>
+```
+
+3. add the repository and the dependency to your `pom.xml`:
+
+```xml
+<repositories>
+  <repository>
+    <id>github-diverse-project-k3</id>
+    <url>https://maven.pkg.github.com/diverse-project/k3</url>
+  </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+    <groupId>io.github.diverse-project.k3</groupId>
+    <artifactId>fr.inria.diverse.k3.al.annotationprocessor</artifactId>
+    <version>4.3.0</version>
+  </dependency>
+</dependencies>
+```
+
+
 Development
 ------------------------
 

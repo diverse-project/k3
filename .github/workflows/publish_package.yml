@@ -1,42 +1,31 @@
-name: Publish to GitHub Packages and maven central
+name: Publish to GitHub Packages
 on:
   release:
     types: [created]
 jobs:
   publish:
-    runs-on: ubuntu-latest 
-    permissions: 
+    runs-on: ubuntu-latest
+    permissions:
       contents: read
-      packages: write 
+      packages: write
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: MAVEN_USERNAME  # env variable for username in deploy
-          server-password: MAVEN_PASSWORD # env variable for token or password in deploy
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase        
-      - name: Set up Maven  🍮
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.9.16
-      - name: Publish to Maven Central Repository
-        # working-directory: k3-al/fr.inria.diverse.k3.al.root
-        run: mvn --batch-mode deploy -P ossrh-distribution --file k3-al/fr.inria.diverse.k3.al.root/pom.xml
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}       
+      - uses: actions/checkout@v4
       - name: Set up Java for publishing to GitHub Packages
         uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
+          # the default server-id "github" (with GITHUB_ACTOR/GITHUB_TOKEN) matches the
+          # distributionManagement/repository/id of the github-distribution profile
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+      - name: Set up Maven  🍮
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.16
       - name: Publish package on github registry
-        run: mvn --batch-mode deploy -P github-distribution --file k3-al/fr.inria.diverse.k3.al.root/pom.xml -DskipTests=true
+        # tests are run before publishing
+        run: mvn --batch-mode deploy -P github-distribution --file k3-al/fr.inria.diverse.k3.al.root/pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
