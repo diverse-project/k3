@@ -111,6 +111,35 @@
 	</pluginRepositories>
 	<build>
 	    <plugins>
+			<plugin>
+				<!-- Safety net: a Java compiler may emit "problem classes" (classes whose methods only throw
+				     "Unresolved compilation problem" errors). Fail the build instead of shipping them. -->
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>check-no-problem-classes</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<resourcecount property="problem.classes.count">
+									<fileset dir="${project.build.outputDirectory}" includes="**/*.class" erroronmissingdir="false">
+										<contains text="Unresolved compilation problem" />
+									</fileset>
+								</resourcecount>
+								<fail message="${problem.classes.count} class file(s) in ${project.build.outputDirectory} contain 'Unresolved compilation problem': the Java compilation silently failed, refusing to package them.">
+									<condition>
+										<not><equals arg1="${problem.classes.count}" arg2="0" /></not>
+									</condition>
+								</fail>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 	        <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
