@@ -27,7 +27,7 @@ public class K3FileTemplates {
 		buffer.append("Require-Bundle: ");
 		buffer.append("fr.inria.diverse.k3.al.annotationprocessor.plugin;bundle-version=\"4.0.0\";visibility:=\"reexport\""+ lineSeparator);
 	    buffer.append("Bundle-ClassPath: ." + lineSeparator);
-	    buffer.append("Bundle-RequiredExecutionEnvironment: JavaSE-17"+lineSeparator);
+	    buffer.append("Bundle-RequiredExecutionEnvironment: JavaSE-21"+lineSeparator);
 	    
 	    return buffer.toString();
     }

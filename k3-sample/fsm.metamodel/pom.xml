@@ -8,7 +8,7 @@
     <version>1.0.0-SNAPSHOT</version>
 
   <properties>
-    <tycho.version>0.18.0</tycho.version>
+    <tycho.version>4.0.13</tycho.version>
     <tycho-extras.version>0.18.0</tycho-extras.version>
 	<obeodesigner-repo.url>http://www.obeo.fr/download/release/designer/6.1/latest/juno3/update/</obeodesigner-repo.url>
     <featureide-repo.url>http://wwwiti.cs.uni-magdeburg.de/iti_db/research/featureide/deploy/</featureide-repo.url>

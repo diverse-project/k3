@@ -4,7 +4,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.diverse-project.k3</groupId>
 	<artifactId>fr.inria.diverse.k3.tools.root</artifactId>
-	<version>4.2.0-SNAPSHOT</version>
+	<version>4.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -18,15 +18,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <properties>
 		<tycho.version>4.0.13</tycho.version>
 		<tycho-extras.version>4.0.13</tycho-extras.version>
-		<!--<xtend-repo.url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>-->
-		<eclipse-repo.url>https://download.eclipse.org/releases/2023-06/</eclipse-repo.url>
-		<!--<tycho-repo.url>https://oss.sonatype.org/content/groups/public/</tycho-repo.url>-->
+		<!--<xtend-repo.url>https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</xtend-repo.url>-->
+		<eclipse-repo.url>https://download.eclipse.org/releases/2026-09/</eclipse-repo.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtend.version>2.31.0</xtend.version>
+		<xtend.version>2.44.0</xtend.version>
 		<junit.version>4.11</junit.version>
-		<java.version>1.8</java.version>
-		<k3.version>4.2.0-SNAPSHOT</k3.version>
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+		<java.version>21</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+		<k3.version>4.3.0-SNAPSHOT</k3.version>
+		<maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 		<emf.version>2.9.1-v20130827-0309</emf.version>
 	</properties>

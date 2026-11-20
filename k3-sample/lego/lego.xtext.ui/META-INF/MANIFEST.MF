@@ -18,7 +18,7 @@ Require-Bundle: lego.xtext;visibility:=reexport,
  org.eclipse.compare
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: insa.ui.quickfix,
  insa.ui.contentassist,
  insa.ui.contentassist.antlr,

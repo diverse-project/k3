@@ -27,11 +27,11 @@ class TestMemoryLeak {
 			println('testNoAspectMemoryLeak() loop '+i)
 			memTester.testBaseMemoryLeakIntenal()
 			usedMemory=toMB(memTester.printUsedMemory("[B INTERMEDIATE]"))
-			assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
+			assertNoMemoryGrowth(referenceUsedMemory, usedMemory)
 		}
 		memTester.testBaseMemoryLeakIntenal()
 		usedMemory=toMB(memTester.printUsedMemory("[B END]"))
-		assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
+		assertNoMemoryGrowth(referenceUsedMemory, usedMemory)
 	} 
 	
 	def void testBaseMemoryLeakIntenal() {			
@@ -68,11 +68,11 @@ class TestMemoryLeak {
 		for(i : 1.. 10){ 
 			memTester.testAspectPropertiesMemoryLeakIntenal()
 			usedMemory=toMB(memTester.printUsedMemory("[INTERMEDIATE]"))
-			assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
+			assertNoMemoryGrowth(referenceUsedMemory, usedMemory)
 		}
 		memTester.testAspectPropertiesMemoryLeakIntenal()
 		usedMemory=toMB(memTester.printUsedMemory("[END]"))
-		assertEquals(referenceUsedMemory, usedMemory, "Used memory isn't the same as reference memory (in MB)")
+		assertNoMemoryGrowth(referenceUsedMemory, usedMemory)
 	} 
 	
 	def void testAspectPropertiesMemoryLeakIntenal() {			
@@ -106,7 +106,18 @@ class TestMemoryLeak {
 	}
 	
 	private static final long MEGABYTE = 1024L * 1024L
-	
+
+	/** Tolerated variation of the used memory (in MB), due to GC/JVM noise.
+	 * A real leak keeps 1 000 000 objects per iteration, i.e. tens of MB. */
+	private static final long TOLERANCE_MB = 2
+
+	/** Fails only if the used memory grew beyond the tolerance;
+	 * using less memory than the reference is not a leak. */
+	def static void assertNoMemoryGrowth(long referenceUsedMemory, long usedMemory) {
+		assertTrue(usedMemory <= referenceUsedMemory + TOLERANCE_MB,
+			"Used memory grew compared to reference memory (in MB): " + referenceUsedMemory + " -> " + usedMemory)
+	}
+
 	def static long toMB(long bytes){
 		return bytes / MEGABYTE;
 	}

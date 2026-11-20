@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.xtext,
  org.kermeta.language.sample.cellularautomata.rules.core.model,
  org.eclipse.xtext.util,
  org.antlr.runtime
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.kermeta.language.sample.cellularautomata.rules,
  org.kermeta.language.sample.cellularautomata.rules.services,
  org.kermeta.language.sample.cellularautomata.rules.parseTreeConstruction,

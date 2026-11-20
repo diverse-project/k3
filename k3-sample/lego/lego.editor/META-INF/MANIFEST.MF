@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Activator: robot.presentation.RobotEditorPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: robot.FlotCtrl.presentation,
  robot.presentation,
  robot.robot.presentation

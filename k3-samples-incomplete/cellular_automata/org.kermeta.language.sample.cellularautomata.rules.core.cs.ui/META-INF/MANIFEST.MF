@@ -16,7 +16,7 @@ Require-Bundle: org.kermeta.language.sample.cellularautomata.rules.core.cs,
  org.eclipse.compare,
  org.eclipse.xtext.builder,
  org.kermeta.language.sample.cellularautomata.rules.core.model;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.kermeta.language.sample.cellularautomata.rules.ui.contentassist,
  org.kermeta.language.sample.cellularautomata.rules.ui.contentassist.antlr
 Bundle-Activator: org.kermeta.language.sample.cellularautomata.rules.ui.internal.CoreActivator
